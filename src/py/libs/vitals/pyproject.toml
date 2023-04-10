@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "vitals"
+version = "0.0.1"
+description = "extract metadata from a Rhythm Doctor .rdzip file"
+authors = ["auburn <37142182+auburnsummer@users.noreply.github.com>"]
+license = "AGPL-3.0-or-later"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "~3.11"
+rdlevel-parse = {path = "../rdlevel_parse", develop = true}
+pillow = "^9.5.0"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.3.0"
+syrupy = "^4.0.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
