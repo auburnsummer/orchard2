@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "v1"
+version = "0.1.0"
+description = "Rhythm Cafe API v1"
+authors = ["auburn <37142182+auburnsummer@users.noreply.github.com>"]
+license = "AGPL-3.0-or-later"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.95.0"
+uvicorn = "^0.21.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
