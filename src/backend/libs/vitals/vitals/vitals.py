@@ -20,6 +20,8 @@ from vitals.facets.tags_facet import tags_facet
 from vitals.facets.thumbnail_facet import thumbnail_facet
 from vitals.facets.updated_facet import updated_facet
 
+from .pydantic_model import VitalsLevel
+
 
 class VitalsException(Exception):
     pass
@@ -95,7 +97,8 @@ def main(f: BinaryIO):
                             f"vitals: An unhandled error occured in a facet: {e}"
                         )
 
-                return final
+                # return final
+                return VitalsLevel(**final)
 
     except zipfile.BadZipFile:
         raise VitalsException(
