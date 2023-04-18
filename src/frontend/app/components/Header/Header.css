@@ -1,0 +1,14 @@
+.he {
+	display: flex;
+	height: 2.75rem;
+	background-color: var(--violet-300);
+	z-index: 10;
+	box-shadow: var(--shadow-elevation-low);
+	align-items: stretch;
+}
+
+.he_logo {
+	height: 3.4rem;
+	fill: var(--violet-400);
+	opacity: 70%;
+}

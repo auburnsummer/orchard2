@@ -5,6 +5,8 @@ description = "extract metadata from a Rhythm Doctor .rdzip file"
 authors = ["auburn <37142182+auburnsummer@users.noreply.github.com>"]
 license = "AGPL-3.0-or-later"
 readme = "README.md"
+packages = [{include = "./vitals"}]
+
 
 [tool.poetry.dependencies]
 python = "~3.11"

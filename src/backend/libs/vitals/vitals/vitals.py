@@ -27,7 +27,7 @@ class VitalsException(Exception):
     pass
 
 
-def main(f: BinaryIO):
+def main(f: BinaryIO) -> VitalsLevel:
     facets = {
         ("artist",): make_color_enabled_key_facet(["settings", "artist"]),
         "artist_tokens": artist_list_facet,
