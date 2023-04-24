@@ -12,7 +12,7 @@ The client knows what the Discord token is, and therefore can make calls to the
 Discord API on their own. This isn't _too_ useful, because we only request a token
 with pretty minimal permissions (identify, guilds.members.read) 
 
-Some API endpoints require further checks. such as 
+General flow is kinda like this:
 
  1. user clicks on a "Log in To Discord" link in client. This links to
 
@@ -24,31 +24,80 @@ Some API endpoints require further checks. such as
 
   rhythm.cafe/login_callback?code=blahblahblah
 
- 3. Remix (in the "server side" on the /login_callback handler) takes the code and calls our API with it to get an actual discord token. this is what's passed into our API _and_ discord's api.
+ 3. Remix (in the "server side" on the /login_callback handler) takes the query param code and calls our API with it to get an actual discord token.
 
   POST api.rhythm.cafe/api/token
     {
         "code": "....."
     }
 
- 4. On the Python end, when we get this, we do a few things:
+ 4. On the Python end, when we get this, we:
 
   1. Generate a token and refresh token by calling discord API
-  2. Populate the User table with the info, expiry date, refresh token.
-     - The refresh token should be encrypted at rest.
-     - Existing expiry date / refresh token is replaced if exists.
-     - Expiry date is a datetime.
-  3. Return the token (but not the refresh).
+  2. Return the token and the refresh. 
 
- 5. The Remix handler then returns `/` route with a cookie set of the token. It can use this token to get stuff
+ 5. Remix then calls a different api, /users/create, with the info to populate the initial object.
+
+ 6. The Remix handler then returns `/` route with a cookie set of the token. It can use this token to get stuff
 
 """
 
-from fastapi import APIRouter
+from typing import Annotated
+from fastapi import APIRouter, Depends
+from fastapi.responses import JSONResponse
+import httpx
+from pydantic import BaseModel
+from v1.dependencies.client_nonrestricted import client_nonrestricted
 from v1.env import ENV
+from v1.models.discord import ErrorResponse
+
 
 auth_routes = APIRouter()
 
 @auth_routes.get("/client_id")
 def get_client_id():
+    """
+    Get the Discord client_id of the app. This is used to get the correct authentication url
+    """
     return ENV.discord_client_id
+
+
+class GetTokenPayload(BaseModel):
+    code: str
+    redirect_uri: str
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    expires_in: int
+    refresh_token: str
+    scope: str
+    token_type: str
+
+
+@auth_routes.post(
+    "/token",
+    responses={
+        200: {"model": TokenResponse},
+        400: {"model": ErrorResponse}
+    }
+)
+async def get_token(payload: GetTokenPayload, client: Annotated[httpx.AsyncClient, Depends(client_nonrestricted)]) -> TokenResponse | ErrorResponse:
+    """
+    Convert a OAuth code into a Discord token.
+
+    Note: The app uses Discord tokens as authentication for endpoints.
+    """
+    resp = await client.post("https://discord.com/api/oauth2/token", data={
+        "grant_type": "authorization_code",
+        "client_id": ENV.discord_client_id,
+        "client_secret": ENV.discord_client_secret.get_secret_value(),
+        "code": payload.code,
+        "redirect_uri": payload.redirect_uri
+    })
+    parsed = resp.json()
+    if resp.is_success:
+        token = TokenResponse(**parsed)
+        return token
+    else:
+        return JSONResponse(status_code=400, content=ErrorResponse(**parsed).dict())

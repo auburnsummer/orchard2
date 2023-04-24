@@ -1,24 +1,7 @@
-# SQL models.
-
+from sqlmodel import Field, SQLModel, JSON, Column
+from typing import List, Optional
 import datetime
-from typing import Optional, List
-
-from sqlmodel import Field, Relationship, SQLModel, create_engine, JSON, Column
-
 from vitals.pydantic_model import ColorToken
-
-
-class User(SQLModel, table=True):
-    discord_id: str = Field(primary_key=True)
-    # should levels this user posts to #rd-showcase be automatically added?
-    autoadd_preference: bool
-
-
-class DiscordMessage(SQLModel, table=True):
-    message_id: str = Field(primary_key=True)
-    channel_id: str
-    guild_id: str
-
 
 # distinct from VitalsLevel model
 class Level(SQLModel, table=True):
@@ -67,26 +50,3 @@ class Level(SQLModel, table=True):
     # Needed for Column(JSON)
     class Config:
         arbitrary_types_allowed = True
-
-
-class Status(SQLModel, table=True):
-    alias: str = Field(primary_key=True)
-
-    level_id: str = Field(foreign_key="level.rdlevel_sha1")
-
-    approval: int = Field(default=0)
-    approval_thread: Optional[str] = Field(default=None)
-
-    approved_time: Optional[datetime.datetime] = Field(default=None)
-
-
-
-
-sqlite_file_name = "orchard.sqlite3"
-sqlite_url = f"sqlite:///{sqlite_file_name}"
-
-connect_args = {"check_same_thread": False}
-engine = create_engine(sqlite_url, echo=True, connect_args=connect_args)
-
-def create_db_and_tables():
-    SQLModel.metadata.create_all(engine)

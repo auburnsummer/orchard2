@@ -1,19 +1,27 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, UploadFile
 
-from typing import Annotated
+from v1.dependencies.client_nonrestricted import client_nonrestricted_shutdown
 
-from .models import create_db_and_tables
+from v1.dependencies.session import create_db_and_tables
 
 from .routes import auth_routes
 
 app = FastAPI()
 
-import vitals 
+import vitals
+import httpx
+
+client = httpx.AsyncClient()
 
 
 @app.on_event("startup")
 def on_startup():
     create_db_and_tables()
+
+
+@app.on_event('shutdown')
+async def shutdown_event():
+    await client_nonrestricted_shutdown()
 
 
 @app.get("/")
