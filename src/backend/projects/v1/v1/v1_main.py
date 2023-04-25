@@ -4,7 +4,7 @@ from v1.dependencies.client_nonrestricted import client_nonrestricted_shutdown
 
 from v1.dependencies.session import create_db_and_tables
 
-from .routes import auth_routes
+from .routes import auth_routes, user_routes
 
 app = FastAPI()
 
@@ -36,3 +36,4 @@ async def analyze(file: UploadFile):
     return result.dict(exclude={'image', 'thumb', 'icon'}) 
 
 app.include_router(auth_routes, tags=["auth"], prefix="/auth")
+app.include_router(user_routes, tags=["user"], prefix="/user")

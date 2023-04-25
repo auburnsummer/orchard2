@@ -1,4 +1,5 @@
 from sqlmodel import Field, Relationship, SQLModel, create_engine, JSON, Column
+from v1.models.discord import DiscordUser
 
 
 class User(SQLModel, table=True):
@@ -7,4 +8,8 @@ class User(SQLModel, table=True):
     # NB: if the level has :no-entry-sign: it still cannot be added, even if this is True.
     anyone_can_add: bool = Field(default=True)
     # if True, the user cannot add or modify levels.
-    banned: bool = Field(default=False) 
+    banned: bool = Field(default=False)
+
+
+class UserCombined(User, DiscordUser):
+    pass

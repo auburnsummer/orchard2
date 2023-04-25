@@ -49,7 +49,7 @@ import httpx
 from pydantic import BaseModel
 from v1.dependencies.client_nonrestricted import client_nonrestricted
 from v1.env import ENV
-from v1.models.discord import ErrorResponse
+from v1.models.discord import OAuthErrorResponse, OAuthTokenResponse
 
 
 auth_routes = APIRouter()
@@ -67,22 +67,14 @@ class GetTokenPayload(BaseModel):
     redirect_uri: str
 
 
-class TokenResponse(BaseModel):
-    access_token: str
-    expires_in: int
-    refresh_token: str
-    scope: str
-    token_type: str
-
-
 @auth_routes.post(
     "/token",
     responses={
-        200: {"model": TokenResponse},
-        400: {"model": ErrorResponse}
+        200: {"model": OAuthTokenResponse},
+        400: {"model": OAuthErrorResponse}
     }
 )
-async def get_token(payload: GetTokenPayload, client: Annotated[httpx.AsyncClient, Depends(client_nonrestricted)]) -> TokenResponse | ErrorResponse:
+async def get_token(payload: GetTokenPayload, client: Annotated[httpx.AsyncClient, Depends(client_nonrestricted)]) -> OAuthTokenResponse | OAuthErrorResponse:
     """
     Convert a OAuth code into a Discord token.
 
@@ -97,7 +89,7 @@ async def get_token(payload: GetTokenPayload, client: Annotated[httpx.AsyncClien
     })
     parsed = resp.json()
     if resp.is_success:
-        token = TokenResponse(**parsed)
+        token = OAuthTokenResponse(**parsed)
         return token
     else:
-        return JSONResponse(status_code=400, content=ErrorResponse(**parsed).dict())
+        return JSONResponse(status_code=400, content=OAuthErrorResponse(**parsed).dict())

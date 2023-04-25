@@ -17,15 +17,16 @@ export const loader = async ({request}: LoaderArgs) => {
     try {
       const headers = new Headers();
       headers.set("Authorization", `Bearer ${value}`);
-      const resp = await fetch("https://discord.com/api/v10/users/@me", {
+      const resp = await fetch(`${process.env.API_URL}/user/me`, {
         headers
-      }).then(r => r.json());
+      });
+      const json = await resp.json();
       return {
-        user: isDiscordUser(resp) ? resp : null
+        user: isDiscordUser(json) ? json : null
       }
     }
     catch {
-      // empty
+      // empty, if the token is invalid, we'll just return { user: null }
     }
   }
   return {

@@ -1,5 +1,6 @@
 from sqlmodel import Field, Relationship, SQLModel, create_engine, JSON, Column
 from pydantic import BaseModel
+from typing import Any
 
 
 class DiscordGuild(SQLModel, table=True):
@@ -13,10 +14,24 @@ class DiscordMessage(SQLModel, table=True):
     guild_id: str = Field(foreign_key="discordguild.id")
 
 
-class ErrorResponse(BaseModel):
+# https://discord.com/developers/docs/reference#error-messages
+class DiscordErrorResponse(BaseModel):
+    code: int
+    message: str
+    errors: Any
+
+
+class OAuthErrorResponse(BaseModel):
     error: str
     error_description: str
 
+
+class OAuthTokenResponse(BaseModel):
+    access_token: str
+    expires_in: int
+    refresh_token: str
+    scope: str
+    token_type: str
 
 
 class DiscordUser(BaseModel):
