@@ -1,5 +1,5 @@
 import { WithClass } from "~/utils/types";
-import { DiscordUser } from "./types";
+import { DiscordUser } from "../../types/user";
 
 import cc from "clsx";
 import { Link } from "@remix-run/react";

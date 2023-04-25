@@ -1,0 +1,39 @@
+.pr {
+    padding: 2rem;
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+.pr_sidebar {
+    width: 12rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.pr_username {
+    font-size: 1.25rem;
+    font-weight: 400;
+}
+
+.pr_discriminator {
+    font-size: 0.875rem;
+    margin-left: 0.125rem;
+    font-weight: 300;
+    color: var(--blueGray-700);
+}
+
+.pr_profile-pic {
+    width: 8rem;
+}
+
+.pr_logout {
+    text-decoration: underline;
+    color: var(--blueGray-800);
+}
+
+.pr_logout:hover {
+    color: var(--blueGray-900);
+    text-decoration: none;
+}
