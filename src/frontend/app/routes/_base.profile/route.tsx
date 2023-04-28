@@ -16,12 +16,8 @@ export default function ProfileRoute() {
     // get the loader data from the _base route using useMatches
     const data = useMatches().find(match => match.id === "routes/_base")?.data;
 
-    console.log(data);
-
     if (isDiscordUserObj(data)) {
-        console.log("made it here");
         const user = data.user;
-        console.log(user);
         if (user) {
             return (
                 <div className="pr">
@@ -36,14 +32,14 @@ export default function ProfileRoute() {
                         </div>
                     </div>
                     <div className="pr_content">
-                        <p>auburn here! there aren't any settings yet, so the only thing you can do here is log out.</p>
-                        <p>i'll have some settings here in the future!</p>
+                        <p>(auburn here. there aren't any settings yet, so the only thing you can do here is log out.)</p>
+                        <p>(i'll have some settings here in the future!)</p>
                     </div>
                 </div>
             )
         } else {
             return (
-                <div>
+                <div className="pr">
                     <h1>You are not logged in, click the top right button to log in</h1>
                 </div>
             )

@@ -21,6 +21,7 @@ export const loader = async ({request}: LoaderArgs) => {
         headers
       });
       const json = await resp.json();
+      console.log(json);
       return {
         user: isDiscordUser(json) ? json : null
       }

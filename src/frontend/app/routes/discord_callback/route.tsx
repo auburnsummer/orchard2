@@ -4,7 +4,7 @@ import { createAuthCookie, createRefreshCookie } from "~/utils/cookies";
 
 
 export const loader = async ({request}: LoaderArgs) => {
-    // get a token and refresh token from the API.
+    // get a token from the API.
     const url = new URL(request.url);
     const code = url.searchParams.get("code");
     const redirect_uri = `https://${url.hostname}/discord_callback`;
@@ -18,10 +18,10 @@ export const loader = async ({request}: LoaderArgs) => {
         });
 
         // get the goodies out of the response.
-        const {access_token, refresh_token, expires_in} = await resp.json();
+        const {token, expires_in} = await resp.json();
 
         const authHeader = new Headers();
-        authHeader.set("Authorization", `Bearer ${access_token}`);
+        authHeader.set("Authorization", `Bearer ${token}`);
 
         // next, check if the user exists. There's an API endpoint /user/me
         // that will return the user if they exist, or 404 if they don't.
@@ -37,7 +37,7 @@ export const loader = async ({request}: LoaderArgs) => {
             const createResp = await fetch(`${process.env.API_URL}/user/create`, {
                 method: "POST",
                 headers: authHeader
-            });
+            })
             if (!createResp.ok) {
                 throw new Error("Failed to create user");
             }
@@ -45,10 +45,8 @@ export const loader = async ({request}: LoaderArgs) => {
 
         // finally, redirect to the home page with the cookies set.
         const authCookie = createAuthCookie(expires_in);
-        const refreshCookie = createRefreshCookie();
         const headers = new Headers();
-        headers.append("set-cookie", await authCookie.serialize(access_token))
-        headers.append("set-cookie", await refreshCookie.serialize(refresh_token))
+        headers.append("set-cookie", await authCookie.serialize(token))
         return redirect("/", {
             headers
         });

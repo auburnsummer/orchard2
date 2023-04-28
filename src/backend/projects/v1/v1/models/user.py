@@ -1,14 +1,13 @@
+import datetime
 from sqlmodel import Field, Relationship, SQLModel, create_engine, JSON, Column
 from v1.models.discord import DiscordUser
 
 
 class User(SQLModel, table=True):
     discord_id: str = Field(primary_key=True)
-    # if True, levels posted by this user to a showcase channel can be added by _anyone_.
-    # NB: if the level has :no-entry-sign: it still cannot be added, even if this is True.
-    anyone_can_add: bool = Field(default=True)
-    # if True, the user cannot add or modify levels.
-    banned: bool = Field(default=False)
+    "id of the user"
+    logout_time: datetime.datetime = Field(default=datetime.datetime.fromtimestamp(0))
+    "tokens issued before this time are invalid."
 
 
 class UserCombined(User, DiscordUser):

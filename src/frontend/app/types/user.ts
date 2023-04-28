@@ -5,9 +5,7 @@ export type DiscordUser = {
    discord_id: string,  // nb: identical to id
    username: string,
    avatar: string,
-   discriminator: string,
-   anyone_can_add: boolean,
-   banned: boolean
+   discriminator: string
 }
 
 export const isDiscordUser: tg.TypeGuard<DiscordUser> = tg.isLikeObject({
@@ -15,9 +13,7 @@ export const isDiscordUser: tg.TypeGuard<DiscordUser> = tg.isLikeObject({
     discord_id: tg.isString,
     username: tg.isString,
     avatar: tg.isString,
-    discriminator: tg.isString,
-    anyone_can_add: tg.isBoolean,
-    banned: tg.isBoolean
+    discriminator: tg.isString
 });
 
 export type DiscordUserObj = {

@@ -1,10 +1,8 @@
 import { Cookie, CookieSerializeOptions, createCookie } from "@remix-run/node";
 
-const FOUR_HUNDRED_DAYS = 400 * 24 * 60 * 60;
-
 type TypedCookie<T>  = {
     cookie: Cookie;
-    serialize: (v: T) => Promise<string>;
+    serialize: (v: T, options?: CookieSerializeOptions) => Promise<string>;
     parse: (s: string | null) => Promise<T | null>;
 }
 
@@ -40,10 +38,4 @@ export const createAuthCookie = (expires_in?: number) => createStringCookie(crea
     maxAge: expires_in || 0,
     // ♫ i love my baby, she's the best ♫
     sameSite: /* ♫ she picks me up at ♫ */ "lax"
-}));
-
-export const createRefreshCookie = () => createStringCookie(createCookie("discord-refresh-token", {
-    maxAge: FOUR_HUNDRED_DAYS,
-    sameSite: "lax",
-    path: "/token_refresh"
 }));
