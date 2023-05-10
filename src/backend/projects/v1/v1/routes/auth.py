@@ -58,8 +58,8 @@ import pyseto
 from v1.dependencies.client_nonrestricted import ClientNonrestricted
 from v1.dependencies.injected_user import InjectedDiscordUser, InjectedUser
 from v1.dependencies.session import InjectedSession
-from v1.dependencies.tokens import PasetoKey
-from v1.env import ENV
+from v1.dependencies.tokens import PasetoKey, session_token_to_key
+from v1.env import env
 from v1.models.discord import OAuthErrorResponse, OAuthTokenResponse, DiscordUser
 from v1.models.sessions import OrchardSessionToken, OrchardTokenResponse
 
@@ -73,7 +73,7 @@ def get_client_id():
     """
     Get the Discord client_id of the app. This is used to get the correct authentication url
     """
-    return ENV.discord_client_id
+    return env().discord_client_id
 
 
 class PostTokenPayload(BaseModel):
@@ -96,8 +96,8 @@ async def get_token(
     # turn the code into a token.
     resp = await client.post("https://discord.com/api/oauth2/token", data={
         "grant_type": "authorization_code",
-        "client_id": ENV.discord_client_id,
-        "client_secret": ENV.discord_client_secret.get_secret_value(),
+        "client_id": env().discord_client_id,
+        "client_secret": env().discord_client_secret.get_secret_value(),
         "code": payload.code,
         "redirect_uri": payload.redirect_uri
     })
@@ -114,11 +114,10 @@ async def get_token(
             user_id = user.id
             # create a paseto token encapsulating the id, but not the original token. 
             # the original token has never been sent to the client, so we don't need to revoke it.
-            expiry = 60*60*24*14 # 14 days
-            session_token = OrchardSessionToken(sub=user_id, iat=datetime.now(), exp=expiry) # 14 days
-            encoded_session_token = session_token.json().encode('utf-8')
-            token = pyseto.encode(key, encoded_session_token, serializer=json)
-            return OrchardTokenResponse(token=token.decode("utf-8"), expires_in=expiry)
+            expiry = timedelta(days=14)
+            session_token = OrchardSessionToken(sub=user_id, iat=datetime.now(), exp=datetime.now() + expiry) # 14 days
+            token = session_token_to_key(session_token, key)
+            return OrchardTokenResponse(token=token, expires_in=int(expiry.total_seconds()))
         else:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Could not find user")
     else:
@@ -131,7 +130,7 @@ async def get_token(
 )
 async def revoke_token(user: InjectedUser, session: InjectedSession):
     # how do we revoke a paseto?
-    # the plan is for each user to have a "global signout date", which is a datetime stored in the db.
+    # each user has a "global signout date", which is a datetime stored in the db.
     # whenever a token is used, check if the paseto was issued before the global signout. if it was, reject it.
     # then, revoking a token is just a matter of setting the global signout date to now.
     # ...of course, this means we can't revoke individual tokens, but that's fine.

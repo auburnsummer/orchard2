@@ -13,7 +13,7 @@ from datetime import datetime
 class OrchardSessionToken(BaseModel):
     sub: str  # discord id
     iat: datetime
-    exp: int
+    exp: datetime
 
 
 class OrchardTokenResponse(BaseModel):

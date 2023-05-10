@@ -13,7 +13,6 @@ export const loader = async ({request}: LoaderArgs) => {
         try {
             const headers = new Headers();
             headers.set("Authorization", `Bearer ${value}`);
-            // the api gets the token to be revoked from the Authorization header.
             await fetch(`${process.env.API_URL}/auth/revoke`, {
                 method: "POST",
                 headers

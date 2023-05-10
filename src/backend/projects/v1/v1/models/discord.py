@@ -38,8 +38,6 @@ class DiscordUser(BaseModel):
     id: str
     """id of the discord user."""
     username: str
-    """username of the discord user without the #number."""
+    """username of the discord user."""
     avatar: str
     """avatar hash of the user. to get the URL: https://cdn.discordapp.com/avatars/{id}/{avatar}.png"""
-    discriminator: str
-    """The #number part of the discord user."""

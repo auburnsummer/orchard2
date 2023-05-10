@@ -28,3 +28,4 @@ async def create_user(token: InjectedToken, session: InjectedSession):
     session.commit()
     session.refresh(new_user)
     return new_user
+ 

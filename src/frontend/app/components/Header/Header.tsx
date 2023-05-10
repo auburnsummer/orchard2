@@ -34,7 +34,7 @@ export function Header({user, className}: HeaderProps) {
             <div aria-hidden className="he_spacer" />
             <div className="he_profile">
                 {user !== null ? (
-                    <Link to="/profile" className="he_logged-in" title={`${user.username}#${user.discriminator}`}>
+                    <Link to="/profile" className="he_logged-in" title={`${user.username}`}>
                         <img className="he_profile-pic" src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`} />
                     </Link>
                 ) : (

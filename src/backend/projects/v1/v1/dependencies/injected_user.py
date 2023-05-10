@@ -11,19 +11,18 @@ from v1.models.discord import DiscordErrorResponse, DiscordUser
 from v1.models.sessions import OrchardSessionToken
 from v1.models.user import User, UserCombined
 
-from v1.env import ENV
+from v1.env import env
 
 from sqlmodel import select
 
 
-async def injected_token(authorization: Annotated[str, Header()], key: PasetoKey):
+def injected_token(authorization: Annotated[str, Header()], key: PasetoKey):
     """
     Dependency that gets the token from the Bearer header and decodes it.
     """
     payload = authorization.replace("Bearer ", "")
-    token = pyseto.decode(key, payload)
-    parsed = json.loads(token.payload.decode("utf-8"))
-    return OrchardSessionToken(**parsed)
+    token = pyseto.decode(key, payload, deserializer=json)
+    return OrchardSessionToken(**token.payload)
 
 
 InjectedToken: TypeAlias = Annotated[OrchardSessionToken, Depends(injected_token)]
@@ -32,7 +31,7 @@ async def injected_orchard_user(token: InjectedToken, session: InjectedSession):
     """
     Dependency that injects the current user from the token.
     """
-    print(token)
+    print(hex(id(session)))
     # get the user from the database. the id is the sub of the token.
     select_statement = select(User).where(User.discord_id == token.sub)
     result = session.exec(select_statement).first()
@@ -55,7 +54,7 @@ async def injected_discord_user(user: InjectedUser, client: ClientNonrestricted)
     """
     user_id = user.discord_id
     resp = await client.get(f"https://discord.com/api/v10/users/{user_id}", headers={
-        "Authorization": f"Bot {ENV.discord_bot_api_key.get_secret_value()}"
+        "Authorization": f"Bot {env().discord_bot_api_key.get_secret_value()}"
     })
     payload = resp.json()
     if resp.is_success:

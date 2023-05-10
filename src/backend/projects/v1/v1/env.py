@@ -2,9 +2,8 @@ from pydantic import BaseSettings, SecretStr, Field
 
 from dotenv import load_dotenv
 
-from base64 import b64decode
-
 load_dotenv()
+
 
 class Environment(BaseSettings):
     discord_client_id: str = Field(..., env="discord_client_id")
@@ -13,8 +12,18 @@ class Environment(BaseSettings):
 
     paseto_key_base64: SecretStr = Field(..., env="paseto_key_base64")
 
+    orchard_db_path: str = Field(..., env="orchard_db_path")
+
     class Config:
         case_sensitive = False
 
-ENV = Environment()
- 
+_environment_singleton: Environment | None = None
+
+def _env():
+    global _environment_singleton
+    if _environment_singleton is None:
+        _environment_singleton = Environment()
+    return _environment_singleton
+
+def env():
+    return _env()
