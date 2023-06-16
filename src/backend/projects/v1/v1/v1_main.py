@@ -6,11 +6,8 @@ from v1.dependencies.client_nonrestricted import client_nonrestricted_shutdown
 
 from v1.dependencies.session import create_db_and_tables
 
-from .routes import auth_routes, user_routes
+from .routes import auth_routes, user_routes, interaction_router
 import logging
-
-import vitals
-
 
 app = FastAPI()
 
@@ -38,11 +35,6 @@ async def root():
     return {"message": "Hello World"}
 
 
-@app.post("/analyze")
-async def analyze(file: UploadFile):
-    result = vitals.analyze(file.file)
-    
-    return result.dict(exclude={'image', 'thumb', 'icon'}) 
-
 app.include_router(auth_routes, tags=["auth"], prefix="/auth")
 app.include_router(user_routes, tags=["user"], prefix="/user")
+app.include_router(interaction_router, tags=["interactions"], prefix="/bot")

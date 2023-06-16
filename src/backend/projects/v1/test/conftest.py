@@ -1,7 +1,7 @@
 import pytest
 from sqlalchemy.pool import StaticPool
 from sqlmodel import create_engine, Session, SQLModel
-from v1.env import Environment
+from v1.libs.env import Environment
 from v1.dependencies.session import get_session
 from v1.models.sessions import OrchardSessionToken
 from v1.models.user import User
@@ -63,5 +63,5 @@ def mock_env():
         paseto_key_base64="4xeS9zuI5a9YqXu4QDAE02oeQO6ZL5uvOvP9pd/Oyc0=",
         orchard_db_path="/dev/null"
     )
-    with patch("v1.env._env", return_value=fake_env):
+    with patch("v1.libs.env._env", return_value=fake_env):
         yield

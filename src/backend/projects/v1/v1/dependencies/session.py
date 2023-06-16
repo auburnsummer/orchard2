@@ -12,7 +12,7 @@ from v1.models.level import Level
 from v1.models.user import User
 from v1.models.status import Status
 
-from v1.env import env
+from v1.libs.env import env
 
 engine_singleton: Engine | None = None
 

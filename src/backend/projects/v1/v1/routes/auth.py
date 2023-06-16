@@ -58,8 +58,8 @@ import pyseto
 from v1.dependencies.client_nonrestricted import ClientNonrestricted
 from v1.dependencies.injected_user import InjectedDiscordUser, InjectedUser
 from v1.dependencies.session import InjectedSession
-from v1.dependencies.tokens import PasetoKey, session_token_to_key
-from v1.env import env
+from v1.dependencies.tokens import PasetoKey, make_user_session_token
+from v1.libs.env import env
 from v1.models.discord import OAuthErrorResponse, OAuthTokenResponse, DiscordUser
 from v1.models.sessions import OrchardSessionToken, OrchardTokenResponse
 
@@ -114,9 +114,7 @@ async def get_token(
             user_id = user.id
             # create a paseto token encapsulating the id, but not the original token. 
             # the original token has never been sent to the client, so we don't need to revoke it.
-            expiry = timedelta(days=14)
-            session_token = OrchardSessionToken(sub=user_id, iat=datetime.now(), exp=datetime.now() + expiry) # 14 days
-            token = session_token_to_key(session_token, key)
+            token, expiry = make_user_session_token(user_id, key)
             return OrchardTokenResponse(token=token, expires_in=int(expiry.total_seconds()))
         else:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Could not find user")

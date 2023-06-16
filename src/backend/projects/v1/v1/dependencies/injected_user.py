@@ -11,7 +11,7 @@ from v1.models.discord import DiscordErrorResponse, DiscordUser
 from v1.models.sessions import OrchardSessionToken
 from v1.models.user import User, UserCombined
 
-from v1.env import env
+from v1.libs.env import env
 
 from sqlmodel import select
 
