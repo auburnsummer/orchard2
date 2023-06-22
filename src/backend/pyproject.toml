@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "orchard"
+version = "0.1.0"
+description = ""
+authors = ["auburn <37142182+auburnsummer@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "~3.11"
+pydantic = ">=2.0b3"
+pillow = "^9.5.0"
+toml = "^0.10.2"
+starlette = "^0.28.0"
+uvicorn = "^0.22.0"
+python-dotenv = "^1.0.0"
+databases = {extras = ["aiosqlite"], version = "^0.7.0"}
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.3.2"
+syrupy = "^4.0.4"
+alembic = "^1.11.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,1 @@
+poetry run uvicorn orchard.projects.v1:app
