@@ -14,6 +14,7 @@ starlette = "^0.28.0"
 uvicorn = "^0.22.0"
 python-dotenv = "^1.0.0"
 databases = {extras = ["aiosqlite"], version = "^0.7.0"}
+pyseto = "^1.7.2"
 
 
 [tool.poetry.group.dev.dependencies]

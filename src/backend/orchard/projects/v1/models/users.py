@@ -6,7 +6,11 @@ Users are expected to have at least one Credential attached to them. This allows
 For the initial scope, the only Credential planned is Discord login.
 """
 
+from functools import wraps
+from orchard.projects.v1.core.auth import requires_scopes, OrchardAuthToken
 from pydantic import BaseModel
+from starlette.requests import Request
+from starlette.responses import JSONResponse
 from .metadata import database, metadata
 from uuid import uuid4
 
@@ -55,3 +59,21 @@ async def add_user(name: str):
     await database.execute(query)
     resultant_user = await get_user_by_id(new_id)
     return resultant_user
+
+
+def inject_user(func):
+    @wraps(func)
+    @requires_scopes({"user"})
+    async def inner(request: Request):
+        token: OrchardAuthToken = request.state.token
+        user_id: str = token.user
+        try:
+            user = await get_user_by_id(user_id)
+            request.state.user = user
+            return await func(request)
+        except UserNotFoundException:
+            content = {
+                "error": f"user with id {user_id} does not exist."
+            }
+            return JSONResponse(status_code=401, content=content)
+    return inner

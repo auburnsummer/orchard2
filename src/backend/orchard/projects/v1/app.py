@@ -7,7 +7,8 @@ from .models.metadata import lifespan
 
 from .routes.users import (
     list_users_handler,
-    add_user_handler
+    add_user_handler,
+    me_handler
 )
 
 from .core.middleware import (
@@ -19,6 +20,7 @@ async def homepage(request):
 
 routes = [
     Route("/users", endpoint=list_users_handler, methods=["GET"]),
+    Route("/users/me", endpoint=me_handler, methods=["GET"]),
     Route("/users", endpoint=add_user_handler, methods=["POST"]),
 ]
 
