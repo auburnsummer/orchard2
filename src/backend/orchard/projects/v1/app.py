@@ -2,13 +2,16 @@ from starlette.applications import Starlette
 from starlette.responses import JSONResponse
 from starlette.routing import Route
 from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
 
 from .models.metadata import lifespan
 
 from .routes.users import (
-    list_users_handler,
-    add_user_handler,
     me_handler
+)
+
+from .routes.discord_auth import (
+    discord_token_handler
 )
 
 from .core.middleware import (
@@ -19,9 +22,10 @@ async def homepage(request):
     return JSONResponse({'hello': 'world'})
 
 routes = [
-    Route("/users", endpoint=list_users_handler, methods=["GET"]),
+    Route("/", endpoint=homepage, methods=["GET", "POST"]),
     Route("/users/me", endpoint=me_handler, methods=["GET"]),
-    Route("/users", endpoint=add_user_handler, methods=["POST"]),
+
+    Route("/auth/token/discord", endpoint=discord_token_handler, methods=["POST"])
 ]
 
 app = Starlette(
@@ -29,6 +33,7 @@ app = Starlette(
     routes=routes,
     lifespan=lifespan,
     middleware=[
-        Middleware(PydanticErrorMiddleware)
+        Middleware(PydanticErrorMiddleware),
+        Middleware(CORSMiddleware, allow_origins=['*'], allow_methods=['*'], allow_headers=['*']),
     ]
 )

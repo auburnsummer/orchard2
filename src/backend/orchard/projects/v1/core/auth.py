@@ -6,23 +6,29 @@ from base64 import b64decode
 import json
 
 from pydantic import BaseModel, Field
+from pyseto.exceptions import VerifyError
 from .config import config
 
 import pyseto
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import wraps
 from typing import Callable, Optional, Set
 
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-class OrchardAuthToken(BaseModel):
-    iat: datetime
-    exp: datetime
+
+class OrchardAuthScopes(BaseModel):
     # tokens have claims attached to them.
     # claim: the token belongs to this user.
     user: Optional[str] = Field(default=None)
+
+
+class OrchardAuthToken(OrchardAuthScopes):
+    iat: datetime
+    exp: datetime
+
 
 paseto_key = pyseto.Key.new(version=4, purpose="local", key=b64decode(config().PASETO_KEY_BASE64.get_secret_value()))
 
@@ -34,6 +40,16 @@ from datetime import datetime, timedelta
 token = OrchardAuthToken(iat=datetime.now(), exp=datetime.now() + timedelta(hours=1)) # other args as reqd
 paseto = token_to_paseto(token)
 """
+
+def make_token_now(scopes: OrchardAuthScopes, exp_time: timedelta):
+    iat = datetime.now()
+    exp = iat + exp_time
+    token = OrchardAuthToken(
+        iat=iat,
+        exp=exp,
+        **scopes.model_dump()
+    )
+    return token_to_paseto(token)
 
 def _token_to_paseto(token: OrchardAuthToken):
     payload = token.model_dump(mode="json")
@@ -99,6 +115,8 @@ def requires_scopes(scopes: Set[str]):
                     request.state.token = parsed_token
                     return await func(request)
             except InvalidToken as exc:
+                return JSONResponse(status_code=401, content={"error": str(exc)})
+            except VerifyError as exc:
                 return JSONResponse(status_code=401, content={"error": str(exc)})
         return inner
     return decorator

@@ -15,12 +15,16 @@ uvicorn = "^0.22.0"
 python-dotenv = "^1.0.0"
 databases = {extras = ["aiosqlite"], version = "^0.7.0"}
 pyseto = "^1.7.2"
+httpx = "^0.24.1"
+sqlalchemy-utils = "^0.41.1"
 
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.2"
 syrupy = "^4.0.4"
 alembic = "^1.11.1"
+pytest-asyncio = "^0.21.0"
+pytest-randomly = "^3.12.0"
 
 [build-system]
 requires = ["poetry-core"]

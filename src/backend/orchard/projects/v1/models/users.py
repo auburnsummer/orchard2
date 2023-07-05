@@ -5,6 +5,7 @@ Users are expected to have at least one Credential attached to them. This allows
 
 For the initial scope, the only Credential planned is Discord login.
 """
+from __future__ import annotations
 
 from functools import wraps
 from orchard.projects.v1.core.auth import requires_scopes, OrchardAuthToken
@@ -15,6 +16,11 @@ from .metadata import database, metadata
 from uuid import uuid4
 
 import sqlalchemy as sa
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from orchard.projects.v1.models.credentials import DiscordCredential
+
 
 users = sa.Table(
     "users",
@@ -42,6 +48,12 @@ async def get_user_by_id(id: str):
         return User(**result)
     else:
         raise UserNotFoundException(f"The user with id {id} was not found.")
+
+
+async def get_user_by_discord_credential(cred: DiscordCredential):
+    id = cred.user_id
+    return await get_user_by_id(id)
+
 
 
 async def get_all_users():

@@ -17,5 +17,3 @@ class PydanticErrorMiddleware:
             }
             resp = JSONResponse(status_code=HTTP_422_UNPROCESSABLE_ENTITY, content=payload)
             await resp(scope, receive, send)
-        except Exception as exc:
-            raise

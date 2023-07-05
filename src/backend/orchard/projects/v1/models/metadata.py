@@ -4,10 +4,15 @@ import sqlalchemy as sa
 from orchard.projects.v1.core.config import config
 
 DATABASE_URL = config().DATABASE_URL
+TEST_DATABASE_URL = "sqlite:////tmp/test.db"
+TESTING = config().TESTING
 
 metadata = sa.MetaData()
 
-database = databases.Database(DATABASE_URL)
+if TESTING:
+    database = databases.Database(TEST_DATABASE_URL, force_rollback=True)
+else:
+    database = databases.Database(DATABASE_URL)
 
 import contextlib
 
