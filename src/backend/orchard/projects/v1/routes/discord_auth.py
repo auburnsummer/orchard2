@@ -10,6 +10,7 @@ from httpx import AsyncClient
 
 from orchard.projects.v1.core.config import config
 from orchard.projects.v1.models.credentials import create_or_get_user_with_credential
+from orchard.projects.v1.models.users import update_user
 from starlette.responses import JSONResponse
 
 class OAuthTokenResponse(BaseModel):
@@ -52,9 +53,14 @@ async def get_discord_user_from_oauth(data: DiscordAuthCallbackHandlerArgs):
 async def discord_token_handler(request):
     data = DiscordAuthCallbackHandlerArgs(**await request.json())
 
-    discord_user = get_discord_user_from_oauth(data)
+    discord_user = await get_discord_user_from_oauth(data)
     
     user, _ = await create_or_get_user_with_credential(discord_user.id, discord_user.username)
+    # if the name is different, update the stored name.
+    if user.name != discord_user.username:
+        user.name = discord_user.username
+        await update_user(user)
+
     # create a scoped token for this user.
     # the original token has never been sent to the client, so we don't need to revoke it.
     exp_time = timedelta(days=7)

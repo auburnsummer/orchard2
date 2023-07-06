@@ -942,6 +942,21 @@ files = [
 pytest = "*"
 
 [[package]]
+name = "pytest-socket"
+version = "0.6.0"
+description = "Pytest Plugin to disable socket calls during tests"
+category = "dev"
+optional = false
+python-versions = ">=3.7,<4.0"
+files = [
+    {file = "pytest_socket-0.6.0-py3-none-any.whl", hash = "sha256:cca72f134ff01e0023c402e78d31b32e68da3efdf3493bf7788f8eba86a6824c"},
+    {file = "pytest_socket-0.6.0.tar.gz", hash = "sha256:363c1d67228315d4fc7912f1aabfd570de29d0e3db6217d61db5728adacd7138"},
+]
+
+[package.dependencies]
+pytest = ">=3.6.3"
+
+[[package]]
 name = "python-dotenv"
 version = "1.0.0"
 description = "Read key-value pairs from a .env file and set them as environment variables"
@@ -1152,4 +1167,4 @@ standard = ["colorama (>=0.4)", "httptools (>=0.5.0)", "python-dotenv (>=0.13)",
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "6e0b73a9e681f8ff627f442cda44582089e4bfee28b1d32819254735ab3d3cd7"
+content-hash = "c0188740244d09c053c657702408ff795ceb6ba0331aaa153bed8ddce989fd00"

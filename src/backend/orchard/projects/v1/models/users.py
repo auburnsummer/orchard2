@@ -8,6 +8,7 @@ For the initial scope, the only Credential planned is Discord login.
 from __future__ import annotations
 
 from functools import wraps
+from orchard.libs.utils.dict_filter import without_keys
 from orchard.projects.v1.core.auth import requires_scopes, OrchardAuthToken
 from pydantic import BaseModel
 from starlette.requests import Request
@@ -37,6 +38,10 @@ class User(BaseModel):
         return self.model_dump()
 
 
+class EditUser(BaseModel):
+    name: str
+
+
 class UserNotFoundException(Exception):
     pass
 
@@ -55,7 +60,6 @@ async def get_user_by_discord_credential(cred: DiscordCredential):
     return await get_user_by_id(id)
 
 
-
 async def get_all_users():
     query = users.select()
     results = await database.fetch_all(query)
@@ -71,6 +75,15 @@ async def add_user(name: str):
     await database.execute(query)
     resultant_user = await get_user_by_id(new_id)
     return resultant_user
+
+
+async def update_user(data: User):
+    values = without_keys(data.model_dump(mode="json"), {"id"})
+    query = users.update().where(users.c.id == data.id).values(**values)
+    await database.execute(query)
+    resultant_user = await get_user_by_id(data.id)
+    return resultant_user
+
 
 
 def inject_user(func):

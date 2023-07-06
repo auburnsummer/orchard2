@@ -49,3 +49,4 @@ async def test_user_me_returns_401_on_token_without_user_scope(client: AsyncClie
     assert response.status_code == 401
     assert response.json() == {'error': 'Token lacks the required scope: user'}
 
+
