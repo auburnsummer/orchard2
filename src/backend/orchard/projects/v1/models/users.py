@@ -6,11 +6,12 @@ Users are expected to have at least one Credential attached to them. This allows
 For the initial scope, the only Credential planned is Discord login.
 """
 from __future__ import annotations
+from datetime import datetime
 
 from functools import wraps
 from orchard.libs.utils.dict_filter import without_keys
 from orchard.projects.v1.core.auth import requires_scopes, OrchardAuthToken
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 from .metadata import database, metadata
@@ -18,7 +19,7 @@ from uuid import uuid4
 
 import sqlalchemy as sa
 
-from typing import TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 if TYPE_CHECKING:
     from orchard.projects.v1.models.credentials import DiscordCredential
 
@@ -27,22 +28,29 @@ users = sa.Table(
     "users",
     metadata,
     sa.Column("id", sa.String, primary_key=True),
-    sa.Column("name", sa.String)
+    sa.Column("name", sa.String, nullable=False),
+    sa.Column("cutoff", sa.DateTime, nullable=False)
 )
 
 class User(BaseModel):
     id: str
     name: str
+    cutoff: datetime = Field(default=datetime.utcfromtimestamp(0))
 
     def to_dict(self):
         return self.model_dump()
 
 
 class EditUser(BaseModel):
-    name: str
+    name: Optional[str] = Field(default=None)
+    cutoff: Optional[datetime] = Field(default=None)
 
 
 class UserNotFoundException(Exception):
+    pass
+
+
+class UserLoggedOutException(Exception):
     pass
 
 
@@ -68,20 +76,18 @@ async def get_all_users():
 
 async def add_user(name: str):
     new_id = uuid4().hex
-    query = users.insert().values(
-        id=new_id,
-        name=name
-    )
+    user = User(id=new_id, name=name)
+    query = users.insert().values(**user.model_dump(mode="python"))
     await database.execute(query)
     resultant_user = await get_user_by_id(new_id)
     return resultant_user
 
 
-async def update_user(data: User):
-    values = without_keys(data.model_dump(mode="json"), {"id"})
-    query = users.update().where(users.c.id == data.id).values(**values)
+async def update_user(user_id: str, data: EditUser):
+    values = data.model_dump(mode="python", exclude_unset=True, exclude_none=True)
+    query = users.update().where(users.c.id == user_id).values(**values)
     await database.execute(query)
-    resultant_user = await get_user_by_id(data.id)
+    resultant_user = await get_user_by_id(user_id)
     return resultant_user
 
 
@@ -94,11 +100,18 @@ def inject_user(func):
         user_id: str = token.user
         try:
             user = await get_user_by_id(user_id)
+            if token.iat < user.cutoff:
+                raise UserLoggedOutException()
             request.state.user = user
             return await func(request)
         except UserNotFoundException:
             content = {
                 "error": f"user with id {user_id} does not exist."
+            }
+            return JSONResponse(status_code=401, content=content)
+        except UserLoggedOutException:
+            content = {
+                "error": f"user with id {user_id} has been logged out."
             }
             return JSONResponse(status_code=401, content=content)
     return inner

@@ -7,7 +7,8 @@ from starlette.middleware.cors import CORSMiddleware
 from .models.metadata import lifespan
 
 from .routes.users import (
-    me_handler
+    me_handler,
+    logout_handler
 )
 
 from .routes.discord_auth import (
@@ -23,7 +24,8 @@ async def homepage(request):
 
 routes = [
     Route("/", endpoint=homepage, methods=["GET", "POST"]),
-    Route("/users/me", endpoint=me_handler, methods=["GET"]),
+    Route("/user/me", endpoint=me_handler, methods=["GET"]),
+    Route("/user/logout", endpoint=logout_handler, methods=["POST"]),
 
     Route("/auth/token/discord", endpoint=discord_token_handler, methods=["POST"])
 ]

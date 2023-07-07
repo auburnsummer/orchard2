@@ -67,7 +67,7 @@ async def test_discord_auth_returns_existing_user(
 
 @pytest.mark.asyncio
 async def test_discord_auth_updates_name_if_discord_name_is_different(
-    mock_get_discord_user_from_oauth: Never, 
+    mock_get_discord_user_from_oauth: Never,
     client: AsyncClient
 ):
     users = await get_all_users()
@@ -82,6 +82,8 @@ async def test_discord_auth_updates_name_if_discord_name_is_different(
         "code": "mockcode",
         "redirect_uri": "http://testserver"
     })
+    print(resp.json())
+    resp.raise_for_status()
     assert resp.status_code == 200
 
     # the credential will have name mafuyu.

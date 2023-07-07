@@ -26,6 +26,9 @@ alembic = "^1.11.1"
 pytest-asyncio = "^0.21.0"
 pytest-randomly = "^3.12.0"
 pytest-socket = "^0.6.0"
+freezegun = "^1.2.2"
+debugpy = "^1.6.7"
+killport = "^1.2.0"
 
 [build-system]
 requires = ["poetry-core"]

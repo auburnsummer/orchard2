@@ -10,6 +10,8 @@ from alembic.config import Config
 
 import pathlib
 
+from freezegun import freeze_time
+
 # This sets `os.environ`, but provides some additional protection.
 # If we placed it below the application import, it would raise an error
 # informing us that 'TESTING' had already been read from the environment.
@@ -54,3 +56,8 @@ async def client():
     async with AsyncClient(app=app, base_url="http://testserver") as client:
         yield client
 
+
+@pytest.fixture(scope="function", autouse=True)
+def time_is_a_human_construct():
+    with freeze_time("2016-06-01"):
+        yield
