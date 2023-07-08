@@ -11,7 +11,11 @@ from orchard.projects.v1.core.auth import paseto_to_token
 @pytest.fixture
 def mock_get_discord_user_from_oauth():
     async def mock(data: DiscordAuthCallbackHandlerArgs):
-        return DiscordUserPartial(id="testid", username="mafuyu")
+        if data.code == "mockcode":
+            return DiscordUserPartial(id="testid", username="mafuyu", avatar="testavatar")
+        if data.code == "mockcode2":
+            return DiscordUserPartial(id="testid", username="mafuyu", avatar=None)
+
     with patch("orchard.projects.v1.routes.discord_auth.get_discord_user_from_oauth", new=mock):
         yield
 
@@ -59,7 +63,7 @@ async def test_discord_auth_returns_existing_user(
     assert resp.status_code == 200
 
     users = await get_all_users()
-    assert users == [user] # no new user has been added
+    assert len(users) == 1
 
     # and the token returned should be valid.
     token = resp.json()["token"]
@@ -90,3 +94,41 @@ async def test_discord_auth_updates_name_if_discord_name_is_different(
     users = await get_all_users()
     assert len(users) == 1
     assert users[0].name == "mafuyu"
+
+
+@pytest.mark.asyncio
+async def test_discord_auth_updates_avatar_url_if_they_have_one(
+    mock_get_discord_user_from_oauth: Never,
+    client: AsyncClient
+):
+    user, cred = await make_new_user_with_credential("testid", "mafuyu")
+    users = await get_all_users()
+    assert users == [user]
+
+    resp = await client.post("/auth/token/discord", json={
+        "code": "mockcode",
+        "redirect_uri": "http://testserver"
+    })
+    assert resp.status_code == 200
+
+    users = await get_all_users()
+    assert users[0].avatar_url == "https://cdn.discordapp.com/avatars/testid/testavatar"
+
+
+@pytest.mark.asyncio
+async def test_discord_auth_does_not_update_avatar_url_if_they_dont_have_one(
+    mock_get_discord_user_from_oauth: Never,
+    client: AsyncClient
+):
+    user, cred = await make_new_user_with_credential("testid", "mafuyu")
+    users = await get_all_users()
+    assert users == [user]
+
+    resp = await client.post("/auth/token/discord", json={
+        "code": "mockcode2",
+        "redirect_uri": "http://testserver"
+    })
+    assert resp.status_code == 200
+
+    users = await get_all_users()
+    assert users[0].avatar_url is None

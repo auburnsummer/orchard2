@@ -29,13 +29,15 @@ users = sa.Table(
     metadata,
     sa.Column("id", sa.String, primary_key=True),
     sa.Column("name", sa.String, nullable=False),
-    sa.Column("cutoff", sa.DateTime, nullable=False)
+    sa.Column("cutoff", sa.DateTime, nullable=False),
+    sa.Column("avatar_url", sa.String, nullable=True)
 )
 
 class User(BaseModel):
     id: str
     name: str
     cutoff: datetime = Field(default=datetime.utcfromtimestamp(0))
+    avatar_url: Optional[str] = Field(default=None)
 
     def to_dict(self):
         return self.model_dump()
@@ -44,6 +46,7 @@ class User(BaseModel):
 class EditUser(BaseModel):
     name: Optional[str] = Field(default=None)
     cutoff: Optional[datetime] = Field(default=None)
+    avatar_url: Optional[str] = Field(default=None)
 
 
 class UserNotFoundException(Exception):

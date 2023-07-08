@@ -1,3 +1,4 @@
+from orchard.projects.v1.routes.levels import prefill_handler
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
 from starlette.routing import Route
@@ -27,7 +28,9 @@ routes = [
     Route("/user/me", endpoint=me_handler, methods=["GET"]),
     Route("/user/logout", endpoint=logout_handler, methods=["POST"]),
 
-    Route("/auth/token/discord", endpoint=discord_token_handler, methods=["POST"])
+    Route("/auth/token/discord", endpoint=discord_token_handler, methods=["POST"]),
+
+    Route("/level/prefill", endpoint=prefill_handler, methods=["POST"])
 ]
 
 app = Starlette(

@@ -4,14 +4,18 @@ Routes relating to discord oauth login.
 
 from datetime import timedelta
 from orchard.projects.v1.core.auth import OrchardAuthScopes, OrchardAuthToken, make_token_now
-from pydantic import BaseModel
+from orchard.projects.v1.core.parse import parse_body_as
+from pydantic import BaseModel, Field
 
 from httpx import AsyncClient
 
 from orchard.projects.v1.core.config import config
 from orchard.projects.v1.models.credentials import create_or_get_user_with_credential
 from orchard.projects.v1.models.users import update_user, EditUser
+from starlette.requests import Request
 from starlette.responses import JSONResponse
+
+from typing import Optional
 
 class OAuthTokenResponse(BaseModel):
     access_token: str
@@ -24,9 +28,12 @@ class DiscordAuthCallbackHandlerArgs(BaseModel):
     code: str
     redirect_uri: str
 
+
+# the discord API returns more than this, but this is the only subset we're interested in.
 class DiscordUserPartial(BaseModel):
     id: str
     username: str
+    avatar: Optional[str] = Field(default=None)
 
 
 async def get_discord_user_from_oauth(data: DiscordAuthCallbackHandlerArgs):
@@ -50,15 +57,31 @@ async def get_discord_user_from_oauth(data: DiscordAuthCallbackHandlerArgs):
 
 # https://discord.com/api/oauth2/authorize?client_id=1096424315718733927&redirect_uri=https%3A%2F%2Fexample.com&response_type=code&scope=identify
 
-async def discord_token_handler(request):
-    data = DiscordAuthCallbackHandlerArgs(**await request.json())
+@parse_body_as(DiscordAuthCallbackHandlerArgs)
+async def discord_token_handler(request: Request):
+    data: DiscordAuthCallbackHandlerArgs = request.state.body
 
     discord_user = await get_discord_user_from_oauth(data)
     
     user, _ = await create_or_get_user_with_credential(discord_user.id, discord_user.username)
+    should_update = False
+    update_payload = {}
+
     # if the name is different, update the stored name.
     if user.name != discord_user.username:
-        await update_user(user.id, EditUser(name=discord_user.username))
+        should_update = True
+        update_payload["name"] = discord_user.username
+
+    # if the avatar is different, update the avatar.
+    if discord_user.avatar:
+        avatar_url = f"https://cdn.discordapp.com/avatars/{discord_user.id}/{discord_user.avatar}"
+        if user.avatar_url != avatar_url:
+            should_update = True
+            update_payload["avatar_url"] = avatar_url
+
+    if should_update:
+        await update_user(user.id, EditUser(**update_payload))
+
 
     # create a scoped token for this user.
     # the original token has never been sent to the client, so we don't need to revoke it.

@@ -25,7 +25,8 @@ async def test_user_me(client: AsyncClient):
     assert response.json() == {
         "name": "mafuyu",
         "id": id,
-        "cutoff": "1970-01-01T00:00:00"
+        "cutoff": "1970-01-01T00:00:00",
+        "avatar_url": None
     }
 
 
