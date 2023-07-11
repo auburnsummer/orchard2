@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import sqlalchemy as sa
 
-from .metadata import metadata, database
+from .metadata import metadata, engine
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -37,20 +37,22 @@ class DiscordCredentialNotFoundException(Exception):
 
 
 async def get_disc_credential(credential_id: str):
-    query = discord_credentials.select().where(discord_credentials.c.id == credential_id)
-    result = await database.fetch_one(query)
+    async with engine.begin() as conn:
+        query = discord_credentials.select().where(discord_credentials.c.id == credential_id)
+        result = (await conn.execute(query)).first()
     if result:
-        return msgspec.convert(result, DiscordCredential)
+        return msgspec.convert(result._mapping, DiscordCredential)
     else:
         raise DiscordCredentialNotFoundException(f"The user with id {id} was not found.")
 
 
 async def create_credential(credential_id: str, user: User):
-    query = discord_credentials.insert().values(
-        id=credential_id,
-        user_id=user.id
-    )
-    await database.execute(query)
+    async with engine.begin() as conn:
+        query = discord_credentials.insert().values(
+            id=credential_id,
+            user_id=user.id
+        )
+        await conn.execute(query)
     resultant_credential = await get_disc_credential(credential_id)
     return resultant_credential
 

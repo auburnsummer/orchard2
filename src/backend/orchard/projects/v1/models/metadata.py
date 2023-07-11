@@ -1,23 +1,23 @@
-import databases
+# import databases
 import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import create_async_engine
 
 from orchard.projects.v1.core.config import config
 
 DATABASE_URL = config().DATABASE_URL
-TEST_DATABASE_URL = "sqlite:////tmp/test.db"
+TEST_DATABASE_URL = "sqlite+aiosqlite:////tmp/test.db"
 TESTING = config().TESTING
 
 metadata = sa.MetaData()
 
 if TESTING:
-    database = databases.Database(TEST_DATABASE_URL, force_rollback=True)
+    engine = create_async_engine(TEST_DATABASE_URL)
 else:
-    database = databases.Database(DATABASE_URL)
+    engine = create_async_engine(DATABASE_URL)
 
 import contextlib
 
 @contextlib.asynccontextmanager
 async def lifespan(app):
-    await database.connect()
     yield
-    await database.disconnect()
+    await engine.dispose()

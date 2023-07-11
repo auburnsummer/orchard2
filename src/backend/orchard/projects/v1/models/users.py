@@ -12,7 +12,7 @@ from functools import wraps
 from orchard.projects.v1.core.auth import requires_scopes, OrchardAuthToken
 from starlette.requests import Request
 from starlette.responses import JSONResponse
-from .metadata import database, metadata
+from .metadata import engine, metadata
 from uuid import uuid4
 
 import sqlalchemy as sa
@@ -64,10 +64,12 @@ class UserLoggedOutException(Exception):
 
 
 async def get_user_by_id(id: str):
-    query = users.select().where(users.c.id == id)
-    result = await database.fetch_one(query)
+    async with engine.begin() as conn:
+        query = users.select().where(users.c.id == id)
+        result = (await conn.execute(query)).first()
+
     if result:
-        return msgspec.convert(result, User)
+        return msgspec.convert(result._mapping, User)
     else:
         raise UserNotFoundException(f"The user with id {id} was not found.")
 
@@ -78,24 +80,32 @@ async def get_user_by_discord_credential(cred: DiscordCredential):
 
 
 async def get_all_users():
-    query = users.select()
-    results = await database.fetch_all(query)
-    return [msgspec.convert(result, User) for result in results]
+    async with engine.begin() as conn:
+        query = users.select()
+        results = (await conn.execute(query)).all()
+
+    return [msgspec.convert(result._mapping, User) for result in results]
 
 
 async def add_user(name: str):
     new_id = uuid4().hex
     user = User(id=new_id, name=name)
-    query = users.insert().values(user.to_dict())
-    await database.execute(query)
+
+    async with engine.begin() as conn:
+        query = users.insert().values(user.to_dict())
+        await conn.execute(query)
+
     resultant_user = await get_user_by_id(new_id)
     return resultant_user
 
 
 async def update_user(user_id: str, data: EditUser):
     values = data.to_dict()
-    query = users.update().where(users.c.id == user_id).values(**values)
-    await database.execute(query)
+
+    async with engine.begin() as conn:
+        query = users.update().where(users.c.id == user_id).values(**values)
+        await conn.execute(query)
+        
     resultant_user = await get_user_by_id(user_id)
     return resultant_user
 
@@ -106,7 +116,11 @@ def inject_user(func):
     @requires_scopes({"user"})
     async def inner(request: Request):
         token: OrchardAuthToken = request.state.token
-        user_id: str = token.user
+        user_id = token.user
+
+        # requires_scopes will already make sure user is defined.
+        assert user_id is not None
+        
         try:
             user = await get_user_by_id(user_id)
             if token.iat < user.cutoff:

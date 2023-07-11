@@ -1,7 +1,7 @@
 import pprint
 import sys
 import zipfile
-from typing import BinaryIO
+from typing import IO
 import msgspec
 
 from orchard.libs.rdlevel_parse import parse
@@ -28,7 +28,7 @@ class VitalsException(Exception):
     pass
 
 
-def main(f: BinaryIO) -> VitalsLevel:
+def main(f: IO[bytes]) -> VitalsLevel:
     facets = {
         ("artist",): make_color_enabled_key_facet(["settings", "artist"]),
         "artist_tokens": artist_list_facet,

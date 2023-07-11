@@ -11,11 +11,11 @@ pillow = "^9.5.0"
 starlette = "^0.28.0"
 uvicorn = "^0.22.0"
 python-dotenv = "^1.0.0"
-databases = {extras = ["aiosqlite"], version = "^0.7.0"}
 pyseto = "^1.7.2"
 httpx = "^0.24.1"
-sqlalchemy-utils = "^0.41.1"
 msgspec = "^0.16.0"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.18"}
+aiosqlite = "^0.19.0"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -51,7 +51,7 @@ async def get_discord_user_from_oauth(data: DiscordAuthCallbackHandlerArgs):
         user_resp = await client.get("https://discord.com/api/users/@me", headers={
             "Authorization": f"Bearer {token_response.access_token}"
         })
-        discord_user = msgspec.json.decode(user_resp.content(), type=DiscordUserPartial)
+        discord_user = msgspec.json.decode(user_resp.content, type=DiscordUserPartial)
     return discord_user
 
 

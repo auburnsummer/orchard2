@@ -1,7 +1,7 @@
+import os
 import pytest
 import pytest_asyncio
 from starlette.config import environ
-from sqlalchemy_utils import database_exists, drop_database, create_database
 from httpx import AsyncClient
 
 from alembic import command
@@ -28,17 +28,12 @@ def create_test_database():
     """
     Create a clean database on every test case.
     For safety, we should abort if a database already exists.
-
-    We use the `sqlalchemy_utils` package here for a few helpers in consistently
-    creating and dropping the database.
     """
     url = str(TEST_DATABASE_URL)
-    assert not database_exists(url), 'Test database already exists. Aborting tests.'
-    create_database(url)             # Create the test database.
     config = Config(str(PATH_TO_ALEMBIC_INI))   # Run the migrations.
     command.upgrade(config, "head")
     yield                            # Run the tests.
-    drop_database(url)               # Drop the test database.
+    os.remove(url.replace("sqlite+aiosqlite:///", ""))
 
 
 @pytest_asyncio.fixture

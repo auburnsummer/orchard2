@@ -43,7 +43,6 @@ class BunnyStorage:
     async def upload_file(self, file: BinaryIO, path: str, file_name: str):
         url = self._build_path(path, file_name)
         file_hash = sha256(file)
-        await self.client.post()
     
 
     async def __aenter__(self):
