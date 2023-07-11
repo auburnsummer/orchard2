@@ -1,7 +1,6 @@
 import pytest
 import pytest_asyncio
 from starlette.config import environ
-from sqlalchemy import create_engine
 from sqlalchemy_utils import database_exists, drop_database, create_database
 from httpx import AsyncClient
 
@@ -10,14 +9,14 @@ from alembic.config import Config
 
 import pathlib
 
-from freezegun import freeze_time
+import time_machine
 
 # This sets `os.environ`, but provides some additional protection.
 # If we placed it below the application import, it would raise an error
 # informing us that 'TESTING' had already been read from the environment.
 environ['TESTING'] = 'True'
 
-from orchard.projects.v1.models.metadata import TEST_DATABASE_URL, metadata
+from orchard.projects.v1.models.metadata import TEST_DATABASE_URL
 
 # PROJECT_LOCATION is the path to app.py. behold and weep!
 from orchard.projects.v1.app import app, __file__ as PROJECT_LOCATION
@@ -59,5 +58,5 @@ async def client():
 
 @pytest.fixture(scope="function", autouse=True)
 def time_is_a_human_construct():
-    with freeze_time("2016-06-01"):
+    with time_machine.travel("2016-06-01"):
         yield

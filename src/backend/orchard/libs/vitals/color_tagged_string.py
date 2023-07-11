@@ -1,7 +1,9 @@
 # parse a unity-style <color> string
 # returns a tuple of the string _without_ the colors, then what bits are colored by 0-indexed ranges.
 import re
+import msgspec
 
+from typing import List
 
 class InvalidColorException(Exception):
     pass
@@ -10,6 +12,9 @@ class InvalidColorException(Exception):
 # (<color=([a-zA-Z0-9#]+)>)|(<\/color>)
 TAG_FINDER = re.compile(r"(<color=([a-zA-Z0-9#]+)>)|(</color>)")
 
+class ColorToken(msgspec.Struct):
+    len: int
+    color: str  # not always a hex literal, this can be a color literal like "red" etc
 
 def parse_color_tagged_string(s: str):
     matches = list(TAG_FINDER.finditer(s.strip()))
@@ -20,15 +25,16 @@ def parse_color_tagged_string(s: str):
     curr_pos = 0
 
     # where we are in the string when it has been stripped of color tags.
-    literals = []
-    tokens = []
+    literals: List[str] = []
+    tokens: List[ColorToken] = []
 
     for match in matches:
         # from curr_pos to the starting position of this match is a literal.
         literal = s[curr_pos : match.start()]
         literals.append(literal)
         # ...which is whatever color is previous (at the top of the stack.)
-        tokens.append({"len": len(literal), "color": color_stack[-1]})
+        next_token = ColorToken(len=len(literal), color=color_stack[-1])
+        tokens.append(next_token)
 
         opening, color, closing = match.groups()
         if opening:
@@ -48,8 +54,10 @@ def parse_color_tagged_string(s: str):
     if leftover:
         # it's whatever color is left.
         literals.append(leftover)
-        tokens.append({"len": len(leftover), "color": color_stack.pop()})
+        next_token = ColorToken(len=len(leftover), color=color_stack[-1])
 
-    tokens = [t for t in tokens if t["len"] > 0]
+        tokens.append(next_token)
+
+    tokens = [t for t in tokens if t.len > 0]
 
     return "".join(literals), tokens

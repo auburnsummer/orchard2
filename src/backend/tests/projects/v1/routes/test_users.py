@@ -79,4 +79,6 @@ async def test_user_logout_sets_cutoff_date(client: AsyncClient):
     })
     assert response.status_code == 204
     user = await get_user_by_id(id)
-    assert user.cutoff == datetime(2016, 6, 1)
+    # 2016/01/01 started when the tests started
+    # so this is a few milliseconds ahead
+    assert user.cutoff >= datetime(2016, 6, 1)

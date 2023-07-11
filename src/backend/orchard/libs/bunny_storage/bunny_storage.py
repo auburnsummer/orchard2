@@ -1,10 +1,23 @@
 from io import BytesIO
 from os import strerror
+from typing import BinaryIO
 from httpx import AsyncClient
+import hashlib
+
+BUF_SIZE = 65536  # lets read stuff in 64kb chunks!
 
 
-def sha256(f: BytesIO) -> str:
-    pass
+def sha256(f: BinaryIO) -> str:
+    m = hashlib.sha256()
+    f.seek(0)
+    while True:
+        data = f.read(BUF_SIZE)
+        if not data:
+            break
+        m.update(data)
+    return m.hexdigest()
+
+
 
 class BunnyStorage:
     api_key: str
@@ -27,6 +40,10 @@ class BunnyStorage:
             "AccessKey": self.api_key
         }
 
+    async def upload_file(self, file: BinaryIO, path: str, file_name: str):
+        url = self._build_path(path, file_name)
+        file_hash = sha256(file)
+        await self.client.post()
     
 
     async def __aenter__(self):

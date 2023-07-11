@@ -1,13 +1,11 @@
-from io import BytesIO
-from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
 
-class ColorToken(BaseModel):
-    len: int
-    color: str
+from .color_tagged_string import ColorToken
 
-class VitalsLevel(BaseModel):
+import msgspec
+
+class VitalsLevel(msgspec.Struct):
     artist: str
     artist_tokens: List[str]
     song: str
@@ -25,9 +23,9 @@ class VitalsLevel(BaseModel):
     two_player: bool
     last_updated: datetime
     tags: List[str]
-    image: BytesIO
-    thumb: BytesIO
-    icon: Optional[BytesIO]
+    image: bytearray
+    thumb: bytearray
+    icon: Optional[bytearray]
     has_classics: bool
     has_oneshots: bool
     has_squareshots: bool
@@ -38,6 +36,3 @@ class VitalsLevel(BaseModel):
     has_window_dance: bool
     sha1: str
     rdlevel_sha1: str
-
-    class Config:
-        arbitrary_types_allowed = True

@@ -2,8 +2,7 @@ import pprint
 import sys
 import zipfile
 from typing import BinaryIO
-
-import toml
+import msgspec
 
 from orchard.libs.rdlevel_parse import parse
 from .facets.artist_list_facet import artist_list_facet
@@ -21,6 +20,8 @@ from .facets.thumbnail_facet import thumbnail_facet
 from .facets.updated_facet import updated_facet
 
 from .pydantic_model import VitalsLevel
+
+import msgspec
 
 
 class VitalsException(Exception):
@@ -74,7 +75,8 @@ def main(f: BinaryIO) -> VitalsLevel:
                         content = comment["text"]
                         if "#orchard" not in content:
                             continue
-                        toml_comment = toml.loads(content)
+                        # toml_comment = toml.loads(content)
+                        toml_comment = msgspec.toml.decode(content)
                         break  # only consider the first valid comment we find.
                     except:
                         # it's fine if there isn't a comment.
@@ -97,8 +99,9 @@ def main(f: BinaryIO) -> VitalsLevel:
                             f"vitals: An unhandled error occured in a facet: {e}"
                         )
 
-                # return final
-                return VitalsLevel(**final)
+                # msgspec.convert will do a runtime typecheck.
+                # if we type all the inputs, we can replace with a direct VitalsLevel(**final)
+                return msgspec.convert(final, VitalsLevel)
 
     except zipfile.BadZipFile:
         raise VitalsException(

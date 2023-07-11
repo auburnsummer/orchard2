@@ -16,9 +16,6 @@ from .routes.discord_auth import (
     discord_token_handler
 )
 
-from .core.middleware import (
-    PydanticErrorMiddleware
-)
 
 async def homepage(request):
     return JSONResponse({'hello': 'world'})
@@ -38,7 +35,6 @@ app = Starlette(
     routes=routes,
     lifespan=lifespan,
     middleware=[
-        Middleware(PydanticErrorMiddleware),
         Middleware(CORSMiddleware, allow_origins=['*'], allow_methods=['*'], allow_headers=['*']),
     ]
 )

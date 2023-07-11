@@ -21,5 +21,9 @@ def thumbnail_facet(obj, zip, **kwargs):
 
         orig.save(orig_file_p, format="png")
         image.save(thumb_file_p, format="png")
+        orig.close()
+        image.close()
 
-    return orig_file_p, thumb_file_p
+    orig_file_p.seek(0)
+    thumb_file_p.seek(0)
+    return orig_file_p.read(), thumb_file_p.read()

@@ -5,7 +5,6 @@ Auth tokens are PASETO tokens encoding the user.
 from base64 import b64decode
 import json
 
-from pydantic import BaseModel, Field
 from pyseto.exceptions import VerifyError
 from .config import config
 
@@ -13,17 +12,17 @@ import pyseto
 
 from datetime import datetime, timedelta
 from functools import wraps
-from typing import Callable, Optional, Set
+from typing import Callable, Optional, Set, Any
 
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
+import msgspec
 
-class OrchardAuthScopes(BaseModel):
-    # tokens have claims attached to them.
-    # claim: the token belongs to this user.
-    user: Optional[str] = Field(default=None)
+ 
 
+class OrchardAuthScopes(msgspec.Struct, kw_only=True):
+    user: Optional[str] = None
 
 class OrchardAuthToken(OrchardAuthScopes):
     iat: datetime
@@ -47,18 +46,16 @@ def make_token_now(scopes: OrchardAuthScopes, exp_time: timedelta):
     token = OrchardAuthToken(
         iat=iat,
         exp=exp,
-        **scopes.model_dump()
+        user=scopes.user
     )
     return token_to_paseto(token)
 
+
 def _token_to_paseto(token: OrchardAuthToken):
-    payload = token.model_dump(mode="json")
-    exp_time_in_seconds = int((token.exp - token.iat).total_seconds())
+    payload = msgspec.json.encode(token)
     encoded_token = pyseto.encode(
         key=paseto_key,
-        payload=payload,
-        serializer=json,
-        exp=exp_time_in_seconds
+        payload=payload
     )
     return encoded_token.decode('utf-8')
 
@@ -73,9 +70,8 @@ def paseto_to_token(paseto: str):
         token=paseto,
         deserializer=json
     )
-    print(token.payload)
-    return OrchardAuthToken(**token.payload)
-
+    return msgspec.convert(token.payload, OrchardAuthToken)
+ 
 
 class InvalidToken(Exception):
     pass
@@ -107,9 +103,8 @@ def requires_scopes(scopes: Set[str]):
         async def inner(request: Request):
             try:
                 parsed_token = parse_token_from_request(request)
-                parsed_dict = parsed_token.model_dump()
                 for scope in scopes:
-                    if parsed_dict[scope] is None:
+                    if getattr(parsed_token, scope) is None:
                         raise InvalidToken(f"Token lacks the required scope: {scope}")
                 else:
                     request.state.token = parsed_token

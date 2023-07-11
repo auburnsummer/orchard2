@@ -1,15 +1,16 @@
-from pydantic import BaseModel, SecretStr
-
+from orchard.libs.utils.secret_str import SecretStr, secret_str_hook
 import os
 
 import pathlib
+
+import msgspec
 
 # two directories up and then .env
 ENV_PATH = pathlib.Path(__file__).resolve().parents[1] / ".env"
 
 from dotenv import dotenv_values
 
-class Config(BaseModel):
+class Config(msgspec.Struct):
     DATABASE_URL: str
     TESTING: bool
     # 32 bytes, base64 encoded
@@ -30,9 +31,9 @@ def _get_config():
     init = {
         **DEFAULT_VALUES,
         **dotenv_values(str(ENV_PATH)),
-        **os.environ
+        **os.environ,
     }
-    return Config(**init)
+    return msgspec.convert(init, Config, strict=False, dec_hook=secret_str_hook)
 
 def config():
     return _get_config()

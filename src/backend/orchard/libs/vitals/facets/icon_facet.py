@@ -19,7 +19,8 @@ def icon_facet(obj, zip: ZipFile, **kwargs):
             image = Image.open(image_buffer)
             image.save(file_p, format="png")
 
-        return file_p
+        file_p.seek(0)
+        return file_p.read()
     except:
         # icon is allowed to be None
         return None

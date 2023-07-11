@@ -7,7 +7,6 @@ The only Credential type available is Discord at the moment.
 """
 from __future__ import annotations
 
-from pydantic import BaseModel
 import sqlalchemy as sa
 
 from .metadata import metadata, database
@@ -16,6 +15,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from orchard.projects.v1.models.users import User
 
+import msgspec
 
 discord_credentials = sa.Table(
     "discord_credentials",
@@ -24,12 +24,12 @@ discord_credentials = sa.Table(
     sa.Column("user_id", sa.String, sa.ForeignKey("users.id"))
 )
 
-class DiscordCredential(BaseModel):
+class DiscordCredential(msgspec.Struct):
     id: str
     user_id: str
 
     def to_dict(self):
-        return self.model_dump()
+        return msgspec.structs.asdict(self)
 
 
 class DiscordCredentialNotFoundException(Exception):
@@ -40,7 +40,7 @@ async def get_disc_credential(credential_id: str):
     query = discord_credentials.select().where(discord_credentials.c.id == credential_id)
     result = await database.fetch_one(query)
     if result:
-        return DiscordCredential(**result)
+        return msgspec.convert(result, DiscordCredential)
     else:
         raise DiscordCredentialNotFoundException(f"The user with id {id} was not found.")
 

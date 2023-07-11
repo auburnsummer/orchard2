@@ -7,9 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "~3.11"
-pydantic = ">=2.0b3"
 pillow = "^9.5.0"
-toml = "^0.10.2"
 starlette = "^0.28.0"
 uvicorn = "^0.22.0"
 python-dotenv = "^1.0.0"
@@ -17,6 +15,7 @@ databases = {extras = ["aiosqlite"], version = "^0.7.0"}
 pyseto = "^1.7.2"
 httpx = "^0.24.1"
 sqlalchemy-utils = "^0.41.1"
+msgspec = "^0.16.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -26,9 +25,11 @@ alembic = "^1.11.1"
 pytest-asyncio = "^0.21.0"
 pytest-randomly = "^3.12.0"
 pytest-socket = "^0.6.0"
-freezegun = "^1.2.2"
 debugpy = "^1.6.7"
 killport = "^1.2.0"
+mypy = "^1.4.1"
+types-pillow = "^10.0.0.0"
+time-machine = "^2.10.0"
 
 [build-system]
 requires = ["poetry-core"]

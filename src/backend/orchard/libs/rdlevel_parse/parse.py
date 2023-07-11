@@ -1,5 +1,5 @@
 from .naya import parse_string
-from typing import TextIO, Any
+from typing import Any
 
-def parse(f: TextIO) -> Any:
+def parse(f: str) -> Any:
     return parse_string(f)

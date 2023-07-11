@@ -9,15 +9,15 @@ from __future__ import annotations
 from datetime import datetime
 
 from functools import wraps
-from orchard.libs.utils.dict_filter import without_keys
 from orchard.projects.v1.core.auth import requires_scopes, OrchardAuthToken
-from pydantic import BaseModel, Field
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 from .metadata import database, metadata
 from uuid import uuid4
 
 import sqlalchemy as sa
+
+import msgspec
 
 from typing import Optional, TYPE_CHECKING
 if TYPE_CHECKING:
@@ -33,20 +33,26 @@ users = sa.Table(
     sa.Column("avatar_url", sa.String, nullable=True)
 )
 
-class User(BaseModel):
+class User(msgspec.Struct):
     id: str
     name: str
-    cutoff: datetime = Field(default=datetime.utcfromtimestamp(0))
-    avatar_url: Optional[str] = Field(default=None)
+    cutoff: datetime = datetime.utcfromtimestamp(0)
+    avatar_url: Optional[str] = None
 
     def to_dict(self):
-        return self.model_dump()
+        return msgspec.structs.asdict(self)
 
 
-class EditUser(BaseModel):
-    name: Optional[str] = Field(default=None)
-    cutoff: Optional[datetime] = Field(default=None)
-    avatar_url: Optional[str] = Field(default=None)
+
+class EditUser(msgspec.Struct):
+    name: Optional[str] = None
+    cutoff: Optional[datetime] = None
+    avatar_url: Optional[str] = None
+
+    def to_dict(self):
+        payload = msgspec.structs.asdict(self)
+        filtered_payload = {k: v for k, v in payload.items() if v is not None}
+        return filtered_payload
 
 
 class UserNotFoundException(Exception):
@@ -61,7 +67,7 @@ async def get_user_by_id(id: str):
     query = users.select().where(users.c.id == id)
     result = await database.fetch_one(query)
     if result:
-        return User(**result)
+        return msgspec.convert(result, User)
     else:
         raise UserNotFoundException(f"The user with id {id} was not found.")
 
@@ -74,20 +80,20 @@ async def get_user_by_discord_credential(cred: DiscordCredential):
 async def get_all_users():
     query = users.select()
     results = await database.fetch_all(query)
-    return [User(**result) for result in results]
+    return [msgspec.convert(result, User) for result in results]
 
 
 async def add_user(name: str):
     new_id = uuid4().hex
     user = User(id=new_id, name=name)
-    query = users.insert().values(**user.model_dump(mode="python"))
+    query = users.insert().values(user.to_dict())
     await database.execute(query)
     resultant_user = await get_user_by_id(new_id)
     return resultant_user
 
 
 async def update_user(user_id: str, data: EditUser):
-    values = data.model_dump(mode="python", exclude_unset=True, exclude_none=True)
+    values = data.to_dict()
     query = users.update().where(users.c.id == user_id).values(**values)
     await database.execute(query)
     resultant_user = await get_user_by_id(user_id)

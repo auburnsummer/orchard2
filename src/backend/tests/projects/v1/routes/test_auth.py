@@ -1,4 +1,4 @@
-from typing import Never
+from typing import Any, Never
 from httpx import AsyncClient
 import pytest
 from unittest.mock import patch
@@ -7,6 +7,7 @@ from orchard.projects.v1.routes.discord_auth import DiscordAuthCallbackHandlerAr
 from orchard.projects.v1.models.users import get_all_users
 from orchard.projects.v1.models.credentials import get_disc_credential, make_new_user_with_credential
 from orchard.projects.v1.core.auth import paseto_to_token
+
 
 @pytest.fixture
 def mock_get_discord_user_from_oauth():
@@ -19,10 +20,9 @@ def mock_get_discord_user_from_oauth():
     with patch("orchard.projects.v1.routes.discord_auth.get_discord_user_from_oauth", new=mock):
         yield
 
-
 @pytest.mark.asyncio
 async def test_discord_auth_creates_new_user_if_no_credential_exists(
-    mock_get_discord_user_from_oauth: Never, 
+    mock_get_discord_user_from_oauth: Never,
     client: AsyncClient
 ):
     # prior to calling the endpoint, there is no user called mafuyu.
