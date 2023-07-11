@@ -46,7 +46,7 @@ async def get_discord_user_from_oauth(data: DiscordAuthCallbackHandlerArgs):
             "code": data.code,
             "redirect_uri": data.redirect_uri
         })
-        token_response = msgspec.json.decode(resp.content(), type=OAuthTokenResponse)
+        token_response = msgspec.json.decode(resp.content, type=OAuthTokenResponse)
         # we have a token, but we don't know the id yet. 
         user_resp = await client.get("https://discord.com/api/users/@me", headers={
             "Authorization": f"Bearer {token_response.access_token}"
