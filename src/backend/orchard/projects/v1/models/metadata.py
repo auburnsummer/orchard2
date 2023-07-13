@@ -19,5 +19,7 @@ import contextlib
 
 @contextlib.asynccontextmanager
 async def lifespan(app):
+    async with engine.begin() as conn:
+        await conn.exec_driver_sql("PRAGMA foreign_keys=ON;")
     yield
     await engine.dispose()
