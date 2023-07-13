@@ -1,7 +1,7 @@
 import pytest
 from orchard.libs.vitals import analyze
 
-from orchard.libs.vitals.facets.sha1_facet import _sha1
+from orchard.libs.hash import sha1
 
 from io import BytesIO
 
@@ -22,7 +22,7 @@ def test_snapshot(rdzip, snapshot, rdzip_path_map):
         # so the snapshots aren't too large, we're replacing the fields mentioned in
         # REPLACE_WITH_HASH with just the sha1 hash
         for prop in REPLACE_WITH_HASH:
-            hash = _sha1(BytesIO(getattr(result, prop)))
+            hash = sha1(BytesIO(getattr(result, prop)))
             setattr(result, prop, hash)
 
         assert result == snapshot

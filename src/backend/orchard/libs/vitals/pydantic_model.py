@@ -5,7 +5,7 @@ from .color_tagged_string import ColorToken
 
 import msgspec
 
-class VitalsLevel(msgspec.Struct):
+class VitalsLevelBase(msgspec.Struct):
     artist: str
     artist_tokens: List[str]
     song: str
@@ -23,9 +23,6 @@ class VitalsLevel(msgspec.Struct):
     two_player: bool
     last_updated: datetime
     tags: List[str]
-    image: bytearray
-    thumb: bytearray
-    icon: Optional[bytearray]
     has_classics: bool
     has_oneshots: bool
     has_squareshots: bool
@@ -36,3 +33,8 @@ class VitalsLevel(msgspec.Struct):
     has_window_dance: bool
     sha1: str
     rdlevel_sha1: str
+    
+class VitalsLevel(VitalsLevelBase):
+    image: bytearray
+    thumb: bytearray
+    icon: Optional[bytearray]

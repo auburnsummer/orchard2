@@ -18,8 +18,9 @@ def parse_body_as(spec: Type[msgspec.Struct]):
             try:
                 data = msgspec.json.decode(await request.body(), type=spec)
                 request.state.body = data
-                return await func(request)
             except (msgspec.EncodeError, msgspec.ValidationError) as e:
                 return JSONResponse(status_code=422, content={"error": str(e)})
+            else:
+                return await func(request)
         return inner
     return decorator
