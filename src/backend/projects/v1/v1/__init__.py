@@ -1,1 +1,0 @@
-from .v1_main import app
