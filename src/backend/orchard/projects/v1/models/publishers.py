@@ -12,6 +12,7 @@ determine who can access admin capabilities.
 
 For the initial scope, the only implementation of a publisher is a Discord server.
 """
+from datetime import datetime
 from .metadata import engine, metadata
 
 import sqlalchemy as sa
@@ -22,12 +23,14 @@ publishers = sa.Table(
     "publishers",
     metadata,
     sa.Column("id", sa.String, primary_key=True),
-    sa.Column("name", sa.String, nullable=False)
+    sa.Column("name", sa.String, nullable=False),
+    sa.Column("cutoff", sa.DateTime, nullable=False),
 )
 
 class Publisher(msgspec.Struct):
     id: str
     name: str
+    cutoff: datetime
 
     def to_dict(self):
         return msgspec.structs.asdict(self)

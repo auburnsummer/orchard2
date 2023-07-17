@@ -12,17 +12,23 @@ import pyseto
 
 from datetime import datetime, timedelta
 from functools import wraps
-from typing import Callable, Optional, Set, Any
+from typing import Callable, Optional, Set, Any, TypedDict
 
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
 import msgspec
 
+class PublisherScope(msgspec.Struct):
+    publisher_id: str
+    action: str
  
-
 class OrchardAuthScopes(msgspec.Struct, kw_only=True):
-    user: Optional[str] = None
+    "The keys and value types that a token can have."
+    user: Optional[str] = None  # the bearer is this user.
+    admin: Optional[bool] = None  # if true, bearer is an admin.
+    publisher: Optional[PublisherScope] = None  # the specific action is approved by this publisher.
+    discord_guild: Optional[str] = None  # the bearer is a representative of this discord guild.
 
 class OrchardAuthToken(OrchardAuthScopes):
     iat: datetime
@@ -46,7 +52,8 @@ def make_token_now(scopes: OrchardAuthScopes, exp_time: timedelta):
     token = OrchardAuthToken(
         iat=iat,
         exp=exp,
-        user=scopes.user
+        user=scopes.user,
+        admin=scopes.admin
     )
     return token_to_paseto(token)
 

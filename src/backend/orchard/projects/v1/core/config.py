@@ -21,11 +21,11 @@ class Config(msgspec.Struct):
     DISCORD_APPLICATION_ID: str
     DISCORD_PUBLIC_KEY: str
     DISCORD_CLIENT_SECRET: SecretStr
+    DISCORD_BOT_TOKEN: SecretStr
     BUNNY_STORAGE_API_KEY: SecretStr
     BUNNY_STORAGE_HOSTNAME: str
     BUNNY_STORAGE_USERNAME: str
     BUNNY_CDN_URL: str
-
 
 
 DEFAULT_VALUES = {

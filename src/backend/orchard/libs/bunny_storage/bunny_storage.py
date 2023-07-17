@@ -19,7 +19,6 @@ async def io_to_generator(f: BinaryIO):
             return
         yield data
 
-# todo: use tenacity https://github.com/jd/tenacity to make this more reliable
 
 class BunnyStorage:
     api_key: str
