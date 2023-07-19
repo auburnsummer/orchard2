@@ -26,6 +26,7 @@ class Config(msgspec.Struct):
     BUNNY_STORAGE_HOSTNAME: str
     BUNNY_STORAGE_USERNAME: str
     BUNNY_CDN_URL: str
+    FRONTEND_URL: str
 
 
 DEFAULT_VALUES = {
