@@ -53,7 +53,9 @@ def make_token_now(scopes: OrchardAuthScopes, exp_time: timedelta):
         iat=iat,
         exp=exp,
         user=scopes.user,
-        admin=scopes.admin
+        admin=scopes.admin,
+        publisher=scopes.publisher,
+        discord_guild=scopes.discord_guild
     )
     return token_to_paseto(token)
 

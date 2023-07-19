@@ -38,7 +38,9 @@ commands are the commands that "do things" in discord and don't just link to rhy
 nb: for the initial scope, only /register is planned. 
 """
 
+from datetime import timedelta
 from re import A
+from orchard.projects.v1.core.auth import OrchardAuthScopes, make_token_now
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 from orchard.projects.v1.core.config import config
@@ -46,6 +48,8 @@ from orchard import __version__
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 from cryptography.exceptions import InvalidSignature
 from textwrap import dedent
+
+from typing import Optional
 
 import msgspec
 
@@ -59,6 +63,29 @@ from .spec import (
     PongInteractionResponse
 )
 
+# most commands only require a publisher token.
+# some commands can be used even before the guild is associated with a publisher.
+# these only take a guild token instead of a publisher token. 
+COMMANDS_USING_GUILD_ID = {
+    "register": "discord_register"
+}
+
+def make_publisher_link(
+    command_name: str,
+    guild_token: Optional[str] = None,
+    publisher_token: Optional[str] = None,
+) -> str:
+    qs = ""
+    if guild_token:
+        qs = qs + f"guild_token={guild_token}"
+    if publisher_token:
+        if qs:  # if there's already stuff there, seperator with & is needed.
+            qs = qs + "&"
+        qs = qs + f"publisher_token={publisher_token}"
+    if qs:
+        qs = "?" + qs
+    link = f"{config().FRONTEND_URL}/publisher/{command_name}{qs}"
+    return f"Click [here]({link}) to continue"
 
 
 async def interaction_handler(request: Request):
@@ -108,7 +135,23 @@ async def interaction_handler(request: Request):
             payload = msgspec.json.encode(response)
             return Response(status_code=200, content=payload, headers={"content-type": "application/json"})
         else:
-            pass
+            if body.data.name in COMMANDS_USING_GUILD_ID:
+                scopes = OrchardAuthScopes(
+                    discord_guild=body.guild_id
+                )
+                exp_time = timedelta(hours=2)
+                guild_token = make_token_now(scopes, exp_time)
+                content = make_publisher_link(COMMANDS_USING_GUILD_ID[body.data.name], guild_token=guild_token)
+                response = MessageInteractionResponse(
+                    data=InteractionMessage(
+                        content=content,
+                        flags=EPHEMERAL
+                    )
+                )
+                payload = msgspec.json.encode(response)
+                return Response(status_code=200, content=payload, headers={"content-type": "application/json"})
+            else:
+                pass
 
 
 

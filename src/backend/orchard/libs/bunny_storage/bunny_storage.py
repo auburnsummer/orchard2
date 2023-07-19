@@ -46,7 +46,7 @@ class BunnyStorage:
     def _build_path(self, path: str, file_name: str):
         "Build valid bunny URL"
         stripped_path = path.lstrip("/") 
-        return f"https://{self.base_endpoint}/{self.storage_zone_name}/{stripped_path}/{file_name}"
+        return f"{self.base_endpoint}/{self.storage_zone_name}/{stripped_path}/{file_name}"
 
     def _get_hash_parts(self, file: BinaryIO):
         "For the hash directory structure, the hash is first 2, next 2, then the rest"
