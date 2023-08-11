@@ -1,1 +1,11 @@
 Generic single-database configuration.
+
+WHEN CHANGING THE TABLES:
+
+`alembic revision -m "description of the revision"`
+
+you can also do autogenerate
+
+`alembic revision --autogenerate -m "fdsfawefawefawefr`
+
+then fill out the stuff!!

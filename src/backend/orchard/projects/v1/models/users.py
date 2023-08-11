@@ -10,8 +10,8 @@ from datetime import datetime
 
 from functools import wraps
 from orchard.projects.v1.core.auth import requires_scopes, OrchardAuthToken
+from orchard.projects.v1.core.exceptions import UserDoesNotExist, UserIsLoggedOut
 from starlette.requests import Request
-from starlette.responses import JSONResponse
 from .metadata import engine, metadata
 from uuid import uuid4
 
@@ -55,12 +55,6 @@ class EditUser(msgspec.Struct):
         return filtered_payload
 
 
-class UserNotFoundException(Exception):
-    pass
-
-
-class UserLoggedOutException(Exception):
-    pass
 
 
 async def get_user_by_id(id: str):
@@ -71,7 +65,7 @@ async def get_user_by_id(id: str):
     if result:
         return msgspec.convert(result._mapping, User)
     else:
-        raise UserNotFoundException(f"The user with id {id} was not found.")
+        raise UserDoesNotExist(user_id=id)
 
 
 async def get_user_by_discord_credential(cred: DiscordCredential):
@@ -112,6 +106,11 @@ async def update_user(user_id: str, data: EditUser):
 
 
 def inject_user(func):
+    """
+    Decorator. Places the logged-in user as request.state.user.
+
+    Exits early if there is anything wrong with the token.
+    """
     @wraps(func)
     @requires_scopes({"user"})
     async def inner(request: Request):
@@ -121,20 +120,9 @@ def inject_user(func):
         # requires_scopes will already make sure user is defined.
         assert user_id is not None
         
-        try:
-            user = await get_user_by_id(user_id)
-            if token.iat < user.cutoff:
-                raise UserLoggedOutException()
-            request.state.user = user
-            return await func(request)
-        except UserNotFoundException:
-            content = {
-                "error": f"user with id {user_id} does not exist."
-            }
-            return JSONResponse(status_code=401, content=content)
-        except UserLoggedOutException:
-            content = {
-                "error": f"user with id {user_id} has been logged out."
-            }
-            return JSONResponse(status_code=401, content=content)
+        user = await get_user_by_id(user_id)
+        if token.iat < user.cutoff:
+            raise UserIsLoggedOut(user_id=user_id)
+        request.state.user = user
+        return await func(request)
     return inner

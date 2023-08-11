@@ -1,23 +1,22 @@
 import * as tg from "generic-type-guard";
 
-export type DiscordUser = {
-   id: string,
-   discord_id: string,  // nb: identical to id
-   username: string,
-   avatar: string
+export type User = {
+    id: string
+    name: string
+    avatar_url: string
+    // we don't care about cutoff here.
 }
 
-export const isDiscordUser: tg.TypeGuard<DiscordUser> = tg.isLikeObject({
+export const isUser: tg.TypeGuard<User> = tg.isLikeObject({
     id: tg.isString,
-    discord_id: tg.isString,
-    username: tg.isString,
-    avatar: tg.isString
+    name: tg.isString,
+    avatar_url: tg.isString
 });
 
-export type DiscordUserObj = {
-    user: DiscordUser | null
+export type UserObject = {
+    user: User | null
 }
 
-export const isDiscordUserObj: tg.TypeGuard<DiscordUserObj> = tg.isLikeObject({
-    user: tg.isNullable(isDiscordUser)
+export const isUserObject: tg.TypeGuard<UserObject> = tg.isLikeObject({
+    user: tg.isNullable(isUser)
 });

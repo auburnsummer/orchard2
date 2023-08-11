@@ -4,15 +4,15 @@ Routes relating to discord oauth login.
 
 from datetime import timedelta
 from orchard.projects.v1.core.auth import OrchardAuthScopes, OrchardAuthToken, make_token_now
-from orchard.projects.v1.core.parse import parse_body_as
+from orchard.projects.v1.core.forward import forward_httpx
+from orchard.projects.v1.core.wrapper import msgspec_return, parse_body_as
 
-from httpx import AsyncClient
+from httpx import AsyncClient, HTTPStatusError
 
 from orchard.projects.v1.core.config import config
 from orchard.projects.v1.models.credentials import create_or_get_user_with_credential
 from orchard.projects.v1.models.users import update_user, EditUser
 from starlette.requests import Request
-from starlette.responses import JSONResponse
 
 from typing import Optional
 
@@ -30,6 +30,7 @@ class OAuthTokenResponse(msgspec.Struct):
 class DiscordUserPartial(msgspec.Struct):
     id: str
     username: str
+    global_name: str
     avatar: Optional[str] = None
 
 class DiscordAuthCallbackHandlerArgs(msgspec.Struct):
@@ -46,6 +47,7 @@ async def get_discord_user_from_oauth(data: DiscordAuthCallbackHandlerArgs):
             "code": data.code,
             "redirect_uri": data.redirect_uri
         })
+        resp.raise_for_status()
         token_response = msgspec.json.decode(resp.content, type=OAuthTokenResponse)
         # we have a token, but we don't know the id yet. 
         user_resp = await client.get("https://discord.com/api/users/@me", headers={
@@ -57,21 +59,28 @@ async def get_discord_user_from_oauth(data: DiscordAuthCallbackHandlerArgs):
 
 # https://discord.com/api/oauth2/authorize?client_id=1096424315718733927&redirect_uri=https%3A%2F%2Fexample.com&response_type=code&scope=identify
 
+class DiscordTokenResponse(msgspec.Struct):
+    token: str
+    expires_in: int
 
+@msgspec_return(status_code=200)
 @parse_body_as(DiscordAuthCallbackHandlerArgs)
 async def discord_token_handler(request: Request):
     data: DiscordAuthCallbackHandlerArgs = request.state.body
 
-    discord_user = await get_discord_user_from_oauth(data)
+    try:
+        discord_user = await get_discord_user_from_oauth(data)
+    except HTTPStatusError as e:
+        return forward_httpx(e.response)
     
-    user, _ = await create_or_get_user_with_credential(discord_user.id, discord_user.username)
+    user, _ = await create_or_get_user_with_credential(discord_user.id, discord_user.global_name)
     should_update = False
     update_payload = {}
 
     # if the name is different, update the stored name.
-    if user.name != discord_user.username:
+    if user.name != discord_user.global_name:
         should_update = True
-        update_payload["name"] = discord_user.username
+        update_payload["name"] = discord_user.global_name
 
     # if the avatar is different, update the avatar.
     if discord_user.avatar:
@@ -88,7 +97,4 @@ async def discord_token_handler(request: Request):
     # the original token has never been sent to the client, so we don't need to revoke it.
     exp_time = timedelta(days=7)
     orch_token = make_token_now(OrchardAuthScopes(user=user.id), exp_time)
-    return JSONResponse({
-        "token": orch_token,
-        "expires_in": exp_time.total_seconds()
-    }, status_code=200)
+    return DiscordTokenResponse(token=orch_token, expires_in=exp_time.total_seconds())

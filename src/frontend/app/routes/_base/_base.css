@@ -1,6 +1,6 @@
 /* BASE */
 .ba {
-    background-color: var(--blueGray-400);
+    background-color: var(--blueGray-300);
     min-height: 100vh;
     display: flex;
     flex-direction: column;

@@ -13,9 +13,9 @@ from orchard.projects.v1.core.auth import paseto_to_token
 def mock_get_discord_user_from_oauth():
     async def mock(data: DiscordAuthCallbackHandlerArgs):
         if data.code == "mockcode":
-            return DiscordUserPartial(id="testid", username="mafuyu", avatar="testavatar")
+            return DiscordUserPartial(id="testid", username="mafuyu", avatar="testavatar", global_name="yuki")
         if data.code == "mockcode2":
-            return DiscordUserPartial(id="testid", username="mafuyu", avatar=None)
+            return DiscordUserPartial(id="testid", username="mafuyu", avatar=None, global_name="yuki")
 
     with patch("orchard.projects.v1.routes.discord_auth.get_discord_user_from_oauth", new=mock):
         yield
@@ -36,7 +36,7 @@ async def test_discord_auth_creates_new_user_if_no_credential_exists(
 
     users = await get_all_users()
     assert len(users) == 1
-    assert users[0].name == "mafuyu"
+    assert users[0].name == "yuki"
 
     # and there should also be a credential created.
     cred = await get_disc_credential("testid")
@@ -77,10 +77,10 @@ async def test_discord_auth_updates_name_if_discord_name_is_different(
     users = await get_all_users()
     assert users == []
 
-    user, cred = await make_new_user_with_credential("testid", "yuki")
+    user, cred = await make_new_user_with_credential("testid", "mafuyu")
     users = await get_all_users()
     assert users == [user]
-    assert users[0].name == "yuki"
+    assert users[0].name == "mafuyu"
 
     resp = await client.post("/auth/token/discord", json={
         "code": "mockcode",
@@ -90,10 +90,10 @@ async def test_discord_auth_updates_name_if_discord_name_is_different(
     resp.raise_for_status()
     assert resp.status_code == 200
 
-    # the credential will have name mafuyu.
+    # the credential will have name yuki.
     users = await get_all_users()
     assert len(users) == 1
-    assert users[0].name == "mafuyu"
+    assert users[0].name == "yuki"
 
 
 @pytest.mark.asyncio

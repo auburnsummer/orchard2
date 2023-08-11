@@ -41,8 +41,9 @@ nb: for the initial scope, only /register is planned.
 from datetime import timedelta
 from re import A
 from orchard.projects.v1.core.auth import OrchardAuthScopes, make_token_now
+from orchard.projects.v1.core.exceptions import InvalidDiscordSignature, MissingDiscordSignatureHeaders
+from orchard.projects.v1.core.wrapper import msgspec_return
 from starlette.requests import Request
-from starlette.responses import JSONResponse, Response
 from orchard.projects.v1.core.config import config
 from orchard import __version__
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
@@ -87,7 +88,7 @@ def make_publisher_link(
     link = f"{config().FRONTEND_URL}/publisher/{command_name}{qs}"
     return f"Click [here]({link}) to continue"
 
-
+@msgspec_return(200)
 async def interaction_handler(request: Request):
     # check the discord headers.
     headers = request.headers
@@ -95,7 +96,7 @@ async def interaction_handler(request: Request):
         sig = headers["X-Signature-Ed25519"]
         timestamp = headers["X-Signature-Timestamp"]
     except KeyError:
-        return JSONResponse(status_code=401, content={"error": "Missing req'd Discord headers"})
+        return MissingDiscordSignatureHeaders()
 
     public_key = config().DISCORD_PUBLIC_KEY
     verify_key = Ed25519PublicKey.from_public_bytes(bytes.fromhex(public_key))
@@ -106,14 +107,13 @@ async def interaction_handler(request: Request):
     try:
         verify_key.verify(bytes.fromhex(sig), to_verify)
     except InvalidSignature:
-        return JSONResponse(status_code=401, content={"error": "Invalid request signature"})
+        return InvalidDiscordSignature()
 
     # we're past the discord auth!
     body = msgspec.json.decode(payload, type=BaseInteraction)
     # first handle PING as usual.
     if body.type == InteractionType.PING:
-        payload = msgspec.json.encode(PongInteractionResponse())
-        return Response(status_code=200, content=payload, headers={"content-type": "application/json"})
+        return PongInteractionResponse()
     
     # application commands are likely to be 99.9% of our traffic.
     # most application commands are just handled by generating a link with tokens...
@@ -132,8 +132,7 @@ async def interaction_handler(request: Request):
                     flags=EPHEMERAL
                 )
             )
-            payload = msgspec.json.encode(response)
-            return Response(status_code=200, content=payload, headers={"content-type": "application/json"})
+            return response
         else:
             if body.data.name in COMMANDS_USING_GUILD_ID:
                 scopes = OrchardAuthScopes(
@@ -148,8 +147,7 @@ async def interaction_handler(request: Request):
                         flags=EPHEMERAL
                     )
                 )
-                payload = msgspec.json.encode(response)
-                return Response(status_code=200, content=payload, headers={"content-type": "application/json"})
+                return response
             else:
                 pass
 

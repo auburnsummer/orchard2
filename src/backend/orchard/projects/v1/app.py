@@ -22,6 +22,10 @@ from .routes.admin import (
     update_slash_commands_handler
 )
 
+from .routes.publishers import (
+    create_new_publisher_via_discord_guild_handler
+)
+
 
 async def homepage(request):
     return JSONResponse({'hello': 'world'})
@@ -40,7 +44,9 @@ routes = [
     Route("/discord_interactions2", endpoint=interaction_handler, methods=["POST"]),
 
 
-    Route("/admin/update_interactions", endpoint=update_slash_commands_handler, methods=["POST"])
+    Route("/admin/update_interactions", endpoint=update_slash_commands_handler, methods=["POST"]),
+
+    Route("/publisher/new/discord", endpoint=create_new_publisher_via_discord_guild_handler, methods=["POST"])
 ]
 
 app = Starlette(

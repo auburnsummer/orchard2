@@ -1,3 +1,4 @@
+
 import { Cookie, CookieSerializeOptions, createCookie } from "@remix-run/node";
 
 type TypedCookie<T>  = {
@@ -34,7 +35,7 @@ function createStringCookie(cookie: Cookie): TypedCookie<string> {
     })
 }
 
-export const createAuthCookie = (expires_in?: number) => createStringCookie(createCookie("discord-token", {
+export const createAuthCookie = (expires_in?: number) => createStringCookie(createCookie("user-token", {
     maxAge: expires_in || 0,
     // ♫ i love my baby, she's the best ♫
     sameSite: /* ♫ she picks me up at ♫ */ "lax"

@@ -16,7 +16,7 @@ async def io_to_generator(f: BinaryIO):
     while True:
         data = f.read(BUF_SIZE)
         if not data:
-            return
+            return 
         yield data
 
 
