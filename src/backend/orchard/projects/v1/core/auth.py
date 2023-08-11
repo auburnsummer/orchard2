@@ -4,6 +4,7 @@ Auth tokens are PASETO tokens encoding the user.
 
 from base64 import b64decode
 import json
+from orchard.projects.v1.core.exceptions import AuthorizationHeaderInvalid, AuthorizationHeaderTokenTypeIsNotBearer, MissingAuthorizationHeader, MissingScopes, NoAuthorizationHeaderTokenType
 
 from pyseto.exceptions import VerifyError
 from .config import config
@@ -15,7 +16,6 @@ from functools import wraps
 from typing import Callable, Optional, Set, Any, TypedDict
 
 from starlette.requests import Request
-from starlette.responses import JSONResponse
 
 import msgspec
 
@@ -90,37 +90,44 @@ def parse_token_from_request(request: Request):
     try:
         auth_header = request.headers["Authorization"]
     except KeyError:
-        raise InvalidToken("No Authorization header.")
-
+        raise MissingAuthorizationHeader()
+ 
     try:
         auth_type, token = auth_header.split(" ")
     except ValueError:
-        raise InvalidToken("No token type.")
+        raise NoAuthorizationHeaderTokenType()
 
     if auth_type.lower() != "bearer":
-        raise InvalidToken("Token type should be Bearer.")
+        raise AuthorizationHeaderTokenTypeIsNotBearer()
 
     try:
         return paseto_to_token(token)
-    except ValueError as exc:
-        raise InvalidToken(str(exc))
+    except (ValueError, pyseto.DecryptError, pyseto.VerifyError) as exc:
+        raise AuthorizationHeaderInvalid(message=str(exc))
 
 
 def requires_scopes(scopes: Set[str]):
+    """
+    Decorator. Give it a set of scopes, and it will ensure those scopes are
+    defined in the token.
+
+    NB: This _does not_ check the value of the scope, just that it's defined.
+    Typically, we will have a specialized version of this decorator, such as
+    @inject_user and @requires_admin for specific routes, rather than using
+    @requires_scopes directly.
+
+    Order: This can return OrchardExceptions, so use with msgspec_return is recommended.
+    Put it before (below) msgspec_return. 
+    """
     def decorator(func):
         @wraps(func)
         async def inner(request: Request):
-            try:
-                parsed_token = parse_token_from_request(request)
-                for scope in scopes:
-                    if getattr(parsed_token, scope) is None:
-                        raise InvalidToken(f"Token lacks the required scope: {scope}")
-                else:
-                    request.state.token = parsed_token
-                    return await func(request)
-            except InvalidToken as exc:
-                return JSONResponse(status_code=401, content={"error": str(exc)})
-            except VerifyError as exc:
-                return JSONResponse(status_code=401, content={"error": str(exc)})
+            parsed_token = parse_token_from_request(request)
+            for scope in scopes:
+                if getattr(parsed_token, scope) is None:
+                    raise MissingScopes(scope=scope)
+            else:
+                request.state.token = parsed_token
+                return await func(request)
         return inner
     return decorator

@@ -1,4 +1,5 @@
 
+from orchard.projects.v1.core.wrapper import msgspec_return
 from orchard.projects.v1.models.users import (
     EditUser,
     User,
@@ -10,12 +11,12 @@ from starlette.requests import Request
 
 from datetime import datetime
 
-import msgspec
 
+@msgspec_return(200)
 @inject_user
 async def me_handler(request: Request):
     user: User = request.state.user
-    return Response(content=msgspec.json.encode(user), headers={"content-type": "application/json"})
+    return user
 
 
 @inject_user

@@ -163,6 +163,8 @@ rd-indexer/
 
 backend-p/
 
+src/frontend_old*
+
 *.sqlite3
 
 .vscode

@@ -8,12 +8,13 @@ token = make_token_now(OrchardAuthScopes(admin=True), timedelta(days=1))
 """
 from functools import wraps
 from orchard.projects.v1.core.config import config
+from orchard.projects.v1.core.exceptions import NotAdmin
+from orchard.projects.v1.core.forward import forward_httpx
 from orchard.projects.v1.routes.interactions.commands import ALL_COMMANDS
 from starlette.requests import Request
 
 from orchard.projects.v1.core.auth import OrchardAuthToken, requires_scopes
-from orchard.projects.v1.core.parse import parse_body_as
-from starlette.responses import JSONResponse
+from orchard.projects.v1.core.wrapper import msgspec_return, parse_body_as
 
 from typing import Optional
 
@@ -31,14 +32,14 @@ def requires_admin(func):
         if token.admin:
             return await func(request)
         else:
-            return JSONResponse(status_code=401)
+            return NotAdmin()
     return inner
 
 
 class UpdateSlashCommandsHandlerArgs(msgspec.Struct):
     guild_id: Optional[str] = None  # if None, we're updating globally.
 
-
+@msgspec_return
 @parse_body_as(UpdateSlashCommandsHandlerArgs)
 @requires_admin
 async def update_slash_commands_handler(request: Request):
@@ -63,4 +64,4 @@ async def update_slash_commands_handler(request: Request):
             "Authorization": f"Bot {c.DISCORD_BOT_TOKEN.get_secret_value()}",
             "content-type": "application/json"
         })
-        return JSONResponse(content=resp.json())
+        return forward_httpx(resp)

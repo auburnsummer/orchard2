@@ -2,18 +2,13 @@ import { redirect, LoaderArgs } from "@remix-run/node";
 import { createAuthCookie } from "~/utils/cookies";
 
 export const loader = async ({request}: LoaderArgs) => {
-    // read the token from the cookie.
-    // if it's not there, redirect to the home page.
-    // if it is there, call the /auth/revoke endpoint.
-    // after calling the endpoint, clear the cookies, without waiting for the response.
-    // then redirect to the login page.
     const authCookie = createAuthCookie();
     const value = await authCookie.parse(request.headers.get("cookie"));
     if (value) {
         try {
             const headers = new Headers();
             headers.set("Authorization", `Bearer ${value}`);
-            await fetch(`${process.env.API_URL}/auth/revoke`, {
+            await fetch(`${process.env.API_URL}/user/logout`, {
                 method: "POST",
                 headers
             });
@@ -26,4 +21,6 @@ export const loader = async ({request}: LoaderArgs) => {
 
         return redirect("/", { headers });
     }
+    // no cookie, just redirect
+    return redirect("/");
 }

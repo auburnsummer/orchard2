@@ -1,0 +1,18 @@
+
+
+.nf {
+    padding: 4rem;
+}
+
+.nf_title {
+    font-size: 1.5rem;
+}
+
+
+.nf_link {
+    color: var(--blue-400);
+}
+
+.nf_link:hover {
+    color: var(--blue-600);
+}

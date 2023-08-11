@@ -1,6 +1,6 @@
 # import databases
 import sqlalchemy as sa
-from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 
 from orchard.projects.v1.core.config import config
 
@@ -10,6 +10,7 @@ TESTING = config().TESTING
 
 metadata = sa.MetaData()
 
+engine: AsyncEngine
 if TESTING:
     engine = create_async_engine(TEST_DATABASE_URL)
 else:

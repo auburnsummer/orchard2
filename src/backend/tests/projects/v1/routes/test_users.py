@@ -31,6 +31,23 @@ async def test_user_me(client: AsyncClient):
 
 
 @pytest.mark.asyncio
+async def test_user_me_returns_401_on_non_existant_user(client: AsyncClient):
+    token = make_token_now(OrchardAuthScopes(user="abc"), timedelta(hours=5))
+    response = await client.get('/user/me', headers={
+        "Authorization": f"Bearer {token}"
+    })
+    assert response.status_code == 401
+    assert response.json() == {
+        "error_code": "UserDoesNotExist",
+        "message": "User with id abc does not exist.",
+        "extra_data": {
+            "user_id": "abc"
+        }
+    }
+
+
+
+@pytest.mark.asyncio
 async def test_user_me_returns_401_on_expired_token(client: AsyncClient):
     user = await add_user(name="mafuyu")
     id = user.id
@@ -39,21 +56,30 @@ async def test_user_me_returns_401_on_expired_token(client: AsyncClient):
         "Authorization": f"Bearer {token}"
     })
     assert response.status_code == 401
-    assert response.json() == {'error': 'Token expired.'}
+    assert response.json() == {
+        "error_code": "AuthorizationHeaderInvalid",
+        "message": "Token expired."
+    }
 
 
 @pytest.mark.asyncio
-async def test_user_me_returns_401_on_token_without_user_scope(client: AsyncClient):
+async def test_user_me_returns_403_on_token_without_user_scope(client: AsyncClient):
     token = make_token_now(OrchardAuthScopes(), timedelta(hours=5))
     response = await client.get('/user/me', headers={
         "Authorization": f"Bearer {token}"
     })
-    assert response.status_code == 401
-    assert response.json() == {'error': 'Token lacks the required scope: user'}
+    assert response.status_code == 403
+    assert response.json() == {
+        'error_code': 'MissingScopes',
+        'message': 'Token lacks the required scope: user',
+        'extra_data': {
+            'scope': 'user'
+        }
+    }
 
 
 @pytest.mark.asyncio
-async def test_user_me_returns_401_on_token_issued_before_cutoff(client: AsyncClient):
+async def test_user_me_returns_403_on_token_issued_before_cutoff(client: AsyncClient):
     user = await add_user(name="mafuyu")
     id = user.id
     user = await update_user(id, EditUser(cutoff=datetime(2016, 6, 2)))
@@ -62,9 +88,13 @@ async def test_user_me_returns_401_on_token_issued_before_cutoff(client: AsyncCl
     response = await client.get('/user/me', headers={
         "Authorization": f"Bearer {token}"
     })
-    assert response.status_code == 401
+    assert response.status_code == 403
     assert response.json() == {
-        "error": f"user with id {id} has been logged out."
+        "error_code": "UserIsLoggedOut",
+        "message": f"User with id {user.id} is logged out.",
+        "extra_data": {
+            "user_id": user.id
+        }
     }
 
 

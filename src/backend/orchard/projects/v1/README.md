@@ -12,6 +12,6 @@ This is the Rhythm Cafe API.
 
 `poetry run 
 
-`poetry run alembic `
+`poetry run alembic upgrade head`
 
 3. `poetry run uvicorn orchard.projects.v1:app`

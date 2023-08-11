@@ -3,7 +3,7 @@ from orchard.libs.bunny_storage import BunnyStorage
 from orchard.libs.hash import sha1
 from orchard.libs.vitals.pydantic_model import VitalsLevelBase
 from orchard.projects.v1.core.config import config
-from orchard.projects.v1.core.parse import parse_body_as
+from orchard.projects.v1.core.wrapper import parse_body_as
 from orchard.projects.v1.models.users import inject_user
 
 import httpx
