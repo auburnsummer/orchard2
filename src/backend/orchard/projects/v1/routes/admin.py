@@ -39,7 +39,7 @@ def requires_admin(func):
 class UpdateSlashCommandsHandlerArgs(msgspec.Struct):
     guild_id: Optional[str] = None  # if None, we're updating globally.
 
-@msgspec_return
+@msgspec_return(200)
 @parse_body_as(UpdateSlashCommandsHandlerArgs)
 @requires_admin
 async def update_slash_commands_handler(request: Request):

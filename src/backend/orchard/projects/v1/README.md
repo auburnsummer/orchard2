@@ -10,8 +10,6 @@ This is the Rhythm Cafe API.
 
 `cd src/backend/orchard/projects/v1`
 
-`poetry run 
-
 `poetry run alembic upgrade head`
 
-3. `poetry run uvicorn orchard.projects.v1:app`
+3. `poetry run uvicorn orchard.projects.v1:app` 
