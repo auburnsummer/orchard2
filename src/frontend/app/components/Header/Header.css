@@ -37,6 +37,7 @@
 
 .he_not-logged-in:hover {
     background-color: var(--purple-300);
+    cursor: pointer;
 }
 
 .he_logged-in {
