@@ -20,7 +20,7 @@ export const loader = async ({request}: LoaderArgs) => {
         try {
             const headers = new Headers();
             headers.set("Authorization", `Bearer ${value}`);
-            const resp = await fetch(`${getEnv("SITE_URL")}/user/me`, {
+            const resp = await fetch(`${getEnv("API_URL")}/user/me`, {
                 headers
             });
             const json = await resp.json();

@@ -1,5 +1,5 @@
 import { LoaderArgs, redirect } from "@remix-run/node";
-import { createAuthCookie } from "~/utils/cookies";
+import { createAuthCookie, createBackToCookie } from "~/utils/cookies";
 import { getEnv } from "~/utils/env";
 
 
@@ -29,11 +29,15 @@ export const loader = async ({request}: LoaderArgs) => {
     const {token, expires_in} = await resp.json();
 
 
-    // redirect to the home page with the cookies set.
+    // redirect to the page set by the cookie earlier.
+    // if there isn't one, just redirect to home page.
+    const pageToDirectTo = (await createBackToCookie().parse(request.headers.get("cookie"))) ?? "/"
+    
+    // set a cookie.
     const authCookie = createAuthCookie(expires_in);
     const headers = new Headers();
     headers.append("set-cookie", await authCookie.serialize(token))
-    return redirect("/", {
+    return redirect(pageToDirectTo, {
         headers
     });
 }

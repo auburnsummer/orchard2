@@ -11,7 +11,7 @@ type HeaderProps = WithClass & {
 
 import "./Header.css";
 import { User } from "~/types/user";
-import { Link } from "@remix-run/react";
+import { Form, Link, useLocation } from "@remix-run/react";
 
 const EBOOKS = [
     'Klyzx: CV why are you streaming a green line for the entire day',
@@ -42,9 +42,15 @@ type ProfileProps = {
     user: User | null;
 }
 const Profile = ({user}: ProfileProps) => {
+    const location = useLocation();
+
     if (!user) {
         return (
-            <Link to="/login?method=discord" className="he_not-logged-in">Log in</Link>
+            <Form action="/login" method="post">
+                <input type="hidden" id="input_method" name="method" value="discord" />
+                <input type="hidden" id="input_go_back_to" name="go_back_to" value={`${location.pathname}${location.search}`} />
+                <button type="submit" className="he_not-logged-in">Log in</button>
+            </Form>
         )
     } else {
         return (

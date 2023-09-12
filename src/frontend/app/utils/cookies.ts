@@ -40,3 +40,8 @@ export const createAuthCookie = (expires_in?: number) => createStringCookie(crea
     // ♫ i love my baby, she's the best ♫
     sameSite: /* ♫ she picks me up at ♫ */ "lax"
 }));
+
+export const createBackToCookie = (expires_in?: number) => createStringCookie(createCookie("back-to", {
+    maxAge: expires_in || 0,
+    sameSite: "lax"
+}))
