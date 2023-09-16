@@ -112,10 +112,10 @@ def inject_user(func):
     Exits early if there is anything wrong with the token.
     """
     @wraps(func)
-    @requires_scopes({"user"})
+    @requires_scopes({"User_all"})
     async def inner(request: Request):
         token: OrchardAuthToken = request.state.token
-        user_id = token.user
+        user_id = token.User_all
 
         # requires_scopes will already make sure user is defined.
         assert user_id is not None

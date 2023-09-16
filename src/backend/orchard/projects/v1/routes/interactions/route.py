@@ -64,12 +64,43 @@ from .spec import (
     PongInteractionResponse
 )
 
-# most commands only require a publisher token.
-# some commands can be used even before the guild is associated with a publisher.
-# these only take a guild token instead of a publisher token. 
-COMMANDS_USING_GUILD_ID = {
-    "register": "discord_register"
+
+def version_handler(_: ApplicationCommandInteraction):
+    content = dedent(f"""
+        ## Bot Version
+
+        `{__version__}`
+    """)
+    response = MessageInteractionResponse(
+        data=InteractionMessage(
+            content=content,
+            flags=EPHEMERAL
+        )
+    )
+    return response
+
+
+def discord_register_handler(body: ApplicationCommandInteraction):
+    scopes = OrchardAuthScopes(
+        DiscordGuild_register=body.guild_id
+    )
+    exp_time = timedelta(hours=2)
+    guild_token = make_token_now(scopes, exp_time)
+    content = make_publisher_link("discord_register", guild_token=guild_token)
+    response = MessageInteractionResponse(
+        data=InteractionMessage(
+            content=content,
+            flags=EPHEMERAL
+        )
+    )
+    return response
+
+HANDLERS = {
+    "register": discord_register_handler,
+    "version": version_handler
 }
+
+
 
 def make_publisher_link(
     command_name: str,
@@ -134,13 +165,10 @@ async def interaction_handler(request: Request):
             )
             return response
         else:
-            if body.data.name in COMMANDS_USING_GUILD_ID:
-                scopes = OrchardAuthScopes(
-                    discord_guild=body.guild_id
-                )
-                exp_time = timedelta(hours=2)
-                guild_token = make_token_now(scopes, exp_time)
-                content = make_publisher_link(COMMANDS_USING_GUILD_ID[body.data.name], guild_token=guild_token)
+            try:
+                return HANDLERS[body.data.name](body)
+            except KeyError:
+                content = dedent(f"I don't know what to do with the command {body.data.name}. This is a bug, please ping auburn!")
                 response = MessageInteractionResponse(
                     data=InteractionMessage(
                         content=content,
@@ -148,8 +176,3 @@ async def interaction_handler(request: Request):
                     )
                 )
                 return response
-            else:
-                pass
-
-
-

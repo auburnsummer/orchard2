@@ -96,5 +96,5 @@ async def discord_token_handler(request: Request):
     # create a scoped token for this user.
     # the original token has never been sent to the client, so we don't need to revoke it.
     exp_time = timedelta(days=7)
-    orch_token = make_token_now(OrchardAuthScopes(user=user.id), exp_time)
+    orch_token = make_token_now(OrchardAuthScopes(User_all=user.id), exp_time)
     return DiscordTokenResponse(token=orch_token, expires_in=exp_time.total_seconds())

@@ -4,7 +4,7 @@ THE ADMIN ROUTES
 These require an admin-scoped token and are related to maintenance tasks of orchard itself.
 
 from orchard.projects.v1.core.auth import *
-token = make_token_now(OrchardAuthScopes(admin=True), timedelta(days=1))
+token = make_token_now(OrchardAuthScopes(Admin_all=True), timedelta(days=1))
 """
 from functools import wraps
 from orchard.projects.v1.core.config import config
@@ -23,13 +23,13 @@ import httpx
 
 def requires_admin(func):
     @wraps(func)
-    @requires_scopes({"admin"})
+    @requires_scopes({"Admin_all"})
     async def inner(request: Request):
         token: OrchardAuthToken = request.state.token
 
-        assert token.admin is not None
+        assert token.Admin_all is not None
 
-        if token.admin:
+        if token.Admin_all:
             return await func(request)
         else:
             return NotAdmin()

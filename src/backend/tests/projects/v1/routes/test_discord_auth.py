@@ -45,7 +45,7 @@ async def test_discord_auth_creates_new_user_if_no_credential_exists(
 
     # and the token returned should be valid.
     token = resp.json()["token"]
-    assert paseto_to_token(token).user == users[0].id
+    assert paseto_to_token(token).User_all == users[0].id
 
 @pytest.mark.asyncio
 async def test_discord_auth_returns_existing_user(
@@ -67,7 +67,7 @@ async def test_discord_auth_returns_existing_user(
 
     # and the token returned should be valid.
     token = resp.json()["token"]
-    assert paseto_to_token(token).user == users[0].id
+    assert paseto_to_token(token).User_all == users[0].id
 
 @pytest.mark.asyncio
 async def test_discord_auth_updates_name_if_discord_name_is_different(
