@@ -22,13 +22,14 @@ import msgspec
 class PublisherScope(msgspec.Struct):
     publisher_id: str
     action: str
+
  
 class OrchardAuthScopes(msgspec.Struct, kw_only=True):
     "The keys and value types that a token can have."
-    user: Optional[str] = None  # the bearer is this user.
-    admin: Optional[bool] = None  # if true, bearer is an admin.
-    publisher: Optional[PublisherScope] = None  # the specific action is approved by this publisher.
-    discord_guild: Optional[str] = None  # the bearer is a representative of this discord guild.
+    User_all: Optional[str] = None  # the bearer is this user.
+    Admin_all: Optional[bool] = None  # if true, bearer is an admin.
+    Publisher: Optional[PublisherScope] = None  # the specific action is approved by this publisher.
+    DiscordGuild_register: Optional[str] = None  # this discord guild can be used to register.
 
 class OrchardAuthToken(OrchardAuthScopes):
     iat: datetime
@@ -49,14 +50,13 @@ paseto = token_to_paseto(token)
 def make_token_now(scopes: OrchardAuthScopes, exp_time: timedelta):
     iat = datetime.now()
     exp = iat + exp_time
-    token = OrchardAuthToken(
-        iat=iat,
-        exp=exp,
-        user=scopes.user,
-        admin=scopes.admin,
-        publisher=scopes.publisher,
-        discord_guild=scopes.discord_guild
-    )
+    token_args = {
+        "iat": iat,
+        "exp": exp
+    }
+    for field in msgspec.structs.fields(scopes):
+        token_args[field.name] = getattr(scopes, field.name)
+    token = OrchardAuthToken(**token_args)
     return token_to_paseto(token)
 
 

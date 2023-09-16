@@ -16,7 +16,7 @@ async def test_homepage(client: AsyncClient):
 async def test_user_me(client: AsyncClient):
     user = await add_user(name="mafuyu")
     id = user.id
-    token = make_token_now(OrchardAuthScopes(user=id), timedelta(hours=5))
+    token = make_token_now(OrchardAuthScopes(User_all=id), timedelta(hours=5))
     response = await client.get('/user/me', headers={
         "Authorization": f"Bearer {token}"
     })
@@ -32,7 +32,7 @@ async def test_user_me(client: AsyncClient):
 
 @pytest.mark.asyncio
 async def test_user_me_returns_401_on_non_existant_user(client: AsyncClient):
-    token = make_token_now(OrchardAuthScopes(user="abc"), timedelta(hours=5))
+    token = make_token_now(OrchardAuthScopes(User_all="abc"), timedelta(hours=5))
     response = await client.get('/user/me', headers={
         "Authorization": f"Bearer {token}"
     })
@@ -51,7 +51,7 @@ async def test_user_me_returns_401_on_non_existant_user(client: AsyncClient):
 async def test_user_me_returns_401_on_expired_token(client: AsyncClient):
     user = await add_user(name="mafuyu")
     id = user.id
-    token = make_token_now(OrchardAuthScopes(user=id), timedelta(hours=-5))
+    token = make_token_now(OrchardAuthScopes(User_all=id), timedelta(hours=-5))
     response = await client.get('/user/me', headers={
         "Authorization": f"Bearer {token}"
     })
@@ -71,9 +71,9 @@ async def test_user_me_returns_403_on_token_without_user_scope(client: AsyncClie
     assert response.status_code == 403
     assert response.json() == {
         'error_code': 'MissingScopes',
-        'message': 'Token lacks the required scope: user',
+        'message': 'Token lacks the required scope: User_all',
         'extra_data': {
-            'scope': 'user'
+            'scope': 'User_all'
         }
     }
 
@@ -84,7 +84,7 @@ async def test_user_me_returns_403_on_token_issued_before_cutoff(client: AsyncCl
     id = user.id
     user = await update_user(id, EditUser(cutoff=datetime(2016, 6, 2)))
     # now is 2016-01-01
-    token = make_token_now(OrchardAuthScopes(user=id), timedelta(hours=5))
+    token = make_token_now(OrchardAuthScopes(User_all=id), timedelta(hours=5))
     response = await client.get('/user/me', headers={
         "Authorization": f"Bearer {token}"
     })
@@ -103,7 +103,7 @@ async def test_user_logout_sets_cutoff_date(client: AsyncClient):
     user = await add_user(name="mafuyu")
     id = user.id
     assert user.cutoff == datetime(1970, 1, 1)
-    token = make_token_now(OrchardAuthScopes(user=id), timedelta(hours=5))
+    token = make_token_now(OrchardAuthScopes(User_all=id), timedelta(hours=5))
     response = await client.post('/user/logout', headers={
         "Authorization": f"Bearer {token}"
     })

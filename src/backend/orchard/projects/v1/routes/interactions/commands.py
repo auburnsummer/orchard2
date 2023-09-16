@@ -1,13 +1,10 @@
 
-from orchard.projects.v1.routes.interactions.spec import ApplicationCommand, ApplicationCommandType
+from .spec import ApplicationCommand, ApplicationCommandType
 
 version = ApplicationCommand(
     name="version",
     description="Print the version of the bot.",
 )
-
-def version_command():
-    pass
 
 register = ApplicationCommand(
     name="register",

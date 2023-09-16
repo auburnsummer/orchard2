@@ -10,7 +10,7 @@ from datetime import timedelta
 def discord_guild_token_1():
     return make_token_now(
         scopes=OrchardAuthScopes(
-            discord_guild="discord_guild_id"
+            DiscordGuild_register="discord_guild_id"
         ),
         exp_time=timedelta(days=1)
     )

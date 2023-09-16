@@ -12,15 +12,15 @@ class CreateNewPublisherViaDiscordGuildArgs(msgspec.Struct):
     publisher_name: str
 
 @msgspec_return(201)
-@requires_scopes({"discord_guild"})
+@requires_scopes({"DiscordGuild_register"})
 @parse_body_as(CreateNewPublisherViaDiscordGuildArgs)
 async def create_new_publisher_via_discord_guild_handler(request: Request):
     args: CreateNewPublisherViaDiscordGuildArgs = request.state.body
     token: OrchardAuthToken = request.state.token
     # requires_scopes will ensure this.
-    assert token.discord_guild is not None
+    assert token.DiscordGuild_register is not None
 
     async with engine.begin() as conn:
-        publisher, _ = await make_new_publisher_with_credential(token.discord_guild, args.publisher_name, conn) 
+        publisher, _ = await make_new_publisher_with_credential(token.DiscordGuild_register, args.publisher_name, conn) 
 
     return publisher
