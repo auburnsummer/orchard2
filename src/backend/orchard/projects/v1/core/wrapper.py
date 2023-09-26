@@ -35,7 +35,7 @@ def msgspec_return(status_code: int):
     Decorator. If the function returns a msgspec object, automatically turns that object
     into an appropriate response.
 
-    If the function returns an OrchardException, automatically generate an appropriate
+    If the function raises an OrchardException, automatically generate an appropriate
     response as well.
 
     Order: this should typically be the last decorator (i.e. at the top.)
