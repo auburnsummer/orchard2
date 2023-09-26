@@ -13,28 +13,44 @@ import pyseto
 
 from datetime import datetime, timedelta
 from functools import wraps
-from typing import Callable, Optional, Set, Any, TypedDict
+from typing import Callable, List, Optional, Set, Any, TypedDict
 
 from starlette.requests import Request
 
 import msgspec
 
-class PublisherScope(msgspec.Struct):
-    publisher_id: str
-    action: str
 
+class PublisherAddScope(msgspec.Struct):
+    publisher_id: str
+    url: str
  
 class OrchardAuthScopes(msgspec.Struct, kw_only=True):
     "The keys and value types that a token can have."
     User_all: Optional[str] = None  # the bearer is this user.
     Admin_all: Optional[bool] = None  # if true, bearer is an admin.
-    Publisher: Optional[PublisherScope] = None  # the specific action is approved by this publisher.
     DiscordGuild_register: Optional[str] = None  # this discord guild can be used to register.
+    Publisher_add: Optional[PublisherAddScope] = None  # this specific publisher id and url can be added
 
 class OrchardAuthToken(OrchardAuthScopes):
     iat: datetime
     exp: datetime
 
+
+def combine_tokens(tokens: List[OrchardAuthToken]):
+    final_iat = max(t.iat for t in tokens)
+    final_exp = min(t.exp for t in tokens)
+    token_args = {}
+    for token in tokens:
+        for field in msgspec.structs.fields(token):
+            value = getattr(token, field.name)
+            if value:
+                token_args[field.name] = getattr(token, field.name)
+
+    token_args["iat"] = final_iat
+    token_args["exp"] = final_exp
+    token = OrchardAuthToken(**token_args)
+
+    return token
 
 paseto_key = pyseto.Key.new(version=4, purpose="local", key=b64decode(config().PASETO_KEY_BASE64.get_secret_value()))
 
@@ -91,19 +107,26 @@ def parse_token_from_request(request: Request):
         auth_header = request.headers["Authorization"]
     except KeyError:
         raise MissingAuthorizationHeader()
- 
-    try:
-        auth_type, token = auth_header.split(" ")
-    except ValueError:
-        raise NoAuthorizationHeaderTokenType()
 
-    if auth_type.lower() != "bearer":
-        raise AuthorizationHeaderTokenTypeIsNotBearer()
+    pasetos = auth_header.split(",")
 
-    try:
-        return paseto_to_token(token)
-    except (ValueError, pyseto.DecryptError, pyseto.VerifyError) as exc:
-        raise AuthorizationHeaderInvalid(message=str(exc))
+    parsed_tokens = []
+    for paseto in pasetos:
+        try:
+            auth_type, string_token = paseto.split(" ")
+        except ValueError:
+            raise NoAuthorizationHeaderTokenType()
+
+        if auth_type.lower() != "bearer":
+            raise AuthorizationHeaderTokenTypeIsNotBearer()
+
+        try:
+            parsed_token = paseto_to_token(string_token)
+            parsed_tokens.append(parsed_token)
+        except (ValueError, pyseto.DecryptError, pyseto.VerifyError) as exc:
+            raise AuthorizationHeaderInvalid(message=str(exc))  
+    
+    return combine_tokens(parsed_tokens)
 
 
 def requires_scopes(scopes: Set[str]):
