@@ -2,6 +2,7 @@ from typing import IO, List, Tuple, Optional
 from orchard.libs.bunny_storage import BunnyStorage
 from orchard.libs.hash import sha1
 from orchard.libs.vitals.pydantic_model import VitalsLevelBase
+from orchard.projects.v1.core.auth import OrchardAuthToken, requires_scopes
 from orchard.projects.v1.core.config import config
 from orchard.projects.v1.core.forward import forward_httpx
 from orchard.projects.v1.core.wrapper import msgspec_return, parse_body_as
@@ -20,9 +21,6 @@ import msgspec
 from io import BytesIO
 import asyncio
 
-class PrefillHandlerArgs(msgspec.Struct):
-    source_url: str
-
 class VitalsLevelExport(VitalsLevelBase):
     image: str
     thumb: str
@@ -30,10 +28,12 @@ class VitalsLevelExport(VitalsLevelBase):
     icon: Optional[str] = None
 
 @msgspec_return(200)
-@parse_body_as(PrefillHandlerArgs)
-@inject_user  # this is an authenticated endpoint, even though we don't actually use the user here.
+@requires_scopes("Publisher_add")
 async def prefill_handler(request: Request):
-    data: PrefillHandlerArgs = request.state.body
+    token: OrchardAuthToken = request.state.token
+    assert token.Publisher_add is not None  # requires_scopes ensures this, this is for typing.
+
+    source_url = token.Publisher_add.url
 
     c = config()
     async with BunnyStorage(
@@ -44,7 +44,7 @@ async def prefill_handler(request: Request):
     ) as bun:
         with TemporaryFile(mode="w+b") as f:
             async with httpx.AsyncClient() as client:
-                resp = await client.get(data.source_url)
+                resp = await client.get(source_url)
                 try:
                     resp.raise_for_status()
                 except httpx.HTTPStatusError as exc:
