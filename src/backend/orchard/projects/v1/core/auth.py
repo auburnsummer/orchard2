@@ -147,7 +147,7 @@ def requires_scopes(scopes: Set[str]):
         async def inner(request: Request):
             parsed_token = parse_token_from_request(request)
             for scope in scopes:
-                if getattr(parsed_token, scope) is None:
+                if getattr(parsed_token, scope, None) is None:
                     raise MissingScopes(scope=scope)
             else:
                 request.state.token = parsed_token
