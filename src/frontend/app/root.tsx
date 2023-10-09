@@ -23,6 +23,7 @@ import "@fontsource/zen-maru-gothic/400.css"
 import "./shared.css";
 import type { Environment } from "./globals";
 import { NotFound } from "./components/NotFound/NotFound";
+import { isOrchardError } from "./utils/error";
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
@@ -72,6 +73,7 @@ export default function App() {
 export function ErrorBoundary() {
     const error = useRouteError();
 
+    // handle 404 specifically.
     if (isRouteErrorResponse(error)) {
         const statusCode = error.status;
         if (statusCode == 404) {
@@ -98,6 +100,12 @@ export function ErrorBoundary() {
     if (error instanceof Error) {
         errorMessage = error.message;
     }
+    if (isRouteErrorResponse(error)) {
+        errorMessage = error.data;
+    }
+    if (isOrchardError(error)) {
+        errorMessage = `${error.error_code}: error.message`;
+    }
 
     return (
         <html lang="en">
@@ -109,7 +117,9 @@ export function ErrorBoundary() {
                 <div className="err">
                     <h1>Uh oh ...</h1>
                     <p>Something went wrong.</p>
-                    <p>If you keep seeing this, please ping auburn! thanks</p>
+                    <p>This is the root error handler. If you're seeing this...</p>
+                    <p>...it means an error occured that I did not anticipate.</p>
+                    <p>If you keep seeing this, please ping auburn! thanks 🙏</p> 
                     <pre>{errorMessage}</pre>
                 </div>
                 <ScrollRestoration />

@@ -6,7 +6,7 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import styles from "./_base.css";
 import { Header } from "~/components/Header";
 import { createAuthCookie } from "~/utils/cookies";
-import { isUser } from "~/types/user";
+import { isUser } from "~/utils/user";
 import { getEnv } from "~/utils/env";
 
 export const links : LinksFunction = () => [

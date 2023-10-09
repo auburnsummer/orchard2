@@ -10,7 +10,7 @@ type HeaderProps = WithClass & {
 }
 
 import "./Header.css";
-import { User } from "~/types/user";
+import { User } from "~/utils/user";
 import { Form, Link, useLocation } from "@remix-run/react";
 
 const EBOOKS = [

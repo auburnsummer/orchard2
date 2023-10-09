@@ -1,6 +1,6 @@
 import { LinksFunction } from "@remix-run/node";
 import { Link, useMatches } from "@remix-run/react"
-import { isUser, isUserObject } from "~/types/user";
+import { isUser, isUserObject } from "~/utils/user";
 
 import styles from "./profile.css";
 
