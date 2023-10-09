@@ -28,10 +28,11 @@ class VitalsLevelExport(VitalsLevelBase):
     icon: Optional[str] = None
 
 @msgspec_return(200)
+@inject_user
 @requires_scopes({"Publisher_add"})
 async def prefill_handler(request: Request):
     token: OrchardAuthToken = request.state.token
-    assert token.Publisher_add is not None  # requires_scopes ensures this, this is for typing.
+    assert token.Publisher_add is not None  # requires_scopes should ensure this already.
 
     source_url = token.Publisher_add.url
 
