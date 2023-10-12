@@ -1,0 +1,15 @@
+.he {
+	display: flex;
+	height: 2.75rem;
+    background-color: var(--sl-color-neutral-200);
+    box-shadow: var(--sl-shadow-large);
+	align-items: center;
+}
+
+.he_logo {
+	display: block;
+	height: 3.4rem;
+	margin-top: 0.4rem;
+	fill: var( --sl-color-primary-400);
+	opacity: 70%;
+}
