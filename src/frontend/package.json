@@ -1,19 +1,26 @@
 {
-  "name": "frontend",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "preact": "^10.16.0"
-  },
-  "devDependencies": {
-    "@preact/preset-vite": "^2.5.0",
-    "typescript": "^5.0.2",
-    "vite": "^4.4.5"
-  }
+    "name": "frontend",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "preview": "vite preview",
+        "lint": "npx prettier . --write"
+    },
+    "dependencies": {
+        "@shoelace-style/shoelace": "^2.9.0",
+        "clsx": "^2.0.0",
+        "jotai": "^2.4.3",
+        "just-random": "^3.2.0",
+        "preact": "^10.18.1",
+        "wouter-preact": "^2.12.0"
+    },
+    "devDependencies": {
+        "@preact/preset-vite": "^2.5.0",
+        "prettier": "3.0.3",
+        "typescript": "^5.2.2",
+        "vite": "^4.4.11"
+    }
 }
