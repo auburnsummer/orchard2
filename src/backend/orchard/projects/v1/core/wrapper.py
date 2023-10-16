@@ -1,6 +1,6 @@
 from functools import wraps
 from typing import Optional, Type
-from orchard.projects.v1.core.exceptions import BodyValidationError, OrchardException
+from orchard.projects.v1.core.exceptions import BodyValidationError, OrchardException, UnknownError
 from starlette.requests import Request
 from starlette.responses import Response
 
@@ -30,6 +30,21 @@ class ErrorResponseContents(msgspec.Struct, kw_only=True, omit_defaults=True):
     message: str
     extra_data: Optional[msgspec.Struct] = None
 
+
+def orchard_exception_response(exc: OrchardException):
+    response_content = ErrorResponseContents(
+        error_code=type(exc).__name__,
+        message=str(exc),
+        extra_data=exc.extra_data()
+    )
+    err_response = Response(
+        status_code=exc.status_code,
+        content=msgspec.json.encode(response_content),
+        media_type="application/json"
+    )
+    return err_response
+
+
 def msgspec_return(status_code: int):
     """
     Decorator. If the function returns a msgspec object, automatically turns that object
@@ -38,6 +53,8 @@ def msgspec_return(status_code: int):
     If the function raises an OrchardException, automatically generate an appropriate
     response as well.
 
+    If the function raises an unhandled exception, automatically generate a decent 500 response.
+
     Order: this should typically be the last decorator (i.e. at the top.)
     """
     def decorator(func):
@@ -45,17 +62,10 @@ def msgspec_return(status_code: int):
             try:
                 orig_response = await func(request)
             except OrchardException as exc:
-                response_content = ErrorResponseContents(
-                    error_code=type(exc).__name__,
-                    message=str(exc),
-                    extra_data=exc.extra_data()
-                )
-                err_response = Response(
-                    status_code=exc.status_code,
-                    content=msgspec.json.encode(response_content),
-                    media_type="application/json"
-                )
-                return err_response
+                return orchard_exception_response(exc)
+            except Exception as exc:
+                synthetic_orchard_exception = UnknownError(orig_exc=exc)
+                return orchard_exception_response(synthetic_orchard_exception)
             if isinstance(orig_response, msgspec.Struct):
                 new_resp = Response(
                     status_code=status_code,
