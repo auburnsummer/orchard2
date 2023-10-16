@@ -13,3 +13,39 @@
 	fill: var( --sl-color-primary-400);
 	opacity: 70%;
 }
+
+.he_user-wrapper {
+	margin-right: 0.5rem;
+}
+
+.he_user-loading {
+	display: inline-block;
+    width: 2rem;
+    height: 2rem;
+	border-radius: 9999px;
+	--color: var(--sl-color-neutral-0);
+	--sheen-color: var(--sl-color-primary-100);
+}
+
+.he_spacer {
+	flex-grow: 1;
+}
+
+.he_avatar-button {
+	border: none;
+	background-color: inherit;
+}
+
+.he_avatar {
+	--size: 2.3rem;
+	transition-property: filter;
+	transition-duration: var(--sl-transition-fast);
+}
+
+.he_avatar-button:hover {
+	cursor: pointer;
+}
+
+.he_avatar-button:hover > .he_avatar {
+	filter: brightness(1.55);
+}
