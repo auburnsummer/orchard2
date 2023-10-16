@@ -12,8 +12,12 @@ const searchParams = new URLSearchParams({
 const discordLoginUrl = `https://discord.com/api/oauth2/authorize?${searchParams.toString()}`;
 
 export function LoginButton() {
+    const onClick = () => {
+        window.open(discordLoginUrl, "_blank", "popup=true,width=800,height=800")
+    }
+
     return (
-        <Button href={discordLoginUrl} target="_blank">
+        <Button onClick={onClick}>
             Log in
         </Button>
     )

@@ -7,6 +7,18 @@ import { ComponentChildren } from "preact";
 import { Icon, Spinner } from "@orchard/ui";
 import { getErrorMessage } from "@orchard/utils/error";
 import { loadable } from "jotai/utils";
+import * as tg from "generic-type-guard";
+import { useAuthToken } from "@orchard/stores/auth";
+
+type OrchardTokenResponse = {
+    token: string;
+    expires_in: number;
+}
+
+const isOrchardTokenResponse: tg.TypeGuard<OrchardTokenResponse> = tg.isLikeObject({
+    token: tg.isString,
+    expires_in: tg.isNumber
+});
 
 const orchardTokenAtom = atom(async () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -21,7 +33,11 @@ const orchardTokenAtom = atom(async () => {
             redirect_uri: window.location.origin + window.location.pathname
         }
     });
-    return resp.json();
+    const data = await resp.json();
+    if (isOrchardTokenResponse(data)) {
+        return data;
+    }
+    throw new Error(`Response did not match schema: ${JSON.stringify(data)}`);
 });
 
 type ErrorBoundaryProps = {
@@ -71,10 +87,19 @@ function ErrorBoundary({children}: ErrorBoundaryProps) {
 }
 
 function DiscordCallbackContent() {
-    const aaa = useAtomValue(orchardTokenAtom);
+    const token = useAtomValue(orchardTokenAtom);
+    const [_, setAuthToken] = useAuthToken();
+
+    useEffect(() => {
+        setAuthToken(token.token);
+        setTimeout(window.close, 500);
+    }, [token]);
 
     return (
-        <p>hello!! result is {JSON.stringify(aaa)}</p>
+        <div class="dc_success">
+            <Icon class="dc_success-icon" name="check-circle" />
+            <span class="dc_success-text">Log in successful! This page will close automatically.</span>
+        </div>
     )
 }
 
