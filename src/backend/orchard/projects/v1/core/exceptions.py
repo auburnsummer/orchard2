@@ -11,6 +11,7 @@ and generate an appropriate response.
 """
 
 import msgspec
+import traceback
 from typing import Set, TypedDict
 from typing_extensions import Unpack
 
@@ -221,3 +222,16 @@ class DiscordGuildCredentialAlreadyExists(OrchardException):
             credential_id=self.credential_id
         )
 
+
+class UnknownErrorArgs(TypedDict):
+    orig_exc: Exception
+
+class UnknownError(OrchardException):
+    def __init__(self, *args, **kwargs: Unpack[UnknownErrorArgs]):
+        super().__init__(*args)
+        self.orig_exc = kwargs.get('orig_exc')
+        self.status_code = 500
+
+    def __str__(self):
+        error_str = '\n'.join(traceback.format_exception_only(self.orig_exc))
+        return f"Unhandled error: {error_str}"

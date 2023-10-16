@@ -12,8 +12,10 @@
     "dependencies": {
         "@shoelace-style/shoelace": "^2.9.0",
         "clsx": "^2.0.0",
+        "generic-type-guard": "^3.7.2",
         "jotai": "^2.4.3",
         "just-random": "^3.2.0",
+        "ky": "^1.0.1",
         "preact": "^10.18.1",
         "wouter-preact": "^2.12.0"
     },
