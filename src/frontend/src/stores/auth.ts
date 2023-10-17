@@ -1,7 +1,8 @@
-import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import ky from 'ky';
 import * as tg from "generic-type-guard";
+import { loadableValue } from './async';
 
 export const authTokenAtom = atomWithStorage('authToken', "");
 
@@ -28,7 +29,7 @@ export const isUser : tg.TypeGuard<User> = tg.isLikeObject({
 });
 
 
-export const loggedInUserAtom = atom(async (get) => {
+export const loggedInUserAtom = loadableValue(async (get) => {
     const token = get(authTokenAtom);
     if (token === "") {
         return undefined;
@@ -45,6 +46,6 @@ export const loggedInUserAtom = atom(async (get) => {
         throw new Error(`Response from /user/me did not match schema: ${JSON.stringify(data)}`);
     }
     return data;
-})
+});
 
 export const useLoggedInUser = () => useAtomValue(loggedInUserAtom);

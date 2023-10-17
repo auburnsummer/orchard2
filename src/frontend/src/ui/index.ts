@@ -1,5 +1,5 @@
 // for now just re-rexport shoelace components.
-// if I need to I can add my own UI elements later.
+// if I need to I can add my own UI elements later, or customize the defaults.
 // this is mostly for aesthetical reasons of being able to import from @orchard/ui lol
 
 import SlSpinner from "@shoelace-style/shoelace/dist/react/spinner/index.js";
@@ -12,6 +12,7 @@ import SlMenu from "@shoelace-style/shoelace/dist/react/menu/index.js";
 import SlMenuItem from "@shoelace-style/shoelace/dist/react/menu-item/index.js";
 import SlMenuLabel from "@shoelace-style/shoelace/dist/react/menu-label/index.js";
 import SlDivider from "@shoelace-style/shoelace/dist/react/divider/index.js";
+import SlInput from "@shoelace-style/shoelace/dist/react/input/index.js";
 
 export const Spinner = SlSpinner;
 export const Button = SlButton;
@@ -23,3 +24,4 @@ export const Menu = SlMenu;
 export const MenuItem = SlMenuItem;
 export const MenuLabel = SlMenuLabel;
 export const Divider = SlDivider;
+export const Input = SlInput;
