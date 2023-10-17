@@ -3,25 +3,22 @@ import "./Header.css";
 import cc from "clsx";
 import { useEbooks } from "@orchard/hooks/useEbook";
 import { LoginButton } from "./LoginButton";
-import { loggedInUserAtom, useLogOut, useLoggedInUser } from "@orchard/stores/auth";
-import { loadable } from "jotai/utils";
-import { useAtomValue } from "jotai";
+import { useLogOut, useLoggedInUser } from "@orchard/stores/auth";
 import { Avatar, Divider, Dropdown, Menu, MenuItem, MenuLabel, Skeleton } from "@orchard/ui";
 import type { SlSelectEvent } from "@shoelace-style/shoelace";
 
 type HeaderProps = WithClass;
 
-const loadableUserAtom = loadable(loggedInUserAtom);
 
 function HeaderUserSection() {
-    const user = useAtomValue(loadableUserAtom);
+    const user = useLoggedInUser();
     const logout = useLogOut();
 
     if (user.state === 'loading') {
         return <Skeleton class="he_user-loading" effect="sheen"/>
     }
 
-    if (user.state === 'hasError' || user.data == undefined) {
+    if (user.state === 'has error' || user.data == undefined) {
         return <LoginButton />
     }
 
