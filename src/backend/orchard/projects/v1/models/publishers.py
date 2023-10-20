@@ -15,16 +15,15 @@ For the initial scope, the only implementation of a publisher is a Discord serve
 from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING
+from orchard.libs.utils.gen_id import IDType, gen_id
 
 from sqlalchemy.ext.asyncio import AsyncConnection
 
-from .metadata import engine, metadata
+from orchard.projects.v1.models.metadata import metadata
 
 import sqlalchemy as sa
 
 import msgspec
-
-from uuid import uuid4
 
 if TYPE_CHECKING:
     from orchard.projects.v1.models.discord_guild_credentials import DiscordGuildCredential
@@ -75,7 +74,7 @@ async def get_publisher_by_discord_guild_credential(cred: DiscordGuildCredential
     
 
 async def add_publisher(name: str, conn: AsyncConnection):
-    new_id = uuid4().hex
+    new_id = gen_id(IDType.PUBLISHER)
     publisher = Publisher(id=new_id, name=name)
 
     query = publishers.insert().values(publisher.to_dict())

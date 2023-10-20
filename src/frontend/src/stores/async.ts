@@ -18,12 +18,18 @@ export type AsyncReadState<Result> = Exclude<AsyncState<Result>, {state: "not st
 
 export type ActionInputFunction<Args extends unknown[], Result> = (get: Getter, set: Setter, ...args: Args) => Promise<Result>
 
+export const RESET = Symbol();
+
 export function startableAction<Args extends unknown[], Result>(func: ActionInputFunction<Args, Result>) {
     const outputAtom = atom<AsyncState<Result>>({state: "not started"});
     return atom(
         get => get(outputAtom),
-        (get, set, ...args: Args) => {
+        (get, set, ...args: Args | [typeof RESET, ...never]) => {
             (async (get, set, ...args) => {
+                if (args[0] === RESET) {
+                    set(outputAtom, {state: "not started"});
+                    return;
+                }
                 set(outputAtom, {state: "loading"});
                 try {
                     const data = await func(get, set, ...args);
