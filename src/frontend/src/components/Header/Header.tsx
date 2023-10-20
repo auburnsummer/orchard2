@@ -24,7 +24,7 @@ function HeaderUserSection() {
 
     const menuHandler = (e: SlSelectEvent) => {
         const item = e.detail.item;
-        if (item.value === "LOG_OUT") {
+        if (item.value === "log out") {
             logout();
         }
     }
@@ -43,7 +43,7 @@ function HeaderUserSection() {
             <Menu onSlSelect={menuHandler}>
                 <MenuLabel>{user.data.name}</MenuLabel>
                 <Divider />
-                <MenuItem value="LOG_OUT">Log out</MenuItem>
+                <MenuItem value="log out">Log out</MenuItem>
             </Menu>
         </Dropdown>
     )

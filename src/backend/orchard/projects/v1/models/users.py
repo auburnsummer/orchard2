@@ -9,11 +9,11 @@ from __future__ import annotations
 from datetime import datetime
 
 from functools import wraps
+from orchard.libs.utils.gen_id import IDType, gen_id
 from orchard.projects.v1.core.auth import requires_scopes, OrchardAuthToken
 from orchard.projects.v1.core.exceptions import UserDoesNotExist, UserIsLoggedOut
 from starlette.requests import Request
-from .metadata import engine, metadata
-from uuid import uuid4
+from orchard.projects.v1.models.metadata import engine, metadata
 
 import sqlalchemy as sa
 
@@ -82,7 +82,7 @@ async def get_all_users():
 
 
 async def add_user(name: str):
-    new_id = uuid4().hex
+    new_id = gen_id(IDType.USER)
     user = User(id=new_id, name=name)
 
     async with engine.begin() as conn:
