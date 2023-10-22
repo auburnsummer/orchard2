@@ -1,0 +1,6 @@
+.lc {
+    background-color: var(--sl-color-neutral-50);
+    box-shadow: var(--sl-shadow-medium);
+    width: 26rem;
+    height: 40rem;
+}

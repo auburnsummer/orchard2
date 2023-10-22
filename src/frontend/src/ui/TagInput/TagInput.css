@@ -1,0 +1,6 @@
+.ti_tags {
+    margin-inline-start: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    gap: 0.25rem;
+}

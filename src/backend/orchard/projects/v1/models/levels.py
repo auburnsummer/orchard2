@@ -10,8 +10,7 @@ from datetime import datetime
 from typing import Optional
 from msgspec import field
 from orchard.libs.vitals.pydantic_model import VitalsLevelBase
-
-from .metadata import metadata
+from orchard.projects.v1.models.metadata import metadata
 
 import sqlalchemy as sa
 
