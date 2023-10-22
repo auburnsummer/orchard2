@@ -3,7 +3,7 @@ import { Header } from "@orchard/components/Header";
 
 export function Home() {
     return (
-        <div>
+        <div class="ho">
             <Header />
             <p>home sweet home</p>
         </div>

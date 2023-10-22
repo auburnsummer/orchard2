@@ -17,7 +17,7 @@ export function LoginButton() {
     }
 
     return (
-        <Button onClick={onClick}>
+        <Button onClick={onClick} class="lb">
             Log in
         </Button>
     )
