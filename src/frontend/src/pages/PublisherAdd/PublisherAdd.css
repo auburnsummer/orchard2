@@ -24,3 +24,30 @@
     color: var(--sl-color-danger-900);
     font-style: italic;
 }
+
+.pa_form-wrapper {
+    flex-grow: 1;
+    height: calc(100vh - 2.75rem);
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.pa_form-wrapper2 {
+    flex-grow: 1;
+    padding: 4rem;
+}
+
+.pa_form {
+    padding: 2rem;
+    background-color: var(--sl-color-neutral-0);
+    box-shadow: var(--sl-shadow-large);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.pa_preview {
+    background-color: green;
+    width: 30rem;
+}
