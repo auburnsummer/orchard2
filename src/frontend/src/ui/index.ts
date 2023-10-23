@@ -15,6 +15,10 @@ import SlMenuLabel from "@shoelace-style/shoelace/dist/react/menu-label/index.js
 import SlDivider from "@shoelace-style/shoelace/dist/react/divider/index.js";
 import SlInput from "@shoelace-style/shoelace/dist/react/input/index.js";
 import SlTag from "@shoelace-style/shoelace/dist/react/tag/index.js";
+import SlDialog from "@shoelace-style/shoelace/dist/react/dialog/index.js";
+import SlCheckbox from "@shoelace-style/shoelace/dist/react/checkbox/index.js";
+import SlTextarea from "@shoelace-style/shoelace/dist/react/textarea/index.js";
+
 
 export const Spinner = SlSpinner;
 export const Button = SlButton;
@@ -29,5 +33,8 @@ export const MenuLabel = SlMenuLabel;
 export const Divider = SlDivider;
 export const Input = SlInput;
 export const Tag = SlTag;
+export const Dialog = SlDialog;
+export const Checkbox = SlCheckbox;
+export const Textarea = SlTextarea;
 
 export { TagInput } from "./TagInput/TagInput";

@@ -5,8 +5,9 @@ import { Header } from "@orchard/components/Header";
 import { atom, useAtom } from "jotai";
 import { useAsyncAction } from "@orchard/hooks/useAsync";
 import { VitalsLevelExport, getLevelPrefill } from "@orchard/api/levels";
-import { useEffect } from "preact/hooks";
-import { Input } from "@orchard/ui";
+import { useEffect, useRef } from "preact/hooks";
+import { Button, Checkbox, Input, TagInput, Textarea } from "@orchard/ui";
+import { atomWithReset } from "jotai/utils";
 
 type STATES = "prefill"
 
@@ -17,12 +18,58 @@ type PublisherAddFormProps = {
 }
 
 function PublisherAddForm({level}: PublisherAddFormProps) {
+    const levelAtom = useRef(atomWithReset(level));
+
+    const [levelPreview, setLevelPreview] = useAtom(levelAtom.current);
+
     return (
         <div class="pa_form-wrapper">
             <div class="pa_form-wrapper2">
                 <form class="pa_form">
                     <Input label="Song" disabled value={level.song}/>
-                    
+                    <Input label="Song alternate title (optional)" />
+                    <TagInput
+                        items={levelPreview.artist_tokens}
+                        onItems={items => {
+                            setLevelPreview(prev => ({
+                                ...prev,
+                                artist_tokens: items
+                            }));
+                        }}
+                        commaSubmits={false}
+                        inputProps={{
+                            label: levelPreview.artist_tokens.length === 1 ? "Artist" : "Artists"
+                        }}
+                    />
+                    <Checkbox
+                        checked={levelPreview.seizure_warning}
+                        disabled
+                    >
+                        Seizure warning
+                    </Checkbox>
+                    <Textarea
+                        value={levelPreview.description}
+                        disabled
+                        label="Description"
+                    />
+                    <TagInput
+                        items={levelPreview.authors}
+                        onItems={items => {
+                            setLevelPreview(prev => ({
+                                ...prev,
+                                artist_tokens: items
+                            }));
+                        }}
+                        commaSubmits={false}
+                        inputProps={{
+                            label: levelPreview.authors.length === 1 ? "Author" : "Authors"
+                        }}
+                    />
+                    <Input
+                        value={`${levelPreview.max_bpm}`}
+                        type="number"
+                        label="BPM"
+                    />
                 </form>
             </div>
             <div class="pa_preview">
@@ -51,10 +98,8 @@ function PublisherAddMainPhase() {
     });
 
     if (state === 'prefill') {
-        if (prefillResult.state === "not started") {
-            return <div class="pa_wrapper2" />
-        }
-        if (prefillResult.state === "loading") {
+        // if not started, we're about to start
+        if (prefillResult.state === "loading" || prefillResult.state === "not started") {
             return (
                 <div class="pa_wrapper2">
                     <Loading class="pa_loading-prefill" text="Analyzing level..." />
@@ -75,7 +120,7 @@ function PublisherAddMainPhase() {
         )
     }
 
-    return <></>;
+    return <p>AAAAAAAAAA</p>
 }
 
 function PublisherAddCheckUser() {
