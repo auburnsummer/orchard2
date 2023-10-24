@@ -35,7 +35,10 @@
 
 .pa_form-wrapper2 {
     flex-grow: 1;
-    padding: 4rem;
+    padding: 2rem 4rem 2rem 4rem;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
 }
 
 .pa_form {
@@ -44,10 +47,25 @@
     box-shadow: var(--sl-shadow-large);
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1rem;
+    overflow-y: scroll;
+}
+
+.pa_form-song-section, .pa_form-bpm-and-difficulty-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .pa_preview {
     background-color: green;
     width: 30rem;
+}
+
+.pa_form-bpm {
+    width: 7rem;
+}
+
+.pa_form-difficulty {
+    width: 10rem;
 }
