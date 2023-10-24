@@ -15,7 +15,14 @@ function HeaderUserSection() {
     const logout = useLogOut();
 
     if (user.state === 'loading') {
-        return <Skeleton class="he_user-loading" effect="sheen"/>
+        return (
+            <Avatar
+                label="Loading user..."
+                class="he_avatar"
+            >
+                <Skeleton effect="pulse" slot="icon" class="he_user-loading" />
+            </Avatar>
+        )
     }
 
     if (user.state === 'has error' || user.data == undefined) {
