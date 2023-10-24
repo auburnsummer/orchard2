@@ -18,6 +18,8 @@ import SlTag from "@shoelace-style/shoelace/dist/react/tag/index.js";
 import SlDialog from "@shoelace-style/shoelace/dist/react/dialog/index.js";
 import SlCheckbox from "@shoelace-style/shoelace/dist/react/checkbox/index.js";
 import SlTextarea from "@shoelace-style/shoelace/dist/react/textarea/index.js";
+import SlSelect from "@shoelace-style/shoelace/dist/react/select/index.js";
+import SlOption from "@shoelace-style/shoelace/dist/react/option/index.js";
 
 
 export const Spinner = SlSpinner;
@@ -36,5 +38,7 @@ export const Tag = SlTag;
 export const Dialog = SlDialog;
 export const Checkbox = SlCheckbox;
 export const Textarea = SlTextarea;
+export const Select = SlSelect;
+export const Option = SlOption;
 
 export { TagInput } from "./TagInput/TagInput";

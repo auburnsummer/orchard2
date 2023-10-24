@@ -6,7 +6,7 @@ import { atom, useAtom } from "jotai";
 import { useAsyncAction } from "@orchard/hooks/useAsync";
 import { VitalsLevelExport, getLevelPrefill } from "@orchard/api/levels";
 import { useEffect, useRef } from "preact/hooks";
-import { Button, Checkbox, Input, TagInput, Textarea } from "@orchard/ui";
+import { Button, Checkbox, Input, Select, TagInput, Textarea, Option } from "@orchard/ui";
 import { atomWithReset } from "jotai/utils";
 
 type STATES = "prefill"
@@ -68,8 +68,57 @@ function PublisherAddForm({level}: PublisherAddFormProps) {
                     <Input
                         value={`${levelPreview.max_bpm}`}
                         type="number"
-                        label="BPM"
+                        label="Max BPM"
                     />
+                    <Input
+                        value={`${levelPreview.max_bpm}`}
+                        type="number"
+                        label="Min BPM"
+                    />
+                    <Select label="difficulty" value={`${levelPreview.difficulty}`}>
+                        <Option value="0">Easy</Option>
+                        <Option value="1">Medium</Option>
+                        <Option value="2">Tough</Option>
+                        <Option value="3">Very Tough</Option>
+                    </Select>
+                    <Checkbox
+                        checked={levelPreview.single_player}
+                    >
+                        Supports single player
+                    </Checkbox>
+                    <p>(for two-handed levels intended to be played by one person, also check this.)</p>
+                    <Checkbox
+                        checked={levelPreview.two_player}
+                    >
+                        Supports two player
+                    </Checkbox>
+                    <TagInput
+                        items={levelPreview.tags}
+                        onItems={items => {
+                            setLevelPreview(prev => ({
+                                ...prev,
+                                tags: items
+                            }));
+                        }}
+                        commaSubmits={true}
+                        inputProps={{
+                            label: "Tags"
+                        }}
+                    />
+                    {
+                        [
+                            "Classics",
+                            "Oneshots",
+                            "Squareshots",
+                            "Freezeshots",
+                            "Freetimes",
+                            "Holds",
+                            "Skipshots",
+                            "Window Dance"
+                        ].map(s => (
+                            <Checkbox>Has {s}</Checkbox>
+                        ))
+                    }
                 </form>
             </div>
             <div class="pa_preview">
