@@ -8,6 +8,7 @@ import { VitalsLevelExport, getLevelPrefill } from "@orchard/api/levels";
 import { useEffect, useRef } from "preact/hooks";
 import { Button, Checkbox, Input, Select, TagInput, Textarea, Option } from "@orchard/ui";
 import { atomWithReset } from "jotai/utils";
+import { EditLevel } from "@orchard/components/EditLevel";
 
 type STATES = "prefill"
 
@@ -20,118 +21,11 @@ type PublisherAddFormProps = {
 function PublisherAddForm({level}: PublisherAddFormProps) {
     const levelAtom = useRef(atomWithReset(level));
 
-    const [levelPreview, setLevelPreview] = useAtom(levelAtom.current);
+    const [levelPrefill, setLevelPrefill] = useAtom(levelAtom.current);
 
     return (
         <div class="pa_form-wrapper">
-            <div class="pa_form-wrapper2">
-                <form class="pa_form">
-                    <div class="pa_form-song-section">
-                        <Input label="Song" value={level.song}/>
-                        <Input label="Song alternate title (optional)" />
-                    </div>
-                    <TagInput
-                        items={levelPreview.artist_tokens}
-                        onItems={items => {
-                            setLevelPreview(prev => ({
-                                ...prev,
-                                artist_tokens: items
-                            }));
-                        }}
-                        commaSubmits={false}
-                        inputProps={{
-                            label: levelPreview.artist_tokens.length === 1 ? "Artist" : "Artists"
-                        }}
-                    />
-                    <TagInput
-                        items={levelPreview.authors}
-                        onItems={items => {
-                            setLevelPreview(prev => ({
-                                ...prev,
-                                artist_tokens: items
-                            }));
-                        }}
-                        commaSubmits={false}
-                        inputProps={{
-                            label: levelPreview.authors.length === 1 ? "Author" : "Authors"
-                        }}
-                    />
-                    <Textarea
-                        value={levelPreview.description}
-                        label="Description"
-                    />
-                    <div class="pa_form-bpm-and-difficulty-section">
-                        <Input
-                            class="pa_form-bpm"
-                            value={`${levelPreview.max_bpm}`}
-                            type="number"
-                            label="Max BPM"
-                        />
-                        <Input
-                            class="pa_form-bpm"
-                            value={`${levelPreview.max_bpm}`}
-                            type="number"
-                            label="Min BPM"
-                        />
-                        <Select
-                            label="Difficulty"
-                            value={`${levelPreview.difficulty}`}
-                            class="pa_form-difficulty"
-                        >
-                            <Option value="0">Easy</Option>
-                            <Option value="1">Medium</Option>
-                            <Option value="2">Tough</Option>
-                            <Option value="3">Very Tough</Option>
-                        </Select>
-                    </div>
-                    <TagInput
-                        items={levelPreview.tags}
-                        onItems={items => {
-                            setLevelPreview(prev => ({
-                                ...prev,
-                                tags: items
-                            }));
-                        }}
-                        commaSubmits={true}
-                        inputProps={{
-                            label: "Tags"
-                        }}
-                    />
-                    <Checkbox
-                        checked={levelPreview.seizure_warning}
-                    >
-                        Seizure warning
-                    </Checkbox>
-                    <Checkbox
-                        checked={levelPreview.single_player}
-                    >
-                        Supports single player
-                    </Checkbox>
-                    <p>(for two-handed levels intended to be played by one person, also check this.)</p>
-                    <Checkbox
-                        checked={levelPreview.two_player}
-                    >
-                        Supports two player
-                    </Checkbox>
-                    {
-                        [
-                            "Classics",
-                            "Oneshots",
-                            "Squareshots",
-                            "Freezeshots",
-                            "Freetimes",
-                            "Holds",
-                            "Skipshots",
-                            "Window Dance"
-                        ].map(s => (
-                            <Checkbox>Has {s}</Checkbox>
-                        ))
-                    }
-                </form>
-            </div>
-            <div class="pa_preview">
-
-            </div>
+            <EditLevel levelPrefill={levelPrefill} class="pa_edit-level" />
         </div>
     )
 }

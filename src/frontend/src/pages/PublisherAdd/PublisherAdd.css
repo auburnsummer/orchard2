@@ -33,7 +33,12 @@
     align-items: stretch;
 }
 
-.pa_form-wrapper2 {
+.pa_edit-level {
+    flex-grow: 1;
+    height: 100%;
+}
+
+/* .pa_form-wrapper2 {
     flex-grow: 1;
     padding: 2rem 4rem 2rem 4rem;
     display: flex;
@@ -68,4 +73,4 @@
 
 .pa_form-difficulty {
     width: 10rem;
-}
+} */
