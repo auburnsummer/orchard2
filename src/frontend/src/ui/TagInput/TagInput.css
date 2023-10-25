@@ -1,6 +1,25 @@
+.ti::part(prefix) {
+    flex-shrink: 1;
+    flex-grow: 0;
+    padding: 0.125rem;
+}
+
+.ti::part(input) {
+    flex-basis: 8rem;
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+
+.ti::part(base) {
+    min-height: var(--sl-input-height-medium);
+    height: unset;
+    align-items: center;
+}
+
 .ti_tags {
     margin-inline-start: 0.5rem;
     display: flex;
     flex-direction: row;
     gap: 0.25rem;
+    flex-wrap: wrap;
 }

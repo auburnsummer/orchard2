@@ -1,5 +1,6 @@
 
  - `.dc`: `DiscordCallback`
+ - `.el`: `EditLevel`
  - `.he`: `Header`
  - `.ho`: `Home`
  - `.lb`: `LoginButton`
