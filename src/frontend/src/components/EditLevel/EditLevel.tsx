@@ -8,15 +8,38 @@ import { Input, Select, TagInput, Textarea, Option, Checkbox } from "@orchard/ui
 import { useRef } from "preact/hooks";
 import { atomWithReset } from "jotai/utils";
 import { useAtom } from "jotai";
+import { withImmer } from "jotai-immer";
+import type { User } from "@orchard/api/auth";
+import type { Publisher } from "@orchard/api/publisher";
+import { useLog } from "@orchard/hooks/useLog";
 
 type EditLevelProps = WithClass & {
     levelPrefill: VitalsLevelExport;
 }
 
-export function EditLevel({"class": _class, levelPrefill}: EditLevelProps) {
-    const levelAtom = useRef(atomWithReset(levelPrefill));
+type LevelPreviewData = VitalsLevelExport & {
+    "song_altname": string;
+    "publisher": Publisher;
+}
 
-    const [levelPreview, setLevelPreview] = useAtom(levelAtom.current);
+function makeInitialAtom(prefill: VitalsLevelExport) {
+    const initialLevelState: LevelPreviewData = {
+        ...prefill,
+        "song_altname": "",
+        "publisher": {
+            "id": "fakeid",
+            "name": "Lorem Ipsum Club"  // TODO: fetch actual publisher from token...
+        }
+    }
+    return withImmer(atomWithReset(initialLevelState));
+}
+
+export function EditLevel({"class": _class, levelPrefill}: EditLevelProps) {
+    const levelAtom = useRef(makeInitialAtom(levelPrefill));
+
+    const [preview, setPreview] = useAtom(levelAtom.current);
+
+    useLog(preview);
 
     return (
         <div class={cc(_class, "el")}>
@@ -26,58 +49,66 @@ export function EditLevel({"class": _class, levelPrefill}: EditLevelProps) {
             <div class="el_wrapper">
                 <form class="el_form">
                     <div class="el_titles">
-                        <Input label="Song" value={levelPreview.song} class="el_title"/>
-                        <Input label="Song alternative name (optional)" class="el_title" />
+                        <Input
+                            class="el_title"
+                            label="Song"
+                            value={preview.song}
+                            onSlInput={e => setPreview(d => {
+                                d.song = e.target.value;
+                            })}
+                        />
+                        <Input
+                            class="el_title"
+                            label="Song alternative name (optional)"
+                            value={preview.song_altname}
+                            onSlInput={e => setPreview(d => {
+                                d.song_altname = e.target.value;
+                            })}
+                        />
                     </div>
                     <TagInput
                         class="el_artists"
-                        items={levelPreview.artist_tokens}
-                        onItems={items => {
-                            setLevelPreview(prev => ({
-                                ...prev,
-                                artist_tokens: items
-                            }));
-                        }}
+                        items={preview.artist_tokens}
+                        onItems={items => setPreview(d => {
+                            d.artist_tokens = items;
+                        })}
                         commaSubmits={false}
                         inputProps={{
-                            label: levelPreview.artist_tokens.length === 1 ? "Artist" : "Artists"
+                            label: preview.artist_tokens.length === 1 ? "Artist" : "Artists"
                         }}
                     />
                     <TagInput
                         class="el_authors"
-                        items={levelPreview.authors}
-                        onItems={items => {
-                            setLevelPreview(prev => ({
-                                ...prev,
-                                artist_tokens: items
-                            }));
-                        }}
-                        commaSubmits={false}
+                        items={preview.authors}
+                        onItems={items => setPreview(d => {
+                            d.authors = items;
+                        })}
+                        commaSubmits={true}
                         inputProps={{
-                            label: levelPreview.authors.length === 1 ? "Author" : "Authors"
+                            label: preview.authors.length === 1 ? "Author" : "Authors"
                         }}
                     />
                     <Textarea
                         class="el_description"
-                        value={levelPreview.description}
+                        value={preview.description}
                         label="Description"
                     />
                     <div class="el_bpm-and-difficulty-section">
                         <Input
                             class="el_bpm"
-                            value={`${levelPreview.max_bpm}`}
+                            value={`${preview.max_bpm}`}
                             type="number"
                             label="Max BPM"
                         />
                         <Input
                             class="el_bpm"
-                            value={`${levelPreview.max_bpm}`}
+                            value={`${preview.max_bpm}`}
                             type="number"
                             label="Min BPM"
                         />
                         <Select
                             label="Difficulty"
-                            value={`${levelPreview.difficulty}`}
+                            value={`${preview.difficulty}`}
                             class="el_difficulty"
                         >
                             <Option value="0">Easy</Option>
@@ -88,9 +119,9 @@ export function EditLevel({"class": _class, levelPrefill}: EditLevelProps) {
                     </div>
                     <TagInput
                         class="el_tags"
-                        items={levelPreview.tags}
+                        items={preview.tags}
                         onItems={items => {
-                            setLevelPreview(prev => ({
+                            setPreview(prev => ({
                                 ...prev,
                                 tags: items
                             }));
@@ -102,33 +133,32 @@ export function EditLevel({"class": _class, levelPrefill}: EditLevelProps) {
                     />
                     <div class="el_checkboxes">
                         <Checkbox
-                            checked={levelPreview.seizure_warning}
+                            checked={preview.seizure_warning}
                         >
                             Seizure warning
                         </Checkbox>
                         <Checkbox
-                            checked={levelPreview.single_player}
+                            checked={preview.single_player}
                         >
                             Supports single player
                         </Checkbox>
-                        <p>(for two-handed levels intended to be played by one person, also check this.)</p>
                         <Checkbox
-                            checked={levelPreview.two_player}
+                            checked={preview.two_player}
                         >
                             Supports two player
                         </Checkbox>
                         {
                             [
-                                "Classics",
-                                "Oneshots",
-                                "Squareshots",
-                                "Freezeshots",
-                                "Freetimes",
-                                "Holds",
-                                "Skipshots",
-                                "Window Dance"
+                                "classics",
+                                "oneshots",
+                                "squareshots",
+                                "freezeshots",
+                                "freetimes",
+                                "holds",
+                                "skipshots",
+                                "window dance"
                             ].map(s => (
-                                <Checkbox>Has {s}</Checkbox>
+                                <Checkbox>Contains {s}</Checkbox>
                             ))
                         }
                     </div>

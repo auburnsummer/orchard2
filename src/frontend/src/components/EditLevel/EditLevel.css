@@ -44,6 +44,8 @@
     flex-direction: column;
     align-items: stretch;
     gap: 0.5rem;
+
+    overflow-y: auto;
 }
 
 .el_titles {
@@ -79,4 +81,10 @@
 .el_preview {
     width: 30rem;
     background-color: green;
+}
+
+.el_checkboxes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 1rem;
 }
