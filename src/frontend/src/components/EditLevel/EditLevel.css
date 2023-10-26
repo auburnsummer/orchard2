@@ -84,6 +84,7 @@
 }
 
 .el_checkboxes {
+    margin-top: 1rem;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
     gap: 1rem;
