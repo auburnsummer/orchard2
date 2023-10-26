@@ -59,7 +59,7 @@ export function EditLevel({"class": _class, levelPrefill}: EditLevelProps) {
                         />
                         <Input
                             class="el_title"
-                            label="Song alternative name (optional)"
+                            label="Song alternate name (optional)"
                             value={preview.song_altname}
                             onSlInput={e => setPreview(d => {
                                 d.song_altname = e.target.value;
@@ -92,24 +92,44 @@ export function EditLevel({"class": _class, levelPrefill}: EditLevelProps) {
                         class="el_description"
                         value={preview.description}
                         label="Description"
+                        onSlInput={e => setPreview(d => {
+                            d.description = e.target.value;
+                        })}
                     />
                     <div class="el_bpm-and-difficulty-section">
                         <Input
                             class="el_bpm"
-                            value={`${preview.max_bpm}`}
+                            step="any"
+                            value={`${preview.min_bpm}`}
                             type="number"
-                            label="Max BPM"
+                            label="Min BPM"
+                            onSlInput={e => setPreview(d => {
+                                d.min_bpm = parseFloat(e.target.value);
+                                if (d.max_bpm < d.min_bpm) {
+                                    d.max_bpm = d.min_bpm;
+                                }
+                            })}
                         />
                         <Input
                             class="el_bpm"
+                            step="any"
                             value={`${preview.max_bpm}`}
                             type="number"
-                            label="Min BPM"
+                            label="Max BPM"
+                            onSlInput={e => setPreview(d => {
+                                d.max_bpm = parseFloat(e.target.value);
+                                if (d.min_bpm > d.max_bpm) {
+                                    d.min_bpm = d.max_bpm;
+                                }
+                            })}
                         />
                         <Select
                             label="Difficulty"
                             value={`${preview.difficulty}`}
                             class="el_difficulty"
+                            onSlChange={e => setPreview(d => {
+                                d.difficulty = parseInt(e.target.value);
+                            })}
                         >
                             <Option value="0">Easy</Option>
                             <Option value="1">Medium</Option>
@@ -120,12 +140,9 @@ export function EditLevel({"class": _class, levelPrefill}: EditLevelProps) {
                     <TagInput
                         class="el_tags"
                         items={preview.tags}
-                        onItems={items => {
-                            setPreview(prev => ({
-                                ...prev,
-                                tags: items
-                            }));
-                        }}
+                        onItems={items => setPreview(d => {
+                            d.tags = items;
+                        })}
                         commaSubmits={true}
                         inputProps={{
                             label: "Tags"
@@ -134,32 +151,50 @@ export function EditLevel({"class": _class, levelPrefill}: EditLevelProps) {
                     <div class="el_checkboxes">
                         <Checkbox
                             checked={preview.seizure_warning}
+                            onSlInput={e => setPreview(d => {
+                                d.seizure_warning = e.target.checked;
+                            })}
                         >
                             Seizure warning
                         </Checkbox>
                         <Checkbox
                             checked={preview.single_player}
+                            onSlInput={e => setPreview(d => {
+                                d.single_player = e.target.checked;
+                            })}
                         >
                             Supports single player
                         </Checkbox>
                         <Checkbox
                             checked={preview.two_player}
+                            onSlInput={e => setPreview(d => {
+                                d.two_player = e.target.checked;
+                            })}
                         >
                             Supports two player
                         </Checkbox>
                         {
-                            [
-                                "classics",
-                                "oneshots",
-                                "squareshots",
-                                "freezeshots",
-                                "freetimes",
-                                "holds",
-                                "skipshots",
-                                "window dance"
-                            ].map(s => (
-                                <Checkbox>Contains {s}</Checkbox>
-                            ))
+                            ([
+                                ["classics", "Contains classics"],
+                                ["oneshots", "Contains oneshots"],
+                                ["squareshots", "Contains squareshots"],
+                                ["freezeshots", "Contains freezeshots"],
+                                ["freetimes", "Contains freetimes"],
+                                ["holds", "Contains holds"],
+                                ["skipshots", "Contains skipshots"],
+                                ["window_dance", "Uses window dance"]
+                            ] as const).map(([tag, s]) => {
+                                return (
+                                    <Checkbox
+                                        checked={preview[`has_${tag}`]}
+                                        onSlInput={e => setPreview(d => {
+                                            d[`has_${tag}`] = e.target.checked;
+                                        })}
+                                    >
+                                        {s}
+                                    </Checkbox>
+                                )
+                            })
                         }
                     </div>
                 </form>
