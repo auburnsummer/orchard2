@@ -4,14 +4,15 @@ import { WithClass } from "@orchard/utils/withClass";
 import cc from "clsx";
 
 import "./EditLevel.css";
-import { Input, Select, TagInput, Textarea, Option, Checkbox } from "@orchard/ui";
+import { Input, Select, TagInput, Textarea, Option, Checkbox, Button, Divider, Dialog } from "@orchard/ui";
 import { useRef } from "preact/hooks";
-import { atomWithReset } from "jotai/utils";
+import { RESET, atomWithReset } from "jotai/utils";
 import { useAtom } from "jotai";
 import { withImmer } from "jotai-immer";
 import type { User } from "@orchard/api/auth";
 import type { Publisher } from "@orchard/api/publisher";
 import { useLog } from "@orchard/hooks/useLog";
+import type { SlDialog } from "@shoelace-style/shoelace";
 
 type EditLevelProps = WithClass & {
     levelPrefill: VitalsLevelExport;
@@ -39,15 +40,54 @@ export function EditLevel({"class": _class, levelPrefill}: EditLevelProps) {
 
     const [preview, setPreview] = useAtom(levelAtom.current);
 
+    const levelPreviewDialog = useRef<SlDialog | null>(null);
+
     useLog(preview);
 
     return (
         <div class={cc(_class, "el")}>
+            <Dialog
+                noHeader
+                class="el_level-preview-smallscreens"
+                ref={levelPreviewDialog}
+            >
+                <p>hello</p>
+            </Dialog>
             <div class="el_too-small">
                 <p class="el_too-small-message">Please increase the size of the web browser</p>
             </div>
             <div class="el_wrapper">
-                <form class="el_form">
+                {/*
+                    nit: we should make this an actual form at some point. the current issue is that 
+                    TagInput does not behave like a form control
+                */}
+                <div class="el_form">
+                    <div class="el_controls">
+                        <Button
+                            class="el_reset-button"
+                            variant="text"
+                            size={"small" as any}
+                            onClick={() => setPreview(_ => RESET)}
+                        >
+                            Reset form
+                        </Button>
+                        <div class="el_controls-spacer" />
+                        <Button
+                            class="el_preview-button"
+                            onClick={() => {
+                                levelPreviewDialog.current?.show();
+                            }}
+                        >
+                            Show preview
+                        </Button>
+                        {/* not type submit, it's too easy for a stray enter to submit the form */}
+                        <Button
+                            class="el_submit-button"
+                        >
+                            Submit
+                        </Button>
+                    </div>
+                    <Divider class="el_control-title-divider" />
                     <div class="el_titles">
                         <Input
                             class="el_title"
@@ -197,7 +237,7 @@ export function EditLevel({"class": _class, levelPrefill}: EditLevelProps) {
                             })
                         }
                     </div>
-                </form>
+                </div>
                 <div class="el_preview">
 
                 </div>
