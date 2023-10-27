@@ -59,7 +59,7 @@
     flex-grow: 1;
 }
 
-@container el (max-width: 36rem) {
+@container el (max-width: 37rem) {
     .el_titles {
         flex-direction: column;
         gap: 0.5rem;
@@ -88,4 +88,22 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
     gap: 1rem;
+}
+
+.el_controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.el_controls-spacer {
+    flex-grow: 1;
+}
+
+.el_submit-button {
+    margin-left: 1rem;
+}
+
+.el_control-title-divider {
+    --spacing: 0.5rem;
 }
