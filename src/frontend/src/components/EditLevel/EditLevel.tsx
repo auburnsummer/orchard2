@@ -43,8 +43,6 @@ export function EditLevel({"class": _class, levelPrefill}: EditLevelProps) {
 
     const levelPreviewDialog = useRef<SlDialog | null>(null);
 
-    useLog(preview);
-
     return (
         <div class={cc(_class, "el")}>
             <Dialog
@@ -239,7 +237,7 @@ export function EditLevel({"class": _class, levelPrefill}: EditLevelProps) {
                     </div>
                 </div>
                 <div class="el_preview">
-
+                    <LevelBox level={preview} />
                 </div>
             </div>
         </div>

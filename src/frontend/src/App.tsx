@@ -18,7 +18,7 @@ registerIconLibrary('fa', {
     let folder = 'regular';
     if (name.substring(0, 4) === 'fas-') folder = 'solid';
     if (name.substring(0, 4) === 'fab-') folder = 'brands';
-    return `https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/svgs/${folder}/${filename}.svg`;
+    return `https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/svgs/${folder}/${filename}.svg`;
   },
   mutator: svg => svg.setAttribute('fill', 'currentColor')
 });
