@@ -10,7 +10,9 @@
         "lint": "npx prettier . --write"
     },
     "dependencies": {
+        "@react-hookz/web": "^23.1.0",
         "@shoelace-style/shoelace": "^2.9.0",
+        "clipboard-copy": "^4.0.1",
         "clsx": "^2.0.0",
         "generic-type-guard": "^3.7.2",
         "immer": "^10.0.3",

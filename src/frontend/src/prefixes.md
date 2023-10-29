@@ -1,5 +1,7 @@
 
+-  `.cl`: `ConjunctionList`
  - `.dc`: `DiscordCallback`
+ - `.dd`: `DifficultyDecorator`
  - `.el`: `EditLevel`
  - `.he`: `Header`
  - `.ho`: `Home`

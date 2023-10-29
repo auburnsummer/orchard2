@@ -2,6 +2,7 @@
 // if I need to I can add my own UI elements later, or customize the defaults.
 // this is mostly for aesthetical reasons of being able to import from @orchard/ui lol
 
+import SlAnimation from "@shoelace-style/shoelace/dist/react/animation/index.js";
 import SlSpinner from "@shoelace-style/shoelace/dist/react/spinner/index.js";
 import SlButton from "@shoelace-style/shoelace/dist/react/button/index.js";
 import SlIcon from "@shoelace-style/shoelace/dist/react/icon/index.js";
