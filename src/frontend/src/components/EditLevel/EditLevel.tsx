@@ -13,12 +13,13 @@ import type { User } from "@orchard/api/auth";
 import type { Publisher } from "@orchard/api/publisher";
 import { useLog } from "@orchard/hooks/useLog";
 import type { SlDialog } from "@shoelace-style/shoelace";
+import { LevelBox } from "../LevelBox";
 
 type EditLevelProps = WithClass & {
     levelPrefill: VitalsLevelExport;
 }
 
-type LevelPreviewData = VitalsLevelExport & {
+export type LevelPreviewData = VitalsLevelExport & {
     "song_altname": string;
     "publisher": Publisher;
 }
@@ -51,7 +52,7 @@ export function EditLevel({"class": _class, levelPrefill}: EditLevelProps) {
                 class="el_level-preview-smallscreens"
                 ref={levelPreviewDialog}
             >
-                <p>hello</p>
+                <LevelBox level={preview} />
             </Dialog>
             <div class="el_too-small">
                 <p class="el_too-small-message">Please increase the size of the web browser</p>

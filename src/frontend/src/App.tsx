@@ -7,29 +7,28 @@ import { DiscordCallback } from './pages/DiscordCallback';
 import { PublisherDiscordRegister } from './pages/PublisherDiscordRegister';
 import { NotFound } from './pages/404';
 import { PublisherAdd } from './pages/PublisherAdd';
-import { Button, TagInput } from './ui';
-import { useState } from 'preact/hooks';
+import { registerIconLibrary } from '@shoelace-style/shoelace/dist/utilities/icon-library.js';
 
 setBasePath('https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.9.0/cdn/');
 
-function Scaffold() {
-    const [items, setItems] = useState(["hello", "world", "hello"])
 
-    const validationMessage = items.length ? "" : "There needs to be at least one thingo."
+registerIconLibrary('fa', {
+  resolver: name => {
+    const filename = name.replace(/^fa[rbs]-/, '');
+    let folder = 'regular';
+    if (name.substring(0, 4) === 'fas-') folder = 'solid';
+    if (name.substring(0, 4) === 'fab-') folder = 'brands';
+    return `https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/svgs/${folder}/${filename}.svg`;
+  },
+  mutator: svg => svg.setAttribute('fill', 'currentColor')
+});
 
-    return (
-        <form style={{padding: "3rem"}}>
-            <TagInput items={items} onItems={setItems} commaSubmits validationMessage={validationMessage} inputProps={{"label": "Tag test"}}/>
-            <Button type="submit">Submit</Button>
-        </form>
-    )
-}
+
 
 export function App() {
 
     return (
         <Switch>
-            <Route path="/scaffold"><Scaffold/></Route>
             <Route path="/publisher/add"><PublisherAdd /></Route>
             <Route path="/publisher/discord_register"><PublisherDiscordRegister /></Route>
             <Route path="/discord_callback"><DiscordCallback /></Route>
