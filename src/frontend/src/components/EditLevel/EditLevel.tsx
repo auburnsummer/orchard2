@@ -48,7 +48,6 @@ export function EditLevel({"class": _class, levelPrefill}: EditLevelProps) {
     return (
         <div class={cc(_class, "el")}>
             <Dialog
-                noHeader
                 class="el_level-preview-smallscreens"
                 ref={levelPreviewDialog}
             >
