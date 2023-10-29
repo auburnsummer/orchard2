@@ -107,3 +107,28 @@
 .el_control-title-divider {
     --spacing: 0.5rem;
 }
+
+.el_level-preview-smallscreens {
+    --width: fit-content;
+}
+
+.el_level-preview-smallscreens::part(panel) {
+    background-color: transparent;
+    box-shadow: none;
+    align-items: end;
+    pointer-events: none;
+}
+
+.el_level-preview-smallscreens::part(body) {
+    pointer-events: auto;
+}
+
+.el_level-preview-smallscreens::part(title) {
+    display: none;
+}
+
+.el_level-preview-smallscreens::part(close-button) {
+    background-color: var(--sl-color-neutral-0);
+    border-radius: 9999px;
+    pointer-events: auto;
+}
