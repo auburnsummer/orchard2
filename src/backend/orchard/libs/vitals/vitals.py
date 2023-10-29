@@ -44,7 +44,7 @@ def main(f: IO[bytes]) -> VitalsLevel:
         ("single_player", "two_player"): player_facet,
         "last_updated": updated_facet,
         "tags": tags_facet,
-        ("image", "thumb"): thumbnail_facet,
+        ("image", "thumb", "is_animated"): thumbnail_facet,
         "icon": icon_facet,
         (
             "has_classics",
