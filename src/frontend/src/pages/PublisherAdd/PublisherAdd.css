@@ -6,6 +6,10 @@
     background-color: var(--sl-color-primary-100);
 }
 
+.pa_header {
+    z-index: 10;
+}
+
 .pa_wrapper1 {
     flex-grow: 1;
     display: flex;

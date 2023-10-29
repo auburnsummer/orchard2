@@ -101,7 +101,7 @@ export function PublisherAdd() {
 
     return (
         <div class="pa">
-            <Header />
+            <Header class="pa_header" />
             <div class="pa_wrapper1">
                 <PublisherAddCheckUser />
             </div>
