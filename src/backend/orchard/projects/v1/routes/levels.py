@@ -60,7 +60,7 @@ async def prefill_handler(request: Request):
             rdzip_args = f, "levels", "rdzip"
             image_args = BytesIO(level.image), "images", "png"
             icon_args = (BytesIO(level.icon), "icons", "png") if level.icon else None
-            thumb_args = BytesIO(level.thumb), "thumbnails", "png"
+            thumb_args = BytesIO(level.thumb), "thumbnails", "webp"
             async with asyncio.TaskGroup() as tg:
                 tg.create_task(bun.upload_file_by_hash(*rdzip_args))
                 tg.create_task(bun.upload_file_by_hash(*image_args))

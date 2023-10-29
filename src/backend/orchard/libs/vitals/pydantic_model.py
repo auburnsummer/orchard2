@@ -35,6 +35,7 @@ class VitalsLevelBase(msgspec.Struct):
     rdlevel_sha1: str
     
 class VitalsLevel(VitalsLevelBase):
+    is_animated: bool
     image: bytearray
     thumb: bytearray
     icon: Optional[bytearray]

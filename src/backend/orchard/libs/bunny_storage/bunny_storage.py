@@ -70,14 +70,15 @@ class BunnyStorage:
 
     async def file_exists(self, path: str, file_name: str):
         url = self._build_path(path, file_name)
-        resp = await self.client.head(url, headers={
+        resp = await self.client.get(url, headers={
             "AccessKey": self.api_key,
+            "Range": "bytes=0-1"
         })
         try:
             resp.raise_for_status()
-            return False
-        except HTTPStatusError:
             return True
+        except HTTPStatusError:
+            return False
 
     @retry(wait=wait_exponential(multiplier=1, min=4, max=10), stop=stop_after_attempt(5))
     async def upload_file(self, file: BinaryIO, path: str, file_name: str, skip_if_already_exists: bool):

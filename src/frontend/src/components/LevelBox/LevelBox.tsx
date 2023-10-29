@@ -16,7 +16,7 @@ type LevelBoxProps = {
 
 export function LevelBox({ level, 'class': _class }: LevelBoxProps) {
     const approval = 10 as number;
-    const { song, song_altname, artist_tokens, authors, tags, image, min_bpm, max_bpm, seizure_warning } = level;
+    const { song, song_altname, artist_tokens, authors, tags, thumb, image, min_bpm, max_bpm, seizure_warning } = level;
 
     const bpmText = min_bpm === max_bpm ? `${min_bpm} BPM` : `${min_bpm}-${max_bpm} BPM`;
     const sourceText = 'Rhythm Doctor Lounge';
@@ -33,7 +33,7 @@ export function LevelBox({ level, 'class': _class }: LevelBoxProps) {
     return (
         <article class={cc(_class, "lb")}>
             <div class="lb_imagebox">
-                <img class="lb_image" src={image} />
+                <img class="lb_image" src={thumb} />
                 <div class="lb_overlay">
                     <div class="lb_description">
                         {
