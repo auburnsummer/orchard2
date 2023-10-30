@@ -23,7 +23,8 @@ from .routes.admin import (
 )
 
 from .routes.publishers import (
-    create_new_publisher_via_discord_guild_handler
+    create_new_publisher_via_discord_guild_handler,
+    get_publisher_handler
 )
 
 
@@ -43,10 +44,10 @@ routes = [
     Route("/discord_interactions", endpoint=interaction_handler, methods=["POST"]),
     Route("/discord_interactions2", endpoint=interaction_handler, methods=["POST"]),
 
-
     Route("/admin/update_interactions", endpoint=update_slash_commands_handler, methods=["POST"]),
 
-    Route("/publisher/new/discord", endpoint=create_new_publisher_via_discord_guild_handler, methods=["POST"])
+    Route("/publisher/new/discord", endpoint=create_new_publisher_via_discord_guild_handler, methods=["POST"]),
+    Route("/publisher/identify", endpoint=get_publisher_handler, methods=["GET"])
 ]
 
 app = Starlette(

@@ -29,6 +29,7 @@ class OrchardAuthScopes(msgspec.Struct, kw_only=True):
     User_all: Optional[str] = None  # the bearer is this user.
     Admin_all: Optional[bool] = None  # if true, bearer is an admin.
     DiscordGuild_register: Optional[str] = None  # this discord guild can be used to register.
+    Publisher_identify: Optional[str] = None  # this token yields this publisher with the /identify endpoint.
     Publisher_add: Optional[PublisherAddScope] = None  # this specific publisher id and url can be added
 
 class OrchardAuthToken(OrchardAuthScopes):

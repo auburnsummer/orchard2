@@ -20,6 +20,7 @@ export const req = (method: string) => async <T>(url: Input, options: Options<T>
     if (guard(data)) {
         return data;
     }
+    console.log(data);
     throw new Error(`Response from ${url} did not match schema ${guard.name}`);
 }
 

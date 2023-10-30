@@ -63,7 +63,6 @@ from .spec import (
     ApplicationCommandInteraction,
     DiscordAttachment,
     InteractionMessage,
-    InteractionType,
     MessageApplicationCommandData,
     MessageInteractionResponse,
     PingInteraction,
@@ -161,7 +160,8 @@ async def add_handler(body: ApplicationCommandInteraction):
             Publisher_add=PublisherAddScope(
                 publisher_id=publisher.id,
                 url=attachment.url
-            )
+            ),
+            Publisher_identify=publisher.id
         )
         token = make_token_now(scopes, timedelta(hours=2))
         link = make_publisher_link("add", publisher_token=token)

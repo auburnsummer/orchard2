@@ -33,9 +33,9 @@ class VitalsLevelBase(msgspec.Struct):
     has_window_dance: bool
     sha1: str
     rdlevel_sha1: str
+    is_animated: bool
     
 class VitalsLevel(VitalsLevelBase):
-    is_animated: bool
     image: bytearray
     thumb: bytearray
     icon: Optional[bytearray]
