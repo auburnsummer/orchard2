@@ -23,3 +23,12 @@ export async function createNewDiscordPublisher(name: string, guildToken: string
         }
     });
 }
+
+export async function getPublisher(publisherToken: string) {
+    return client.get("publisher/identify", {
+        guard: isPublisher,
+        headers: {
+            Authorization: `Bearer ${publisherToken}`
+        }
+    })
+}

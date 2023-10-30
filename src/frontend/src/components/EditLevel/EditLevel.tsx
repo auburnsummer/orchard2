@@ -17,27 +17,25 @@ import { LevelBox } from "../LevelBox";
 
 type EditLevelProps = WithClass & {
     levelPrefill: VitalsLevelExport;
+    publisherName: string;
 }
 
 export type LevelPreviewData = VitalsLevelExport & {
     "song_altname": string;
-    "publisher": Publisher;
+    "publisherName": string;
 }
 
-function makeInitialAtom(prefill: VitalsLevelExport) {
+function makeInitialAtom(prefill: VitalsLevelExport, publisherName: string) {
     const initialLevelState: LevelPreviewData = {
         ...prefill,
         "song_altname": "",
-        "publisher": {
-            "id": "fakeid",
-            "name": "Lorem Ipsum Club"  // TODO: fetch actual publisher from token...
-        }
+        publisherName
     }
     return withImmer(atomWithReset(initialLevelState));
 }
 
-export function EditLevel({"class": _class, levelPrefill}: EditLevelProps) {
-    const levelAtom = useRef(makeInitialAtom(levelPrefill));
+export function EditLevel({"class": _class, levelPrefill, publisherName}: EditLevelProps) {
+    const levelAtom = useRef(makeInitialAtom(levelPrefill, publisherName));
 
     const [preview, setPreview] = useAtom(levelAtom.current);
 

@@ -9,23 +9,27 @@ import { useEffect, useRef } from "preact/hooks";
 import { Button, Checkbox, Input, Select, TagInput, Textarea, Option } from "@orchard/ui";
 import { atomWithReset } from "jotai/utils";
 import { EditLevel } from "@orchard/components/EditLevel";
+import { Publisher, getPublisher } from "@orchard/api/publisher";
+import { tuple } from "@orchard/utils/grabbag";
+import combinePromises from "@orchard/utils/combinePromises";
 
 type STATES = "prefill"
 
 const stateAtom = atom<STATES>("prefill");
 
 type PublisherAddFormProps = {
-    level: VitalsLevelExport
+    level: VitalsLevelExport;
+    publisher: Publisher
 }
 
-function PublisherAddForm({level}: PublisherAddFormProps) {
+function PublisherAddForm({level, publisher}: PublisherAddFormProps) {
     const levelAtom = useRef(atomWithReset(level));
 
     const [levelPrefill, setLevelPrefill] = useAtom(levelAtom.current);
 
     return (
         <div class="pa_form-wrapper">
-            <EditLevel levelPrefill={levelPrefill} class="pa_edit-level" />
+            <EditLevel levelPrefill={levelPrefill} publisherName={publisher.name} class="pa_edit-level" />
         </div>
     )
 }
@@ -38,7 +42,10 @@ function PublisherAddMainPhase() {
             throw new Error("No publisher token given. Try the command again in discord")
         }
         const userToken = get(authTokenAtom);
-        return getLevelPrefill(publisherToken, userToken);
+        return combinePromises({
+            prefill: getLevelPrefill(publisherToken, userToken),
+            publisher: getPublisher(publisherToken)
+        })
     });
 
     useEffect(() => {
@@ -66,8 +73,9 @@ function PublisherAddMainPhase() {
                 </div>
             )
         }
+        const {prefill, publisher} = prefillResult.data;
         return (
-            <PublisherAddForm level={prefillResult.data}/>
+            <PublisherAddForm level={prefill} publisher={publisher}/>
         )
     }
 

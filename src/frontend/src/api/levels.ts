@@ -36,6 +36,7 @@ export type VitalsLevelExport = {
     sha1: string,
     rdlevel_sha1: string
     image: string,
+    is_animated: boolean,
     thumb: string,
     url: string,
     icon?: string
@@ -75,6 +76,7 @@ const isVitalsExport: tg.TypeGuard<VitalsLevelExport> = tg.isLikeObject({
     sha1: tg.isString,
     rdlevel_sha1: tg.isString,
     image: tg.isString,
+    is_animated: tg.isBoolean,
     thumb: tg.isString,
     url: tg.isString,
     icon: tg.isOptional(tg.isString)
