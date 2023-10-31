@@ -22,14 +22,14 @@ type EditLevelProps = WithClass & {
 
 export type LevelPreviewData = VitalsLevelExport & {
     "song_altname": string;
-    "publisherName": string;
+    "publisher_name": string;
 }
 
 function makeInitialAtom(prefill: VitalsLevelExport, publisherName: string) {
     const initialLevelState: LevelPreviewData = {
         ...prefill,
         "song_altname": "",
-        publisherName
+        "publisher_name": publisherName
     }
     return withImmer(atomWithReset(initialLevelState));
 }
