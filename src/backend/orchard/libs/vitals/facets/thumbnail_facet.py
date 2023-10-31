@@ -33,7 +33,7 @@ def thumbnail_facet(obj, zip, **kwargs_):
         thumbnail_image.save(
             thumb_file_p,
             format="webp",
-            quality=75,
+            quality=82,
             method=6
         )
         image.close()
