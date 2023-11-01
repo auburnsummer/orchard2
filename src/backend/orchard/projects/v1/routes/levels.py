@@ -1,8 +1,9 @@
+from datetime import timedelta
 from typing import IO, List, Tuple, Optional
 from orchard.libs.bunny_storage import BunnyStorage
 from orchard.libs.hash import sha1
 from orchard.libs.vitals.pydantic_model import VitalsLevelBase
-from orchard.projects.v1.core.auth import OrchardAuthToken, requires_scopes
+from orchard.projects.v1.core.auth import AssetURLScope, OrchardAuthScopes, OrchardAuthToken, make_token_now, requires_scopes
 from orchard.projects.v1.core.config import config
 from orchard.projects.v1.core.forward import forward_httpx
 from orchard.projects.v1.core.wrapper import msgspec_return, parse_body_as
@@ -26,6 +27,9 @@ class VitalsLevelExport(VitalsLevelBase):
     thumb: str
     url: str
     icon: Optional[str] = None
+
+class PrefillResult(VitalsLevelExport):
+    asset_token: str
 
 @msgspec_return(200)
 @inject_user
@@ -68,14 +72,31 @@ async def prefill_handler(request: Request):
                 if icon_args:
                     tg.create_task(bun.upload_file_by_hash(*icon_args))
 
+            thumb = bun.get_public_url(bun.get_url_by_hash(*thumb_args))
+            image = bun.get_public_url(bun.get_url_by_hash(*image_args))
+            icon = bun.get_public_url(bun.get_url_by_hash(*icon_args) if icon_args else None)
+            url = bun.get_public_url(bun.get_url_by_hash(*rdzip_args)),
+            asset_token = make_token_now(
+                scopes=OrchardAuthScopes(
+                    Publisher_assets=AssetURLScope(
+                        image=image,
+                        thumb=thumb,
+                        icon=icon,
+                        url=url
+                    )
+                ),
+                exp_time=timedelta(days=1)
+            )
+
             payload = {
                 **msgspec.structs.asdict(level),
-                "thumb": bun.get_public_url(bun.get_url_by_hash(*thumb_args)),
-                "image": bun.get_public_url(bun.get_url_by_hash(*image_args)),
-                "icon": bun.get_public_url(bun.get_url_by_hash(*icon_args) if icon_args else None),
-                "url": bun.get_public_url(bun.get_url_by_hash(*rdzip_args))
+                "thumb": thumb,
+                "image": image,
+                "icon": icon,
+                "url": url,
+                "asset_token": asset_token
             }
-            to_send = msgspec.convert(payload, VitalsLevelExport)
+            to_send = msgspec.convert(payload, PrefillResult)
 
     return to_send
 
