@@ -170,3 +170,5 @@ src/frontend_old*
 .vscode
 
 tmp/
+
+NEXT.txt

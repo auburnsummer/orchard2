@@ -23,6 +23,15 @@ import msgspec
 class PublisherAddScope(msgspec.Struct):
     publisher_id: str
     url: str
+
+class AssetURLScope(msgspec.Struct):
+    """
+    indicates that these image / thumb / icon combo is allowed to be submitted with this url
+    """
+    image: str
+    thumb: str
+    url: str
+    icon: Optional[str] = None
  
 class OrchardAuthScopes(msgspec.Struct, kw_only=True):
     "The keys and value types that a token can have."
@@ -31,6 +40,7 @@ class OrchardAuthScopes(msgspec.Struct, kw_only=True):
     DiscordGuild_register: Optional[str] = None  # this discord guild can be used to register.
     Publisher_identify: Optional[str] = None  # this token yields this publisher with the /identify endpoint.
     Publisher_add: Optional[PublisherAddScope] = None  # this specific publisher id and url can be added
+    Publisher_assets: Optional[AssetURLScope] = None
 
 class OrchardAuthToken(OrchardAuthScopes):
     iat: datetime
