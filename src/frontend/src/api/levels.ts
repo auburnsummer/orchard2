@@ -39,7 +39,8 @@ export type VitalsLevelExport = {
     is_animated: boolean,
     thumb: string,
     url: string,
-    icon?: string
+    icon?: string,
+    asset_token: string
 };
 
 const isColorToken: tg.TypeGuard<ColorToken> = tg.isLikeObject({
@@ -79,7 +80,8 @@ const isVitalsExport: tg.TypeGuard<VitalsLevelExport> = tg.isLikeObject({
     is_animated: tg.isBoolean,
     thumb: tg.isString,
     url: tg.isString,
-    icon: tg.isOptional(tg.isString)
+    icon: tg.isOptional(tg.isString),
+    asset_token: tg.isString
 });
 
 // the url for the prefill is encoded in the token and cannot be changed by the user.
