@@ -41,6 +41,8 @@ nb: for the initial scope, only /register is planned.
 from datetime import timedelta
 import json
 from re import A
+from orchard.libs.discord_msgspec.interaction import AnyInteraction, ApplicationCommandInteraction, MessageApplicationCommandData, PingInteraction
+from orchard.libs.discord_msgspec.interaction_response import EPHEMERAL, MessageInteractionCallbackData, MessageInteractionResponse, PongInteractionResponse
 from orchard.projects.v1.core.auth import OrchardAuthScopes, PublisherAddScope, make_token_now
 from orchard.projects.v1.core.exceptions import InvalidDiscordSignature, MissingDiscordSignatureHeaders
 from orchard.projects.v1.core.wrapper import msgspec_return
@@ -59,17 +61,7 @@ from typing import Optional, List
 
 import msgspec
 
-from .spec import (
-    EPHEMERAL,
-    AnyInteraction,
-    ApplicationCommandInteraction,
-    DiscordAttachment,
-    InteractionMessage,
-    MessageApplicationCommandData,
-    MessageInteractionResponse,
-    PingInteraction,
-    PongInteractionResponse,
-)
+
 
 from loguru import logger
 
@@ -80,7 +72,7 @@ async def version_handler(_: ApplicationCommandInteraction):
         `{__version__}`
     """)
     response = MessageInteractionResponse(
-        data=InteractionMessage(
+        data=MessageInteractionCallbackData(
             content=content,
             flags=EPHEMERAL
         )
@@ -96,7 +88,7 @@ async def discord_register_handler(body: ApplicationCommandInteraction):
     guild_token = make_token_now(scopes, exp_time)
     content = make_publisher_link_continue("discord_register", guild_token=guild_token)
     response = MessageInteractionResponse(
-        data=InteractionMessage(
+        data=MessageInteractionCallbackData(
             content=content,
             flags=EPHEMERAL
         )
@@ -107,7 +99,7 @@ async def discord_register_handler(body: ApplicationCommandInteraction):
 async def add_handler(body: ApplicationCommandInteraction):
     def error(message: str):
         response = MessageInteractionResponse(
-            data=InteractionMessage(
+            data=MessageInteractionCallbackData(
                 content=message,
                 flags=EPHEMERAL
             )
@@ -157,7 +149,7 @@ async def add_handler(body: ApplicationCommandInteraction):
         final_content = final_content + f"* `{attachment.filename}`: [click here]({link})\n"
 
     response = MessageInteractionResponse(
-        data=InteractionMessage(
+        data=MessageInteractionCallbackData(
             content=final_content,
             flags=EPHEMERAL
         )
@@ -216,8 +208,8 @@ async def interaction_handler(request: Request):
 
     try:
         verify_key.verify(bytes.fromhex(sig), to_verify)
-    except InvalidSignature:
-        raise InvalidDiscordSignature()
+    except InvalidSignature as exc:
+        raise InvalidDiscordSignature() from exc
 
     #print(payload)
 
@@ -233,7 +225,7 @@ async def interaction_handler(request: Request):
         except KeyError:
             content = dedent(f"I don't know what to do with the command {body.data.name}. This is a bug, please ping auburn!")
             response = MessageInteractionResponse(
-                data=InteractionMessage(
+                data=MessageInteractionCallbackData(
                     content=content,
                     flags=EPHEMERAL
                 )

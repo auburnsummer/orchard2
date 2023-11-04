@@ -3,6 +3,8 @@ Routes relating to discord oauth login.
 """
 
 from datetime import timedelta
+from orchard.libs.discord_msgspec.oauth import OAuthTokenResponse
+from orchard.libs.discord_msgspec.user import DiscordUser
 from orchard.projects.v1.core.auth import OrchardAuthScopes, OrchardAuthToken, make_token_now
 from orchard.projects.v1.core.forward import forward_httpx
 from orchard.projects.v1.core.wrapper import msgspec_return, parse_body_as
@@ -14,24 +16,7 @@ from orchard.projects.v1.models.credentials import create_or_get_user_with_crede
 from orchard.projects.v1.models.users import update_user, EditUser
 from starlette.requests import Request
 
-from typing import Optional
-
 import msgspec
-
-class OAuthTokenResponse(msgspec.Struct):
-    access_token: str
-    expires_in: int
-    refresh_token: str
-    scope: str
-    token_type: str
-
-
-# the discord API returns more than this, but this is the only subset we're interested in.
-class DiscordUserPartial(msgspec.Struct):
-    id: str
-    username: str
-    global_name: str
-    avatar: Optional[str] = None
 
 class DiscordAuthCallbackHandlerArgs(msgspec.Struct):
     code: str
@@ -53,7 +38,7 @@ async def get_discord_user_from_oauth(data: DiscordAuthCallbackHandlerArgs):
         user_resp = await client.get("https://discord.com/api/users/@me", headers={
             "Authorization": f"Bearer {token_response.access_token}"
         })
-        discord_user = msgspec.json.decode(user_resp.content, type=DiscordUserPartial)
+        discord_user = msgspec.json.decode(user_resp.content, type=DiscordUser)
     return discord_user
 
 

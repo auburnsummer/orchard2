@@ -1,5 +1,7 @@
 
-from .spec import ApplicationCommand, ApplicationCommandType
+from orchard.libs.discord_msgspec.application_command import ApplicationCommand
+from orchard.libs.discord_msgspec.interaction import ApplicationCommandType
+
 
 version = ApplicationCommand(
     name="version",
