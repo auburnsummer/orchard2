@@ -88,7 +88,8 @@ def test_parse_token_from_request_combines_comma_seperated_tokens():
         OrchardAuthScopes(
             Publisher_add=PublisherAddScope(
                 publisher_id="testid",
-                url="https://example.com/example.rdzip"
+                url="https://example.com/example.rdzip",
+                user_id="testuser"
             )
         ), timedelta(hours=5)
     )
@@ -99,6 +100,7 @@ def test_parse_token_from_request_combines_comma_seperated_tokens():
     assert parsed.User_all == "yuki"
     assert parsed.Publisher_add == PublisherAddScope(
         publisher_id="testid",
-        url="https://example.com/example.rdzip"
+        url="https://example.com/example.rdzip",
+        user_id="testuser"
     )
 

@@ -1,9 +1,10 @@
 from typing import Any, Never
 from httpx import AsyncClient
+from orchard.libs.discord_msgspec.user import DiscordUser
 import pytest
 from unittest.mock import patch
 
-from orchard.projects.v1.routes.discord_auth import DiscordAuthCallbackHandlerArgs, DiscordUserPartial
+from orchard.projects.v1.routes.discord_auth import DiscordAuthCallbackHandlerArgs
 from orchard.projects.v1.models.users import get_all_users
 from orchard.projects.v1.models.credentials import get_disc_credential, make_new_user_with_credential
 from orchard.projects.v1.core.auth import paseto_to_token
@@ -13,9 +14,9 @@ from orchard.projects.v1.core.auth import paseto_to_token
 def mock_get_discord_user_from_oauth():
     async def mock(data: DiscordAuthCallbackHandlerArgs):
         if data.code == "mockcode":
-            return DiscordUserPartial(id="testid", username="mafuyu", avatar="testavatar", global_name="yuki")
+            return DiscordUser(id="testid", username="mafuyu", avatar="testavatar", global_name="yuki")
         if data.code == "mockcode2":
-            return DiscordUserPartial(id="testid", username="mafuyu", avatar=None, global_name="yuki")
+            return DiscordUser(id="testid", username="mafuyu", avatar=None, global_name="yuki")
 
     with patch("orchard.projects.v1.routes.discord_auth.get_discord_user_from_oauth", new=mock):
         yield

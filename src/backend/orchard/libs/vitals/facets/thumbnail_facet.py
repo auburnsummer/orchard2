@@ -23,13 +23,20 @@ def thumbnail_facet(obj, zip, **kwargs_):
         thumbnail_image = image.copy()
         thumbnail_image.thumbnail((THUMBNAIL_SIZE, THUMBNAIL_SIZE), Image.Resampling.LANCZOS, reducing_gap=None)
 
-        image.save(
-            orig_file_p,
-            format="png",
-            save_all=True,
-            optimize=True,
-            
-        )
+        try:
+            image.save(
+                orig_file_p,
+                format="png",
+                save_all=True,
+                optimize=True,
+            )
+        # whatever Samario is doing with his thumbnails, PIL's save_all doesn't work with it
+        except ValueError:
+            image.save(
+                orig_file_p,
+                format="png" 
+            )
+        
         thumbnail_image.save(
             thumb_file_p,
             format="webp",
