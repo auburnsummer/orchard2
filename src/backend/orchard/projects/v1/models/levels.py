@@ -16,9 +16,8 @@ from msgspec import field
 import msgspec
 from orchard.libs.bunny_storage.bunny_storage import BunnyStorage
 from orchard.libs.vitals.pydantic_model import VitalsLevelBase
-from orchard.projects.v1.core.auth import AssetURLScope, OrchardAuthScopes, OrchardAuthToken, make_token_now, requires_scopes
+from orchard.projects.v1.core.auth import OrchardAuthScopes, make_token_now
 from orchard.projects.v1.core.config import config
-from orchard.projects.v1.core.forward import forward_httpx
 from orchard.projects.v1.models.metadata import metadata
 from orchard.libs.vitals import analyze
 
@@ -103,7 +102,10 @@ class PrefillResult(VitalsLevelBase, kw_only=True):
     thumb: str
     url: str
     icon: Optional[str] = None
-    asset_token: str
+
+class PrefillResultWithToken(msgspec.Struct, kw_only=True):
+    result: PrefillResult
+    signed_token: str
 
 async def run_prefill(source_url: str):
     c = config()
@@ -139,29 +141,26 @@ async def run_prefill(source_url: str):
             image = bun.get_public_url(bun.get_url_by_hash(*image_args))
             icon = bun.get_public_url(bun.get_url_by_hash(*icon_args) if icon_args else None)
             url = bun.get_public_url(bun.get_url_by_hash(*rdzip_args))
-            asset_token = make_token_now(
-                scopes=OrchardAuthScopes(
-                    Publisher_assets=AssetURLScope(
-                        image=image,
-                        thumb=thumb,
-                        icon=icon,
-                        url=url
-                    )
-                ),
-                exp_time=timedelta(days=1)
-            )
 
             payload = {
                 **msgspec.structs.asdict(level),
                 "thumb": thumb,
                 "image": image,
                 "icon": icon,
-                "url": url,
-                "asset_token": asset_token
+                "url": url
             }
             to_send = msgspec.convert(payload, PrefillResult)
-            return to_send
 
+            asset_token = make_token_now(
+                scopes=OrchardAuthScopes(
+                    Publisher_prefill=to_send
+                ),
+                exp_time=timedelta(days=1)
+            )
+            return PrefillResultWithToken(result=to_send, signed_token=asset_token)
+
+class AddLevelArgs(VitalsLevelBase):
+    asset_token: str
 
 def add_level():
     pass

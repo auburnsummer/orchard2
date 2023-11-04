@@ -75,7 +75,7 @@ function PublisherAddMainPhase() {
         }
         const {prefill, publisher} = prefillResult.data;
         return (
-            <PublisherAddForm level={prefill} publisher={publisher}/>
+            <PublisherAddForm level={prefill.result} publisher={publisher}/>
         )
     }
 
