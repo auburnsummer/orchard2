@@ -20,7 +20,7 @@ def parse_body_as(spec: Type[msgspec.Struct]):
                 data = msgspec.json.decode(await request.body(), type=spec)
                 request.state.body = data
             except (msgspec.DecodeError, msgspec.ValidationError) as e:
-                raise BodyValidationError(message=str(e))
+                raise BodyValidationError(message=str(e)) from e
             else:
                 return await func(request)
         return inner
