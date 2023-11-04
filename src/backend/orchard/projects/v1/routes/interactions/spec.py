@@ -6,6 +6,8 @@ import msgspec
 
 from enum import IntEnum
 
+from orchard.projects.v1.routes.discord_auth import DiscordUserPartial
+
 # Interactions.
 class InteractionType(IntEnum):
     PING = 1
@@ -17,6 +19,7 @@ class BaseInteraction(msgspec.Struct, kw_only=True, tag_field="type"):
 
 class PingInteraction(BaseInteraction, tag=InteractionType.PING.value):
     pass
+
 
 class ApplicationCommandInteraction(BaseInteraction, tag=InteractionType.APPLICATION_COMMAND.value):
     guild_id: str  # we don't support DMs. So this will always be a value.
@@ -40,10 +43,12 @@ class MessageApplicationCommandData(BaseApplicationCommandData, tag=ApplicationC
     target_id: str
     resolved: Optional[Resolved] = None
 
-class DiscordMessage(msgspec.Struct):
+class DiscordMessage(msgspec.Struct, kw_only=True):
     id: str
     channel_id: str
     attachments: List[DiscordAttachment]
+    webhook_id: Optional[str] = None
+    author: DiscordUserPartial
 
 class DiscordAttachment(msgspec.Struct, kw_only=True):
     id: str
@@ -77,10 +82,7 @@ class InteractionMessage(msgspec.Struct):
 class MessageInteractionResponse(InteractionResponse, tag=InteractionCallbackType.CHANNEL_MESSAGE_WITH_SOURCE.value):
     data: InteractionMessage
 
-class ApplicationCommandType(IntEnum):
-    CHAT_INPUT = 1
-    USER = 2
-    MESSAGE = 3
+
 
 class ApplicationCommand(msgspec.Struct):
     name: str

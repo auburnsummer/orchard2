@@ -39,9 +39,13 @@ export type VitalsLevelExport = {
     is_animated: boolean,
     thumb: string,
     url: string,
-    icon?: string,
-    asset_token: string
+    icon?: string
 };
+
+export type PrefillResult = {
+    result: VitalsLevelExport,
+    signed_token: string
+}
 
 const isColorToken: tg.TypeGuard<ColorToken> = tg.isLikeObject({
     len: tg.isNumber,
@@ -81,13 +85,17 @@ const isVitalsExport: tg.TypeGuard<VitalsLevelExport> = tg.isLikeObject({
     thumb: tg.isString,
     url: tg.isString,
     icon: tg.isOptional(tg.isString),
-    asset_token: tg.isString
+});
+
+const isPrefillResult : tg.TypeGuard<PrefillResult> = tg.isLikeObject({
+    result: isVitalsExport,
+    signed_token: tg.isString
 });
 
 // the url for the prefill is encoded in the token and cannot be changed by the user.
 export async function getLevelPrefill(publisherToken: string, userToken: string) {
     return client.post("level/prefill", {
-        guard: isVitalsExport,
+        guard: isPrefillResult,
         headers: {
             authorization: `Bearer ${publisherToken},Bearer ${userToken}`
         }

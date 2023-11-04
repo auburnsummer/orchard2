@@ -39,10 +39,12 @@ nb: for the initial scope, only /register is planned.
 """
 
 from datetime import timedelta
+import json
 from re import A
 from orchard.projects.v1.core.auth import OrchardAuthScopes, PublisherAddScope, make_token_now
 from orchard.projects.v1.core.exceptions import InvalidDiscordSignature, MissingDiscordSignatureHeaders
 from orchard.projects.v1.core.wrapper import msgspec_return
+from orchard.projects.v1.models.credentials import create_or_get_user_with_credential
 from orchard.projects.v1.models.discord_guild_credentials import get_disc_guild_credential, DiscordGuildCredentialNotFoundException
 from orchard.projects.v1.models.metadata import engine
 from orchard.projects.v1.models.publishers import get_publisher_by_discord_guild_credential
@@ -85,6 +87,7 @@ async def version_handler(_: ApplicationCommandInteraction):
     )
     return response
 
+
 async def discord_register_handler(body: ApplicationCommandInteraction):
     scopes = OrchardAuthScopes(
         DiscordGuild_register=body.guild_id
@@ -102,15 +105,18 @@ async def discord_register_handler(body: ApplicationCommandInteraction):
 
 
 async def add_handler(body: ApplicationCommandInteraction):
-    # add should always be on a message.
-    if not isinstance(body.data, MessageApplicationCommandData):
+    def error(message: str):
         response = MessageInteractionResponse(
             data=InteractionMessage(
-                content="Not a message. ping auburn if you see this.",
+                content=message,
                 flags=EPHEMERAL
             )
         )
         return response
+    
+    # add should always be on a message.
+    if not isinstance(body.data, MessageApplicationCommandData):
+        return error("/add used on not a message, ping auburn if you see this.")
 
     guild_id = body.guild_id
 
@@ -119,47 +125,30 @@ async def add_handler(body: ApplicationCommandInteraction):
             cred = await get_disc_guild_credential(guild_id, conn)
             publisher = await get_publisher_by_discord_guild_credential(cred, conn)
         except DiscordGuildCredentialNotFoundException:
-            response = MessageInteractionResponse(
-                data=InteractionMessage(
-                    content="This server is not registered. Use /register first.",
-                    flags=EPHEMERAL
-                )
-            )
-            return response
+            return error("This server is not registered. Use /register first.")
 
     data = body.data
-    logger.info(data)
-    if not data.resolved:
-        response = MessageInteractionResponse(
-            data=InteractionMessage(
-                content="Resolved not present. This is a bug, ping auburn.",
-                flags=EPHEMERAL
-            )
-        )
-        return response
+    if not data.resolved or not data.resolved.messages:
+        return error("Discord did not give us resolved data. This is a bug, ping auburn if you see this")
 
-    all_attachments: List[DiscordAttachment] = []
+    try:
+        message = data.resolved.messages[data.target_id]
+    except KeyError:
+        return error("target_id not given in resolved data. This is a bug, ping auburn if you see this")
 
-    for _, value in data.resolved.messages.items():
-        for attachment in value.attachments:
-            all_attachments.append(attachment)
+    if len(message.attachments) == 0:
+        return error("No attachments in this message")
 
-    if not all_attachments:
-        response = MessageInteractionResponse(
-            data=InteractionMessage(
-                content="The message does not have attachments",
-                flags=EPHEMERAL
-            )
-        )
-        return response
+    final_content = f"Found {len(message.attachments)} level(s) in the message:\n\n"
 
-    final_content = f"Found {len(all_attachments)} level(s) in the message:\n\n"
+    user, _ = await create_or_get_user_with_credential(message.author.id, message.author.global_name)
     
-    for attachment in all_attachments:
+    for attachment in message.attachments:
         scopes = OrchardAuthScopes(
             Publisher_add=PublisherAddScope(
                 publisher_id=publisher.id,
-                url=attachment.url
+                url=attachment.url,
+                user_id=user.id
             ),
             Publisher_identify=publisher.id
         )
@@ -229,6 +218,8 @@ async def interaction_handler(request: Request):
         verify_key.verify(bytes.fromhex(sig), to_verify)
     except InvalidSignature:
         raise InvalidDiscordSignature()
+
+    #print(payload)
 
     # we're past the discord auth!
     body = msgspec.json.decode(payload, type=AnyInteraction)

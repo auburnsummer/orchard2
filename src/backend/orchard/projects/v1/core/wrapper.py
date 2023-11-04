@@ -6,6 +6,8 @@ from starlette.responses import Response
 
 import msgspec
 
+from loguru import logger
+
 def parse_body_as(spec: Type[msgspec.Struct]):
     """
     Decorator. Give it a class that inherits from Struct, and it will parse the json
@@ -64,6 +66,8 @@ def msgspec_return(status_code: int):
             except OrchardException as exc:
                 return orchard_exception_response(exc)
             except Exception as exc:
+                logger.error("Unhandled error")
+                logger.error(exc)
                 synthetic_orchard_exception = UnknownError(orig_exc=exc)
                 return orchard_exception_response(synthetic_orchard_exception)
             if isinstance(orig_response, msgspec.Struct):

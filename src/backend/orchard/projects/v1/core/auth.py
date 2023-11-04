@@ -1,19 +1,19 @@
 """
 Auth tokens are PASETO tokens encoding the user.
 """
+from __future__ import annotations
 
 from base64 import b64decode
 import json
 from orchard.projects.v1.core.exceptions import AuthorizationHeaderInvalid, AuthorizationHeaderTokenTypeIsNotBearer, MissingAuthorizationHeader, MissingScopes, NoAuthorizationHeaderTokenType
 
-from pyseto.exceptions import VerifyError
 from .config import config
 
 import pyseto
 
 from datetime import datetime, timedelta
 from functools import wraps
-from typing import Callable, List, Optional, Set, Any, TypedDict
+from typing import List, Optional, Set
 
 from starlette.requests import Request
 
@@ -22,9 +22,10 @@ import msgspec
 
 class PublisherAddScope(msgspec.Struct):
     publisher_id: str
+    user_id: str
     url: str
 
-class AssetURLScope(msgspec.Struct):
+class AssetURLScope(msgspec.Struct, kw_only=True):
     """
     indicates that these image / thumb / icon combo is allowed to be submitted with this url
     """
@@ -32,6 +33,8 @@ class AssetURLScope(msgspec.Struct):
     thumb: str
     url: str
     icon: Optional[str] = None
+    sha1: str
+    rdlevel_sha1: str
  
 class OrchardAuthScopes(msgspec.Struct, kw_only=True):
     "The keys and value types that a token can have."
@@ -40,7 +43,7 @@ class OrchardAuthScopes(msgspec.Struct, kw_only=True):
     DiscordGuild_register: Optional[str] = None  # this discord guild can be used to register.
     Publisher_identify: Optional[str] = None  # this token yields this publisher with the /identify endpoint.
     Publisher_add: Optional[PublisherAddScope] = None  # this specific publisher id and url can be added
-    Publisher_assets: Optional[AssetURLScope] = None
+    Publisher_prefill: Optional[AssetURLScope] = None
 
 class OrchardAuthToken(OrchardAuthScopes):
     iat: datetime
