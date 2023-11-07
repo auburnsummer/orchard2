@@ -3,7 +3,7 @@ from __future__ import annotations
 from orchard.libs.melite.factory import make_row_trace
 
 from apsw import Connection
-from tests.libs.melite.conftest import Bird, Watcher, Watcher2
+from tests.libs.melite.conftest import Bird, Song, Watcher, Watcher2
 
 
 def test_factory_basic_operation(db_with_some_data: Connection):
@@ -100,4 +100,18 @@ def test_factory_fk_not_null(db_with_two_tables_not_null_fk_and_data):
             name="anna"
         ),
         Watcher2(id='33333', name='ines', fav_bird=Bird(id='aaaaa', name='wren', height_cm=5, colour='blue')),
+    ]
+
+
+def test_factory_array_column(db_with_array_col_table_data: Connection):
+    cursor = db_with_array_col_table_data.cursor()
+    cursor.set_row_trace(make_row_trace(Song, db_with_array_col_table_data))
+    q = """--sql
+    SELECT * FROM song
+    """
+    cursor.execute(q)
+    results = list(cursor)
+    assert results == [
+        Song(id='fffff', name='tell me how', tags=['slow', '1p']),
+        Song(id='ggggg', name='evan finds the third room', tags=['fast', 'gimmick'])
     ]

@@ -1,5 +1,5 @@
-from typing import Optional
-from orchard.libs.melite.base import MeliteStruct
+from typing import Annotated, List, Optional
+from orchard.libs.melite.base import JSON, MeliteStruct
 import pytest
 import apsw
 
@@ -115,3 +115,33 @@ class Watcher2(MeliteStruct, kw_only=True):
     id: str
     name: str
     fav_bird: Bird
+
+
+@pytest.fixture
+def db_with_table_with_array_column(db):
+    q = """--sql
+CREATE TABLE "song" (
+    "id" TEXT PRIMARY KEY NOT NULL,
+    "name" TEXT NOT NULL,
+    "tags" TEXT NOT NULL -- this is a json encoded column, but sqlite doesn't know that!
+) STRICT
+    """
+    db.execute(q)
+    yield db
+
+@pytest.fixture
+def db_with_array_col_table_data(db_with_table_with_array_column):
+    q = """--sql
+    INSERT INTO "song"
+    VALUES
+        ('fffff', 'tell me how', '["slow","1p"]'),
+        ('ggggg', 'evan finds the third room', '["fast","gimmick"]')
+    """
+    db_with_table_with_array_column.execute(q)
+    yield db_with_table_with_array_column
+
+class Song(MeliteStruct, kw_only=True):
+    table_name = "song"
+    id: str
+    name: str
+    tags: Annotated[List[str], JSON]

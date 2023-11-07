@@ -8,7 +8,7 @@ from __future__ import annotations
 import msgspec
 import typing
 import apsw
-from orchard.libs.melite.base import MeliteStruct
+from orchard.libs.melite.base import JSON, MeliteStruct
 
 
 def make_row_trace(spec: typing.Type[MeliteStruct], conn: apsw.Connection):
@@ -40,7 +40,12 @@ def make_row_trace(spec: typing.Type[MeliteStruct], conn: apsw.Connection):
                     for t in typing.get_args(field.type):
                         if issubclass(t, MeliteStruct):
                             sub_struct = t
-
+                # it may also be in a form Annotated[type, JSON]
+                if typing.get_origin(field.type) == typing.Annotated:
+                    type_to_convert_into, annot = typing.get_args(field.type)
+                    if annot == JSON:
+                        print(value)
+                        value = msgspec.json.decode(value, type=type_to_convert_into, strict=False)
             if sub_struct is not None:
                 cursor = conn.cursor()
                 cursor.row_trace = make_row_trace(sub_struct, conn)
