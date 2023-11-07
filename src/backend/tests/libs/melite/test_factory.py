@@ -3,7 +3,7 @@ from __future__ import annotations
 from orchard.libs.melite.factory import make_row_trace
 
 from apsw import Connection
-from tests.libs.melite.conftest import Bird, Song, Watcher, Watcher2
+from tests.libs.melite.conftest import Bird, Song, Song2, Tag, Watcher, Watcher2
 
 
 def test_factory_basic_operation(db_with_some_data: Connection):
@@ -114,4 +114,17 @@ def test_factory_array_column(db_with_array_col_table_data: Connection):
     assert results == [
         Song(id='fffff', name='tell me how', tags=['slow', '1p']),
         Song(id='ggggg', name='evan finds the third room', tags=['fast', 'gimmick'])
+    ]
+
+def test_factory_array_struct_column(db_with_array_struct_col_table_data: Connection):
+    cursor = db_with_array_struct_col_table_data.cursor()
+    cursor.set_row_trace(make_row_trace(Song2, db_with_array_struct_col_table_data))
+    q = """--sql
+    SELECT * FROM song
+    """
+    cursor.execute(q)
+    results = list(cursor)
+    assert results == [
+        Song2(id='fffff', name='tell me how', tags=[Tag(tag='slow', canonical=True), Tag(tag='1p', canonical=True)]),
+        Song2(id='ggggg', name='evan finds the third room', tags=[Tag(tag='fast', canonical=True), Tag(tag='the third room is ao3', canonical=False)])
     ]

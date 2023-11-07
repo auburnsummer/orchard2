@@ -1,4 +1,5 @@
 from typing import Annotated, List, Optional
+import msgspec
 from orchard.libs.melite.base import JSON, MeliteStruct
 import pytest
 import apsw
@@ -145,3 +146,24 @@ class Song(MeliteStruct, kw_only=True):
     id: str
     name: str
     tags: Annotated[List[str], JSON]
+
+class Tag(msgspec.Struct, kw_only=True):
+    tag: str
+    canonical: bool
+
+class Song2(MeliteStruct, kw_only=True):
+    table_name = "song"
+    id: str
+    name: str
+    tags: Annotated[List[Tag], JSON]
+
+@pytest.fixture
+def db_with_array_struct_col_table_data(db_with_table_with_array_column):
+    q = """--sql
+    INSERT INTO "song"
+    VALUES
+        ('fffff', 'tell me how', '[{"tag":"slow","canonical":true},{"tag": "1p","canonical":true}]'),
+        ('ggggg', 'evan finds the third room', '[{"tag":"fast","canonical":true},{"tag":"the third room is ao3","canonical":false}]')
+    """
+    db_with_table_with_array_column.execute(q)
+    yield db_with_table_with_array_column

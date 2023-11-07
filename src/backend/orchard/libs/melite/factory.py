@@ -44,7 +44,6 @@ def make_row_trace(spec: typing.Type[MeliteStruct], conn: apsw.Connection):
                 if typing.get_origin(field.type) == typing.Annotated:
                     type_to_convert_into, annot = typing.get_args(field.type)
                     if annot == JSON:
-                        print(value)
                         value = msgspec.json.decode(value, type=type_to_convert_into, strict=False)
             if sub_struct is not None:
                 cursor = conn.cursor()
@@ -55,10 +54,9 @@ def make_row_trace(spec: typing.Type[MeliteStruct], conn: apsw.Connection):
                     WHERE "{sub_struct.table_name}"."{sub_struct.primary_key}" = ?
                 """
                 cursor.execute(q, [value])
-                result = next(cursor)
-                final[field.encode_name] = result
-            else:
-                final[field.encode_name] = value
+                value = next(cursor)
+            
+            final[field.encode_name] = value
 
 
         return msgspec.convert(final, type=spec, strict=False)
