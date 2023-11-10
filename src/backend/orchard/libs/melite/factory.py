@@ -10,6 +10,37 @@ import typing
 import apsw
 from orchard.libs.melite.base import JSON, MeliteStruct
 
+def get_melite_struct(type_: typing.Any) -> typing.Optional[typing.Type[MeliteStruct]]:
+    """
+    if `type_` is a MeliteStruct or Optional[MeliteStruct], extract the type.
+    Otherwise, returns None.
+    """
+    try:
+        if issubclass(type_, MeliteStruct):
+            return type_
+    except TypeError:
+        pass
+
+    if typing.get_origin(type_) == typing.Union:
+        for t in typing.get_args(type_):
+            if issubclass(t, MeliteStruct):
+                return t
+
+    return None
+
+def get_json_struct(type_: typing.Any) -> typing.Optional[typing.Any]:
+    """
+    if `type_` is of the form Annotated[type2, JSON], returns type2.
+    Otherwise, returns None.
+    """
+    if typing.get_origin(type_) == typing.Annotated:
+        type_to_convert_into, annot = typing.get_args(type_)
+        if annot == JSON:
+            return type_to_convert_into
+
+    return None
+
+
 
 def make_row_trace(spec: typing.Type[MeliteStruct], conn: apsw.Connection):
     """
@@ -30,28 +61,19 @@ def make_row_trace(spec: typing.Type[MeliteStruct], conn: apsw.Connection):
             sub_struct: typing.Optional[typing.Type[MeliteStruct]] = None
             if value is not None:
                 # otherwise, it might be a struct reference...
-                try:
-                    if issubclass(field.type, MeliteStruct):
-                        sub_struct = field.type
-                except TypeError:
-                    pass
-                # it may also be in the form Optional[cls]
-                if typing.get_origin(field.type) == typing.Union:
-                    for t in typing.get_args(field.type):
-                        if issubclass(t, MeliteStruct):
-                            sub_struct = t
+                sub_struct = get_melite_struct(field.type)
                 # it may also be in a form Annotated[type, JSON]
-                if typing.get_origin(field.type) == typing.Annotated:
-                    type_to_convert_into, annot = typing.get_args(field.type)
-                    if annot == JSON:
-                        value = msgspec.json.decode(value, type=type_to_convert_into, strict=False)
+                type_to_convert_into = get_json_struct(field.type)
+                if type_to_convert_into:
+                    value = msgspec.json.decode(value, type=type_to_convert_into, strict=False)
             if sub_struct is not None:
                 cursor = conn.cursor()
                 cursor.row_trace = make_row_trace(sub_struct, conn)
                 q = f"""
                     --sql
                     SELECT * FROM "{sub_struct.table_name}"
-                    WHERE "{sub_struct.table_name}"."{sub_struct.primary_key}" = ?
+                    WHERE
+                        "{sub_struct.table_name}"."{sub_struct.primary_key}" = ?
                 """
                 cursor.execute(q, [value])
                 value = next(cursor)

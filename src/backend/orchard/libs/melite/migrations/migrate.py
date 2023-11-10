@@ -13,7 +13,6 @@ MELITE_TABLE = "__melite"
 
 def create_melite_table(conn: Connection):
     "Create the internal table used for tracking the schema version."
-    # pypika's DSL can't do the CHECK or STRICT here.
     conn.execute(f"""
     CREATE TABLE "{MELITE_TABLE}" (
         "id" INT PRIMARY KEY CHECK (id = 0),
