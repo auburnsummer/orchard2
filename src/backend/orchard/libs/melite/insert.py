@@ -3,6 +3,7 @@ from orchard.libs.melite.base import MeliteStruct
 from typing import List, Tuple
 
 import msgspec
+import datetime
 from orchard.libs.melite.factory import get_json_struct, get_melite_struct
 from orchard.libs.melite.utils import wrap_quotes
 
@@ -24,6 +25,9 @@ def insert(conn: Connection, obj: MeliteStruct, recurse=True):
 
             if get_json_struct(field.type) is not None:
                 value = msgspec.json.encode(value).decode(encoding='utf-8')
+            
+            if isinstance(value, datetime.datetime):
+                value = value.replace(microsecond=0).astimezone(tz=datetime.timezone.utc).isoformat()
 
         to_insert.append((field.encode_name, value))
 

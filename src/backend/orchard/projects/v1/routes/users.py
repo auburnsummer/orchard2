@@ -1,19 +1,22 @@
 from orchard.projects.v1.core.wrapper import msgspec_return
-from orchard.projects.v1.models.users import (
-    EditUser,
-    User,
-    inject_user,
-    update_user
-)
+from orchard.projects.v1.models.engine import update
+from orchard.projects.v1.models.users import User, inject_user
+# from orchard.projects.v1.models.users import (
+#     EditUser,
+#     User,
+#     inject_user,
+#     update_user
+# )
 from starlette.responses import Response
 from starlette.requests import Request
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 @msgspec_return(200)
 @inject_user
 async def me_handler(request: Request):
+    "Handler for route that fetches current user"
     user: User = request.state.user
     return user
 
@@ -26,6 +29,7 @@ async def logout_handler(request: Request):
     same user. I don't think this should be too much of an issue.
     """
     user: User = request.state.user
-    _ = await update_user(user.id, EditUser(cutoff=datetime.utcnow()))
+    user.cutoff = datetime.now(tz=timezone.utc)
+    update(user)
 
     return Response(status_code=204)
