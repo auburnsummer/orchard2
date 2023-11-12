@@ -64,17 +64,17 @@ def mock_migrators():
     return migrators, calls
 
 def test_get_current_version_returns_current_version_when_table_exists(db_with_existing_table):
-    assert get_current_version(db_with_existing_table) == "newversion"
+    assert get_current_version(db_with_existing_table).melite_version == "newversion"
 
 def test_get_current_version_returns_origin_when_table_does_not_exist(db):
-    assert get_current_version(db) == "origin"
+    assert get_current_version(db).melite_version == "origin"
 
 def test_migrate(db, mock_migrators):
     migrators, calls = mock_migrators
     migrate(db, None, migrators)
 
     v = get_current_version(db)
-    assert v == "c"
+    assert v.melite_version == "c"
     # the migrations were called in the correct order.
     assert calls == ["A", "B", "C"]
 
@@ -82,7 +82,7 @@ def test_migrate_does_not_run_migrator_outside_of_requested_version(db, mock_mig
     migrators, calls = mock_migrators
     migrate(db, "b", migrators)
     v = get_current_version(db)
-    assert v == "b"
+    assert v.melite_version == "b"
     # C not called.
     assert calls == ["A", "B"]
 

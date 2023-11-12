@@ -6,7 +6,7 @@ All levels belong to a user and a publisher.
 
 from __future__ import annotations
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from io import BytesIO
 from tempfile import TemporaryFile
 
@@ -93,7 +93,7 @@ class Level(VitalsLevelBase, kw_only=True):
 
     uploader: str
     publisher: str
-    uploaded: datetime = field(default_factory=datetime.now)
+    uploaded: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     approval: int = field(default=0)
 
 

@@ -5,11 +5,23 @@ import apsw.bestpractice
 
 from apsw import Connection
 from loguru import logger
+from orchard.libs.melite.base import MeliteStruct
+from orchard.libs.melite.insert import insert
+from orchard.libs.melite.select import Select
+from orchard.libs.melite.update import update
 
 apsw.bestpractice.apply(apsw.bestpractice.recommended)
 
 ORIGIN = "origin"  # the first version is always called "origin".
 MELITE_TABLE = "__melite"
+
+class MeliteMetadata(MeliteStruct):
+    table_name = MELITE_TABLE
+    id: int
+    melite_version: str
+
+class MeliteMigrationException(Exception):
+    pass
 
 def create_melite_table(conn: Connection):
     "Create the internal table used for tracking the schema version."
@@ -19,25 +31,22 @@ def create_melite_table(conn: Connection):
         "melite_version" TEXT NOT NULL
     ) STRICT;
 """)
-    conn.execute(f"""
-    INSERT INTO "{MELITE_TABLE}" VALUES (0, 'origin')
-    """)
+    insert(conn, MeliteMetadata(
+        id=0,
+        melite_version='origin'
+    ))
 
-
-def get_current_version(conn: Connection) -> str:
-    "Read the current schema version from the database. Creates the table if it doesn't exist."
-    q = f"""--sql
-    SELECT "melite_version" FROM "{MELITE_TABLE}"
-    WHERE "{MELITE_TABLE}"."id" = 0
-    """
+def get_current_version(conn: Connection) -> MeliteMetadata:
     try:
-        cursor = conn.execute(q)
+        metadata = Select(conn, MeliteMetadata).by_id(0)
+        if metadata:
+            return metadata
+        else:
+            raise MeliteMigrationException("Melite table exists but no value.")
     except apsw.SQLError:
-        logger.warning("__melite table does not exist. Making it now...")
         create_melite_table(conn)
-        cursor = conn.execute(q)
-    row = next(cursor)
-    return row[0]
+        return get_current_version(conn)
+
 
 
 
@@ -60,8 +69,6 @@ class Migrator(ABC):
     def upgrade(self, conn: Connection):
         "Run the migration."
 
-class NoMigrationException(Exception):
-    pass
 
 def migrate(conn: Connection, target_version: str | None, migrators: List[Migrator]):
     """
@@ -69,27 +76,24 @@ def migrate(conn: Connection, target_version: str | None, migrators: List[Migrat
     as the target version, run the migration to the latest.
     """
     current_version = get_current_version(conn)
-    if current_version == target_version:
+    if current_version.melite_version == target_version:
         return
 
     logger.info(f"Beginning migration to {target_version or 'latest'}")
 
     while True:
         current_version = get_current_version(conn)
-        if current_version == target_version:
+        if current_version.melite_version == target_version:
             break
         for migrator in migrators:
-            if migrator.migrate_from == current_version:
+            if migrator.migrate_from == current_version.melite_version:
                 next_version = migrator.migrate_to
-                logger.info(f"version {current_version} -> {next_version}")
+                logger.info(f"version {current_version.melite_version} -> {next_version}")
                 migrator.upgrade(conn)
-                conn.execute(f"""--sql
-                UPDATE {MELITE_TABLE}
-                    SET "melite_version" = ?
-                    WHERE "id" = 0
-                """, [next_version])
+                current_version.melite_version = next_version
+                update(conn, current_version)
                 break
         else:
             if target_version is None:
                 break
-            raise NoMigrationException(f"No migration found for version {current_version}.")
+            raise MeliteMigrationException(f"No migration found for version {current_version.melite_version}.")
