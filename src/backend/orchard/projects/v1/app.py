@@ -1,3 +1,4 @@
+from orchard.projects.v1.routes.discord_auth import discord_token_handler
 from orchard.projects.v1.routes.users import logout_handler, me_handler
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
@@ -18,7 +19,7 @@ routes = [
     Route("/user/me", endpoint=me_handler, methods=["GET"]),
     Route("/user/logout", endpoint=logout_handler, methods=["POST"]),
 
-    # Route("/auth/token/discord", endpoint=discord_token_handler, methods=["POST"]),
+    Route("/auth/token/discord", endpoint=discord_token_handler, methods=["POST"]),
 
     # Route("/level/prefill", endpoint=prefill_handler, methods=["POST"]),
 

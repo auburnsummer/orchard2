@@ -28,12 +28,17 @@ class User(MeliteStruct):
     avatar_url: Optional[str] = None
 
     @staticmethod
-    def create(name: str) -> User:
-        "Creates a new user with the specified name and inserts that user into the db."
-        new_user = User(
+    def new(name: str) -> User:
+        "Creates a new user with the specified name but does not insert that user into the db."
+        return User(
             id=gen_id(IDType.USER),
             name=name
         )
+
+    @staticmethod
+    def create(name: str) -> User:
+        "Creates a new user with the specified name and inserts that user into the db."
+        new_user = User.new(name)
         insert(new_user)
         return new_user
 
