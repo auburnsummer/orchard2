@@ -13,8 +13,7 @@ from httpx import AsyncClient, HTTPStatusError
 
 from orchard.projects.v1.core.config import config
 from orchard.projects.v1.models.credentials import DiscordCredential
-from orchard.projects.v1.models.engine import select, insert, update
-from orchard.projects.v1.models.users import User
+from orchard.projects.v1.models.engine import update
 from starlette.requests import Request
 
 import msgspec
@@ -59,14 +58,9 @@ async def discord_token_handler(request: Request):
         discord_user = await get_discord_user_from_oauth(data)
     except HTTPStatusError as e:
         return forward_httpx(e.response)
-    
-    cred = select(DiscordCredential).by_id(discord_user.id)
-    if not cred:
-        # make a new user.
-        user = User.new(name=discord_user.global_name)
-        cred = DiscordCredential(id=discord_user.id, user=user)
-        insert(cred) # the user is inserted also.
 
+    cred = DiscordCredential.get_or_create(discord_user.id, discord_user.global_name)
+    
     should_update = False
 
     user = cred.user
@@ -76,10 +70,15 @@ async def discord_token_handler(request: Request):
         user.name = discord_user.global_name
 
     # if the avatar is different, update the avatar.
-    if discord_user.avatar:
-        avatar_url = f"https://cdn.discordapp.com/avatars/{discord_user.id}/{discord_user.avatar}"
+    avatar = discord_user.avatar
+    if avatar is not None:
+        avatar_url = f"https://cdn.discordapp.com/avatars/{discord_user.id}/{avatar}"
         if user.avatar_url != avatar_url:
             user.avatar_url = avatar_url
+            should_update = True
+    else:
+        if user.avatar_url is not None:
+            user.avatar_url = None
             should_update = True
 
     if should_update:
