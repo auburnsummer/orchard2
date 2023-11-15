@@ -20,7 +20,12 @@ console = ApplicationCommand(
 
 # Message types cannot have a description.
 add = ApplicationCommand(
-    name="add",
+    name="Add to Rhythm Cafe",
+    type=ApplicationCommandType.MESSAGE
+)
+
+add_unrestricted = ApplicationCommand(
+    name="Add to Rhythm Cafe (delegated)",
     type=ApplicationCommandType.MESSAGE
 )
 
@@ -28,5 +33,6 @@ ALL_COMMANDS = [
     version,
     register,
     console,
-    add
+    add,
+    add_unrestricted
 ]

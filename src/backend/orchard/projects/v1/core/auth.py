@@ -11,7 +11,7 @@ from .config import config
 
 import pyseto
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from functools import wraps
 from typing import List, Optional, Set
 
@@ -73,12 +73,12 @@ Token generation:
 from orchard.projects.v1.core.auth import OrchardAuthToken, token_to_paseto
 from datetime import datetime, timedelta
 
-token = OrchardAuthToken(iat=datetime.now(), exp=datetime.now() + timedelta(hours=1)) # other args as reqd
+token = OrchardAuthToken(iat=datetime.now(timezone.utc), exp=datetime.now(timezone.utc) + timedelta(hours=1)) # other args as reqd
 paseto = token_to_paseto(token)
 """
 
 def make_token_now(scopes: OrchardAuthScopes, exp_time: timedelta):
-    iat = datetime.now()
+    iat = datetime.now(timezone.utc)
     exp = iat + exp_time
     token_args = {
         "iat": iat,

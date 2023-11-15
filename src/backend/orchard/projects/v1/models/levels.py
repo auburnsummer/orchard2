@@ -6,95 +6,78 @@ All levels belong to a user and a publisher.
 
 from __future__ import annotations
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from io import BytesIO
 from tempfile import TemporaryFile
 
-from typing import Optional
+from typing import Annotated, List, Optional
 import httpx
 from msgspec import field
 import msgspec
 from orchard.libs.bunny_storage.bunny_storage import BunnyStorage
+from orchard.libs.melite.base import JSON, MeliteStruct
+from orchard.libs.vitals.color_tagged_string import ColorToken
 from orchard.libs.vitals.pydantic_model import VitalsLevelBase
 from orchard.projects.v1.core.auth import OrchardAuthScopes, make_token_now
 from orchard.projects.v1.core.config import config
-from orchard.projects.v1.models.metadata import metadata
 from orchard.libs.vitals import analyze
-
-import sqlalchemy as sa
-
-levels = sa.Table(
-    "levels",
-    metadata,
-    # a generated id
-    sa.Column("id", sa.String, primary_key=True),
-
-    # vitals
-    sa.Column("artist", sa.String, nullable=False),
-    sa.Column("artist_tokens", sa.JSON, nullable=False),
-    sa.Column("song", sa.String, nullable=False),
-    sa.Column("song_ct", sa.JSON, nullable=False),
-    sa.Column("seizure_warning", sa.Boolean, nullable=False),
-    sa.Column("description", sa.String, nullable=False),
-    sa.Column("description_ct", sa.JSON, nullable=False),
-    sa.Column("hue", sa.Float, nullable=False),
-    sa.Column("authors", sa.JSON, nullable=False),
-    sa.Column("authors_raw", sa.String, nullable=False),
-    sa.Column("max_bpm", sa.Float, nullable=False),
-    sa.Column("min_bpm", sa.Float, nullable=False),
-    sa.Column("difficulty", sa.Integer, nullable=False),
-    sa.Column("single_player", sa.Boolean, nullable=False),
-    sa.Column("two_player", sa.Boolean, nullable=False),
-    sa.Column("last_updated", sa.DateTime, nullable=False),
-    sa.Column("tags", sa.JSON, nullable=False),
-    sa.Column("has_classics", sa.Boolean, nullable=False),
-    sa.Column("has_oneshots", sa.Boolean, nullable=False),
-    sa.Column("has_squareshots", sa.Boolean, nullable=False),
-    sa.Column("has_freezeshots", sa.Boolean, nullable=False),
-    sa.Column("has_freetimes", sa.Boolean, nullable=False),
-    sa.Column("has_holds", sa.Boolean, nullable=False),
-    sa.Column("has_skipshots", sa.Boolean, nullable=False),
-    sa.Column("has_window_dance", sa.Boolean, nullable=False),
-    sa.Column("sha1", sa.String, nullable=False, unique=True),
-    sa.Column("rdlevel_sha1", sa.String, nullable=False, unique=True),
-
-    # not quite from vitals but derived data
-    sa.Column("image", sa.String, nullable=False),
-    sa.Column("thumb", sa.String, nullable=False),
-    sa.Column("icon", sa.String, nullable=True),
-    sa.Column("url", sa.String, nullable=False),
-    sa.Column("url2", sa.String, nullable=False),
-
-    # e.g localised title if song is CJK
-    sa.Column("song_altname", sa.String, nullable=True),
-
-    # other stuff.
-    # might not be the user who posted the level.
-    sa.Column("uploader", sa.String, sa.ForeignKey("users.id"), nullable=False),
-    sa.Column("publisher", sa.String, sa.ForeignKey("publishers.id"), nullable=False),
-
-    sa.Column("uploaded", sa.DateTime, nullable=False),
-    sa.Column("approval", sa.Integer, nullable=False, default=0)
-)
+from orchard.projects.v1.models.publishers import Publisher
+from orchard.projects.v1.models.users import User
 
 
-class Level(VitalsLevelBase, kw_only=True):
+class Level(MeliteStruct):
     """
-    Corresponding class for Level table.
+    We're repeating fields from VitalsLevelBase
+    because there may be fields that we don't want to store for now
     """
-    image: str
-    thumb: str
-    icon: Optional[str] = field(default=None)
+    table_name = "level"
 
+    id: str
+    artist: str
+    artist_tokens: Annotated[List[str], JSON]
+    song: str
+    song_ct: Annotated[List[ColorToken], JSON]
+    seizure_warning: bool
+    description: str
+    description_ct: Annotated[List[ColorToken], JSON]
+    hue: float
+    authors: Annotated[List[str], JSON]
+    authors_raw: str
+    max_bpm: float
+    min_bpm: float
+    difficulty: int
+    single_player: bool
+    two_player: bool
+    last_updated: datetime
+    tags: Annotated[List[str], JSON]
+    has_classics: bool
+    has_oneshots: bool
+    has_squareshots: bool
+    has_freezeshots: bool
+    has_freetimes: bool
+    has_holds: bool
+    has_skipshots: bool
+    has_window_dance: bool
+    sha1: str
+    rdlevel_sha1: str
+    is_animated: bool
+
+    image: str  # url
+    thumb: str  # url
+    icon: Optional[str]
     url: str
-    url2: str
 
-    song_altname: Optional[str] = field(default=None)
+    # e.g. localised title if song is CJK
+    song_alt: str
 
-    uploader: str
-    publisher: str
-    uploaded: datetime = field(default_factory=datetime.now)
-    approval: int = field(default=0)
+    # who uploaded the level.
+    # authors is just a list of strings which may not actually be a user.
+    uploader: User
+    publisher: Publisher
+
+    uploaded: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+    approval: int = 0
 
 
 class PrefillResult(VitalsLevelBase, kw_only=True):

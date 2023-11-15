@@ -4,52 +4,17 @@ Discord interactions.
 Generally speaking, because I have the rhythm.cafe website, I _don't_ want to have to implement
 UI twice. Once in a website, and once in Discord. So, the only thing Discord interactions do
 is send a link to rhythm.cafe, which does the actual work.
-
-...with one exception, which I'll get to later.
-
-By the way, this is how publishers work in general. So if I end up implementing another publisher
-type, the links to rhythm.cafe are the same. there should be little discord specific stuff here.
-
-The format of the link is always the same. It's rhythm.cafe/publisher/<endpoint>
-
- - where <endpoint> is a string defined by the slash command. This may not always be equal to the
-   name of the command.
-
-Query parameters:
-
- - publisher_token: a Paseto token that contains the publisher id of the publisher doing the interaction,
-                and the value of <endpoint>.
-                basically, a publisher_token for /foo cannot be used for /bar.
-
- - if the command is a message command, the message ID is passed as a query parameter message_id
-
- - any other parameters passed into the slash command are passed through to the endpoint.
-
- - an important note. there is no distinction between "admin" and "non-admin" commands. all commands
-   use the same system. it's up to the guild to restrict which commands can be used by which people.
-
-The endpoint must validate guild_token, and then we can do whatever we want.
-
-Now, the one exception. There has to be a way to create a publisher in the first place.
-
-The /register (create a new publisher linked to this guild) and /link (link an existing publisher to this guild)
-commands are the commands that "do things" in discord and don't just link to rhythm cafe.
-
-nb: for the initial scope, only /register is planned. 
 """
 
 from datetime import timedelta
-import json
-from re import A
 from orchard.libs.discord_msgspec.interaction import AnyInteraction, ApplicationCommandInteraction, MessageApplicationCommandData, PingInteraction
 from orchard.libs.discord_msgspec.interaction_response import EPHEMERAL, MessageInteractionCallbackData, MessageInteractionResponse, PongInteractionResponse
 from orchard.projects.v1.core.auth import OrchardAuthScopes, PublisherAddScope, make_token_now
 from orchard.projects.v1.core.exceptions import InvalidDiscordSignature, MissingDiscordSignatureHeaders
 from orchard.projects.v1.core.wrapper import msgspec_return
-from orchard.projects.v1.models.credentials import create_or_get_user_with_credential
-from orchard.projects.v1.models.discord_guild_credentials import get_disc_guild_credential, DiscordGuildCredentialNotFoundException
-from orchard.projects.v1.models.metadata import engine
-from orchard.projects.v1.models.publishers import get_publisher_by_discord_guild_credential
+from orchard.projects.v1.models.credentials import DiscordCredential
+from orchard.projects.v1.models.discord_guild_credentials import DiscordGuildPublisherCredential
+from orchard.projects.v1.models.engine import select
 from starlette.requests import Request
 from orchard.projects.v1.core.config import config
 from orchard import __version__
@@ -57,13 +22,9 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 from cryptography.exceptions import InvalidSignature
 from textwrap import dedent
 
-from typing import Optional, List
+from typing import Optional
 
 import msgspec
-
-
-
-from loguru import logger
 
 async def version_handler(_: ApplicationCommandInteraction):
     content = dedent(f"""
@@ -108,16 +69,16 @@ async def add_handler(body: ApplicationCommandInteraction):
     
     # add should always be on a message.
     if not isinstance(body.data, MessageApplicationCommandData):
-        return error("/add used on not a message, ping auburn if you see this.")
+        return error("/add used on something that's not a message, ping auburn if you see this.")
 
     guild_id = body.guild_id
 
-    async with engine.begin() as conn:
-        try:
-            cred = await get_disc_guild_credential(guild_id, conn)
-            publisher = await get_publisher_by_discord_guild_credential(cred, conn)
-        except DiscordGuildCredentialNotFoundException:
-            return error("This server is not registered. Use /register first.")
+    cred = select(DiscordGuildPublisherCredential).by_id(guild_id)
+
+    if not cred:
+        return error("This server is not registered. Use /register first.")
+
+    publisher = cred.publisher
 
     data = body.data
     if not data.resolved or not data.resolved.messages:
@@ -133,7 +94,8 @@ async def add_handler(body: ApplicationCommandInteraction):
 
     final_content = f"Found {len(message.attachments)} level(s) in the message:\n\n"
 
-    user, _ = await create_or_get_user_with_credential(message.author.id, message.author.global_name)
+    cred = DiscordCredential.get_or_create(message.author.id, message.author.global_name)
+    user = cred.user
     
     for attachment in message.attachments:
         scopes = OrchardAuthScopes(
@@ -159,7 +121,8 @@ async def add_handler(body: ApplicationCommandInteraction):
 HANDLERS = {
     "register": discord_register_handler,
     "version": version_handler,
-    "add": add_handler
+    "Add to Rhythm Cafe": add_handler,
+    "Add to Rhythm Cafe (delegated)": add_handler
 }
 
 
@@ -210,8 +173,6 @@ async def interaction_handler(request: Request):
         verify_key.verify(bytes.fromhex(sig), to_verify)
     except InvalidSignature as exc:
         raise InvalidDiscordSignature() from exc
-
-    #print(payload)
 
     # we're past the discord auth!
     body = msgspec.json.decode(payload, type=AnyInteraction)

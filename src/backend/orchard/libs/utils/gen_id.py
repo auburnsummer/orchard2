@@ -19,8 +19,8 @@ class IDType(StrEnum):
     """
     Unique prefixes for ids. 
     """
-    PUBLISHER = "p"
-    USER = "u"
+    PUBLISHER = "p_"
+    USER = "u_"
 
 def gen_id(id_type: IDType):
     """Generate an id, id_type is the unique prefix."""

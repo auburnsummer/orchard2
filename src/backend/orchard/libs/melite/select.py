@@ -1,4 +1,4 @@
-from typing import Optional, TypeVar, Type, Generic
+from typing import Iterable, Optional, TypeVar, Type, Generic
 
 from orchard.libs.melite.factory import make_row_trace
 from .base import MeliteStruct
@@ -25,3 +25,13 @@ class Select(Generic[T_co]):
         """, [id_])
 
         return next(cursor, None)
+
+    def all(self) -> Iterable[T_co]:
+        "Run a select query and return all rows."
+        cursor = self.conn.cursor()
+        cursor.row_trace = make_row_trace(self.spec, self.conn)
+        cursor.execute(f"""--sql
+            SELECT * FROM "{self.spec.table_name}"
+        """)
+
+        return cursor

@@ -7,8 +7,9 @@ import enum
 class _JSONMark(enum.Enum):
     JSON = "JSONMARK"
 
-# Mark a field with Annotated[JSON, type] to have it be deserialized and serialized automatically."
 JSON = _JSONMark.JSON
+"Mark a field with Annotated[type, JSON] to have it be deserialized and serialized automatically."
+
 
 class MeliteStruct(msgspec.Struct):
     """
