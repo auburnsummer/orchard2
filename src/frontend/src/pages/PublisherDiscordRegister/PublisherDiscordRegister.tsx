@@ -64,6 +64,8 @@ function PublisherDiscordRegisterContents() {
         return (
             <div class="pd_success">
                 <h1 class="pd_success-success">Success!</h1>
+                <p>Your publisher called "{publisher.data.name}" has been created.</p>
+                <p>You may now close this window.</p>
                 <p class="pd_success-techinfo">id: {publisher.data.id}</p>
             </div>
         )

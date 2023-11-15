@@ -103,9 +103,8 @@ async def test_discord_auth_updates_details(
     assert user.name == "yuki"
     assert user.avatar_url == "https://cdn.discordapp.com/avatars/testid/testavatar"
 
-@pytest.mark.skip
 @pytest.mark.asyncio
-async def test_discord_auth_does_not_update_avatar_url_if_they_dont_have_one(
+async def test_discord_auth_clears_avatar_url_if_they_dont_have_one(
     mock_get_discord_user_from_oauth: Never,
     client: AsyncClient
 ):
