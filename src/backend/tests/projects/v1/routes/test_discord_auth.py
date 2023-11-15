@@ -1,12 +1,13 @@
-from typing import Any, Never
+from typing import Never
 from httpx import AsyncClient
 from orchard.libs.discord_msgspec.user import DiscordUser
+from orchard.projects.v1.models.credentials import DiscordCredential
+from orchard.projects.v1.models.engine import insert, select
+from orchard.projects.v1.models.users import User
 import pytest
 from unittest.mock import patch
 
 from orchard.projects.v1.routes.discord_auth import DiscordAuthCallbackHandlerArgs
-from orchard.projects.v1.models.users import get_all_users
-from orchard.projects.v1.models.credentials import get_disc_credential, make_new_user_with_credential
 from orchard.projects.v1.core.auth import paseto_to_token
 
 
@@ -27,7 +28,8 @@ async def test_discord_auth_creates_new_user_if_no_credential_exists(
     client: AsyncClient
 ):
     # prior to calling the endpoint, there is no user called mafuyu.
-    assert (await get_all_users()) == []
+    all_users = list(select(User).all())
+    assert all_users == []
 
     resp = await client.post("/auth/token/discord", json={
         "code": "mockcode",
@@ -35,26 +37,33 @@ async def test_discord_auth_creates_new_user_if_no_credential_exists(
     })
     assert resp.status_code == 200
 
-    users = await get_all_users()
-    assert len(users) == 1
-    assert users[0].name == "yuki"
+    all_users = list(select(User).all())
+
+    assert len(all_users) == 1
+    assert all_users[0].name == "yuki"
 
     # and there should also be a credential created.
-    cred = await get_disc_credential("testid")
+    cred = select(DiscordCredential).by_id("testid")
+    assert cred is not None
     assert cred.id == "testid"
-    assert cred.user_id == users[0].id
+    assert cred.user == all_users[0]
 
-    # and the token returned should be valid.
+    # # and the token returned should be valid.
     token = resp.json()["token"]
-    assert paseto_to_token(token).User_all == users[0].id
+    assert paseto_to_token(token).User_all == all_users[0].id
 
 @pytest.mark.asyncio
 async def test_discord_auth_returns_existing_user(
     mock_get_discord_user_from_oauth: Never, 
     client: AsyncClient
 ):
-    user, cred = await make_new_user_with_credential("testid", "mafuyu")
-    users = await get_all_users()
+    user = User.new(name="mafuyu")
+    cred = DiscordCredential(
+        id="testid",
+        user=user
+    )
+    insert(cred)
+    users = list(select(User).all())
     assert users == [user]
 
     resp = await client.post("/auth/token/discord", json={
@@ -63,7 +72,7 @@ async def test_discord_auth_returns_existing_user(
     })
     assert resp.status_code == 200
 
-    users = await get_all_users()
+    users = list(select(User).all())
     assert len(users) == 1
 
     # and the token returned should be valid.
@@ -71,39 +80,17 @@ async def test_discord_auth_returns_existing_user(
     assert paseto_to_token(token).User_all == users[0].id
 
 @pytest.mark.asyncio
-async def test_discord_auth_updates_name_if_discord_name_is_different(
+async def test_discord_auth_updates_details(
     mock_get_discord_user_from_oauth: Never,
     client: AsyncClient
 ):
-    users = await get_all_users()
-    assert users == []
-
-    user, cred = await make_new_user_with_credential("testid", "mafuyu")
-    users = await get_all_users()
-    assert users == [user]
-    assert users[0].name == "mafuyu"
-
-    resp = await client.post("/auth/token/discord", json={
-        "code": "mockcode",
-        "redirect_uri": "http://testserver"
-    })
-    print(resp.json())
-    resp.raise_for_status()
-    assert resp.status_code == 200
-
-    # the credential will have name yuki.
-    users = await get_all_users()
-    assert len(users) == 1
-    assert users[0].name == "yuki"
-
-
-@pytest.mark.asyncio
-async def test_discord_auth_updates_avatar_url_if_they_have_one(
-    mock_get_discord_user_from_oauth: Never,
-    client: AsyncClient
-):
-    user, cred = await make_new_user_with_credential("testid", "mafuyu")
-    users = await get_all_users()
+    user = User.new(name="mafuyu")
+    cred = DiscordCredential(
+        id="testid",
+        user=user
+    )
+    insert(cred)
+    users = list(select(User).all())
     assert users == [user]
 
     resp = await client.post("/auth/token/discord", json={
@@ -112,17 +99,23 @@ async def test_discord_auth_updates_avatar_url_if_they_have_one(
     })
     assert resp.status_code == 200
 
-    users = await get_all_users()
-    assert users[0].avatar_url == "https://cdn.discordapp.com/avatars/testid/testavatar"
-
+    user = select(User).by_id(user.id)
+    assert user.name == "yuki"
+    assert user.avatar_url == "https://cdn.discordapp.com/avatars/testid/testavatar"
 
 @pytest.mark.asyncio
-async def test_discord_auth_does_not_update_avatar_url_if_they_dont_have_one(
+async def test_discord_auth_clears_avatar_url_if_they_dont_have_one(
     mock_get_discord_user_from_oauth: Never,
     client: AsyncClient
 ):
-    user, cred = await make_new_user_with_credential("testid", "mafuyu")
-    users = await get_all_users()
+    user = User.new(name="mafuyu")
+    user.avatar_url = "fjiewjfoiwejfweof"
+    cred = DiscordCredential(
+        id="testid",
+        user=user
+    )
+    insert(cred)
+    users = list(select(User).all())
     assert users == [user]
 
     resp = await client.post("/auth/token/discord", json={
@@ -131,5 +124,7 @@ async def test_discord_auth_does_not_update_avatar_url_if_they_dont_have_one(
     })
     assert resp.status_code == 200
 
-    users = await get_all_users()
-    assert users[0].avatar_url is None
+    user = select(User).by_id(user.id)
+    assert user.name == "yuki"
+    assert user.avatar_url is None
+

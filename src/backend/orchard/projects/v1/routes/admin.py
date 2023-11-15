@@ -3,8 +3,7 @@ THE ADMIN ROUTES
 
 These require an admin-scoped token and are related to maintenance tasks of orchard itself.
 
-from orchard.projects.v1.core.auth import *
-token = make_token_now(OrchardAuthScopes(Admin_all=True), timedelta(days=1))
+poetry run python -c "from orchard.projects.v1.core.auth import *; token = make_token_now(OrchardAuthScopes(Admin_all=True), timedelta(days=1)); print(token)"
 """
 from functools import wraps
 from orchard.projects.v1.core.config import config
@@ -32,7 +31,7 @@ def requires_admin(func):
         if token.Admin_all:
             return await func(request)
         else:
-            return NotAdmin()
+            raise NotAdmin()
     return inner
 
 

@@ -1,4 +1,5 @@
 
+import datetime
 from typing import List, Tuple
 from apsw import Connection
 import msgspec
@@ -26,6 +27,10 @@ def update(conn: Connection, obj: MeliteStruct, recurse=True):
 
             if get_json_struct(field.type) is not None:
                 value = msgspec.json.encode(value).decode(encoding='utf-8')
+
+            if isinstance(value, datetime.datetime):
+                value = value.replace(microsecond=0).astimezone(tz=datetime.timezone.utc).isoformat()
+
 
         to_update.append((field.encode_name, value))
 
