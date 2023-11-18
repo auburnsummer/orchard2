@@ -107,7 +107,7 @@ async def add_handler(body: ApplicationCommandInteraction):
             Publisher_identify=publisher.id
         )
         token = make_token_now(scopes, timedelta(hours=2))
-        link = make_publisher_link("add", publisher_token=token)
+        link = make_publisher_link("add/rd", publisher_token=token)
         final_content = final_content + f"* `{attachment.filename}`: [click here]({link})\n"
 
     response = MessageInteractionResponse(

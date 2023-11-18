@@ -13,7 +13,7 @@ ALPHABET = string.ascii_lowercase + string.digits
 
 # probably safe https://zelark.github.io/nano-id-cc/
 # ~293 years or 51M IDs needed, in order to have a 1% probability of at least one collision.
-NANOID_LENGTH = 11
+NANOID_LENGTH = 9
 
 class IDType(StrEnum):
     """
@@ -21,6 +21,8 @@ class IDType(StrEnum):
     """
     PUBLISHER = "p_"
     USER = "u_"
+    RD_LEVEL = "rd_"
+    HS_LEVEL = "hs_"  # currently unused.
 
 def gen_id(id_type: IDType):
     """Generate an id, id_type is the unique prefix."""

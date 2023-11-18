@@ -5,8 +5,8 @@
  - `.el`: `EditLevel`
  - `.he`: `Header`
  - `.ho`: `Home`
- - `.lb`: `LoginButton`
- - `.lc`: `LevelCard`
+ - `.lu`: `LoginButton`
+ - `.lb`: `LevelBox`
  - `.lo`: `Loading`
  - `.nf`: `NotFound`
  - `.pa`: `PublisherAdd`

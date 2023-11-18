@@ -27,7 +27,7 @@ class Publisher(MeliteStruct):
 
     @staticmethod
     def new(name: str) -> Publisher:
-        "Creates a new publisher with the specified name but does not insert that user into the db."
+        "Creates a new publisher with the specified name but does not insert that publisher into the db."
         return Publisher(
             id=gen_id(IDType.PUBLISHER),
             name=name
@@ -35,7 +35,7 @@ class Publisher(MeliteStruct):
 
     @staticmethod
     def create(name: str) -> Publisher:
-        "Creates a new user with the specified name and inserts that user into the db."
+        "Creates a new publisher with the specified name and inserts that publisher into the db."
         new_publisher = Publisher.new(name)
         insert(new_publisher)
         return new_publisher

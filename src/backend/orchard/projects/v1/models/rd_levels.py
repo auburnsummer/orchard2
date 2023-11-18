@@ -16,30 +16,28 @@ from msgspec import field
 import msgspec
 from orchard.libs.bunny_storage.bunny_storage import BunnyStorage
 from orchard.libs.melite.base import JSON, MeliteStruct
-from orchard.libs.vitals.color_tagged_string import ColorToken
 from orchard.libs.vitals.pydantic_model import VitalsLevelBase
-from orchard.projects.v1.core.auth import OrchardAuthScopes, make_token_now
+from orchard.projects.v1.core.auth import AssetURLScope, OrchardAuthScopes, make_token_now
 from orchard.projects.v1.core.config import config
 from orchard.libs.vitals import analyze
 from orchard.projects.v1.models.publishers import Publisher
 from orchard.projects.v1.models.users import User
 
 
-class Level(MeliteStruct):
+class RDLevel(MeliteStruct):
     """
     We're repeating fields from VitalsLevelBase
-    because there may be fields that we don't want to store for now
+    because there are fields that we don't want to store for now
+    such as the colortoken stuff
     """
-    table_name = "level"
+    table_name = "rdlevel"
 
     id: str
     artist: str
     artist_tokens: Annotated[List[str], JSON]
     song: str
-    song_ct: Annotated[List[ColorToken], JSON]
     seizure_warning: bool
     description: str
-    description_ct: Annotated[List[ColorToken], JSON]
     hue: float
     authors: Annotated[List[str], JSON]
     authors_raw: str
@@ -80,14 +78,16 @@ class Level(MeliteStruct):
     approval: int = 0
 
 
-class PrefillResult(VitalsLevelBase, kw_only=True):
+class RDPrefillResult(VitalsLevelBase, kw_only=True):
     image: str
     thumb: str
     url: str
     icon: Optional[str] = None
+    song_ct: msgspec.UnsetType = msgspec.UNSET
+    description_ct: msgspec.UnsetType = msgspec.UNSET
 
-class PrefillResultWithToken(msgspec.Struct, kw_only=True):
-    result: PrefillResult
+class RDPrefillResultWithToken(msgspec.Struct, kw_only=True):
+    result: RDPrefillResult
     signed_token: str
 
 async def run_prefill(source_url: str):
@@ -132,18 +132,13 @@ async def run_prefill(source_url: str):
                 "icon": icon,
                 "url": url
             }
-            to_send = msgspec.convert(payload, PrefillResult)
+            to_send = msgspec.convert(payload, RDPrefillResult)
+            asset_token_scopes = msgspec.convert(payload, AssetURLScope)
 
             asset_token = make_token_now(
                 scopes=OrchardAuthScopes(
-                    Publisher_prefill=to_send
+                    Publisher_prefill=asset_token_scopes
                 ),
                 exp_time=timedelta(days=1)
             )
-            return PrefillResultWithToken(result=to_send, signed_token=asset_token)
-
-class AddLevelArgs(VitalsLevelBase):
-    asset_token: str
-
-def add_level():
-    pass
+            return RDPrefillResultWithToken(result=to_send, signed_token=asset_token)
