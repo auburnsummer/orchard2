@@ -29,5 +29,7 @@ class AddPublisherTable(Migrator):
                 "id" TEXT PRIMARY KEY NOT NULL,
                 "publisher" TEXT NOT NULL REFERENCES "publisher" ("id")
             ) STRICT;
+            --sql
+            CREATE INDEX "discord_guild_publisher_credential_publisher_index" ON "discord_guild_publisher_credential" ("publisher")
         """
         conn.execute(sql)

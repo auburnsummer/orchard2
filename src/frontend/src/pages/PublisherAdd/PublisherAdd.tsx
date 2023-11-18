@@ -1,4 +1,4 @@
-import { authTokenAtom, useLoggedInUser } from "@orchard/stores/auth";
+import { authTokenAtom } from "@orchard/stores/auth";
 import "./PublisherAdd.css";
 import { Loading } from "@orchard/components/Loading";
 import { Header } from "@orchard/components/Header";
@@ -6,11 +6,9 @@ import { atom, useAtom } from "jotai";
 import { useAsyncAction } from "@orchard/hooks/useAsync";
 import { VitalsLevelExport, getLevelPrefill } from "@orchard/api/levels";
 import { useEffect, useRef } from "preact/hooks";
-import { Button, Checkbox, Input, Select, TagInput, Textarea, Option } from "@orchard/ui";
 import { atomWithReset } from "jotai/utils";
 import { EditLevel } from "@orchard/components/EditLevel";
 import { Publisher, getPublisher } from "@orchard/api/publisher";
-import { tuple } from "@orchard/utils/grabbag";
 import combinePromises from "@orchard/utils/combinePromises";
 
 type STATES = "prefill"
@@ -41,9 +39,8 @@ function PublisherAddMainPhase() {
         if (publisherToken == null) {
             throw new Error("No publisher token given. Try the command again in discord")
         }
-        const userToken = get(authTokenAtom);
         return combinePromises({
-            prefill: getLevelPrefill(publisherToken, userToken),
+            prefill: getLevelPrefill(publisherToken),
             publisher: getPublisher(publisherToken)
         })
     });
@@ -82,36 +79,13 @@ function PublisherAddMainPhase() {
     return <p>AAAAAAAAAA</p>
 }
 
-function PublisherAddCheckUser() {
-    const user = useLoggedInUser();
-
-    if (user.state === "loading") {
-        return (
-            <div class="pa_wrapper2">
-                <Loading text="Checking user..." class="pa_loading-user" />
-            </div>
-        )
-    }
-
-    if (user.state === "has error") {
-        return (
-            <div class="pa_wrapper2">
-                <p class="pa_loading-user-error">Please login to continue</p>
-            </div>
-        )
-    }
-
-    return <PublisherAddMainPhase />
-}
 
 export function PublisherAdd() {
-
-
     return (
         <div class="pa">
             <Header class="pa_header" />
             <div class="pa_wrapper1">
-                <PublisherAddCheckUser />
+                <PublisherAddMainPhase />
             </div>
         </div>
     )

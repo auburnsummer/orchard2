@@ -57,8 +57,8 @@ def make_row_trace(spec: typing.Type[MeliteStruct], conn: apsw.Connection):
         final = {}
         for field in msgspec.structs.fields(spec):
             value = converted[field.encode_name]
-            # if it's None, it's always None in the resulting struct regardless of the type.
             sub_struct: typing.Optional[typing.Type[MeliteStruct]] = None
+            # if it's None, it's always None in the resulting struct regardless of the type.
             if value is not None:
                 # otherwise, it might be a struct reference...
                 sub_struct = get_melite_struct(field.type)
@@ -77,6 +77,8 @@ def make_row_trace(spec: typing.Type[MeliteStruct], conn: apsw.Connection):
                 """
                 cursor.execute(q, [value])
                 value = next(cursor)
+            if field.type == bool:
+                value = bool(value)
             
             final[field.encode_name] = value
 

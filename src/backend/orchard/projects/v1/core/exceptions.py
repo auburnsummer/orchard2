@@ -126,6 +126,27 @@ class UserDoesNotExist(OrchardException):
 
     def extra_data(self):
         return UserDoesNotExistExtraData(user_id=self.user_id)
+
+class PublisherDoesNotExistArgs(TypedDict):
+    publisher_id: str
+
+class PublisherDoesNotExistExtraData(msgspec.Struct):
+    publisher_id: str
+
+class PublisherDoesNotExist(OrchardException):
+    """
+    Thrown when a publisher does not exist
+    """
+    def __init__(self, *args, **kwargs: Unpack[PublisherDoesNotExistArgs]):
+        super().__init__(*args)
+        self.publisher_id = kwargs.get("publisher_id")
+        self.status_code = 401
+
+    def __str__(self):
+        return f"User with id {self.publisher_id} does not exist."
+
+    def extra_data(self):
+        return PublisherDoesNotExistExtraData(publisher_id=self.publisher_id)
     
 
 class MissingDiscordSignatureHeaders(OrchardException):
@@ -221,6 +242,20 @@ class DiscordGuildCredentialAlreadyExists(OrchardException):
         return DiscordGuildCredentialAlreadyExistsExtraData(
             credential_id=self.credential_id
         )
+
+class LevelAddURLMismatchArgs(TypedDict):
+    url1: str
+    url2: str
+
+class LevelAddURLMismatch(OrchardException):
+    def __init__(self, *args, **kwargs: Unpack[LevelAddURLMismatchArgs]):
+        super().__init__(*args)
+        self.url1 = kwargs.get('url1')
+        self.url2 = kwargs.get('url2')
+        self.status_code = 403
+    
+    def __str__(self):
+        return f"Received metadata for url {self.url2} but only authorized for url {self.url1}. Try the command from the start. If you see this again, it's a bug, ping auburn"
 
 
 class UnknownErrorArgs(TypedDict):

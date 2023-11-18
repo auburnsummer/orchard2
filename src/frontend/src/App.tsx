@@ -26,10 +26,9 @@ registerIconLibrary('fa', {
 
 
 export function App() {
-
     return (
         <Switch>
-            <Route path="/publisher/add"><PublisherAdd /></Route>
+            <Route path="/publisher/add/rd"><PublisherAdd /></Route>
             <Route path="/publisher/discord_register"><PublisherDiscordRegister /></Route>
             <Route path="/discord_callback"><DiscordCallback /></Route>
             <Route path="/"><Home/></Route>

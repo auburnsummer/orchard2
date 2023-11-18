@@ -2,19 +2,12 @@ import { client } from "./client.ts";
 
 import * as tg from "generic-type-guard";
 
-type ColorToken = {
-    len: number,
-    color: string
-}
 
 export type VitalsLevelExport = {
-    artist: string,
     artist_tokens: string[],
     song: string,
-    song_ct: ColorToken[],
     seizure_warning: boolean,
     description: string,
-    description_ct: ColorToken[],
     hue: number,
     authors: string[],
     authors_raw: string,
@@ -47,19 +40,11 @@ export type PrefillResult = {
     signed_token: string
 }
 
-const isColorToken: tg.TypeGuard<ColorToken> = tg.isLikeObject({
-    len: tg.isNumber,
-    color: tg.isString
-});
-
 const isVitalsExport: tg.TypeGuard<VitalsLevelExport> = tg.isLikeObject({
-    artist: tg.isString,
     artist_tokens: tg.isArray(tg.isString),
     song: tg.isString,
-    song_ct: tg.isArray(isColorToken),
     seizure_warning: tg.isBoolean,
     description: tg.isString,
-    description_ct: tg.isArray(isColorToken),
     hue: tg.isNumber,
     authors: tg.isArray(tg.isString),
     authors_raw: tg.isString,
@@ -93,11 +78,11 @@ const isPrefillResult : tg.TypeGuard<PrefillResult> = tg.isLikeObject({
 });
 
 // the url for the prefill is encoded in the token and cannot be changed by the user.
-export async function getLevelPrefill(publisherToken: string, userToken: string) {
-    return client.post("level/prefill", {
+export async function getLevelPrefill(publisherToken: string) {
+    return client.post("rdlevel/prefill", {
         guard: isPrefillResult,
         headers: {
-            authorization: `Bearer ${publisherToken},Bearer ${userToken}`
+            authorization: `Bearer ${publisherToken}`
         }
     })
 }

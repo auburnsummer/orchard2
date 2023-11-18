@@ -35,6 +35,7 @@ class AssetURLScope(msgspec.Struct, kw_only=True):
     icon: Optional[str] = None
     sha1: str
     rdlevel_sha1: str
+    is_animated: bool
  
 class OrchardAuthScopes(msgspec.Struct, kw_only=True):
     "The keys and value types that a token can have."
