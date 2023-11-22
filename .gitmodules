@@ -1,0 +1,3 @@
+[submodule "src/backend/orchard/libs/signal_fts5/Signal-FTS5-Extension"]
+	path = src/backend/orchard/libs/signal_fts5/Signal-FTS5-Extension
+	url = https://github.com/signalapp/Signal-FTS5-Extension.git

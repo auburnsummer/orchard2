@@ -9,9 +9,9 @@ import msgspec
 
 from datetime import datetime, timedelta
 
-@pytest.mark.asyncio
-async def test_create_rdlevel_happy_path(client: AsyncClient, mock_user: User, mock_publisher: Publisher):
-    test_payload = {
+@pytest.fixture
+def test_payload():
+    return {
         "artist": "shino ft. Hatsune Miku",
         "artist_tokens": ["shino", "Hatsune Miku"],
         "song": "花を唄う",
@@ -38,6 +38,8 @@ async def test_create_rdlevel_happy_path(client: AsyncClient, mock_user: User, m
         "has_window_dance": False
     }
 
+@pytest.fixture
+def url_scope():
     url_scope = {
         "image": "https://example.com/testimage.png",
         "thumb": "https://example.com/testimage-thumb.png",
@@ -46,14 +48,32 @@ async def test_create_rdlevel_happy_path(client: AsyncClient, mock_user: User, m
         "rdlevel_sha1": "testrdlevelsha1",
         "is_animated": True
     }
-    url_scope = msgspec.convert(url_scope, type=AssetURLScope)
+    return msgspec.convert(url_scope, type=AssetURLScope)
 
+@pytest.fixture
+def publisher_add_scope(
+    mock_user: User,
+    mock_publisher: Publisher
+):
     publisher_add_scope = {
         "publisher_id": mock_publisher.id,
         "user_id": mock_user.id,
         "url": "https://example.com/testlevel.rdzip"
     }
     publisher_add_scope = msgspec.convert(publisher_add_scope, type=PublisherAddScope)
+    return publisher_add_scope
+
+
+@pytest.mark.asyncio
+async def test_create_rdlevel_happy_path(
+    client: AsyncClient,
+    mock_user: User,
+    mock_publisher: Publisher,
+    test_payload,
+    url_scope,
+    publisher_add_scope
+):
+
 
     token = make_token_now(scopes=OrchardAuthScopes(
         Publisher_add=publisher_add_scope,
@@ -80,3 +100,30 @@ async def test_create_rdlevel_happy_path(client: AsyncClient, mock_user: User, m
     assert the_level.song == test_payload["song"]
     assert the_level.song_alt == test_payload["song_alt"]
     assert the_level.sha1 == url_scope.sha1
+
+
+@pytest.mark.asyncio
+async def test_throws_error_if_url_from_prefill_and_add_dont_match(
+    client: AsyncClient,
+    mock_user: User,
+    mock_publisher: Publisher,
+    test_payload,
+    url_scope,
+    publisher_add_scope
+):
+    publisher_add_scope.url = "ahiwofekawefhawelfk"
+    token = make_token_now(scopes=OrchardAuthScopes(
+        Publisher_add=publisher_add_scope,
+        Publisher_prefill=url_scope
+    ), exp_time=timedelta(hours=1))
+
+    resp = await client.post("/rdlevel", headers={
+        "authorization": f"Bearer {token}"
+    }, json={
+        "level": test_payload
+    })
+    assert resp.status_code == 403
+    assert resp.json() ==         {'error_code': 'LevelAddURLMismatch',
+         'message': 'Received metadata for url https://example.com/testlevel.rdzip but '
+                    'only authorized for url ahiwofekawefhawelfk. Try the command from '
+                    "the start. If you see this again, it's a bug, ping auburn"}

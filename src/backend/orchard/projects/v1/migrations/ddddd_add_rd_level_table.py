@@ -54,7 +54,8 @@ class AddRDLevelTable(Migrator):
                 "uploader"          TEXT        NOT NULL REFERENCES "user" ("id"),
                 "publisher"         TEXT        NOT NULL REFERENCES "publisher" ("id"),
                 "uploaded"          TEXT        NOT NULL, -- datetime
-                "approval"          INTEGER     NOT NULL
+                "approval"          INTEGER     NOT NULL,
+                CHECK( "id" LIKE 'rd_%') -- ids for rdlevels begin with rd_
             ) STRICT;
             --sql
             CREATE INDEX "rdlevel_uploader_idx" ON "rdlevel" ("uploader");

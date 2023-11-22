@@ -1,10 +1,12 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
   "features": {
-    "ghcr.io/devcontainers-contrib/features/poetry:2": {},
     "ghcr.io/devcontainers/features/python:1": {
-      "version": "3.11"
-    }
-  },
-  "postCreateCommand": "go install github.com/DarthSim/hivemind@latest"
+      "version": "3.11",
+      "installTools": false,
+      "useOryxIfAvailable": true
+    },
+    "ghcr.io/devcontainers-contrib/features/poetry:2": {},
+    "ghcr.io/devcontainers/features/rust:1": {}
+  }
 }

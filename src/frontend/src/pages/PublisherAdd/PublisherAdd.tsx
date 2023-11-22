@@ -4,7 +4,7 @@ import { Loading } from "@orchard/components/Loading";
 import { Header } from "@orchard/components/Header";
 import { atom, useAtom } from "jotai";
 import { useAsyncAction } from "@orchard/hooks/useAsync";
-import { VitalsLevelExport, getLevelPrefill } from "@orchard/api/levels";
+import { VitalsLevelExport, getRDLevelPrefill } from "@orchard/api/levels";
 import { useEffect, useRef } from "preact/hooks";
 import { atomWithReset } from "jotai/utils";
 import { EditLevel } from "@orchard/components/EditLevel";
@@ -40,7 +40,7 @@ function PublisherAddMainPhase() {
             throw new Error("No publisher token given. Try the command again in discord")
         }
         return combinePromises({
-            prefill: getLevelPrefill(publisherToken),
+            prefill: getRDLevelPrefill(publisherToken),
             publisher: getPublisher(publisherToken)
         })
     });
