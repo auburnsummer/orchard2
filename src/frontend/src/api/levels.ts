@@ -78,11 +78,15 @@ const isPrefillResult : tg.TypeGuard<PrefillResult> = tg.isLikeObject({
 });
 
 // the url for the prefill is encoded in the token and cannot be changed by the user.
-export async function getLevelPrefill(publisherToken: string) {
+export async function getRDLevelPrefill(publisherToken: string) {
     return client.post("rdlevel/prefill", {
         guard: isPrefillResult,
         headers: {
             authorization: `Bearer ${publisherToken}`
         }
     })
+}
+
+export async function addRDLevel() {
+
 }

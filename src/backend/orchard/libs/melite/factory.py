@@ -73,7 +73,7 @@ def make_row_trace(spec: typing.Type[MeliteStruct], conn: apsw.Connection):
                     --sql
                     SELECT * FROM "{sub_struct.table_name}"
                     WHERE
-                        "{sub_struct.table_name}"."{sub_struct.primary_key}" = ?
+                        "{sub_struct.table_name}"."{sub_struct.primary_key}" = ?;
                 """
                 cursor.execute(q, [value])
                 value = next(cursor)
