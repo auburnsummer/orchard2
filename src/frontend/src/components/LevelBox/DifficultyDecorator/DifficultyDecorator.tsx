@@ -1,6 +1,6 @@
 import cc from 'clsx';
 import './DifficultyDecorator.css';
-import type { VitalsLevelExport } from '@orchard/api/levels';
+import type { RDPrefillResult } from '@orchard/api/levels';
 import type { WithClass } from '@orchard/utils/withClass';
 
 const DIFFICULTY_STRINGS = [
@@ -17,7 +17,7 @@ const DIFFICULTY_CLASSES = [
     'ultima!dd'
 ];
 
-type DifficultyDecoratorProps = Pick<VitalsLevelExport, 'difficulty'> & WithClass;
+type DifficultyDecoratorProps = Pick<RDPrefillResult, 'difficulty'> & WithClass;
 
 export function DifficultyDecorator({ difficulty, 'class': _class }: DifficultyDecoratorProps) {
     const difficultyString = DIFFICULTY_STRINGS[difficulty];

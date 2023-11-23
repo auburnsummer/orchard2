@@ -1,11 +1,11 @@
-import { VitalsLevelExport } from "@orchard/api/levels"
+import { RDLevel, RDPrefillResult, RDPrefillResultTruncated } from "@orchard/api/levels"
 import { WithClass } from "@orchard/utils/withClass";
 
 import cc from "clsx";
 
 import "./EditLevel.css";
 import { Input, Select, TagInput, Textarea, Option, Checkbox, Button, Divider, Dialog } from "@orchard/ui";
-import { useRef } from "preact/hooks";
+import { useMemo, useRef } from "preact/hooks";
 import { RESET, atomWithReset } from "jotai/utils";
 import { useAtom } from "jotai";
 import { withImmer } from "jotai-immer";
@@ -16,30 +16,39 @@ import type { SlDialog } from "@shoelace-style/shoelace";
 import { LevelBox } from "../LevelBox";
 
 type EditLevelProps = WithClass & {
-    levelPrefill: VitalsLevelExport;
-    publisherName: string;
+    levelPrefill: RDPrefillResult;
+    publisher: Publisher;
 }
 
-export type LevelPreviewData = VitalsLevelExport & {
-    "song_altname": string;
-    "publisher_name": string;
-}
 
-function makeInitialAtom(prefill: VitalsLevelExport, publisherName: string) {
-    const initialLevelState: LevelPreviewData = {
+
+function makeInitialAtom(prefill: RDPrefillResult) {
+    const initialLevelState: RDPrefillResultTruncated = {
         ...prefill,
-        "song_altname": "",
-        "publisher_name": publisherName
+        "song_alt": ""
     }
     return withImmer(atomWithReset(initialLevelState));
 }
 
-export function EditLevel({"class": _class, levelPrefill, publisherName}: EditLevelProps) {
-    const levelAtom = useRef(makeInitialAtom(levelPrefill, publisherName));
+export function EditLevel({"class": _class, levelPrefill, publisher}: EditLevelProps) {
+    const levelAtom = useRef(makeInitialAtom(levelPrefill));
 
     const [preview, setPreview] = useAtom(levelAtom.current);
 
     const levelPreviewDialog = useRef<SlDialog | null>(null);
+
+    // in preview we don't have all the fields
+    const merged = useMemo<RDLevel>(() => ({
+        ...levelPrefill,
+        ...preview,
+        uploader: {
+            id: "u_preview",
+            name: "Preview"
+        },
+        publisher,
+        uploaded: Date(),
+        approval: 0
+    }), [levelPrefill, preview]);
 
     return (
         <div class={cc(_class, "el")}>
@@ -47,7 +56,7 @@ export function EditLevel({"class": _class, levelPrefill, publisherName}: EditLe
                 class="el_level-preview-smallscreens"
                 ref={levelPreviewDialog}
             >
-                <LevelBox level={preview} />
+                <LevelBox level={merged} />
             </Dialog>
             <div class="el_too-small">
                 <p class="el_too-small-message">Please increase the size of the web browser</p>
@@ -96,9 +105,9 @@ export function EditLevel({"class": _class, levelPrefill, publisherName}: EditLe
                         <Input
                             class="el_title"
                             label="Song alternate name (optional)"
-                            value={preview.song_altname}
+                            value={preview.song_alt}
                             onSlInput={e => setPreview(d => {
-                                d.song_altname = e.target.value;
+                                d.song_alt = e.target.value;
                             })}
                         />
                     </div>
@@ -235,7 +244,7 @@ export function EditLevel({"class": _class, levelPrefill, publisherName}: EditLe
                     </div>
                 </div>
                 <div class="el_preview">
-                    <LevelBox level={preview} />
+                    <LevelBox level={merged} />
                 </div>
             </div>
         </div>

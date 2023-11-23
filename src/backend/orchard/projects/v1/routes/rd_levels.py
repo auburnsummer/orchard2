@@ -1,5 +1,6 @@
 import msgspec
 from orchard.libs.utils.gen_id import IDType, gen_id
+from orchard.libs.vitals.msgspec_schema import VitalsLevelBase, VitalsLevelBaseMutable
 from orchard.projects.v1.core.auth import OrchardAuthToken, requires_scopes
 from orchard.projects.v1.core.exceptions import LevelAddURLMismatch, PublisherDoesNotExist, UserDoesNotExist
 from orchard.projects.v1.core.wrapper import msgspec_return, parse_body_as
@@ -22,29 +23,21 @@ async def prefill_handler(request: Request):
     prefill_result = await run_prefill(source_url)
     return prefill_result
 
-class RDPrefillResultTruncated(RDPrefillResult, kw_only=True):
-    image: msgspec.UnsetType = msgspec.UNSET
-    thumb: msgspec.UnsetType = msgspec.UNSET
-    url: msgspec.UnsetType = msgspec.UNSET
-    icon: msgspec.UnsetType = msgspec.UNSET
-    sha1: msgspec.UnsetType = msgspec.UNSET
-    rdlevel_sha1: msgspec.UnsetType = msgspec.UNSET
-    is_animated: msgspec.UnsetType = msgspec.UNSET
-
+class AddRDLevelPayload(VitalsLevelBaseMutable, kw_only=True):
     song_alt: str
 
-class AddRdLevelHandlerArgs(msgspec.Struct):
-    level: RDPrefillResultTruncated
+class AddRDLevelHandlerArgs(msgspec.Struct):
+    level: AddRDLevelPayload
 
 class AddRdlevelResponse(msgspec.Struct):
     level: RDLevel
 
 @msgspec_return(201)
-@parse_body_as(AddRdLevelHandlerArgs)
+@parse_body_as(AddRDLevelHandlerArgs)
 @requires_scopes({"Publisher_add", "Publisher_prefill"})
 async def add_rd_level_handler(request: Request):
     token: OrchardAuthToken = request.state.token
-    body: AddRdLevelHandlerArgs = request.state.body
+    body: AddRDLevelHandlerArgs = request.state.body
 
     assert token.Publisher_add is not None
     assert token.Publisher_prefill is not None

@@ -1,18 +1,15 @@
 from typing import List, Optional
 from datetime import datetime
 
-from .color_tagged_string import ColorToken
-
 import msgspec
 
-class VitalsLevelBase(msgspec.Struct):
+class VitalsLevelBaseMutable(msgspec.Struct):
+    "The properties on VitalsLevel where it might make sense for the client to be changing them"
     artist: str
     artist_tokens: List[str]
     song: str
-    song_ct: List[ColorToken]
     seizure_warning: bool
     description: str
-    description_ct: List[ColorToken]
     hue: float
     authors: List[str]
     authors_raw: str
@@ -31,11 +28,15 @@ class VitalsLevelBase(msgspec.Struct):
     has_holds: bool
     has_skipshots: bool
     has_window_dance: bool
+
+class VitalsLevelBase(VitalsLevelBaseMutable):
+    "VitalsLevelBaseMutable + immutable properties"
     sha1: str
     rdlevel_sha1: str
     is_animated: bool
     
 class VitalsLevel(VitalsLevelBase):
+    "VitalsLevelBaseMutable + VitalsLevelBase + image data"
     image: bytearray
     thumb: bytearray
     icon: Optional[bytearray]

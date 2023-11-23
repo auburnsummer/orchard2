@@ -37,7 +37,6 @@ async def lifespan(_):
     # pylint: disable=W0603
     global engine
     apsw.bestpractice.apply(apsw.bestpractice.recommended)
-    logger.info(TESTING)
     if TESTING:
         engine = apsw.Connection(TEST_DATABASE_URL)
     else:
