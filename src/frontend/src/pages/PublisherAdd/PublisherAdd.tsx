@@ -4,7 +4,7 @@ import { Loading } from "@orchard/components/Loading";
 import { Header } from "@orchard/components/Header";
 import { atom, useAtom } from "jotai";
 import { useAsyncAction } from "@orchard/hooks/useAsync";
-import { VitalsLevelExport, getRDLevelPrefill } from "@orchard/api/levels";
+import { RDPrefillResult, getRDLevelPrefill } from "@orchard/api/levels";
 import { useEffect, useRef } from "preact/hooks";
 import { atomWithReset } from "jotai/utils";
 import { EditLevel } from "@orchard/components/EditLevel";
@@ -16,7 +16,7 @@ type STATES = "prefill"
 const stateAtom = atom<STATES>("prefill");
 
 type PublisherAddFormProps = {
-    level: VitalsLevelExport;
+    level: RDPrefillResult;
     publisher: Publisher
 }
 
@@ -27,7 +27,7 @@ function PublisherAddForm({level, publisher}: PublisherAddFormProps) {
 
     return (
         <div class="pa_form-wrapper">
-            <EditLevel levelPrefill={levelPrefill} publisherName={publisher.name} class="pa_edit-level" />
+            <EditLevel levelPrefill={levelPrefill} publisher={publisher} class="pa_edit-level" />
         </div>
     )
 }

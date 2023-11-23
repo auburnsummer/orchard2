@@ -16,13 +16,14 @@ from msgspec import field
 import msgspec
 from orchard.libs.bunny_storage.bunny_storage import BunnyStorage
 from orchard.libs.melite.base import JSON, MeliteStruct
-from orchard.libs.vitals.pydantic_model import VitalsLevelBase
+from orchard.libs.vitals.msgspec_schema import VitalsLevelBase
 from orchard.projects.v1.core.auth import AssetURLScope, OrchardAuthScopes, make_token_now
 from orchard.projects.v1.core.config import config
 from orchard.libs.vitals import analyze
 from orchard.projects.v1.models.publishers import Publisher
 from orchard.projects.v1.models.users import User
 
+from loguru import logger
 
 class RDLevel(MeliteStruct):
     """
@@ -83,8 +84,6 @@ class RDPrefillResult(VitalsLevelBase, kw_only=True):
     thumb: str
     url: str
     icon: Optional[str] = None
-    song_ct: msgspec.UnsetType = msgspec.UNSET
-    description_ct: msgspec.UnsetType = msgspec.UNSET
 
 class RDPrefillResultWithToken(msgspec.Struct, kw_only=True):
     result: RDPrefillResult
@@ -125,8 +124,10 @@ async def run_prefill(source_url: str):
             icon = bun.get_public_url(bun.get_url_by_hash(*icon_args) if icon_args else None)
             url = bun.get_public_url(bun.get_url_by_hash(*rdzip_args))
 
+            level_dict = msgspec.structs.asdict(level)
+
             payload = {
-                **msgspec.structs.asdict(level),
+                **level_dict,
                 "thumb": thumb,
                 "image": image,
                 "icon": icon,

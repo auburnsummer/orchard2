@@ -7,19 +7,19 @@ import "./LevelBox.css";
 
 import type { WithClass } from '@orchard/utils/withClass';
 import { useExcite } from '@orchard/hooks/useExcite';
-import { LevelPreviewData } from '../EditLevel/EditLevel';
 import { Icon } from '@orchard/ui';
+import { RDLevel, RDPrefillResultTruncated } from '@orchard/api/levels';
 
 type LevelBoxProps = {
-    level: LevelPreviewData  // for now
+    level: RDLevel
 } & WithClass;
 
 export function LevelBox({ level, 'class': _class }: LevelBoxProps) {
     const approval = 10 as number;
-    const { song, song_altname, artist_tokens, authors, tags, thumb, is_animated, image, min_bpm, max_bpm, seizure_warning } = level;
+    const { song, song_alt, artist_tokens, authors, tags, thumb, is_animated, image, min_bpm, max_bpm, seizure_warning } = level;
 
     const bpmText = min_bpm === max_bpm ? `${min_bpm} BPM` : `${min_bpm}-${max_bpm} BPM`;
-    const sourceText = level.publisher_name;
+    const sourceText = level.publisher.name;
 
     const usersIcon = authors.length > 1 ? "people-fill" : "person-fill";
     const canonicalUrl = level.url;
@@ -56,7 +56,7 @@ export function LevelBox({ level, 'class': _class }: LevelBoxProps) {
                 <div class="lb_cast">
                     <div class="lb_song-wrapper">
                         <h1 class="lb_song">{song}</h1>
-                        {song_altname && <h2 class="lb_songalt">({song_altname})</h2>}
+                        {song_alt && <h2 class="lb_songalt">({song_alt})</h2>}
                     </div>
                     <div class="lb_artist-wrapper">
                         <ConjunctionList

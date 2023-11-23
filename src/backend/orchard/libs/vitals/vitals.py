@@ -19,7 +19,7 @@ from .facets.tags_facet import tags_facet
 from .facets.thumbnail_facet import thumbnail_facet
 from .facets.updated_facet import updated_facet
 
-from .pydantic_model import VitalsLevel
+from .msgspec_schema import VitalsLevel
 
 import msgspec
 
@@ -32,9 +32,9 @@ def main(f: IO[bytes]) -> VitalsLevel:
     facets = {
         ("artist",): make_color_enabled_key_facet(["settings", "artist"]),
         "artist_tokens": artist_list_facet,
-        ("song", "song_ct"): make_color_enabled_key_facet(["settings", "song"]),
+        "song": make_color_enabled_key_facet(["settings", "song"]),
         "seizure_warning": make_key_facet(["settings", "seizureWarning"], True),
-        ("description", "description_ct"): make_color_enabled_key_facet(
+        "description": make_color_enabled_key_facet(
             ["settings", "description"]
         ),
         "hue": make_key_facet(["settings", "songNameHue"], 0.0),
