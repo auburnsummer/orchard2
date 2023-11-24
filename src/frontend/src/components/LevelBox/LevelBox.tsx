@@ -8,7 +8,7 @@ import "./LevelBox.css";
 import type { WithClass } from '@orchard/utils/withClass';
 import { useExcite } from '@orchard/hooks/useExcite';
 import { Icon } from '@orchard/ui';
-import { RDLevel, RDPrefillResultTruncated } from '@orchard/api/levels';
+import { RDLevel, RDPrefillResultTruncated } from '@orchard/api/levels/levels';
 
 type LevelBoxProps = {
     level: RDLevel

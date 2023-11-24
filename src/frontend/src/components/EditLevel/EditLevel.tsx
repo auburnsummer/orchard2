@@ -1,4 +1,4 @@
-import { RDLevel, RDPrefillResult, RDPrefillResultTruncated } from "@orchard/api/levels"
+import { RDLevel, RDPrefillResult, RDPrefillResultTruncated } from "@orchard/api/levels/levels"
 import { WithClass } from "@orchard/utils/withClass";
 
 import cc from "clsx";
