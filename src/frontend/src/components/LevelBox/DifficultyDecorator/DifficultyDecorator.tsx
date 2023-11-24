@@ -1,6 +1,6 @@
 import cc from 'clsx';
 import './DifficultyDecorator.css';
-import type { RDPrefillResult } from '@orchard/api/levels';
+import type { RDPrefillResult } from '@orchard/api/levels/levels';
 import type { WithClass } from '@orchard/utils/withClass';
 
 const DIFFICULTY_STRINGS = [

@@ -4,7 +4,7 @@ import { Loading } from "@orchard/components/Loading";
 import { Header } from "@orchard/components/Header";
 import { atom, useAtom } from "jotai";
 import { useAsyncAction } from "@orchard/hooks/useAsync";
-import { RDPrefillResult, getRDLevelPrefill } from "@orchard/api/levels";
+import { RDPrefillResult, getRDLevelPrefill } from "@orchard/api/levels/levels";
 import { useEffect, useRef } from "preact/hooks";
 import { atomWithReset } from "jotai/utils";
 import { EditLevel } from "@orchard/components/EditLevel";
