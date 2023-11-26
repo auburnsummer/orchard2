@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from base64 import b64decode
 import json
+from orchard.libs.utils.gen_id import IDType, gen_id
 from orchard.projects.v1.core.exceptions import AuthorizationHeaderInvalid, AuthorizationHeaderTokenTypeIsNotBearer, MissingAuthorizationHeader, MissingScopes, NoAuthorizationHeaderTokenType
 
 from .config import config
@@ -20,12 +21,13 @@ from starlette.requests import Request
 import msgspec
 
 
-class PublisherAddScope(msgspec.Struct):
+class PublisherRDPrefillScope(msgspec.Struct):
     publisher_id: str
     user_id: str
     url: str
+    link_id: str
 
-class AssetURLScope(msgspec.Struct, kw_only=True):
+class PublisherAddAssetsScope(msgspec.Struct, kw_only=True):
     """
     indicates that these image / thumb / icon combo is allowed to be submitted with this url
     """
@@ -36,6 +38,7 @@ class AssetURLScope(msgspec.Struct, kw_only=True):
     sha1: str
     rdlevel_sha1: str
     is_animated: bool
+    link_id: str
  
 class OrchardAuthScopes(msgspec.Struct, kw_only=True):
     "The keys and value types that a token can have."
@@ -43,8 +46,8 @@ class OrchardAuthScopes(msgspec.Struct, kw_only=True):
     Admin_all: Optional[bool] = None  # if true, bearer is an admin.
     DiscordGuild_register: Optional[str] = None  # this discord guild can be used to register.
     Publisher_identify: Optional[str] = None  # this token yields this publisher with the /identify endpoint.
-    Publisher_add: Optional[PublisherAddScope] = None  # this specific publisher id and url can be added
-    Publisher_prefill: Optional[AssetURLScope] = None
+    Publisher_rdprefill: Optional[PublisherRDPrefillScope] = None  # allows the bearer to use the rdlevel/prefill endpoint
+    Publisher_rdadd: Optional[PublisherAddAssetsScope] = None
 
 class OrchardAuthToken(OrchardAuthScopes):
     iat: datetime

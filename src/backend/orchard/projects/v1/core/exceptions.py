@@ -243,19 +243,21 @@ class DiscordGuildCredentialAlreadyExists(OrchardException):
             credential_id=self.credential_id
         )
 
-class LevelAddURLMismatchArgs(TypedDict):
-    url1: str
-    url2: str
+class LinkedTokensIDMismatchArgs(TypedDict):
+    id1: str
+    id2: str
+    context: str
 
-class LevelAddURLMismatch(OrchardException):
-    def __init__(self, *args, **kwargs: Unpack[LevelAddURLMismatchArgs]):
+class LinkedTokensIDMismatch(OrchardException):
+    def __init__(self, *args, **kwargs: Unpack[LinkedTokensIDMismatchArgs]):
         super().__init__(*args)
-        self.url1 = kwargs.get('url1')
-        self.url2 = kwargs.get('url2')
+        self.id1 = kwargs.get('id1')
+        self.id2 = kwargs.get('id2')
+        self.context = kwargs.get('context')
         self.status_code = 403
     
     def __str__(self):
-        return f"Received metadata for url {self.url2} but only authorized for url {self.url1}. Try the command from the start. If you see this again, it's a bug, ping auburn"
+        return f"{self.context}: received mismatching ids {self.id1} and {self.id2}. Try the command from the start. If you see this again, it's a bug, ping auburn"
 
 
 class UnknownErrorArgs(TypedDict):

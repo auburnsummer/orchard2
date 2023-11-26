@@ -1,5 +1,5 @@
 from httpx import AsyncClient, HTTPStatusError
-from orchard.projects.v1.core.auth import AssetURLScope, OrchardAuthScopes, PublisherAddScope, make_token_now
+from orchard.projects.v1.core.auth import OrchardAuthScopes, PublisherAddAssetsScope, PublisherRDPrefillScope, make_token_now
 from orchard.projects.v1.models.engine import select
 from orchard.projects.v1.models.publishers import Publisher
 from orchard.projects.v1.models.rd_levels import RDLevel
@@ -39,29 +39,31 @@ def test_payload():
     }
 
 @pytest.fixture
-def url_scope():
+def publisher_assets_scope():
     url_scope = {
-        "image": "https://example.com/testimage.png",
-        "thumb": "https://example.com/testimage-thumb.png",
-        "url": "https://example.com/testlevel.rdzip",
+        "image": "https://cabinet.rhythm.cafe/testimage.png",
+        "thumb": "https://cabinet.rhythm.cafe/testimage-thumb.png",
+        "url": "https://cabinet.rhythm.cafe/testlevel.rdzip",
         "sha1": "testsha1",
         "rdlevel_sha1": "testrdlevelsha1",
-        "is_animated": True
+        "is_animated": True,
+        "link_id": "testlinkid"
     }
-    return msgspec.convert(url_scope, type=AssetURLScope)
+    return msgspec.convert(url_scope, type=PublisherAddAssetsScope)
 
 @pytest.fixture
-def publisher_add_scope(
+def publisher_prefill_scope(
     mock_user: User,
     mock_publisher: Publisher
 ):
-    publisher_add_scope = {
+    rd_prefill_scope = {
         "publisher_id": mock_publisher.id,
         "user_id": mock_user.id,
-        "url": "https://example.com/testlevel.rdzip"
+        "url": "https://third.party.website/testlevel.rdzip",
+        "link_id": "testlinkid"
     }
-    publisher_add_scope = msgspec.convert(publisher_add_scope, type=PublisherAddScope)
-    return publisher_add_scope
+    rd_prefill_scope = msgspec.convert(rd_prefill_scope, type=PublisherRDPrefillScope)
+    return rd_prefill_scope
 
 
 @pytest.mark.asyncio
@@ -70,14 +72,14 @@ async def test_create_rdlevel_happy_path(
     mock_user: User,
     mock_publisher: Publisher,
     test_payload,
-    url_scope,
-    publisher_add_scope
+    publisher_assets_scope,
+    publisher_prefill_scope
 ):
 
 
     token = make_token_now(scopes=OrchardAuthScopes(
-        Publisher_add=publisher_add_scope,
-        Publisher_prefill=url_scope
+        Publisher_rdadd=publisher_assets_scope,
+        Publisher_rdprefill=publisher_prefill_scope
     ), exp_time=timedelta(hours=1))
 
     resp = await client.post("/rdlevel", headers={
@@ -99,7 +101,7 @@ async def test_create_rdlevel_happy_path(
     assert the_level.id == id
     assert the_level.song == test_payload["song"]
     assert the_level.song_alt == test_payload["song_alt"]
-    assert the_level.sha1 == url_scope.sha1
+    assert the_level.sha1 == publisher_assets_scope.sha1
 
 
 @pytest.mark.asyncio
@@ -108,13 +110,13 @@ async def test_throws_error_if_url_from_prefill_and_add_dont_match(
     mock_user: User,
     mock_publisher: Publisher,
     test_payload,
-    url_scope,
-    publisher_add_scope
+    publisher_assets_scope,
+    publisher_prefill_scope
 ):
-    publisher_add_scope.url = "ahiwofekawefhawelfk"
+    publisher_assets_scope.link_id = "ahiwofekawefhawelfk"
     token = make_token_now(scopes=OrchardAuthScopes(
-        Publisher_add=publisher_add_scope,
-        Publisher_prefill=url_scope
+        Publisher_rdadd=publisher_assets_scope,
+        Publisher_rdprefill=publisher_prefill_scope
     ), exp_time=timedelta(hours=1))
 
     resp = await client.post("/rdlevel", headers={
@@ -123,7 +125,7 @@ async def test_throws_error_if_url_from_prefill_and_add_dont_match(
         "level": test_payload
     })
     assert resp.status_code == 403
-    assert resp.json() ==         {'error_code': 'LevelAddURLMismatch',
-         'message': 'Received metadata for url https://example.com/testlevel.rdzip but '
-                    'only authorized for url ahiwofekawefhawelfk. Try the command from '
-                    "the start. If you see this again, it's a bug, ping auburn"}
+    assert resp.json() ==          {'error_code': 'LinkedTokensIDMismatch',
+          'message': 'adding rd level: received mismatching ids ahiwofekawefhawelfk and '
+                    'testlinkid. Try the command from the start. If you see this '
+                     "again, it's a bug, ping auburn"}

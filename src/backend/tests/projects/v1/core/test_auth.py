@@ -4,7 +4,7 @@ import pyseto
 import pytest
 import random
 
-from orchard.projects.v1.core.auth import OrchardAuthScopes, PublisherAddScope, parse_token_from_request, make_token_now
+from orchard.projects.v1.core.auth import OrchardAuthScopes, PublisherRDPrefillScope, parse_token_from_request, make_token_now
 from starlette.requests import Request
 from starlette.datastructures import Headers
 
@@ -83,24 +83,25 @@ def test_parse_token_from_request():
     assert parsed.Admin_all == True
 
 def test_parse_token_from_request_combines_comma_seperated_tokens():
-    token = make_token_now(OrchardAuthScopes(User_all="yuki"), timedelta(hours=5))
+    token = make_token_now(OrchardAuthScopes(User_all="u_awfafafafa"), timedelta(hours=5))
     token2 = make_token_now(
         OrchardAuthScopes(
-            Publisher_add=PublisherAddScope(
+            Publisher_rdprefill=PublisherRDPrefillScope(
                 publisher_id="testid",
                 url="https://example.com/example.rdzip",
-                user_id="testuser"
+                user_id="testuser",
+                link_id="aaaaa"
             )
-        ), timedelta(hours=5)
+        ), timedelta(hours=4)
     )
     request = build_request(headers={
         "Authorization": f"Bearer {token},Bearer {token2}"
     })
     parsed = parse_token_from_request(request)
-    assert parsed.User_all == "yuki"
-    assert parsed.Publisher_add == PublisherAddScope(
-        publisher_id="testid",
-        url="https://example.com/example.rdzip",
-        user_id="testuser"
-    )
-
+    assert parsed.User_all == "u_awfafafafa"
+    assert parsed.Publisher_rdprefill == PublisherRDPrefillScope(
+                publisher_id="testid",
+                url="https://example.com/example.rdzip",
+                user_id="testuser",
+                link_id="aaaaa"
+            )

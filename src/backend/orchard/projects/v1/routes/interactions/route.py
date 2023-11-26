@@ -9,7 +9,8 @@ is send a link to rhythm.cafe, which does the actual work.
 from datetime import timedelta
 from orchard.libs.discord_msgspec.interaction import AnyInteraction, ApplicationCommandInteraction, MessageApplicationCommandData, PingInteraction
 from orchard.libs.discord_msgspec.interaction_response import EPHEMERAL, MessageInteractionCallbackData, MessageInteractionResponse, PongInteractionResponse
-from orchard.projects.v1.core.auth import OrchardAuthScopes, PublisherAddScope, make_token_now
+from orchard.libs.utils.gen_id import IDType, gen_id
+from orchard.projects.v1.core.auth import OrchardAuthScopes, PublisherRDPrefillScope, make_token_now
 from orchard.projects.v1.core.exceptions import InvalidDiscordSignature, MissingDiscordSignatureHeaders
 from orchard.projects.v1.core.wrapper import msgspec_return
 from orchard.projects.v1.models.credentials import DiscordCredential
@@ -98,11 +99,14 @@ async def add_handler(body: ApplicationCommandInteraction):
     user = cred.user
     
     for attachment in message.attachments:
+        # create a scoped token to use the /prefill and /identify endpoints
+        # the token to use the /add endpoint is returned from the /prefill endpoint.
         scopes = OrchardAuthScopes(
-            Publisher_add=PublisherAddScope(
+            Publisher_rdprefill=PublisherRDPrefillScope(
                 publisher_id=publisher.id,
+                user_id=user.id,
                 url=attachment.url,
-                user_id=user.id
+                link_id=gen_id(IDType.PREFILL)
             ),
             Publisher_identify=publisher.id
         )

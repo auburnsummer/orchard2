@@ -17,7 +17,7 @@ import msgspec
 from orchard.libs.bunny_storage.bunny_storage import BunnyStorage
 from orchard.libs.melite.base import JSON, MeliteStruct
 from orchard.libs.vitals.msgspec_schema import VitalsLevelBase
-from orchard.projects.v1.core.auth import AssetURLScope, OrchardAuthScopes, make_token_now
+from orchard.projects.v1.core.auth import OrchardAuthScopes, PublisherAddAssetsScope, PublisherRDPrefillScope, make_token_now
 from orchard.projects.v1.core.config import config
 from orchard.libs.vitals import analyze
 from orchard.projects.v1.models.publishers import Publisher
@@ -28,8 +28,7 @@ from loguru import logger
 class RDLevel(MeliteStruct):
     """
     We're repeating fields from VitalsLevelBase
-    because there are fields that we don't want to store for now
-    such as the colortoken stuff
+    because there may be fields in there we don't want to store
     """
     table_name = "rdlevel"
 
@@ -89,7 +88,8 @@ class RDPrefillResultWithToken(msgspec.Struct, kw_only=True):
     result: RDPrefillResult
     signed_token: str
 
-async def run_prefill(source_url: str):
+async def run_prefill(scope: PublisherRDPrefillScope):
+    source_url = scope.url
     c = config()
     async with BunnyStorage(
         api_key=c.BUNNY_STORAGE_API_KEY.get_secret_value(),
@@ -126,19 +126,29 @@ async def run_prefill(source_url: str):
 
             level_dict = msgspec.structs.asdict(level)
 
-            payload = {
-                **level_dict,
+            asset_urls = {
                 "thumb": thumb,
                 "image": image,
                 "icon": icon,
                 "url": url
             }
+
+            payload = {
+                **level_dict,
+                **asset_urls
+            }
             to_send = msgspec.convert(payload, RDPrefillResult)
-            asset_token_scopes = msgspec.convert(payload, AssetURLScope)
+
+            publisher_assets_scope = {
+                **payload,
+                "link_id": scope.link_id
+            }
+
+            publisher_assets_scope = msgspec.convert(publisher_assets_scope, PublisherAddAssetsScope)
 
             asset_token = make_token_now(
                 scopes=OrchardAuthScopes(
-                    Publisher_prefill=asset_token_scopes
+                    Publisher_rdadd=publisher_assets_scope
                 ),
                 exp_time=timedelta(days=1)
             )

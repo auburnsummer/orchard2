@@ -19,10 +19,11 @@ class IDType(StrEnum):
     """
     Unique prefixes for ids. 
     """
-    PUBLISHER = "p_"
-    USER = "u_"
-    RD_LEVEL = "rd_"
-    HS_LEVEL = "hs_"  # currently unused.
+    PUBLISHER = "p_"  # a publisher
+    USER = "u_"  # a user
+    PREFILL = "prefill_"  # a prefill result / also used to make sure an add token is part of the same flow.
+    RD_LEVEL = "rd_"  # a Rhythm Doctor level.
+    HS_LEVEL = "hs_"  # a Heaven Studio level. currently unused.
 
 def gen_id(id_type: IDType):
     """Generate an id, id_type is the unique prefix."""

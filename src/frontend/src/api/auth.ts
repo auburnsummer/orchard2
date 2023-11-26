@@ -4,14 +4,14 @@ import * as tg from "generic-type-guard";
 export type User = {
     id: string;
     name: string;
-    avatar_url?: string;
+    avatar_url: string | null;
     // we don't read cutoff atm
 }
 
 export const isUser : tg.TypeGuard<User> = tg.isLikeObject({
     id: tg.isString,
     name: tg.isString,
-    avatar_url: tg.isOptional(tg.isString)
+    avatar_url: tg.isNullable(tg.isString)
 });
 
 export async function getLoggedInUser(authToken: string) {
