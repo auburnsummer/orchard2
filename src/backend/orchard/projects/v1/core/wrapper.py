@@ -60,6 +60,7 @@ def msgspec_return(status_code: int):
     Order: this should typically be the last decorator (i.e. at the top.)
     """
     def decorator(func):
+        @wraps(func)
         async def inner(request: Request):
             try:
                 orig_response = await func(request)

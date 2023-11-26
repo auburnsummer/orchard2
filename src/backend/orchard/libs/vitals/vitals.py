@@ -30,7 +30,7 @@ class VitalsException(Exception):
 
 def main(f: IO[bytes]) -> VitalsLevel:
     facets = {
-        ("artist",): make_color_enabled_key_facet(["settings", "artist"]),
+        "artist": make_color_enabled_key_facet(["settings", "artist"]),
         "artist_tokens": artist_list_facet,
         "song": make_color_enabled_key_facet(["settings", "song"]),
         "seizure_warning": make_key_facet(["settings", "seizureWarning"], True),

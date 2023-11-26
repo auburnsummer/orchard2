@@ -1,4 +1,3 @@
-import { RDLevel, RDPrefillResult, RDPrefillResultTruncated } from "@orchard/api/levels/levels"
 import { WithClass } from "@orchard/utils/withClass";
 
 import cc from "clsx";
@@ -14,23 +13,23 @@ import type { Publisher } from "@orchard/api/publisher";
 import { useLog } from "@orchard/hooks/useLog";
 import type { SlDialog } from "@shoelace-style/shoelace";
 import { LevelBox } from "../LevelBox";
+import { AddRDLevelPayload, RDLevel, RDPrefillResult } from "@orchard/api/levels/types";
 
 type EditLevelProps = WithClass & {
     levelPrefill: RDPrefillResult;
     publisher: Publisher;
+    onSubmit: (payload: AddRDLevelPayload) => void;
 }
 
-
-
 function makeInitialAtom(prefill: RDPrefillResult) {
-    const initialLevelState: RDPrefillResultTruncated = {
+    const initialLevelState: AddRDLevelPayload = {
         ...prefill,
         "song_alt": ""
     }
     return withImmer(atomWithReset(initialLevelState));
 }
 
-export function EditLevel({"class": _class, levelPrefill, publisher}: EditLevelProps) {
+export function EditLevel({"class": _class, levelPrefill, publisher, onSubmit}: EditLevelProps) {
     const levelAtom = useRef(makeInitialAtom(levelPrefill));
 
     const [preview, setPreview] = useAtom(levelAtom.current);
@@ -88,6 +87,7 @@ export function EditLevel({"class": _class, levelPrefill, publisher}: EditLevelP
                         {/* not type submit, it's too easy for a stray enter to submit the form */}
                         <Button
                             class="el_submit-button"
+                            onClick={_ => onSubmit(preview)}
                         >
                             Submit
                         </Button>

@@ -1,9 +1,11 @@
 import * as tg from "generic-type-guard";
+import { User, isUser } from "../auth";
+import { Publisher, isPublisher } from "..";
 
 /**
  * corresponds to VitalsLevelBaseMutable in libs/vitals/msgspec_schema.py
  */
-type VitalsLevelBaseMutable = {
+export type VitalsLevelBaseMutable = {
     artist: string;
     artist_tokens: string[];
     song: string;
@@ -80,11 +82,11 @@ export const isVitalsLevelBase: tg.TypeGuard<VitalsLevelBase> = tg.isLikeObject(
 /**
  * Corresponds to RDPrefillResult in v1/models/rd_levels.py
  */
-type RDPrefillResult = VitalsLevelBase & {
+export type RDPrefillResult = VitalsLevelBase & {
     image: string;
     thumb: string;
     url: string;
-    icon?: string;
+    icon: string | null;
 }
 
 const rdPrefillResultGuards = {
@@ -92,7 +94,7 @@ const rdPrefillResultGuards = {
     image: tg.isString,
     thumb: tg.isString,
     url: tg.isString,
-    icon: tg.isOptional(tg.isString)
+    icon: tg.isNullable(tg.isString)
 }
 
 export const isRDPrefillResult: tg.TypeGuard<RDPrefillResult> = tg.isLikeObject(rdPrefillResultGuards);
@@ -100,7 +102,7 @@ export const isRDPrefillResult: tg.TypeGuard<RDPrefillResult> = tg.isLikeObject(
 /**
  * Corresponds to RDPrefillResultWithToken in v1/models/rd_levels.py
  */
-type RDPrefillResultWithToken = {
+export type RDPrefillResultWithToken = {
     result: RDPrefillResult,
     signed_token: string;
 }
@@ -108,4 +110,44 @@ type RDPrefillResultWithToken = {
 export const isRDPrefillResultWithToken: tg.TypeGuard<RDPrefillResultWithToken> = tg.isLikeObject({
     result: isRDPrefillResult,
     signed_token: tg.isString
+})
+
+
+/**
+ * Corresponds to AddRDLevelPayload in v1/routes/rd_levels.py
+ */
+export type AddRDLevelPayload = VitalsLevelBaseMutable & {
+    song_alt: string;
+}
+
+/**
+ * Corresponds to RDLevel in v1/models/rd_levels.py
+ */
+export type RDLevel = RDPrefillResult & AddRDLevelPayload & {
+    uploader: User
+    publisher: Publisher
+
+    uploaded: string // datetime
+    approval: number
+}
+
+export const isRDLevel: tg.TypeGuard<RDLevel> = tg.isLikeObject({
+    ...rdPrefillResultGuards,
+    id: tg.isString,
+    song_alt: tg.isString,
+    uploader: isUser,
+    publisher: isPublisher,
+    uploaded: tg.isString,
+    approval: tg.isNumber
+})
+
+/**
+ * Corresponds to AddRDLevelResponse in v1/routes/rd_levels.py
+ */
+export type AddRDLevelResponse = {
+    level: RDLevel
+}
+
+export const isAddRDLevelResponse: tg.TypeGuard<AddRDLevelResponse> = tg.isLikeObject({
+    level: isRDLevel
 })

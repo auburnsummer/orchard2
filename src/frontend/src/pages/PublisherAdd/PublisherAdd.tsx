@@ -1,33 +1,36 @@
-import { authTokenAtom } from "@orchard/stores/auth";
 import "./PublisherAdd.css";
 import { Loading } from "@orchard/components/Loading";
 import { Header } from "@orchard/components/Header";
 import { atom, useAtom } from "jotai";
 import { useAsyncAction } from "@orchard/hooks/useAsync";
-import { RDPrefillResult, getRDLevelPrefill } from "@orchard/api/levels/levels";
-import { useEffect, useRef } from "preact/hooks";
-import { atomWithReset } from "jotai/utils";
+import { addRDLevel, getRDLevelPrefill } from "@orchard/api/levels/levels";
+import { useEffect } from "preact/hooks";
 import { EditLevel } from "@orchard/components/EditLevel";
 import { Publisher, getPublisher } from "@orchard/api/publisher";
 import combinePromises from "@orchard/utils/combinePromises";
+import { AddRDLevelPayload, RDPrefillResultWithToken } from "@orchard/api/levels/types";
 
 type STATES = "prefill"
 
 const stateAtom = atom<STATES>("prefill");
 
 type PublisherAddFormProps = {
-    level: RDPrefillResult;
+    prefillResult: RDPrefillResultWithToken
     publisher: Publisher
+    publisherToken: string
 }
 
-function PublisherAddForm({level, publisher}: PublisherAddFormProps) {
-    const levelAtom = useRef(atomWithReset(level));
+function PublisherAddForm({prefillResult, publisher, publisherToken}: PublisherAddFormProps) {
+    const { result, signed_token: signedToken } = prefillResult;
 
-    const [levelPrefill, setLevelPrefill] = useAtom(levelAtom.current);
+    const onSubmit = async (payload: AddRDLevelPayload) => {
+        const result = await addRDLevel(signedToken, publisherToken, payload);
+        console.log(result);
+    }
 
     return (
         <div class="pa_form-wrapper">
-            <EditLevel levelPrefill={levelPrefill} publisher={publisher} class="pa_edit-level" />
+            <EditLevel levelPrefill={result} publisher={publisher} class="pa_edit-level" onSubmit={onSubmit} />
         </div>
     )
 }
@@ -35,13 +38,14 @@ function PublisherAddForm({level, publisher}: PublisherAddFormProps) {
 function PublisherAddMainPhase() {
     const [state, setState] = useAtom(stateAtom);
     
-    const [prefillResult, startPrefill] = useAsyncAction(async (get, _set, publisherToken: string | null) => {
+    const [prefillResult, startPrefill] = useAsyncAction(async (_get, _set, publisherToken: string | null) => {
         if (publisherToken == null) {
             throw new Error("No publisher token given. Try the command again in discord")
         }
         return combinePromises({
             prefill: getRDLevelPrefill(publisherToken),
-            publisher: getPublisher(publisherToken)
+            publisher: getPublisher(publisherToken),
+            publisherToken
         })
     });
 
@@ -70,9 +74,9 @@ function PublisherAddMainPhase() {
                 </div>
             )
         }
-        const {prefill, publisher} = prefillResult.data;
+        const {prefill, publisher, publisherToken} = prefillResult.data;
         return (
-            <PublisherAddForm level={prefill.result} publisher={publisher}/>
+            <PublisherAddForm prefillResult={prefill} publisher={publisher} publisherToken={publisherToken}/>
         )
     }
 
