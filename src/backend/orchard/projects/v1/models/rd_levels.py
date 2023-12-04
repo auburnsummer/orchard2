@@ -20,6 +20,7 @@ from orchard.libs.vitals.msgspec_schema import VitalsLevelBase
 from orchard.projects.v1.core.auth import OrchardAuthScopes, PublisherAddAssetsScope, PublisherRDPrefillScope, make_token_now
 from orchard.projects.v1.core.config import config
 from orchard.libs.vitals import analyze
+from orchard.projects.v1.models.engine import select
 from orchard.projects.v1.models.publishers import Publisher
 from orchard.projects.v1.models.users import User
 
@@ -76,6 +77,17 @@ class RDLevel(MeliteStruct):
     uploaded: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
     approval: int = 0
+
+    @staticmethod
+    def by_sha1(sha1: str) -> Optional[RDLevel]:
+        cursor = select(RDLevel).cursor()
+        q = f"""
+--sql
+SELECT * FROM {RDLevel.table_name}
+WHERE sha1 = ?
+"""
+        cursor.execute(q, [sha1])
+        return next(cursor, None)
 
 
 class RDPrefillResult(VitalsLevelBase, kw_only=True):

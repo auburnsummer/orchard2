@@ -15,6 +15,8 @@ import traceback
 from typing import Set, TypedDict
 from typing_extensions import Unpack
 
+from orchard.projects.v1.core.config import config
+
 
 class OrchardException(Exception):
     status_code: int
@@ -259,6 +261,18 @@ class LinkedTokensIDMismatch(OrchardException):
     def __str__(self):
         return f"{self.context}: received mismatching ids {self.id1} and {self.id2}. Try the command from the start. If you see this again, it's a bug, ping auburn"
 
+class RDLevelAlreadyExistsArgs(TypedDict):
+    level_id: str
+    sha1: str
+
+class RDLevelAlreadyExists(OrchardException):
+    def __init__(self, *args, **kwargs: Unpack[RDLevelAlreadyExistsArgs]):
+        super().__init__(*args)
+        self.level_id = kwargs.get('level_id')
+        self.sha1 = kwargs.get('sha1')
+
+    def __str__(self):
+        return f"Level already exists: {config().FRONTEND_URL}/rdlevel/{self.level_id}"
 
 class UnknownErrorArgs(TypedDict):
     orig_exc: Exception
