@@ -2,7 +2,7 @@ import msgspec
 from orchard.libs.utils.gen_id import IDType, gen_id
 from orchard.libs.vitals.msgspec_schema import VitalsLevelBaseMutable
 from orchard.projects.v1.core.auth import OrchardAuthToken, requires_scopes
-from orchard.projects.v1.core.exceptions import LinkedTokensIDMismatch, PublisherDoesNotExist, UserDoesNotExist
+from orchard.projects.v1.core.exceptions import LinkedTokensIDMismatch, PublisherDoesNotExist, RDLevelAlreadyExists, UserDoesNotExist
 from orchard.projects.v1.core.wrapper import msgspec_return, parse_body_as
 from orchard.projects.v1.models.engine import insert, select
 from orchard.projects.v1.models.publishers import Publisher
@@ -19,6 +19,9 @@ async def prefill_handler(request: Request):
     assert token.Publisher_rdprefill is not None  # requires_scopes should ensure this already.
 
     prefill_result = await run_prefill(token.Publisher_rdprefill)
+    existing_level = RDLevel.by_sha1(prefill_result.result.sha1)
+    if existing_level is not None:
+        raise RDLevelAlreadyExists(level_id=existing_level.id, sha1=prefill_result.result.sha1)
     return prefill_result
 
 class AddRDLevelPayload(VitalsLevelBaseMutable, kw_only=True):
