@@ -1,5 +1,6 @@
 from apsw import Connection
 from orchard.libs.melite.migrations.migrate import Migrator
+from orchard.libs.utils.relative_file import whereami
 
 class AddDiscordCredentialsTable(Migrator):
     "Add discord credentials table"
@@ -13,13 +14,6 @@ class AddDiscordCredentialsTable(Migrator):
         return "bbbbb"
 
     def upgrade(self, conn: Connection):
-        sql = """--sql
-            CREATE TABLE "discord_credential"
-            (
-                "id" TEXT PRIMARY KEY NOT NULL,
-                "user" TEXT NOT NULL REFERENCES "user" ("id")
-            ) STRICT;
-            --sql
-            CREATE INDEX "discord_credential_user_index" ON "discord_credential" ("user");
-        """
+        with open(whereami() / "bbbbb_add_discord_credentials_table.sql") as f:
+            sql = f.read()
         conn.execute(sql)

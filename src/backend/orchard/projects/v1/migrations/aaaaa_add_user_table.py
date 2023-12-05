@@ -1,6 +1,7 @@
 
 from apsw import Connection
 from orchard.libs.melite.migrations.migrate import Migrator
+from orchard.libs.utils.relative_file import whereami
 
 
 class AddUserTable(Migrator):
@@ -15,14 +16,6 @@ class AddUserTable(Migrator):
         return "aaaaa"
 
     def upgrade(self, conn: Connection):
-        sql = """--sql
-            CREATE TABLE "user"
-            (
-                "id" TEXT PRIMARY KEY NOT NULL,
-                "name" TEXT NOT NULL,
-                "cutoff" TEXT NOT NULL, -- datetime
-                "avatar_url" TEXT, -- nullable
-                CHECK( "id" LIKE 'u_%') -- ids for users begin with u_
-            ) STRICT;
-        """
+        with open(whereami() / "aaaaa_add_user_table.sql") as f:
+            sql = f.read()
         conn.execute(sql)
