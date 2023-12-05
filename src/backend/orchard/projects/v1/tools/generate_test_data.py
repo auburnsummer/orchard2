@@ -12,6 +12,7 @@ import msgspec
 from pathlib import Path
 import random
 import json
+from orchard.libs.utils.relative_file import whereami
 
 from orchard.projects.v1.models.engine import insert, setup_db
 from orchard.projects.v1.models.users import User
@@ -129,9 +130,7 @@ def main_test_data_gen(data):
         insert(level, False)
 
 if __name__ == "__main__":
-    path = Path(__file__).resolve().parent
-    test_data_json_path = path / "test_data.json"
-    with open(test_data_json_path) as f:
+    with open(whereami() / "test_data.json") as f:
         data = msgspec.json.decode(f.read())
 
     setup_db()
