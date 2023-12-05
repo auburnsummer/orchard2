@@ -58,7 +58,7 @@ def main_test_data_gen(data):
         } for row in data
     ]
 
-    tag_pool = [row["tags"] for row in data]
+    tag_pool = [json.loads(row["tags"]) for row in data]
 
 
     for i in range(NUMBER_OF_LEVELS):

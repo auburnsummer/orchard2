@@ -76,4 +76,75 @@ CREATE TRIGGER rdlevel_au AFTER UPDATE on rdlevel BEGIN
         VALUES (new.id, new.song, new.song_alt, new.artist_tokens, new.authors, new.description, new.tags);
 END;
 
+
+-- tags
+CREATE TABLE "rdlevel_tag"
+(
+    "rdlevel"   TEXT    NOT NULL REFERENCES "rdlevel" ("id"),
+    "tag"       TEXT    NOT NULL,
+    PRIMARY KEY ("rdlevel", "tag")
+);
+
+CREATE INDEX "rdlevel_tag_idx_tag" ON "rdlevel_tag" ("tag");
+
+CREATE TRIGGER rdlevel_ai2 AFTER INSERT ON rdlevel BEGIN
+  INSERT OR IGNORE INTO rdlevel_tag(rdlevel, tag) select new.id, j.value from json_each(new.tags) as j;
+END;
+
+CREATE TRIGGER rdlevel_ad2 AFTER DELETE ON rdlevel BEGIN
+  DELETE FROM rdlevel_tag where rdlevel = old.id;
+END;
+
+CREATE TRIGGER rdlevel_au2 AFTER UPDATE ON rdlevel BEGIN
+  DELETE FROM rdlevel_tag where rdlevel = old.id;
+  INSERT OR IGNORE INTO rdlevel_tag(rdlevel, tag) select new.id, j.value from json_each(new.tags) as j;
+END;
+
+--artists
+CREATE TABLE "rdlevel_artist"
+(
+    "rdlevel"       TEXT    NOT NULL REFERENCES "rdlevel" ("id"),
+    "artist"        TEXT    NOT NULL,
+    PRIMARY KEY ("rdlevel", "artist")
+);
+
+CREATE INDEX "rdlevel_artist_idx_artist" ON "rdlevel_artist" ("artist");
+
+CREATE TRIGGER rdlevel_ai3 AFTER INSERT ON rdlevel BEGIN
+  INSERT OR IGNORE INTO rdlevel_artist(rdlevel, artist) select new.id, j.value from json_each(new.artist_tokens) as j;
+END;
+
+CREATE TRIGGER rdlevel_ad3 AFTER DELETE ON rdlevel BEGIN
+  DELETE FROM rdlevel_artist where rdlevel = old.id;
+END;
+
+CREATE TRIGGER rdlevel_au3 AFTER UPDATE ON rdlevel BEGIN
+  DELETE FROM rdlevel_artist where rdlevel = old.id;
+  INSERT OR IGNORE INTO rdlevel_artist(rdlevel, artist) select new.id, j.value from json_each(new.artist_tokens) as j;
+END;
+
+--authors
+CREATE TABLE "rdlevel_author"
+(
+    "rdlevel"       TEXT    NOT NULL REFERENCES "rdlevel" ("id"),
+    "author"        TEXT    NOT NULL,
+    PRIMARY KEY ("rdlevel", "author")
+);
+
+CREATE INDEX "rdlevel_author_idx_author" ON "rdlevel_author" ("author");
+
+CREATE TRIGGER rdlevel_ai4 AFTER INSERT ON rdlevel BEGIN
+  INSERT OR IGNORE INTO rdlevel_author(rdlevel, author) select new.id, j.value from json_each(new.authors) as j;
+END;
+
+CREATE TRIGGER rdlevel_ad4 AFTER DELETE ON rdlevel BEGIN
+  DELETE FROM rdlevel_author where rdlevel = old.id;
+END;
+
+CREATE TRIGGER rdlevel_au4 AFTER UPDATE ON rdlevel BEGIN
+  DELETE FROM rdlevel_author where rdlevel = old.id;
+  INSERT OR IGNORE INTO rdlevel_author(rdlevel, author) select new.id, j.value from json_each(new.authors) as j;
+END;
+
+
 COMMIT;
