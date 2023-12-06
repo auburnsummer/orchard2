@@ -60,6 +60,8 @@ CREATE VIRTUAL TABLE rdlevel_search USING fts5(
     prefix='2 3',
     tokenize='porter signal_tokenizer'
 );
+-- configure the rank: https://www.sqlite.org/fts5.html#the_rank_configuration_option
+INSERT INTO rdlevel_search(rdlevel_search, rank) VALUES('rank', 'bm25(0.0, 6.0, 6.0, 2.0, 2.0, 1.0, 3.0)');
 
 CREATE TRIGGER rdlevel_ai AFTER INSERT ON rdlevel BEGIN
     INSERT INTO rdlevel_search ("id", "song", "song_alt", "artist_tokens", "authors", "description", "tags")

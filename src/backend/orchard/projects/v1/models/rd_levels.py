@@ -9,8 +9,9 @@ import asyncio
 from datetime import datetime, timedelta, timezone
 from io import BytesIO
 from tempfile import TemporaryFile
+from textwrap import dedent
 
-from typing import Annotated, List, Optional
+from typing import Annotated, List, Optional, Tuple
 import httpx
 from msgspec import field
 import msgspec
@@ -25,6 +26,42 @@ from orchard.projects.v1.models.publishers import Publisher
 from orchard.projects.v1.models.users import User
 
 from loguru import logger
+
+class FloatRange(msgspec.Struct):
+    max: float
+    min: float
+
+class IntRange(msgspec.Struct):
+    max: int
+    min: int
+    
+
+class RDSearchParams(msgspec.Struct):
+    q: Optional[str] = None
+    tags: List[str] = []
+    artists: List[str] = []
+    authors: List[str] = []
+    min_bpm: Optional[float] = None
+    max_bpm: Optional[float] = None
+    min_difficulty: Optional[int] = None
+    max_difficulty: Optional[int] = None
+    single_player: Optional[bool] = None
+    two_player: Optional[bool] = None
+    has_classics: Optional[bool] = None
+    has_oneshots: Optional[bool] = None
+    has_squareshots: Optional[bool] = None
+    has_freezeshots: Optional[bool] = None
+    has_freetimes: Optional[bool] = None
+    has_holds: Optional[bool] = None
+    has_skipshots: Optional[bool] = None
+    has_window_dance: Optional[bool] = None
+
+    uploader: Optional[str] = None
+    publisher: Optional[str] = None
+
+    min_approval: Optional[int] = None
+    max_approval: Optional[int] = None
+
 
 class RDLevel(MeliteStruct):
     """
@@ -88,6 +125,119 @@ WHERE sha1 = ?
 """
         cursor.execute(q, [sha1])
         return next(cursor, None)
+
+    @staticmethod
+    def query(params: RDSearchParams) -> List[RDLevel]:
+        # build a query...
+        the_query = "SELECT * FROM rdlevel"
+        parameters = []
+
+        # q, we need to join so we can order by rank later
+        if params.q:
+            the_query += dedent("""
+                INNER JOIN (
+                    SELECT id, rank FROM rdlevel_search
+                        WHERE rdlevel_search MATCH ?
+                ) AS search ON search.id = rdlevel.id
+            """)
+            parameters.append(params.q)
+
+        # so we don't have to think about if there's at least one WHERE. this is compiled out by sqlite planner.
+        the_query += "\nWHERE TRUE"
+
+        # parameters involving a list of things the levels have to meet.
+        # there are subtables pre-prepared for this, so we don't need to use json_each here.
+        set_parameters: List[Tuple[List[str], str, str]] = [
+            (params.tags, "rdlevel_tag", "tag"),
+            (params.artists, "rdlevel_artist", "artist"),
+            (params.authors, "rdlevel_author", "author")
+        ]
+
+        for wanted, subtable, param_name in set_parameters:
+            if len(wanted) == 0:
+                continue
+            placeholders = ','.join(["?"] * len(wanted))
+            the_query += dedent(f"""
+                AND rdlevel.id IN (
+                    SELECT rdlevel FROM {subtable}
+                        WHERE {param_name} IN ({placeholders})
+                    GROUP BY rdlevel
+                    HAVING COUNT(DISTINCT {param_name}) = ?
+                )
+            """)
+            parameters.extend(wanted)
+            parameters.append(len(wanted))
+
+        # parameters that are simply a check of equality against the given value.
+        value_params: List[Tuple[Optional[bool | str | int], str]] = [
+            (params.single_player, "single_player"),
+            (params.two_player, "two_player"),
+            (params.has_classics, "has_classics"),
+            (params.has_oneshots, "has_oneshots"),
+            (params.has_squareshots, "has_squareshots"),
+            (params.has_freezeshots, "has_freezeshots"),
+            (params.has_freetimes, "has_freetimes"),
+            (params.has_holds, "has_holds"),
+            (params.has_skipshots, "has_skipshots"),
+            (params.has_window_dance, "has_window_dance"),
+            (params.uploader, "uploader"),
+            (params.publisher, "publisher")
+        ]
+
+        for wanted, param_name in value_params:
+            if wanted is None:
+                continue
+
+            the_query += dedent("""
+                AND rdlevel.{param_name} = ?                    
+            """)
+            parameters.append(wanted)
+
+        # parameters where a single value needs to be within a specified range.
+        range_params: List[Tuple[Optional[int | float], Optional[int | float], str]] = [
+            (params.min_approval, params.max_approval, "approval"),
+            (params.min_difficulty, params.max_difficulty, "difficulty")
+        ]
+
+        for min_value, max_value, param_name in range_params:
+            if min_value:
+                the_query += dedent(f"""
+                    AND rdlevel.{param_name} >= ?                 
+                """)
+                parameters.append(min_value)
+            if max_value:
+                the_query += dedent(f"""
+                    AND rdlevel.{param_name} <= ?            
+                """)
+                parameters.append(max_value)
+
+        # bpm is special.
+        if params.min_bpm:
+            the_query += dedent(f"""
+                AND rdlevel.min_bpm >= ?     
+            """)
+            parameters.append(params.min_bpm)
+
+        if params.max_bpm:
+            the_query += dedent(f"""
+                AND rdlevel.max_bpm <= ?                    
+            """)
+            parameters.append(params.max_bpm)
+
+        if params.q:
+            the_query += dedent("""
+                ORDER BY rank
+            """)
+        else:
+            the_query += dedent("""
+                ORDER BY last_updated DESC                    
+            """)
+        
+        logger.info(the_query)
+        cursor = select(RDLevel).cursor()
+        cursor.execute(the_query, parameters)
+        return list(cursor)
+
 
 
 class RDPrefillResult(VitalsLevelBase, kw_only=True):
