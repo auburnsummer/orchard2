@@ -1,3 +1,4 @@
+from typing import List
 import msgspec
 from orchard.libs.utils.gen_id import IDType, gen_id
 from orchard.libs.vitals.msgspec_schema import VitalsLevelBaseMutable
@@ -6,7 +7,7 @@ from orchard.projects.v1.core.exceptions import LinkedTokensIDMismatch, Publishe
 from orchard.projects.v1.core.wrapper import msgspec_return, parse_body_as
 from orchard.projects.v1.models.engine import insert, select
 from orchard.projects.v1.models.publishers import Publisher
-from orchard.projects.v1.models.rd_levels import RDLevel, run_prefill
+from orchard.projects.v1.models.rd_levels import RDLevel, RDSearchParams, run_prefill
 from orchard.projects.v1.models.users import User
 
 from starlette.requests import Request
@@ -69,3 +70,17 @@ async def add_rd_level_handler(request: Request):
     insert(level, recurse=False)  # user, publisher already exist.
 
     return AddRdlevelResponse(level=level)
+
+class SearchRDLevelsResponse(msgspec.Struct):
+    levels: List[RDLevel]
+
+@msgspec_return(200)
+@parse_body_as(RDSearchParams)
+async def search_rd_levels_handler(request: Request):
+    body: RDSearchParams = request.state.body
+
+    results = RDLevel.query(body)
+    
+    return SearchRDLevelsResponse(
+        levels=results
+    )
