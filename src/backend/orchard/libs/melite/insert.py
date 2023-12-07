@@ -7,12 +7,7 @@ import datetime
 from orchard.libs.melite.factory import get_json_struct, get_melite_struct
 from orchard.libs.melite.utils import wrap_quotes
 
-def insert(conn: Connection, obj: MeliteStruct, recurse=True):
-    """
-    Insert a struct into the database. 
-
-    recurse: also inserts other structs into the database that are being referenced
-    """
+def _insert(conn: Connection, obj: MeliteStruct, recurse=True):
     to_insert: List[Tuple[str, str]] = []
     for field in msgspec.structs.fields(obj):
         value = getattr(obj, field.encode_name)
@@ -20,7 +15,7 @@ def insert(conn: Connection, obj: MeliteStruct, recurse=True):
             sub_struct = get_melite_struct(field.type)
             if sub_struct:
                 if recurse:
-                    insert(conn, value)
+                    _insert(conn, value)
                 value = getattr(value, sub_struct.primary_key)
 
             if get_json_struct(field.type) is not None:
@@ -38,3 +33,13 @@ def insert(conn: Connection, obj: MeliteStruct, recurse=True):
         ({",".join("?" for _ in to_insert)})
     """
     conn.execute(q, [t[1] for t in to_insert])
+
+
+def insert(conn: Connection, obj: MeliteStruct, recurse=True):
+    """
+    Insert a struct into the database. 
+
+    recurse: also inserts other structs into the database that are being referenced
+    """
+    with conn:
+        _insert(conn, obj, recurse)

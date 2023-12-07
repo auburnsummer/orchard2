@@ -41,6 +41,8 @@ CREATE TABLE "rdlevel"
     CHECK( "id" LIKE 'rd_%'), -- ids for rdlevels begin with rd_
     CHECK( "max_bpm" >= "min_bpm" ) 
 ) STRICT;
+
+CREATE INDEX "rdlevel_idx_last_updated" ON "rdlevel" ("last_updated");
 CREATE INDEX "rdlevel_idx_uploader" ON "rdlevel" ("uploader");
 CREATE INDEX "rdlevel_idx_publisher" ON "rdlevel" ("publisher");
 CREATE INDEX "rdlevel_idx_sha1" ON "rdlevel" ("sha1");

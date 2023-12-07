@@ -11,7 +11,6 @@ DONT_FORWARD_THESE_HEADERS = {
 
 def forward_httpx(resp: HTTPXResponse) -> Response:
     filtered_headers = { k: v for k, v in resp.headers.items() if k.lower() not in DONT_FORWARD_THESE_HEADERS }
-    print(filtered_headers)
     return Response(
         resp.content,
         status_code=resp.status_code,

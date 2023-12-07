@@ -7,7 +7,7 @@ from orchard.libs.melite.factory import get_json_struct, get_melite_struct
 from orchard.libs.melite.utils import wrap_quotes
 from .base import MeliteStruct
 
-def update(conn: Connection, obj: MeliteStruct, recurse=True):
+def _update(conn: Connection, obj: MeliteStruct, recurse=True):
     """
     Update a row in the database.
 
@@ -22,7 +22,7 @@ def update(conn: Connection, obj: MeliteStruct, recurse=True):
             sub_struct = get_melite_struct(field.type)
             if sub_struct:
                 if recurse:
-                    update(conn, value)
+                    _update(conn, value)
                 value = getattr(value, sub_struct.primary_key)
 
             if get_json_struct(field.type) is not None:
@@ -41,3 +41,7 @@ def update(conn: Connection, obj: MeliteStruct, recurse=True):
         WHERE "{obj.table_name}"."{obj.primary_key}" = ?
     """
     conn.execute(q, [t[1] for t in to_update] + [getattr(obj, obj.primary_key)])
+
+def update(conn: Connection, obj: MeliteStruct, recurse=True):
+    with conn:
+        _update(conn, obj, recurse)
