@@ -27,9 +27,7 @@ routes = [
 
     Route("/rdlevel/prefill", endpoint=prefill_handler, methods=["POST"]),
     Route("/rdlevel", endpoint=add_rd_level_handler, methods=["POST"]),
-
-    # post for now because i don't have querystring parser implemented yet
-    Route("/rdlevelaaa", endpoint=search_rd_levels_handler, methods=["POST"]),
+    Route("/rdlevel", endpoint=search_rd_levels_handler, methods=["GET"]),
 
     # sometimes discord caches the dns incorrectly, changing the url helps.
     Route("/discord_interactions", endpoint=interaction_handler, methods=["POST"]),

@@ -1,5 +1,6 @@
 from functools import wraps
 from typing import Optional, Type
+import typing
 from orchard.projects.v1.core.exceptions import BodyValidationError, OrchardException, UnknownError
 from starlette.requests import Request
 from starlette.responses import Response
@@ -7,6 +8,8 @@ from starlette.responses import Response
 import msgspec
 
 from loguru import logger
+
+from urllib.parse import parse_qs
 
 def parse_body_as(spec: Type[msgspec.Struct]):
     """
@@ -19,6 +22,49 @@ def parse_body_as(spec: Type[msgspec.Struct]):
             try:
                 data = msgspec.json.decode(await request.body(), type=spec)
                 request.state.body = data
+            except (msgspec.DecodeError, msgspec.ValidationError) as e:
+                raise BodyValidationError(message=str(e)) from e
+            else:
+                return await func(request)
+        return inner
+    return decorator
+
+def is_list_type(type_: typing.Any):
+    "If type is of the form List[something] or Optional[List[something]], return True, otherwise False"
+    if type_ == list:
+        return True
+    origin = typing.get_origin(type_)
+    if origin is list:
+        return True
+
+    if origin is not None:
+        return any(is_list_type(a) for a in typing.get_args(type_))
+
+    return False
+
+def parse_qs_as(spec: Type[msgspec.Struct]):
+    """
+    Decorator. Give it a class that inherits from Struct, and it will parse the query
+    string and place the parsed result as request.state.query.
+
+    nb: does not support nested structures at this stage.
+    """
+    def decorator(func):
+        @wraps(func)
+        async def inner(request: Request):
+            try:
+                list_fields = set(field.encode_name for field in msgspec.structs.fields(spec) if is_list_type(field.type))
+                # nb already doesn't have leading ?
+                qs = request.url.query
+                parsed = parse_qs(qs)
+
+                # if it's a list with a single item, just make it that single item.
+                for key, value in parsed.items():
+                    if len(value) == 1 and key not in list_fields:
+                        parsed[key] = value[0]
+
+                data = msgspec.convert(parsed, spec, strict=False)
+                request.state.query = data
             except (msgspec.DecodeError, msgspec.ValidationError) as e:
                 raise BodyValidationError(message=str(e)) from e
             else:

@@ -5,6 +5,7 @@ from orchard.libs.melite.migrations.migrate import migrate
 from orchard.libs.melite.select import Select, T_co
 from orchard.libs.melite.insert import insert as melite_insert
 from orchard.libs.melite.update import update as melite_update
+from orchard.libs.melite.utils import temporary_table as melite_temporary_table
 from orchard.libs.signal_fts5.install_extension import install_extension
 from orchard.projects.v1.core.config import config
 from orchard.projects.v1.migrations.all import ALL_MIGRATIONS
@@ -19,6 +20,9 @@ TESTING = config().TESTING
 
 engine: apsw.Connection
 
+def make_cursor():
+    global engine
+    return engine.cursor()
 
 def select(spec: Type[T_co]) -> Select[T_co]:
     "return a Select for the given type. pass a type in, not an instance of that type"
@@ -42,6 +46,11 @@ def setup_db():
     install_extension(engine)
     migrate(engine, None, ALL_MIGRATIONS)
 
+@contextlib.contextmanager
+def temporary_table():
+    global engine
+    with melite_temporary_table(engine) as s:
+        yield s
 
 @contextlib.asynccontextmanager
 async def lifespan(_):

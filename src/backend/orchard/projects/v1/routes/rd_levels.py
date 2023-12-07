@@ -4,7 +4,7 @@ from orchard.libs.utils.gen_id import IDType, gen_id
 from orchard.libs.vitals.msgspec_schema import VitalsLevelBaseMutable
 from orchard.projects.v1.core.auth import OrchardAuthToken, requires_scopes
 from orchard.projects.v1.core.exceptions import LinkedTokensIDMismatch, PublisherDoesNotExist, RDLevelAlreadyExists, UserDoesNotExist
-from orchard.projects.v1.core.wrapper import msgspec_return, parse_body_as
+from orchard.projects.v1.core.wrapper import msgspec_return, parse_body_as, parse_qs_as
 from orchard.projects.v1.models.engine import insert, select
 from orchard.projects.v1.models.publishers import Publisher
 from orchard.projects.v1.models.rd_levels import RDLevel, RDSearchParams, run_prefill
@@ -75,12 +75,10 @@ class SearchRDLevelsResponse(msgspec.Struct):
     levels: List[RDLevel]
 
 @msgspec_return(200)
-@parse_body_as(RDSearchParams)
+@parse_qs_as(RDSearchParams)
 async def search_rd_levels_handler(request: Request):
-    body: RDSearchParams = request.state.body
+    body: RDSearchParams = request.state.query
 
     results = RDLevel.query(body)
     
-    return SearchRDLevelsResponse(
-        levels=results
-    )
+    return results
