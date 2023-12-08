@@ -1,7 +1,6 @@
 import contextlib
 from apsw import Connection
-from uuid import uuid4
-import time
+from nanoid import non_secure_generate
 
 def wrap_quotes(s: str):
     "Return the string with quotes around it"
@@ -12,7 +11,7 @@ def single_quotes(s: str):
 
 @contextlib.contextmanager
 def temporary_table(conn: Connection):
-    temp_table_id = uuid4().hex
+    temp_table_id = non_secure_generate()
     try:
         conn.execute(f"ATTACH ':memory:' AS \"{temp_table_id}\";")
         yield temp_table_id

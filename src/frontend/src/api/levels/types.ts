@@ -151,3 +151,80 @@ export type AddRDLevelResponse = {
 export const isAddRDLevelResponse: tg.TypeGuard<AddRDLevelResponse> = tg.isLikeObject({
     level: isRDLevel
 })
+
+/**
+ * Corresponds to RDSearchParams in v1/models/rd_levels.py
+ */
+export type RDSearchParams = {
+    q?: string;
+    tags?: string[];
+    artists?: string[];
+    authors?: string[];
+    min_bpm?: number;
+    max_bpm?: number;
+    difficulty?: string[];
+    single_player?: boolean;
+    two_player?: boolean;
+    has_classics?: boolean;
+    has_oneshots?: boolean;
+    has_squareshots?: boolean;
+    has_freezeshots?: boolean;
+    has_freetimes?: boolean;
+    has_holds?: boolean;
+    has_skipshots?: boolean;
+    has_window_dance?: boolean;
+
+    uploader?: string;
+    publisher?: string;
+
+    min_approval?: number;
+    max_approval?: number;
+
+    offset?: number;
+    limit?: number;
+}
+
+/**
+ * Corresponds to StrFacetValue in v1/models/rd_levels.py
+ */
+export type StrFacetValue = {
+    value: string;
+    count: number;
+}
+
+export const isStrFacetValue: tg.TypeGuard<StrFacetValue> = tg.isLikeObject({
+    value: tg.isString,
+    count: tg.isNumber
+});
+
+/**
+ * Corresponds to IntFacetValue in v1/models/rd_levels.py
+ */
+export type IntFacetValue = {
+    value: number;
+    count: number;
+}
+
+export const isIntFacetValue: tg.TypeGuard<IntFacetValue> = tg.isLikeObject({
+    value: tg.isNumber,
+    count: tg.isNumber
+})
+
+/**
+ * Corresponds to RDQueryResult in v1/models/rd_levels.py
+ */
+export type RDQueryResult = {
+    levels: RDLevel[];
+    tags: StrFacetValue[];
+    artists: StrFacetValue[];
+    authors: StrFacetValue[];
+    difficulties: IntFacetValue[];
+} 
+
+export const isRDQueryResult: tg.TypeGuard<RDQueryResult> = tg.isLikeObject({
+    levels: tg.isArray(isRDLevel),
+    tags: tg.isArray(isStrFacetValue),
+    artists: tg.isArray(isStrFacetValue),
+    authors: tg.isArray(isStrFacetValue),
+    difficulties: tg.isArray(isIntFacetValue)
+});

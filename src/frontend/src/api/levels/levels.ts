@@ -1,6 +1,6 @@
 import { client } from "../client.ts";
 
-import { AddRDLevelPayload, isAddRDLevelResponse, isRDPrefillResultWithToken } from "./types.ts";
+import { AddRDLevelPayload, RDSearchParams, isAddRDLevelResponse, isRDPrefillResultWithToken, isRDQueryResult } from "./types.ts";
 
 // the url for the prefill is encoded in the token and cannot be changed by the user.
 export async function getRDLevelPrefill(publisherToken: string) {
@@ -24,4 +24,20 @@ export async function addRDLevel(prefillSignedToken: string, publisherToken: str
             Authorization: `Bearer ${prefillSignedToken},Bearer ${publisherToken}`
         }
     });
+}
+
+
+export async function search(params: RDSearchParams) {
+    const searchParams = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+            value.forEach(v => searchParams.append(key, v))
+        } else {
+            searchParams.append(key, value.toString())
+        }
+    })
+    return client.get("rdlevel", {
+        guard: isRDQueryResult,
+        searchParams
+    })
 }
