@@ -8,7 +8,7 @@ import "./LevelBox.css";
 import type { WithClass } from '@orchard/utils/withClass';
 import { useExcite } from '@orchard/hooks/useExcite';
 import { Icon } from '@orchard/ui';
-import { RDLevel, RDPrefillResultTruncated } from '@orchard/api/levels/levels';
+import { RDLevel } from '@orchard/api/levels/types';
 
 type LevelBoxProps = {
     level: RDLevel
@@ -16,7 +16,7 @@ type LevelBoxProps = {
 
 export function LevelBox({ level, 'class': _class }: LevelBoxProps) {
     const approval = 10 as number;
-    const { song, song_alt, artist_tokens, authors, tags, thumb, is_animated, image, min_bpm, max_bpm, seizure_warning } = level;
+    const { song, song_alt, artist_tokens, authors, tags, thumb, min_bpm, max_bpm, seizure_warning } = level;
 
     const bpmText = min_bpm === max_bpm ? `${min_bpm} BPM` : `${min_bpm}-${max_bpm} BPM`;
     const sourceText = level.publisher.name;

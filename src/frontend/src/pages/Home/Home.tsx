@@ -1,11 +1,12 @@
 import { Header } from "@orchard/components/Header";
+import { LevelList } from "@orchard/components/LevelList";
 
 
 export function Home() {
     return (
         <div class="ho">
             <Header />
-            <p>home sweet home</p>
+            <LevelList />
         </div>
     )
 }

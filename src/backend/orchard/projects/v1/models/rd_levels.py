@@ -34,7 +34,8 @@ class FloatRange(msgspec.Struct):
 class IntRange(msgspec.Struct):
     max: int
     min: int
-    
+
+MAX_FACETS = 100    
 
 class RDSearchParams(msgspec.Struct):
     q: Optional[str] = None
@@ -286,6 +287,7 @@ WHERE sha1 = ?
                 )
                 GROUP BY tag
                 ORDER BY count DESC
+                LIMIT {MAX_FACETS}
             """)
             sfacet_cursor.execute(query3)
             tags_facet = list(sfacet_cursor)
@@ -296,6 +298,7 @@ WHERE sha1 = ?
                 )
                 GROUP BY artist
                 ORDER BY count DESC
+                LIMIT {MAX_FACETS}
             """)
             sfacet_cursor.execute(query4)
             artists_facet = list(sfacet_cursor)
@@ -307,7 +310,7 @@ WHERE sha1 = ?
                 )
                 GROUP BY author
                 ORDER BY count DESC
-
+                LIMIT {MAX_FACETS}
             """)
             sfacet_cursor.execute(query5)
             authors_facet = list(sfacet_cursor)
