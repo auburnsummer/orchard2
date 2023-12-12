@@ -30,10 +30,13 @@ export async function addRDLevel(prefillSignedToken: string, publisherToken: str
 export async function search(params: RDSearchParams) {
     const searchParams = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
+        if (!value) {
+            return;
+        }
         if (Array.isArray(value)) {
-            value.forEach(v => searchParams.append(key, v))
+            value.forEach(v => searchParams.append(key, `${v}`))
         } else {
-            searchParams.append(key, value.toString())
+            searchParams.append(key, `${value}`)
         }
     })
     return client.get("rdlevel", {
