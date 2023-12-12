@@ -162,7 +162,7 @@ export type RDSearchParams = {
     authors?: string[];
     min_bpm?: number;
     max_bpm?: number;
-    difficulty?: string[];
+    difficulty?: number[];
     single_player?: boolean;
     two_player?: boolean;
     has_classics?: boolean;
