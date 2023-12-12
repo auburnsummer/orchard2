@@ -12,6 +12,8 @@ const DEFAULT_SEARCH_PARAMS = {
 export const rdSearchParamsAtom = atomWithDefault<RDSearchParams>(_ => {
     const searchParams = new URLSearchParams(window.location.search);
 
+    console.log(searchParams);
+
     const stringGet = (key: string) => searchParams.get(key) || undefined;
     const stringArrGet = (key: string) => {
         const values = searchParams.getAll(key)

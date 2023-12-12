@@ -124,6 +124,7 @@ export type AddRDLevelPayload = VitalsLevelBaseMutable & {
  * Corresponds to RDLevel in v1/models/rd_levels.py
  */
 export type RDLevel = RDPrefillResult & AddRDLevelPayload & {
+    id: string
     uploader: User
     publisher: Publisher
 

@@ -1,12 +1,11 @@
-import { useEffect } from "preact/hooks";
 import "./LevelList.css";
-import { search } from "@orchard/api/levels/levels";
-import { RDQueryResult, RDSearchParams } from "@orchard/api/levels/types";
 import { WithClass } from "@orchard/utils/withClass";
-import { useAsyncAction } from "@orchard/hooks/useAsync";
 import { useAtom } from "jotai";
 import { rdSearchParamsAtom } from "@orchard/stores/rd_search";
 import { useSearchResults } from "@orchard/hooks/useSearchResults";
+
+import cc from "clsx";
+import { LevelBox } from "../LevelBox";
 
 type LevelListProps = WithClass;
 
@@ -37,6 +36,16 @@ export function LevelList({"class": _class}: LevelListProps) {
     }
 
     return (
-        <p>{JSON.stringify(searchResults.data)}</p>
+        <div class={cc(_class, "le")}>
+            <ul class="le_levels">
+                {
+                    searchResults.data.levels.map(level => {
+                        return (
+                            <LevelBox level={level} key={level.id} class="le_level" />
+                        )
+                    })
+                }
+            </ul>
+        </div>
     )
 }
