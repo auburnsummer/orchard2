@@ -40,9 +40,11 @@ export function EditLevel({"class": _class, levelPrefill, publisher, onSubmit}: 
     const merged = useMemo<RDLevel>(() => ({
         ...levelPrefill,
         ...preview,
+        id: "rd_preview",
         uploader: {
             id: "u_preview",
-            name: "Preview"
+            name: "Preview",
+            avatar_url: null
         },
         publisher,
         uploaded: Date(),
