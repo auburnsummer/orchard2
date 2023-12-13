@@ -15,8 +15,7 @@ type LevelBoxProps = {
 } & WithClass;
 
 export function LevelBox({ level, 'class': _class }: LevelBoxProps) {
-    const approval = 10 as number;
-    const { song, song_alt, artist_tokens, authors, tags, thumb, min_bpm, max_bpm, seizure_warning } = level;
+    const { approval, song, song_alt, artist_tokens, authors, tags, thumb, min_bpm, max_bpm, seizure_warning } = level;
 
     const bpmText = min_bpm === max_bpm ? `${min_bpm} BPM` : `${min_bpm}-${max_bpm} BPM`;
     const sourceText = level.publisher.name;
