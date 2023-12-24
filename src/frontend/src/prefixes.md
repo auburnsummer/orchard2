@@ -9,6 +9,7 @@
  - `.lu`: `LoginButton`
  - `.lb`: `LevelBox`
  - `.lo`: `Loading`
+ - `.ls`: `LevelListSidebar`
  - `.nf`: `NotFound`
  - `.pa`: `PublisherAdd`
  - `.pd`: `PublisherDiscordRegister`

@@ -6,6 +6,7 @@ import { useSearchResults } from "@orchard/hooks/useSearchResults";
 
 import cc from "clsx";
 import { LevelBox } from "../LevelBox";
+import { LevelListSidebar } from "./LevelListSidebar";
 
 type LevelListProps = WithClass;
 
@@ -37,6 +38,7 @@ export function LevelList({"class": _class}: LevelListProps) {
 
     return (
         <div class={cc(_class, "le")}>
+            <LevelListSidebar class="le_sidebar" />
             <ul class="le_levels">
                 {
                     searchResults.data.levels.map(level => {

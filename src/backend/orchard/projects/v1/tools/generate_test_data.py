@@ -124,7 +124,7 @@ def main_test_data_gen(data):
 
             uploaded=datetime.now(tz=timezone.utc),
 
-            approval=random.choice([0, 10]),
+            approval=random.choice([0, 10, -1]),
         )
 
         insert(level, False)
