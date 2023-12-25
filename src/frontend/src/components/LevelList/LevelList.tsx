@@ -16,11 +16,10 @@ export function LevelList({"class": _class}: LevelListProps) {
     const [searchResults, startSearch] = useSearchResults();
 
     if (searchResults.state === "not started") {
+        // useSearchResults always starts the search automatically.
+        // so this state shouldn't ever be rendered.
         return (
-            <div>
-            <p>not started</p>
-            <button onClick={startSearch}>search</button>
-            </div>
+            <p>search did not start. if you see this, it's a bug, ping auburn!</p>
         )
     }
 
