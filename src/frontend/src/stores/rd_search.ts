@@ -5,9 +5,14 @@
 import { RDSearchParams } from '@orchard/api/levels/types';
 import { atomWithDefault } from 'jotai/utils';
 
-const DEFAULT_SEARCH_PARAMS = {
+import * as tg from "generic-type-guard";
+
+export const DEFAULT_SEARCH_PARAMS = {
     min_approval: 10
 }
+type DefaultSearchParamsKeys = keyof (typeof DEFAULT_SEARCH_PARAMS);
+
+export const isKeyOfDefaultSearchParams: tg.TypeGuard<DefaultSearchParamsKeys> = tg.isElementOf("min_approval")
 
 export const rdSearchParamsAtom = atomWithDefault<RDSearchParams>(_ => {
     const searchParams = new URLSearchParams(window.location.search);
