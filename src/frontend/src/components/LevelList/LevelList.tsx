@@ -7,11 +7,12 @@ import { useSearchResults } from "@orchard/hooks/useSearchResults";
 import cc from "clsx";
 import { LevelBox } from "../LevelBox";
 import { LevelListSidebar } from "./LevelListSidebar";
+import { useImmerAtom } from "jotai-immer";
 
 type LevelListProps = WithClass;
 
 export function LevelList({"class": _class}: LevelListProps) {
-    const [query, setQuery] = useAtom(rdSearchParamsAtom);
+    const [query, setQuery] = useImmerAtom(rdSearchParamsAtom);
 
     const [searchResults, startSearch] = useSearchResults();
 
@@ -31,12 +32,23 @@ export function LevelList({"class": _class}: LevelListProps) {
 
     if (searchResults.state === "has error") {
         return (
+            <div>
             <p>error</p>
+            <p>{`${searchResults.message}`}</p>
+            </div>
         )
+    }
+
+    const temptest = () => {
+        setQuery(d => {
+            d.q = "miku";
+        });
+        startSearch();
     }
 
     return (
         <div class={cc(_class, "le")}>
+            <button onClick={temptest}>click me</button>
             <LevelListSidebar class="le_sidebar" />
             <ul class="le_levels">
                 {
