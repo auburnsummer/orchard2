@@ -1,0 +1,7 @@
+.se_bar {
+    display: flex;
+}
+
+.se_input {
+    flex-grow: 1;
+}

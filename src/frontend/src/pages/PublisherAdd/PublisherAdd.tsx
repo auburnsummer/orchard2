@@ -1,18 +1,13 @@
 import "./PublisherAdd.css";
 import { Loading } from "@orchard/components/Loading";
 import { Header } from "@orchard/components/Header";
-import { atom, useAtom } from "jotai";
-import { useAsyncAction } from "@orchard/hooks/useAsync";
 import { addRDLevel, getRDLevelPrefill } from "@orchard/api/levels/levels";
 import { useEffect } from "preact/hooks";
 import { EditLevel } from "@orchard/components/EditLevel";
 import { Publisher, getPublisher } from "@orchard/api/publisher";
 import combinePromises from "@orchard/utils/combinePromises";
 import { AddRDLevelPayload, RDPrefillResultWithToken } from "@orchard/api/levels/types";
-
-type STATES = "prefill"
-
-const stateAtom = atom<STATES>("prefill");
+import { useAsyncAction2 as useAsyncAction } from "@orchard/hooks/useAsyncAction";
 
 type PublisherAddFormProps = {
     prefillResult: RDPrefillResultWithToken
@@ -35,10 +30,8 @@ function PublisherAddForm({prefillResult, publisher, publisherToken}: PublisherA
     )
 }
 
-function PublisherAddMainPhase() {
-    const [state, setState] = useAtom(stateAtom);
-    
-    const [prefillResult, startPrefill] = useAsyncAction(async (_get, _set, publisherToken: string | null) => {
+function PublisherAddMainPhase() {    
+    const [prefillResult, startPrefill] = useAsyncAction(async (publisherToken: string | null) => {
         if (publisherToken == null) {
             throw new Error("No publisher token given. Try the command again in discord")
         }
@@ -54,33 +47,30 @@ function PublisherAddMainPhase() {
             const searchParams = new URLSearchParams(window.location.search);
             startPrefill(searchParams.get("publisher_token"));
         }
-    });
+    }, [prefillResult]);
 
-    if (state === 'prefill') {
-        // if not started, we're about to start
-        if (prefillResult.state === "loading" || prefillResult.state === "not started") {
-            return (
-                <div class="pa_wrapper2">
-                    <Loading class="pa_loading-prefill" text="Analyzing level..." />
-                </div>
-            )
-        }
-        if (prefillResult.state === "has error") {
-            return (
-                <div class="pa_wrapper2">
-                    <div class="pa_loading-error">
-                        <p><b>Error:</b>{prefillResult.message}</p>
-                    </div>
-                </div>
-            )
-        }
-        const {prefill, publisher, publisherToken} = prefillResult.data;
+    // if not started, we're about to start
+    if (prefillResult.state === "loading" || prefillResult.state === "not started") {
         return (
-            <PublisherAddForm prefillResult={prefill} publisher={publisher} publisherToken={publisherToken}/>
+            <div class="pa_wrapper2">
+                <Loading class="pa_loading-prefill" text="Analyzing level..." />
+            </div>
         )
     }
+    if (prefillResult.state === "has error") {
+        return (
+            <div class="pa_wrapper2">
+                <div class="pa_loading-error">
+                    <p><b>Error:</b>{prefillResult.message}</p>
+                </div>
+            </div>
+        )
+    }
+    const {prefill, publisher, publisherToken} = prefillResult.data;
 
-    return <p>AAAAAAAAAA</p>
+    return (
+        <PublisherAddForm prefillResult={prefill} publisher={publisher} publisherToken={publisherToken}/>
+    )
 }
 
 

@@ -21,10 +21,12 @@ import SlCheckbox from "@shoelace-style/shoelace/dist/react/checkbox/index.js";
 import SlTextarea from "@shoelace-style/shoelace/dist/react/textarea/index.js";
 import SlSelect from "@shoelace-style/shoelace/dist/react/select/index.js";
 import SlOption from "@shoelace-style/shoelace/dist/react/option/index.js";
+import SlButtonGroup from "@shoelace-style/shoelace/dist/react/button-group/index.js";
 
 
 export const Spinner = SlSpinner;
 export const Button = SlButton;
+export const ButtonGroup = SlButtonGroup;
 export const Icon = SlIcon;
 export const IconButton = SlIconButton;
 export const Skeleton = SlSkeleton;

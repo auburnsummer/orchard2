@@ -39,16 +39,8 @@ export function LevelList({"class": _class}: LevelListProps) {
         )
     }
 
-    const temptest = () => {
-        setQuery(d => {
-            d.q = "miku";
-        });
-        startSearch();
-    }
-
     return (
         <div class={cc(_class, "le")}>
-            <button onClick={temptest}>click me</button>
             <LevelListSidebar class="le_sidebar" />
             <ul class="le_levels">
                 {

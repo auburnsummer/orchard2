@@ -13,4 +13,5 @@
  - `.nf`: `NotFound`
  - `.pa`: `PublisherAdd`
  - `.pd`: `PublisherDiscordRegister`
+ - `.se`: `SearchBar`
  - `.ti`: `TagInput`

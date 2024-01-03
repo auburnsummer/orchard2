@@ -38,7 +38,8 @@ export async function getErrorMessage(val: unknown) {
 
 /**
  * Always throws an error.
- * For TypeScript reasons: https://stackoverflow.com/a/74605768
+ * For TypeScript reasons to tell it that a codepath is never reachable.
+ * https://stackoverflow.com/a/74605768
  */
 export function assertNever(x: never): never {
     throw new Error("Unexpected Value: " + x);

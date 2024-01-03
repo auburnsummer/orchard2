@@ -1,9 +1,8 @@
 import { Header } from "@orchard/components/Header";
 
 import "./PublisherDiscordRegister.css";
-import { Button, Input, Spinner } from "@orchard/ui";
-import { useAsyncAction } from "@orchard/hooks/useAsync";
-import { assertNever } from "@orchard/utils/error";
+import { Button, Input } from "@orchard/ui";
+import { useAsyncAction2 as useAsyncAction } from "@orchard/hooks/useAsyncAction";
 
 import { createNewDiscordPublisher } from "@orchard/api/publisher";
 import { useForm } from "@orchard/hooks/useForm";
@@ -20,7 +19,7 @@ const isFormContents: tg.TypeGuard<FormContents> = tg.isLikeObject({
 })
 
 function PublisherDiscordRegisterContents() {
-    const [publisher, startRegister] = useAsyncAction(async (_get, _set, name: string) => {
+    const [publisher, startRegister] = useAsyncAction(async (name: string) => {
         const urlParams = new URLSearchParams(window.location.search);
         const guildToken = urlParams.get("guild_token");
         if (!guildToken) {
@@ -71,21 +70,16 @@ function PublisherDiscordRegisterContents() {
         )
     }
 
-    if (publisher.state === 'has error') {
-        return (
-            <div class="pd_error">
-                <p class="pd_error-1"><b>Error:</b> {publisher.message}</p>
-                <p class="pd_error-2">Try again from the start. If it happens again, ping auburn!</p>
-            </div>
-        )
-    }
-
-    assertNever(publisher);
-
+    // only remaining state is error
+    return (
+        <div class="pd_error">
+            <p class="pd_error-1"><b>Error:</b> {publisher.message}</p>
+            <p class="pd_error-2">Try again from the start. If it happens again, ping auburn!</p>
+        </div>
+    )
 }
 
 export function PublisherDiscordRegister() {
-
     return (
         <div class="pd">
             <Header />

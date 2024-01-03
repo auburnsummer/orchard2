@@ -3,7 +3,11 @@ import { useCallback, useEffect, useRef } from "preact/hooks";
 import * as tg from "generic-type-guard";
 import { serialize } from '@shoelace-style/shoelace/dist/utilities/form.js';
 
-
+/**
+ * @param guard - type guard that the form data expects.
+ * @param onFormSubmit - function to call with the form data on submit.
+ * @returns - props for the form
+ */
 export function useForm<Payload>(guard: tg.TypeGuard<Payload>, onFormSubmit: (p: Payload) => void) {
     const ref = useRef<HTMLFormElement | null>(null);
 
