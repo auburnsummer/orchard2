@@ -1,15 +1,14 @@
 import "./DiscordCallback.css";
-import { Icon, Spinner } from "@orchard/ui";
+import { Icon } from "@orchard/ui";
 import { useSetAtom } from "jotai";
 import { useEffect } from "preact/hooks";
 import { authTokenAtom } from "@orchard/stores/auth";
-import { assertNever } from "@orchard/utils/error";
-import { useAsyncAction } from "@orchard/hooks/useAsync";
+import { useAsyncAction2 as useAsyncAction } from "@orchard/hooks/useAsyncAction";
 import { getOrchardTokenResponseFromDiscord } from "@orchard/api/auth";
 import { Loading } from "@orchard/components/Loading";
 
 function DiscordCallbackContents() {
-    const [output, startLoginAttempt] = useAsyncAction(async (_get, _set, code: string | null) => {
+    const [output, startLoginAttempt] = useAsyncAction(async (code: string | null) => {
         if (!code) {
             throw new Error("Expected a code query parameter.");
         }
@@ -45,16 +44,13 @@ function DiscordCallbackContents() {
         )
     }
 
-    if (output.state === 'has data') {
-        return (
-            <div class="dc_success">
-                <Icon class="dc_success-icon" name="check-circle" />
-                <span class="dc_success-text">Log in successful! This page will close automatically.</span>
-            </div>
-        )
-    }
-
-    assertNever(output);
+    // must have data if we got here.
+    return (
+        <div class="dc_success">
+            <Icon class="dc_success-icon" name="check-circle" />
+            <span class="dc_success-text">Log in successful! This page will close automatically.</span>
+        </div>
+    )
 }
 
 export function DiscordCallback() {
