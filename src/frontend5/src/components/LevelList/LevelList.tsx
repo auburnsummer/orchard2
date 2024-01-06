@@ -12,9 +12,7 @@ import { useImmerAtom } from "jotai-immer";
 type LevelListProps = WithClass;
 
 export function LevelList({"class": _class}: LevelListProps) {
-    const [query, setQuery] = useImmerAtom(rdSearchParamsAtom);
-
-    const [searchResults, startSearch] = useSearchResults();
+    const [searchResults] = useSearchResults();
 
     if (searchResults.state === "not started") {
         // useSearchResults always starts the search automatically.

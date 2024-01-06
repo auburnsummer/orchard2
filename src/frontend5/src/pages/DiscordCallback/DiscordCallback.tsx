@@ -3,7 +3,7 @@ import { Icon } from "@orchard/ui";
 import { useSetAtom } from "jotai";
 import { useEffect } from "preact/hooks";
 import { authTokenAtom } from "@orchard/stores/auth";
-import { useAsyncAction2 as useAsyncAction } from "@orchard/hooks/useAsyncAction";
+import { useAsyncAction2 as useAsyncAction } from "@orchard/hooks/useAsync";
 import { getOrchardTokenResponseFromDiscord } from "@orchard/api/auth";
 import { Loading } from "@orchard/components/Loading";
 

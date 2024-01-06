@@ -30,6 +30,7 @@ export function useAsyncAction2<Args extends unknown[], Result>(func: AsyncActio
         const runner = async (...args: Args) => {
             setValue({state: "loading"});
             try {
+                await new Promise((resolve, reject) => setTimeout(resolve, 5000));
                 const data = await func(...args);
                 setValue({
                     state: "has data",
@@ -45,7 +46,7 @@ export function useAsyncAction2<Args extends unknown[], Result>(func: AsyncActio
             }
         };
         return (...args: Args) => void runner(...args);
-    }, [func]);
+    }, [func, setValue]);
 
     return tuple(value, runFunc)
 }

@@ -2,7 +2,7 @@ import { Header } from "@orchard/components/Header";
 
 import "./PublisherDiscordRegister.css";
 import { Button, Input } from "@orchard/ui";
-import { useAsyncAction2 as useAsyncAction } from "@orchard/hooks/useAsyncAction";
+import { useAsyncAction2 as useAsyncAction } from "@orchard/hooks/useAsync";
 
 import { createNewDiscordPublisher } from "@orchard/api/publisher";
 import { useForm } from "@orchard/hooks/useForm";

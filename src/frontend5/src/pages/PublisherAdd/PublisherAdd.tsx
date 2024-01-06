@@ -7,7 +7,7 @@ import { EditLevel } from "@orchard/components/EditLevel";
 import { Publisher, getPublisher } from "@orchard/api/publisher";
 import combinePromises from "@orchard/utils/combinePromises";
 import { AddRDLevelPayload, RDPrefillResultWithToken } from "@orchard/api/levels/types";
-import { useAsyncAction2 as useAsyncAction } from "@orchard/hooks/useAsyncAction";
+import { useAsyncAction2 as useAsyncAction } from "@orchard/hooks/useAsync";
 
 type PublisherAddFormProps = {
     prefillResult: RDPrefillResultWithToken

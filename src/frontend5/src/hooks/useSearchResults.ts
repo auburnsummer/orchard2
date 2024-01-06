@@ -1,6 +1,6 @@
 import { search } from "@orchard/api/levels/levels";
 import { DEFAULT_SEARCH_PARAMS, isKeyOfDefaultSearchParams, rdSearchParamsAtom } from "@orchard/stores/rd_search";
-import { useAsyncAction2 as useAsyncAction } from "./useAsyncAction";
+import { useAsyncAction2 as useAsyncAction } from "./useAsync";
 import { useCallback, useEffect, useMemo } from "preact/hooks";
 import { tuple } from "@orchard/utils/grabbag";
 import { objectEntries } from 'ts-extras';
@@ -35,7 +35,7 @@ export function useSearchResults() {
 
     useEffect(() => {
         if (searchResults.state === "not started") {
-            startSearchInternal(false);
+            startSearchInternal(true);
         }
     }, [searchResults]);
 
