@@ -1,44 +1,34 @@
-import { client } from "./client";
-import * as tg from "generic-type-guard";
+import { nullish, object, string, number, type Output } from 'valibot';
+import { client } from './client';
 
-export type User = {
-    id: string;
-    name: string;
-    avatar_url: string | null;
-    // we don't read cutoff atm
-}
-
-export const isUser : tg.TypeGuard<User> = tg.isLikeObject({
-    id: tg.isString,
-    name: tg.isString,
-    avatar_url: tg.isNullable(tg.isString)
+export const userSchema = object({
+	id: string(),
+	name: string(),
+	avatar_url: nullish(string()),
 });
 
+export type User = Output<typeof userSchema>;
+
 export async function getLoggedInUser(authToken: string) {
-    return client.get("user/me", {
-        guard: isUser,
-        headers: {
-            Authorization: `Bearer ${authToken}`
-        }
-    });
+	return client.get('user/me', {
+		schema: userSchema,
+		headers: {
+			Authorization: `Bearer ${authToken}`,
+		},
+	});
 }
 
-type OrchardTokenResponse = {
-    token: string;
-    expires_in: number;
-}
-
-const isOrchardTokenResponse: tg.TypeGuard<OrchardTokenResponse> = tg.isLikeObject({
-    token: tg.isString,
-    expires_in: tg.isNumber
+const orchardTokenResponseSchema = object({
+	token: string(),
+	expires_in: number(),
 });
 
 export async function getOrchardTokenResponseFromDiscord(code: string) {
-    return client.post("auth/token/discord", {
-        guard: isOrchardTokenResponse,
-        json: {
-            code,
-            redirect_uri: window.location.origin + window.location.pathname
-        }
-    });
+	return client.post('auth/token/discord', {
+		schema: orchardTokenResponseSchema,
+		json: {
+			code,
+			redirect_uri: window.location.origin + window.location.pathname
+		},
+	});
 }

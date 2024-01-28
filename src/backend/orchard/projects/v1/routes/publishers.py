@@ -1,5 +1,5 @@
 import msgspec
-from orchard.projects.v1.core.exceptions import DiscordGuildCredentialAlreadyExists
+from orchard.projects.v1.core.exceptions import DiscordGuildCredentialAlreadyExists, PublisherDoesNotExist
 
 from orchard.projects.v1.core.wrapper import msgspec_return, parse_body_as
 from orchard.projects.v1.core.auth import requires_scopes, OrchardAuthToken
@@ -8,6 +8,8 @@ from orchard.projects.v1.models.engine import insert, select
 from orchard.projects.v1.models.publishers import Publisher
 
 from starlette.requests import Request
+
+from loguru import logger
 
 class CreateNewPublisherViaDiscordGuildArgs(msgspec.Struct):
     publisher_name: str
@@ -38,4 +40,8 @@ async def get_publisher_handler(request: Request):
     token: OrchardAuthToken = request.state.token
     assert token.Publisher_identify is not None
 
-    return select(Publisher).by_id(token.Publisher_identify)
+    publisher = select(Publisher).by_id(token.Publisher_identify)
+    logger.info(publisher)
+    if publisher is None:
+        raise PublisherDoesNotExist(publisher_id=token.Publisher_identify)
+    return publisher
