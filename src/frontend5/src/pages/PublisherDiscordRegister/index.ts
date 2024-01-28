@@ -1,1 +1,0 @@
-export { PublisherDiscordRegister } from "./PublisherDiscordRegister";

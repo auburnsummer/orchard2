@@ -3,8 +3,13 @@ import '@shoelace-style/shoelace/dist/themes/light.css';
 import '@shoelace-style/shoelace/dist/themes/dark.css';
 import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
 import { registerIconLibrary } from '@shoelace-style/shoelace/dist/utilities/icon-library.js';
-import './app.css';
-import { authTokenSig } from './signals/auth.js';
+import { Route, Switch } from 'wouter-preact';
+import './App.css';
+import { NotFound } from './pages/404';
+import { PublisherDiscordRegister } from './pages/PublisherDiscordRegister';
+import { DiscordCallback } from '~/pages/DiscordCallback';
+import { Home } from '~/pages/Home';
+import { PublisherAdd } from './pages/PublisherAdd';
 
 setBasePath('https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.12.0/cdn/');
 
@@ -30,9 +35,12 @@ registerIconLibrary('fa', {
 
 export function App() {
 	return (
-		<div>
-			<h1>hello!</h1>
-			<p>{authTokenSig}</p>
-		</div>
+		<Switch>
+			<Route path='/publisher/add/rd'><PublisherAdd /></Route>
+			<Route path='/discord_callback'><DiscordCallback /></Route>
+			<Route path='/publisher/discord_register'><PublisherDiscordRegister /></Route>
+			<Route path='/'><Home/></Route>
+			<Route><NotFound /></Route>
+		</Switch>
 	);
 }

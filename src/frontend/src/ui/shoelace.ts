@@ -1,6 +1,6 @@
 // For now just re-rexport shoelace components.
 // if I need to I can add my own UI elements later, or customize the defaults.
-// this is mostly for aesthetical reasons of being able to import from @orchard/ui lol
+// this is mostly for aesthetical reasons of being able to import from ~/ui lol
 
 export { default as Spinner } from '@shoelace-style/shoelace/dist/react/spinner/index.js';
 

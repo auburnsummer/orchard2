@@ -145,7 +145,7 @@ class PublisherDoesNotExist(OrchardException):
         self.status_code = 401
 
     def __str__(self):
-        return f"User with id {self.publisher_id} does not exist."
+        return f"Publisher with id {self.publisher_id} does not exist."
 
     def extra_data(self):
         return PublisherDoesNotExistExtraData(publisher_id=self.publisher_id)

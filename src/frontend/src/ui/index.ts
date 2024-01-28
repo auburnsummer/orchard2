@@ -1,3 +1,3 @@
-/* eslint-disable import/extensions */
 
 export * from './shoelace';
+export { TagInput } from './TagInput';
