@@ -1,34 +1,35 @@
 {
-    "compilerOptions": {
-        "target": "ES2021",
-        "useDefineForClassFields": true,
-        "module": "ESNext",
-        "lib": ["ES2021", "DOM", "DOM.Iterable"],
-        "skipLibCheck": true,
-
-        "paths": {
-            "react": ["./node_modules/preact/compat/"],
-            "react-dom": ["./node_modules/preact/compat/"],
-            "@orchard/*": ["./src/*"]
-        },
-
-        /* Bundler mode */
-        "moduleResolution": "bundler",
-        "allowImportingTsExtensions": true,
-        "resolveJsonModule": true,
-        "isolatedModules": true,
-        "noEmit": true,
-        "jsx": "react-jsx",
-        "jsxImportSource": "preact",
-
-
-        /* Linting */
-        "strict": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "noFallthroughCasesInSwitch": true,
-        "exactOptionalPropertyTypes": true
+  "compilerOptions": {
+    "target": "ES2021",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2021", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "noErrorTruncation": true,
+    "paths": {
+      "react": ["./node_modules/preact/compat/"],
+      "react-dom": ["./node_modules/preact/compat/"],
+      "~/*": ["./src/*"]
     },
-    "include": ["src"],
-    "references": [{ "path": "./tsconfig.node.json" }]
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noPropertyAccessFromIndexSignature": true
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

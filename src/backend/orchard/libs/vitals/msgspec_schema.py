@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Annotated
 from datetime import datetime
 
 import msgspec
@@ -6,12 +6,12 @@ import msgspec
 class VitalsLevelBaseMutable(msgspec.Struct):
     "The properties on VitalsLevel where it might make sense for the client to be changing them"
     artist: str
-    artist_tokens: List[str]
-    song: str
+    artist_tokens: Annotated[List[str], msgspec.Meta(min_length=1)]
+    song: Annotated[str, msgspec.Meta(min_length=1)]
     seizure_warning: bool
     description: str
     hue: float
-    authors: List[str]
+    authors: Annotated[List[str], msgspec.Meta(min_length=1)]
     authors_raw: str
     max_bpm: float
     min_bpm: float

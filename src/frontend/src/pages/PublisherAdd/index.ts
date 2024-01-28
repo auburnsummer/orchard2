@@ -1,1 +1,1 @@
-export { PublisherAdd } from "./PublisherAdd";
+export { PublisherAdd } from './PublisherAdd.js';

@@ -1,1 +1,1 @@
-export { DiscordCallback } from "./DiscordCallback";
+export { DiscordCallback } from './DiscordCallback.js';

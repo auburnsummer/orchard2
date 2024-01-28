@@ -1,1 +1,1 @@
-export { LevelListSidebar } from "./LevelListSidebar";
+export { LevelListSidebar } from './LevelListSidebar.js';

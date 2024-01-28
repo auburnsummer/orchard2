@@ -14,5 +14,6 @@
     "ghcr.io/devcontainers/features/rust:1": {
       "version": "1.74.0"
     }
-  }
+  },
+  "postCreateCommand": "./.devcontainer/postCreateCommand.sh"
 }

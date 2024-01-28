@@ -1,1 +1,1 @@
-export { TagInput } from "./TagInput";
+export { TagInput } from './TagInput.js';

@@ -1,1 +1,1 @@
-export { NotFound } from "./404.tsx";
+export { NotFound } from './404.tsx';
