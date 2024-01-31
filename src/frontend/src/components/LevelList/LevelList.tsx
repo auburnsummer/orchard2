@@ -12,7 +12,7 @@ export function LevelList({ class: _class }: LevelListProperties) {
 	const searchResultsCombined = searchResultsCombined$.value;
 
 	if (searchResultsCombined.state === 'has error') {
-		// We'll never render this state bc HomeContents guards.
+		// We should never render this state bc HomeContents guards.
 		return <></>;
 	}
 
