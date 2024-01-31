@@ -2,11 +2,11 @@ import cc from 'clsx';
 import type { SlSelectEvent } from '@shoelace-style/shoelace';
 import { LoginButton } from './LoginButton';
 import './Header.css';
+import { SearchBar } from './SearchBar';
 import { type WithClass } from '~/utils/withClass';
 import { Avatar, Divider, Dropdown, Menu, MenuItem, MenuLabel, Skeleton } from '~/ui';
-import { authToken$, notLoggedIn } from '~/signals/auth';
+import { notLoggedIn } from '~/signals/auth';
 import { loggedInUser$, logout } from '~/signals/loggedInUser';
-import { SearchBar } from './SearchBar';
 
 type HeaderProps = WithClass;
 
