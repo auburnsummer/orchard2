@@ -6,6 +6,7 @@ import { type RDQueryResult } from '~/api/levels/schemas';
 import { type AsyncResource } from '~/hooks/useAsync';
 import { searchRDLevels } from '~/api/levels/levels';
 import { getErrorMessage } from '~/utils/error';
+import { serializeObjectToSearchParams } from '~/utils/url';
 
 export const rdSearchResults$ = signal<AsyncResource<RDQueryResult>>({ state: 'loading' });
 export const previousSearchResults$ = signal<RDQueryResult | undefined>(undefined);
@@ -15,25 +16,15 @@ export const fetchResults$ = computed(() => {
 	const currentRdSearchResults = rdSearchResults$.value;
 	return async (writeToQueryParams: boolean) => {
 		if (writeToQueryParams) {
+			const newSearchParams = serializeObjectToSearchParams(rdSearchParams);
 			const url = new URL(window.location.href);
-			for (const [key, value] of objectEntries(rdSearchParams)) {
-				if (value === undefined || value === null) {
-					continue;
-				}
+			// Replace the search params with our ones. but keep anything in the original we didn't know about.
+			for (const key of newSearchParams.keys()) {
+				url.searchParams.delete(key);
+			}
 
-				if (Array.isArray(value) && value.length === 0) {
-					continue;
-				}
-
-				// TODO handle array values stringifying properly
-				const defaultSearchParamsKey = safeParse(keyOfDefaultSearchParamsSchema, key);
-				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-				if (defaultSearchParamsKey.success && `${DEFAULT_SEARCH_PARAMS[defaultSearchParamsKey.output]}` === `${value}`) {
-					continue;
-				}
-
-				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-				url.searchParams.set(key, `${value}`);
+			for (const [key, value] of newSearchParams.entries()) {
+				url.searchParams.append(key, value);
 			}
 
 			window.history.pushState({}, '', url);

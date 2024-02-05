@@ -34,7 +34,7 @@ const intGet = (key: string) => functionGet(key, v => Number.parseInt(v, 10));
 const intArrayGet = (key: string) => functionArrayGet(key, v => Number.parseInt(v, 10));
 const booleanGet = (key: string) => functionGet(key, v => v.toLowerCase() === 'true');
 
-export const rdSearchParams$ = signal<RDSearchParams>({
+const getRDSearchParams = () => ({
 	q: stringGet('q'),
 	tags: stringArrayGet('tags'),
 	artists: stringArrayGet('artists'),
@@ -59,6 +59,8 @@ export const rdSearchParams$ = signal<RDSearchParams>({
 	offset: intGet('offset'),
 	limit: intGet('limit'),
 });
+
+export const rdSearchParams$ = signal<RDSearchParams>(getRDSearchParams());
 
 export const setSearchParams = (draftFunc: (draft: Draft<RDSearchParams>) => void) => {
 	rdSearchParams$.value = produce(rdSearchParams$.value, draftFunc);

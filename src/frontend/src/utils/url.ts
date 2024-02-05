@@ -1,4 +1,3 @@
-
 // eslint-disable-next-line @typescript-eslint/ban-types
 type AllowedValues = string | string[] | number | number[] | boolean | boolean[] | null | undefined;
 
