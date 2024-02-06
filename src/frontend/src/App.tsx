@@ -7,9 +7,10 @@ import { Route, Switch } from 'wouter-preact';
 import './App.css';
 import { NotFound } from './pages/404';
 import { PublisherDiscordRegister } from './pages/PublisherDiscordRegister';
+import { PublisherAdd } from './pages/PublisherAdd';
+import { registerPopStateHandler } from './signals/handlePopState';
 import { DiscordCallback } from '~/pages/DiscordCallback';
 import { Home } from '~/pages/Home';
-import { PublisherAdd } from './pages/PublisherAdd';
 
 setBasePath('https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.12.0/cdn/');
 
@@ -32,6 +33,8 @@ registerIconLibrary('fa', {
 		svg.setAttribute('fill', 'currentColor');
 	},
 });
+
+registerPopStateHandler();
 
 export function App() {
 	return (
