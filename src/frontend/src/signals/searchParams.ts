@@ -1,7 +1,7 @@
 import { signal } from '@preact/signals';
 import { type Draft, produce } from 'immer';
 import { objectKeys } from 'ts-extras';
-import { keyof, literal, picklist } from 'valibot';
+import { picklist } from 'valibot';
 import { type RDSearchParams } from '~/api/levels/schemas';
 
 export const DEFAULT_SEARCH_PARAMS = {
@@ -34,7 +34,7 @@ const intGet = (key: string) => functionGet(key, v => Number.parseInt(v, 10));
 const intArrayGet = (key: string) => functionArrayGet(key, v => Number.parseInt(v, 10));
 const booleanGet = (key: string) => functionGet(key, v => v.toLowerCase() === 'true');
 
-const getRDSearchParams = () => ({
+export const getRDSearchParams = () => ({
 	q: stringGet('q'),
 	tags: stringArrayGet('tags'),
 	artists: stringArrayGet('artists'),
@@ -65,3 +65,4 @@ export const rdSearchParams$ = signal<RDSearchParams>(getRDSearchParams());
 export const setSearchParams = (draftFunc: (draft: Draft<RDSearchParams>) => void) => {
 	rdSearchParams$.value = produce(rdSearchParams$.value, draftFunc);
 };
+
