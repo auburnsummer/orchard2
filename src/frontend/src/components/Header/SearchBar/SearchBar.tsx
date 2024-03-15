@@ -1,7 +1,4 @@
 import cc from 'clsx';
-import type { TargetedEvent } from 'preact/compat';
-import { useComputed } from '@preact/signals';
-import { type SlButton } from '@shoelace-style/shoelace';
 import { object, string } from 'valibot';
 import './SearchBar.css';
 import { type WithClass } from '~/utils/withClass';
@@ -24,6 +21,8 @@ export function SearchBar({ class: _class }: SearchBarProperties) {
 		void fetchResults$.value(true);
 	});
 
+	const rdSearchParams = rdSearchParams$.value;
+
 	return (
 		<div class={cc(_class, 'se')}>
 			<form class='se_bar' {...formProps}>
@@ -31,6 +30,11 @@ export function SearchBar({ class: _class }: SearchBarProperties) {
 					name='search'
 					class='se_input'
 					placeholder='Search'
+					// Note value is only one-way bounded here, so as soon as the user types something,
+					// the value in the input is different from rdSearchParams.q. but then rdSearchParams
+					// is re-rendered (e.g. by a popstate), this component rerenders and changes the visible
+					// value back to sync.
+					value={rdSearchParams.q ?? ''}
 				/>
 				<Button type='submit'>
 					<Icon name='search' />

@@ -13,4 +13,11 @@
     grid-template-columns: repeat( auto-fit, minmax(22rem, 1fr) );
     column-gap: 1rem;
     row-gap: 1rem;
+
+    margin-top: 0;
+}
+
+
+.loading\!le_levels {
+    opacity: 0.6;
 }

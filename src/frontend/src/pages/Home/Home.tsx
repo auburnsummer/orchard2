@@ -1,3 +1,4 @@
+import './Home.css';
 import { Header } from '~/components/Header';
 import { LevelList } from '~/components/LevelList';
 import { Loading } from '~/components/Loading';
@@ -25,7 +26,7 @@ function HomeContents() {
 		);
 	}
 
-	return <LevelList />;
+	return <LevelList class='ho_levels' />;
 }
 
 export function Home() {
