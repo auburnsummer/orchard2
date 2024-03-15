@@ -27,7 +27,7 @@ export function LevelList({ class: _class }: LevelListProperties) {
 	return (
 		<div class={cc(_class, 'le')}>
 			<LevelListSidebar class='le_sidebar' />
-			<ul class='le_levels'>
+			<ul class={cc('le_levels', { 'loading!le_levels': searchResultsLoading })}>
 				{
 					searchResultsCombined.data.levels.map(level => (
 						<LevelBox level={level} key={level.id} class='le_level' />
