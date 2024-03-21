@@ -1,4 +1,5 @@
 from functools import wraps
+import traceback
 from typing import Optional, Type
 import typing
 from orchard.projects.v1.core.exceptions import BodyValidationError, OrchardException, UnknownError
@@ -113,8 +114,8 @@ def msgspec_return(status_code: int):
             except OrchardException as exc:
                 return orchard_exception_response(exc)
             except Exception as exc:
-                logger.error("Unhandled error")
-                logger.error(exc)
+                logger.exception("Unhandled error")
+                # logger.error(traceback.format_exc())
                 synthetic_orchard_exception = UnknownError(orig_exc=exc)
                 return orchard_exception_response(synthetic_orchard_exception)
             if isinstance(orig_response, msgspec.Struct):
