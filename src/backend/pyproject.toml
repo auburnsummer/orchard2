@@ -6,14 +6,14 @@ authors = ["auburn <37142182+auburnsummer@users.noreply.github.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "~3.11"
+python = "~3.12"
 pillow = "10.1.0"
 starlette = "^0.28.0"
 uvicorn = "^0.22.0"
 python-dotenv = "^1.0.0"
 pyseto = "^1.7.2"
 httpx = "^0.24.1"
-msgspec = "^0.16.0"
+msgspec = "^0.18.6"
 tenacity = "^8.2.2"
 loguru = "^0.7.0"
 cryptography = "^41.0.2"

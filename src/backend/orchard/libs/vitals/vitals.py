@@ -21,6 +21,8 @@ from .facets.updated_facet import updated_facet
 
 from .msgspec_schema import VitalsLevel
 
+from loguru import logger
+
 import msgspec
 
 
@@ -59,6 +61,8 @@ def main(f: IO[bytes]) -> VitalsLevel:
         "sha1": sha1_facet,
         "rdlevel_sha1": rdlevel_sha1_facet,
     }
+
+    logger.info("MADE IT HERE")
 
     try:
         with zipfile.ZipFile(f) as z:
