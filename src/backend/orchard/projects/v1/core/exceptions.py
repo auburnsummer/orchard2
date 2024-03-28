@@ -270,6 +270,7 @@ class RDLevelAlreadyExists(OrchardException):
         super().__init__(*args)
         self.level_id = kwargs.get('level_id')
         self.sha1 = kwargs.get('sha1')
+        self.status_code = 409
 
     def __str__(self):
         return f"Level already exists: {config().FRONTEND_URL}/rdlevel/{self.level_id}"
