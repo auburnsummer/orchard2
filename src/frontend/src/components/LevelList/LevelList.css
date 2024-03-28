@@ -3,11 +3,17 @@
     flex-direction: row;
 }
 
+.le_sidebar {
+    position: fixed;
+    display: block;
+    width: 19rem;
+}
+
 .le_levels {
     flex-grow: 1;
     display: grid;
 
-    padding-left: 1rem;
+    padding-left: calc(19rem + 1rem);
     padding-right: 1rem;
 
     grid-template-columns: repeat( auto-fit, minmax(22rem, 1fr) );

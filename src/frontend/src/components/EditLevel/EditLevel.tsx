@@ -92,6 +92,7 @@ export function EditLevel({ class: _class, levelPrefill, publisher, onSubmit }: 
 						<Button
 							class='el_submit-button'
 							onClick={_ => onSubmit(preview$.value)}
+							variant='primary'
 						>
                             Submit
 						</Button>

@@ -32,7 +32,7 @@ function HomeContents() {
 export function Home() {
 	return (
 		<div class='ho'>
-			<Header />
+			<Header class='ho_header' />
 			<div class='ho_contents'>
 				<HomeContents />
 			</div>
