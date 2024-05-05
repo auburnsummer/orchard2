@@ -9,12 +9,19 @@
     width: 19rem;
 }
 
+.le_content {
+    display: flex;
+    flex-direction: column;
+    padding-left: calc(19rem + 1rem);
+    padding-right: 1rem;
+    justify-content: stretch;
+    width: 100%;
+}
+
 .le_levels {
     flex-grow: 1;
     display: grid;
-
-    padding-left: calc(19rem + 1rem);
-    padding-right: 1rem;
+    padding: 0;
 
     grid-template-columns: repeat( auto-fit, minmax(22rem, 1fr) );
     column-gap: 1rem;
@@ -24,6 +31,6 @@
 }
 
 
-.loading\!le_levels {
+.loading\!le_content {
     opacity: 0.6;
 }

@@ -245,6 +245,16 @@ export function EditLevel({ class: _class, levelPrefill, publisher, onSubmit }: 
 							))
 						}
 					</div>
+					<div class='el_secondsubmit'>
+						{/* not type submit, it's too easy for a stray enter to submit the form */}
+						<Button
+							class='el_submit-button2'
+							onClick={_ => onSubmit(preview$.value)}
+							variant='primary'
+						>
+                            Submit
+						</Button>
+					</div>
 				</div>
 				<div class='el_preview'>
 					<LevelBox level={merged$.value} />

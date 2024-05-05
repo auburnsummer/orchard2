@@ -12,7 +12,7 @@ export function LevelList({ class: _class }: LevelListProperties) {
 	const searchResultsCombined = searchResultsCombined$.value;
 
 	if (searchResultsCombined.state === 'has error') {
-		// We should never render this state bc HomeContents guards.
+		// We should never render this state bc HomeContents won't render LevelList if it has an error.
 		return <></>;
 	}
 
@@ -27,13 +27,20 @@ export function LevelList({ class: _class }: LevelListProperties) {
 	return (
 		<div class={cc(_class, 'le')}>
 			<LevelListSidebar class='le_sidebar' />
-			<ul class={cc('le_levels', { 'loading!le_levels': searchResultsLoading })}>
+			<div class={cc('le_content', { 'loading!le_content': searchResultsLoading })}>
+				<div class='le_controls'>
+					<button>Next page</button>
+					<button>Previous page</button>
+				</div>
+				<ul class='le_levels'>
 				{
 					searchResultsCombined.data.levels.map(level => (
 						<LevelBox level={level} key={level.id} class='le_level' />
 					))
 				}
 			</ul>
+			</div>
+
 		</div>
 	);
 }
