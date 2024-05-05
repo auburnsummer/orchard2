@@ -119,6 +119,10 @@
     gap: 1rem;
 }
 
+.el_secondsubmit {
+    margin-top: 1.5rem;
+}
+
 .el_controls {
     display: flex;
     flex-direction: row;
