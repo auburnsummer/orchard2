@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "rhythm-cafe"
+version = "0.1.0"
+description = ""
+authors = ["aub <37142182+auburnsummer@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+Django = "^5.0.6"
+nanoid = "^2.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
