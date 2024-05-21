@@ -56,6 +56,13 @@ ROOT_URLCONF = 'orchard.urls'
 
 TEMPLATES = [
     {
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'environment': 'cafe.jinja2.environment.environment'
+        }
+    },
+    {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
         'APP_DIRS': True,
