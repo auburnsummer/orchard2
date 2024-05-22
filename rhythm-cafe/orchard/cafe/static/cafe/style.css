@@ -1,0 +1,19 @@
+html {
+    box-sizing: border-box;
+    overscroll-behavior-y: none;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+body {
+    margin: 0;
+    font-family: var(--sl-font-sans);
+}
+
+/* https://www.abeautifulsite.net/posts/flash-of-undefined-custom-elements/ */
+:not(:defined) {
+    visibility: hidden;
+}
+  

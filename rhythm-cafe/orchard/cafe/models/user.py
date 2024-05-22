@@ -1,27 +1,53 @@
+from typing import Any
 from django.db import models
-from django.contrib.auth.models import AbstractUser
-from cafe.libs.gen_id import IDType
+from django.contrib.auth.models import AbstractUser, UserManager
+from cafe.libs.gen_id import IDType, gen_id
 
 from .utils import create_pk_field
+
+class CafeUserManager(UserManager):
+    def create_user(self, username, email=None, password=None, **extra_fields):
+        """
+        For compatability with other parts of the django ecosystem, we do some trickery here.
+
+        Orchard always uses opaque usernames. The actual "name" of the user is first_name. If
+        username is given, and first_name is not, we make the given username the first_name and
+        generate a new opaque username.
+
+        If display_name is given, we assume it's code that is aware of our system, and leave it as-is.
+        """
+        if extra_fields.get("first_name") is None:        
+            extra_fields["first_name"] = username
+            username = gen_id(IDType.USER)
+
+        return super().create_user(username, email, password, **extra_fields)
+    
+    def create_superuser(self, username, email=None, password=None, **extra_fields):
+        if extra_fields.get("first_name") is None:        
+            extra_fields["first_name"] = username
+            username = gen_id(IDType.USER)
+
+        return super().create_superuser(username, email, password, **extra_fields)
 
 class User(AbstractUser):
     """
     User. Compared to the base django User, we're:
      - username is always opaque
-     - instead of first and last name, we're using a display name
+     - only the first name is used
      - emails are unique
     """
     username = create_pk_field(IDType.USER)
-    display_name = models.CharField(max_length=150)
-    email = models.EmailField(unique=True, blank=True, null=True)
+    email = models.EmailField(unique=True)
 
-    REQUIRED_FIELDS = ["display_name"]
+    REQUIRED_FIELDS = ["email"]
 
     def get_full_name(self) -> str:
-        return self.display_name
+        return self.first_name
     
     def get_short_name(self) -> str:
-        return self.display_name
-    
+        return self.first_name
+
     def __str__(self):
-        return f"{self.display_name} ({self.username})"
+        return f"{self.first_name} ({self.username})"
+    
+    objects = CafeUserManager()

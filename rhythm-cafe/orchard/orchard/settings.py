@@ -9,11 +9,16 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+from dotenv import load_dotenv
+
+load_dotenv()  # take environment variables from .env.
 
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+from os import environ
 
 
 # Quick-start development settings - unsuitable for production
@@ -26,6 +31,8 @@ SECRET_KEY = 'django-insecure-&4yba!29&k9c_2zk)g&+)lsh_bydh#8aliyn1g!n-&@l7irq&^
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+LOGOUT_REDIRECT_URL = "/"
 
 
 # Application definition
@@ -40,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'oauthlogin'
 ]
 
 MIDDLEWARE = [
@@ -76,6 +84,24 @@ TEMPLATES = [
         },
     },
 ]
+
+OAUTH_LOGIN_PROVIDERS = {
+    "discord": {
+        "class": "cafe.libs.discord_oauth.DiscordOAuthProvider",
+        "kwargs": {
+            "client_id": environ["DISCORD_CLIENT_ID"],
+            "client_secret": environ["DISCORD_CLIENT_SECRET"],
+            "scope": "email"
+            # "scope" is optional, defaults to ""
+
+            # You can add other fields if you have additional kwargs in your class __init__
+            # def __init__(self, *args, custom_arg="default", **kwargs):
+            #     self.custom_arg = custom_arg
+            #     super().__init__(*args, **kwargs)
+        },
+    },
+}
+
 
 WSGI_APPLICATION = 'orchard.wsgi.application'
 

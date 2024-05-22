@@ -2,12 +2,21 @@
 {% block title %}Home{% endblock %}
 {% block head %}
     {{ super() }}
+    <link rel="stylesheet" href="{{ static('cafe/header.css') }}" />
 {% endblock %}
 {% block body %}
+    {% include 'cafe/header.jinja' %}
     <h1>Index</h1>
     <p class="important">
       Welcome to my awesome homepage!
     </p>
+    {% if user.is_authenticated %}
+      <strong>You are logged in.</strong>
+    {% else %}
     <strong>You are not logged in.</strong>
-    <a href="#">click this link to log in</a>
+    <form action="{{ url('oauthlogin:login', args=['discord']) }}" method="post">
+      {{ csrf_input }}
+      <button type="submit">Login with Discord</button>
+    </form>
+    {% endif %}
 {% endblock %}
