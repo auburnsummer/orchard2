@@ -1,0 +1,27 @@
+.profinfo {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.procinfo_spacer {
+    flex-grow: 1;
+}
+
+.profinfo_changename {
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+}
+
+.profinfo_changename > sl-button {
+    margin-left: 1rem;
+}
+
+.profinfo_userid {
+    font-size: 0.875rem;
+    font-style: italic;
+    color: var(--sl-color-neutral-500);
+}

@@ -1,12 +1,20 @@
 {% extends "cafe/profile/layout.jinja" %}
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ static('cafe/profile/profile.css') }}" />
+{% endblock %}
 {% block content %}
-    <form action="/accounts/profile/" method="post">
-        {{ csrf_input }}
-        <sl-input name="first_name" label="Name" required value="{{ user.first_name }}">
-        </sl-input>
-        <sl-button type="submit">Change</sl-button>
-    </form>
-    <p>user id: {{ user.username }} </p>
+    <div class="profinfo">
+        <form action="/accounts/profile/" method="post" class="profinfo_changename">
+            {{ csrf_input }}
+            <sl-input name="first_name" label="Name" required value="{{ user.first_name }}">
+            </sl-input>
+            <sl-button type="submit">Change name</sl-button>
+        </form>
+        <div class="procinfo_spacer"></div>
+        <p class="profinfo_userid">User id: {{ user.username }}</p>
+    </div>
+
 
     {# <h2>Existing connections</h2>
     <ul>
