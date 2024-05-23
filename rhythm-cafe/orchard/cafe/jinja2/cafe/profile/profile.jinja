@@ -8,7 +8,7 @@
     </form>
     <p>user id: {{ user.username }} </p>
 
-    <h2>Existing connections</h2>
+    {# <h2>Existing connections</h2>
     <ul>
         {% for connection in request.user.oauth_connections.all() %}
         <li>
@@ -35,5 +35,5 @@
             </form>
         </li>
         {% endfor %}
-    </ul>
+    </ul> #}
 {% endblock %}
