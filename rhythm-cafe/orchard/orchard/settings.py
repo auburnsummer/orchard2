@@ -35,6 +35,8 @@ ALLOWED_HOSTS = []
 LOGOUT_REDIRECT_URL = "/"
 LOGIN_URL = "/"
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+
 
 # Application definition
 
