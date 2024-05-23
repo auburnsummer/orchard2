@@ -11,7 +11,7 @@
         <div class="la_sidebar">
             <div class="la_sidebar-header">
                 <h1>Profile</h1>
-                <button>
+                <sl-icon-button name="chevron-left">
                     Back
                     <script>
                         // If they got here via us, go back.
@@ -24,12 +24,39 @@
                             }
                         });
                     </script>
-                </button>
+                </sl-icon-button>
             </div>
-            <nav>
+            <nav class="la_sidebar-nav">
                 <ul>
-                    <li>Info</li>
-                    <li>Settings</li>
+                    <li>
+                        <a
+                            href="/accounts/profile/"
+                        >
+                            Info
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="/accounts/profile/connections"
+                        >
+                            Connections
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="/accounts/profile/settings/"
+                        >
+                            Settings
+                        </a>
+                    </li>
+                    <script>
+                        any("a", me())
+                            .run(el => {
+                                if (el.href === location.href) {
+                                    el.classList.add("active-link");
+                                }
+                            });
+                    </script>
                 </ul>
             </nav>
         </div>

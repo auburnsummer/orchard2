@@ -1,5 +1,6 @@
 import httpx
-
+from django.utils import timezone
+import datetime
 from oauthlogin.providers import OAuthProvider, OAuthToken, OAuthUser
 
 
@@ -24,6 +25,8 @@ class DiscordOAuthProvider(OAuthProvider):
         data = response.json()
         return OAuthToken(
             access_token=data["access_token"],
+            refresh_token=data["refresh_token"],
+            access_token_expires_at=timezone.now() + datetime.timedelta(seconds=data["expires_in"])
         )
 
     def get_oauth_user(self, *, oauth_token):
@@ -36,7 +39,6 @@ class DiscordOAuthProvider(OAuthProvider):
         )
         response.raise_for_status()
         data = response.json()
-        print(data)
         return OAuthUser(
             id=data["id"],
             username=data["username"],

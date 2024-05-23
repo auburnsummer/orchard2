@@ -18,7 +18,6 @@ class ProfileInfoForm(ModelForm):
         model = User
         fields = ["first_name"]
 
-
 @login_required
 def profile(request):
     if request.method == 'POST':
