@@ -14,9 +14,5 @@
       <strong>You are logged in.</strong>
     {% else %}
     <strong>You are not logged in.</strong>
-    <form action="{{ url('oauthlogin:login', args=['discord']) }}" method="post">
-      {{ csrf_input }}
-      <button type="submit">Login with Discord</button>
-    </form>
     {% endif %}
 {% endblock %}

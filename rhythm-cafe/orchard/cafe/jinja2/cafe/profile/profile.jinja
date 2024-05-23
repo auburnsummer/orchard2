@@ -1,0 +1,10 @@
+{% extends "cafe/profile/layout.jinja" %}
+{% block content %}
+    <form action="/accounts/profile/" method="post">
+        {{ csrf_input }}
+        <sl-input name="first_name" label="Name" required value="{{ user.first_name }}">
+        </sl-input>
+        <sl-button type="submit">Change</sl-button>
+    </form>
+    <p>user id: {{ user.username }} </p>
+{% endblock %}

@@ -1,5 +1,6 @@
 from typing import Any
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.models import AbstractUser, UserManager
 from cafe.libs.gen_id import IDType, gen_id
 
@@ -38,8 +39,9 @@ class User(AbstractUser):
     """
     username = create_pk_field(IDType.USER)
     email = models.EmailField(unique=True)
+    first_name = models.CharField(blank=False, max_length=100)
 
-    REQUIRED_FIELDS = ["email"]
+    REQUIRED_FIELDS = ["first_name", "email"]
 
     def get_full_name(self) -> str:
         return self.first_name
@@ -51,3 +53,11 @@ class User(AbstractUser):
         return f"{self.first_name} ({self.username})"
     
     objects = CafeUserManager()
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                check=Q(username__startswith="u_"),
+                name="cafe__user__username_startswith_u_"
+            )
+        ]
