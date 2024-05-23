@@ -36,6 +36,7 @@ class DiscordOAuthProvider(OAuthProvider):
         )
         response.raise_for_status()
         data = response.json()
+        print(data)
         return OAuthUser(
             id=data["id"],
             username=data["username"],

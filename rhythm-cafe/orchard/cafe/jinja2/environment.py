@@ -11,7 +11,7 @@ def environment(**options):
     env.globals.update(
         {
             "static": static,
-            "url": reverse,
+            "url": reverse
         }
     )
     return env
