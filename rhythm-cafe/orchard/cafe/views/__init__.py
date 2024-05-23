@@ -1,2 +1,4 @@
 from .index import index
-from .profile import profile
+from . import profile
+
+__all__ = ['index', 'profile']
