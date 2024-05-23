@@ -24,10 +24,18 @@
         <sl-dropdown placement="bottom-right">
             <sl-button slot="trigger" caret>{{ user.get_short_name() }}</sl-button>
             <sl-menu>
-                <sl-menu-item>Profile</sl-menu-item>
+                <sl-menu-item>
+                    Profile
+                    <script>
+                        me().on("click", async ev => {
+                            window.location = "/accounts/profile/"
+                        })
+                    </script>
+                </sl-menu-item>
                 <sl-menu-item>
                     Log out
                     <script>
+                        /* Sign out has to be a POST request. so we have an invisible form that is submitted. */
                         me().on("click", async ev => {
                             me("#logoutForm").submit();
                         });
@@ -36,7 +44,7 @@
             </sl-menu>
         </sl-dropdown>
     {% else %}
-        <form action="{{ url('oauthlogin:login', args=['discord']) }}" method="post">
+        <form action="/oauth/discord/login/" method="post">
             {{ csrf_input }}
             <sl-button type="submit">Log in with Discord</sl-button>
         </form>

@@ -1,0 +1,42 @@
+{% extends "cafe/base.jinja" %}
+{% block title %} {{ user.get_short_name() }} Profile {% endblock %}
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ static('cafe/header.css') }}" />
+    <link rel="stylesheet" href="{{ static('cafe/profile/layout.css') }}" />
+{% endblock %}
+{% block body %}
+    {% include 'cafe/header.jinja' %}
+    <div class="la">
+        <div class="la_sidebar">
+            <div class="la_sidebar-header">
+                <h1>Profile</h1>
+                <button>
+                    Back
+                    <script>
+                        // If they got here via us, go back.
+                        // but if there's no history, they could have gotten here directly.
+                        me().on('click', async ev => {
+                            if (document.referrer && (new URL(document.referrer)).host === window.location.host) {
+                                history.back();
+                            } else {
+                                window.location = '/'
+                            }
+                        });
+                    </script>
+                </button>
+            </div>
+            <nav>
+                <ul>
+                    <li>Info</li>
+                    <li>Settings</li>
+                </ul>
+            </nav>
+        </div>
+        <div class="la_content">
+            {% block content %}
+
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}
