@@ -7,6 +7,8 @@ from cafe.models import User
 
 from django.forms import widgets
 
+from oauthlogin.providers import get_provider_keys
+
 class ShoelaceTextWidget(widgets.TextInput):
     def render(self, name, value, attrs = ..., renderer = ...):
         return super().render(name, value, attrs, renderer)
@@ -29,4 +31,9 @@ def profile(request):
     else:
         form = ProfileInfoForm(initial={'first_name': request.user.first_name})
 
-    return render(request, "cafe/profile/profile.jinja", { "user": request.user })
+    render_data = {
+        "user": request.user,
+        "oauth_provider_keys": get_provider_keys()
+    }
+
+    return render(request, "cafe/profile/profile.jinja", render_data)
