@@ -9,6 +9,7 @@
     flex-direction: column;
     position: sticky;
     top: 0px;
+    padding-top: 1rem;
     overflow-y: auto;
     border-right: 1px solid  var(--sl-color-neutral-200);
 }
@@ -28,6 +29,10 @@
 .prof_sidebar-header > sl-icon-button {
     margin-left: 0.5rem;
     font-size: 1.25rem;
+}
+
+.prof_sidebar-nav {
+    padding-top: 1rem;
 }
 
 .prof_sidebar-nav ul {

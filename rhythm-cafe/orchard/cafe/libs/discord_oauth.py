@@ -3,6 +3,20 @@ from django.utils import timezone
 import datetime
 from oauthlogin.providers import OAuthProvider, OAuthToken, OAuthUser
 
+from functools import cache
+
+@cache
+def get_discord_user_from_oauth(bearer_token: str):
+    response = httpx.get(
+        "https://discord.com/api/users/@me",
+        headers={
+            "Accept": "application/json",
+            "Authorization": f"Bearer {bearer_token}",
+        },
+    )
+    data = response.json()
+    response.raise_for_status()
+    return data
 
 class DiscordOAuthProvider(OAuthProvider):
     authorization_url = "https://discord.com/oauth2/authorize"
@@ -23,6 +37,7 @@ class DiscordOAuthProvider(OAuthProvider):
         )
         response.raise_for_status()
         data = response.json()
+        print(data)
         return OAuthToken(
             access_token=data["access_token"],
             refresh_token=data["refresh_token"],
@@ -30,17 +45,11 @@ class DiscordOAuthProvider(OAuthProvider):
         )
 
     def get_oauth_user(self, *, oauth_token):
-        response = httpx.get(
-            "https://discord.com/api/users/@me",
-            headers={
-                "Accept": "application/json",
-                "Authorization": f"Bearer {oauth_token.access_token}",
-            },
-        )
-        response.raise_for_status()
-        data = response.json()
+        data = get_discord_user_from_oauth(oauth_token.access_token)
+
         return OAuthUser(
             id=data["id"],
             username=data["username"],
+            # TODO: check what happens if email is not verified
             email=data["email"],
         )

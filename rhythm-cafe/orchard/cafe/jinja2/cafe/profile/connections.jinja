@@ -4,32 +4,51 @@
     <link rel="stylesheet" href="{{ static('cafe/profile/connections.css') }}" />
 {% endblock %}
 {% block content %}
-    <h2>Existing connections</h2>
-    <ul>
-        {% for connection in request.user.oauth_connections.all() %}
-        <li>
-            {{ connection.provider_key }} [ID: {{ connection.provider_user_id }}]
-            {% if connection.can_be_disconnected %}
-            <form action="/oauth/{{ connection.provider_key }}/disconnect/" method="post">
-                {{ csrf_input }}
-                <input type="hidden" name="provider_user_id" value="{{ connection.provider_user_id }}">
-                <button type="submit">Disconnect</button>
-            </form>
-            {% endif %}
-        </li>
-        {% endfor %}
-    </ul>
+    <div class="profconnections">
+        <h2>Existing connections</h2>
+        <ul class="profconnections_existing">
+            {% for connection in request.user.oauth_connections.all() %}
+            <li>
+                <sl-details class="profconnections_connection">
+                    {% with data = connection_map[connection.provider_user_id] %}
+                        <div slot="summary" class="profconnections_connection-summary">
+                            {# for now, assume discord as we have no other connection types yet. #}
+                            <sl-icon name="discord"></sl-icon>
+                            <p>{{ data['global_name'] }}</p>
+                        </div>
+                        <ul class="profconnections_connection-info">
+                            <li>
+                                <p><strong>Username: </strong><span>{{ data['username'] }}</span></p>
+                            </li>
+                            <li>
+                                <p><strong>Discord ID: </strong><span>{{ data['id'] }}</span></p>
+                            </li>
+                        </ul>
+                        {% if connection.can_be_disconnected %}
+                        <form action="/oauth/{{ connection.provider_key }}/disconnect/" method="post" class="profconnections_disconnect">
+                            {{ csrf_input }}
+                            <input type="hidden" name="provider_user_id" value="{{ connection.provider_user_id }}">
+                            <sl-button type="submit">Disconnect</sl-button>
+                        </form>
+                        {% endif %}
+                    {% endwith %}
+                </sl-details>
+            </li>
+            {% endfor %}
+        </ul>
 
-    <h2>Add a connection</h2>
-    <ul>
-        {% for provider_key in oauth_provider_keys %}
-        <li>
-            {{ provider_key}}
-            <form action="/oauth/{{ provider_key }}/connect/" method="post">
-                {{ csrf_input }}
-                <button type="submit">Connect</button>
-            </form>
-        </li>
-        {% endfor %}
-    </ul>
+        <h2>Add a connection</h2>
+        <ul>
+            {% for provider_key in oauth_provider_keys %}
+            <li>
+                {{ provider_key}}
+                <form action="/oauth/{{ provider_key }}/connect/" method="post">
+                    {{ csrf_input }}
+                    <button type="submit">Connect</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
 {% endblock %}
