@@ -23,7 +23,7 @@ def profile(request):
         form = ProfileInfoForm(initial={'first_name': request.user.first_name})
 
     render_data = {
-        "user": request.user,
+        "user": request.user
     }
 
     return render(request, "cafe/profile/profile.jinja", render_data)

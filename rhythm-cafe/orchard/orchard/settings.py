@@ -94,7 +94,7 @@ OAUTH_LOGIN_PROVIDERS = {
         "kwargs": {
             "client_id": environ["DISCORD_CLIENT_ID"],
             "client_secret": environ["DISCORD_CLIENT_SECRET"],
-            "scope": "email"
+            "scope": "identify email"
             # "scope" is optional, defaults to ""
 
             # You can add other fields if you have additional kwargs in your class __init__
