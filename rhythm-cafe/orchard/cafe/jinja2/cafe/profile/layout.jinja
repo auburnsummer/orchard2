@@ -11,19 +11,8 @@
         <div class="prof_sidebar">
             <div class="prof_sidebar-header">
                 <h1>Profile</h1>
-                <sl-icon-button name="chevron-left">
+                <sl-icon-button name="chevron-left" href="/">
                     Back
-                    <script>
-                        // If they got here via us, go back.
-                        // but if there's no history, they could have gotten here directly.
-                        me().on('click', async ev => {
-                            if (document.referrer && (new URL(document.referrer)).host === window.location.host) {
-                                history.back();
-                            } else {
-                                window.location = '/'
-                            }
-                        });
-                    </script>
                 </sl-icon-button>
             </div>
             <nav class="prof_sidebar-nav">

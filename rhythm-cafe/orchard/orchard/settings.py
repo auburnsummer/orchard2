@@ -30,7 +30,10 @@ SECRET_KEY = 'django-insecure-&4yba!29&k9c_2zk)g&+)lsh_bydh#8aliyn1g!n-&@l7irq&^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+  'localhost',
+  '127.0.0.1',
+]
 
 LOGOUT_REDIRECT_URL = "/"
 LOGIN_URL = "/"
@@ -95,12 +98,6 @@ OAUTH_LOGIN_PROVIDERS = {
             "client_id": environ["DISCORD_CLIENT_ID"],
             "client_secret": environ["DISCORD_CLIENT_SECRET"],
             "scope": "identify email"
-            # "scope" is optional, defaults to ""
-
-            # You can add other fields if you have additional kwargs in your class __init__
-            # def __init__(self, *args, custom_arg="default", **kwargs):
-            #     self.custom_arg = custom_arg
-            #     super().__init__(*args, **kwargs)
         },
     },
 }

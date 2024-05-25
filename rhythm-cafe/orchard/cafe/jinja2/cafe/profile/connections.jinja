@@ -24,12 +24,12 @@
                                 <p><strong>Discord ID: </strong><span>{{ data['id'] }}</span></p>
                             </li>
                         </ul>
-                        {% if connection.can_be_disconnected %}
-                        <form action="/oauth/{{ connection.provider_key }}/disconnect/" method="post" class="profconnections_disconnect">
-                            {{ csrf_input }}
-                            <input type="hidden" name="provider_user_id" value="{{ connection.provider_user_id }}">
-                            <sl-button type="submit">Disconnect</sl-button>
-                        </form>
+                        {% if connection.can_be_disconnected() %}
+                            <form action="{{ url('oauthlogin:disconnect', args=[connection.provider_key]) }}" method="post" class="profconnections_disconnect">
+                                {{ csrf_input }}
+                                <input type="hidden" name="provider_user_id" value="{{ connection.provider_user_id }}">
+                                <sl-button type="submit">Disconnect</sl-button>
+                            </form>
                         {% endif %}
                     {% endwith %}
                 </sl-details>
@@ -38,13 +38,12 @@
         </ul>
 
         <h2>Add a connection</h2>
-        <ul>
+        <ul class="profconnections_connection-add">
             {% for provider_key in oauth_provider_keys %}
-            <li>
-                {{ provider_key}}
+            <li class="">
                 <form action="/oauth/{{ provider_key }}/connect/" method="post">
                     {{ csrf_input }}
-                    <button type="submit">Connect</button>
+                    <sl-button type="submit">Connect with {{ provider_key.title() }}</sl-button>
                 </form>
             </li>
             {% endfor %}

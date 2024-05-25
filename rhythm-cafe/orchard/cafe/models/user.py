@@ -11,11 +11,12 @@ class CafeUserManager(UserManager):
         """
         For compatability with other parts of the django ecosystem, we do some trickery here.
 
-        Orchard always uses opaque usernames. The actual "name" of the user is first_name. If
+        Orchard always uses opaque usernames. The actual "name" of the user is first_name. (we don't
+        render last_name anywhere.) If
         username is given, and first_name is not, we make the given username the first_name and
         generate a new opaque username.
 
-        If display_name is given, we assume it's code that is aware of our system, and leave it as-is.
+        If first_name is given, we assume it's code that is aware of our system, and leave it as-is.
         """
         if extra_fields.get("first_name") is None:        
             extra_fields["first_name"] = username

@@ -5,6 +5,9 @@ from oauthlogin.providers import OAuthProvider, OAuthToken, OAuthUser
 
 from functools import cache
 
+class DiscordUserNotVerified(Exception):
+    pass
+
 @cache
 def get_discord_user_from_oauth(bearer_token: str):
     response = httpx.get(
@@ -47,9 +50,14 @@ class DiscordOAuthProvider(OAuthProvider):
     def get_oauth_user(self, *, oauth_token):
         data = get_discord_user_from_oauth(oauth_token.access_token)
 
+        #if True:
+        #    raise DiscordUserNotVerified("User needs to have a verified email")
+        
+        display_name = data["global_name"] if "global_name" in data.keys() else data["username"]
+
         return OAuthUser(
             id=data["id"],
-            username=data["username"],
+            username=display_name,  # doesn't need to be unique
             # TODO: check what happens if email is not verified
             email=data["email"],
         )

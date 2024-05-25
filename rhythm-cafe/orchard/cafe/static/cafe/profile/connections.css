@@ -47,3 +47,13 @@
 .profconnections_disconnect {
     padding-top: 1.5rem;
 }
+
+.profconnections_connection-add {
+    padding: 0;
+    list-style: none;
+
+}
+
+.profconnections_connection-add > li {
+    list-style-type: none;
+}

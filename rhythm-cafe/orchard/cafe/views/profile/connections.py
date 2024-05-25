@@ -22,7 +22,6 @@ def connections(request):
     connection_map = { connection.provider_user_id: get_discord_user_from_connection(connection) for connection in disc_connections}
 
     render_data = {
-        "user": request.user,
         "oauth_provider_keys": get_provider_keys(),
         "connection_map": connection_map
     }
