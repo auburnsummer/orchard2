@@ -41,6 +41,7 @@ class DiscordOAuthProvider(OAuthProvider):
         )
         response.raise_for_status()
         data = response.json()
+        print(data)
         return OAuthToken(
             access_token=data["access_token"],
             refresh_token=data["refresh_token"],
@@ -49,12 +50,16 @@ class DiscordOAuthProvider(OAuthProvider):
 
     def get_oauth_user(self, *, oauth_token):
         data = get_discord_user_from_oauth(oauth_token.access_token)
+
+        # from testing, Discord seems to block the oauth on their end if the user is not verified.
+        # but we'll check ourselves to be safe.
+        if not data['verified']:
+           raise DiscordUserNotVerified("User needs to have a verified email")
         
         display_name = data["global_name"] if "global_name" in data.keys() else data["username"]
 
         return OAuthUser(
             id=data["id"],
             username=display_name,  # doesn't need to be unique
-            # TODO: check what happens if email is not verified
             email=data["email"],
         )
