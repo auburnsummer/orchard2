@@ -18,6 +18,9 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 
+handler404 = "cafe.views.errors.notfound"
+handler500 = "cafe.views.errors.servererror"
+
 urlpatterns = [
     path('cafe_admin/', admin.site.urls),
     path("oauth/", include("oauthlogin.urls")),

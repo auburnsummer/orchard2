@@ -1,0 +1,11 @@
+{% extends "cafe/base.jinja" %}
+{% block title %}Server Error{% endblock %}
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ static('cafe/header.css') }}" />
+{% endblock %}
+{% block body %}
+    {% include 'cafe/header.jinja' %}
+    <h1>Internal Server Error</h1>
+    <p>{{ error_message }}</p>
+{% endblock %}
