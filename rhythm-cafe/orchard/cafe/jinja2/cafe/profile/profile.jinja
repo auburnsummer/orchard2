@@ -14,34 +14,4 @@
         <div class="procinfo_spacer"></div>
         <p class="profinfo_userid">User id: {{ user.username }}</p>
     </div>
-
-
-    {# <h2>Existing connections</h2>
-    <ul>
-        {% for connection in request.user.oauth_connections.all() %}
-        <li>
-            {{ connection.provider_key }} [ID: {{ connection.provider_user_id }}]
-            {% if connection.can_be_disconnected %}
-            <form action="/oauth/{{ connection.provider_key }}/disconnect/" method="post">
-                {{ csrf_input }}
-                <input type="hidden" name="provider_user_id" value="{{ connection.provider_user_id }}">
-                <button type="submit">Disconnect</button>
-            </form>
-            {% endif %}
-        </li>
-        {% endfor %}
-    </ul>
-
-    <h2>Add a connection</h2>
-    <ul>
-        {% for provider_key in oauth_provider_keys %}
-        <li>
-            {{ provider_key}}
-            <form action="/oauth/{{ provider_key }}/connect/" method="post">
-                {{ csrf_input }}
-                <button type="submit">Connect</button>
-            </form>
-        </li>
-        {% endfor %}
-    </ul> #}
 {% endblock %}
