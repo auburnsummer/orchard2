@@ -30,9 +30,16 @@ SECRET_KEY = 'django-insecure-&4yba!29&k9c_2zk)g&+)lsh_bydh#8aliyn1g!n-&@l7irq&^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+environ['HTTPS'] = "on"
+
 ALLOWED_HOSTS = [
   'localhost',
   '127.0.0.1',
+  'seal-epic-luckily.ngrok-free.app'
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://seal-epic-luckily.ngrok-free.app'
 ]
 
 LOGOUT_REDIRECT_URL = "/"
@@ -101,6 +108,8 @@ OAUTH_LOGIN_PROVIDERS = {
         },
     },
 }
+
+DISCORD_PUBLIC_KEY = environ["DISCORD_PUBLIC_KEY"]
 
 
 WSGI_APPLICATION = 'orchard.wsgi.application'
