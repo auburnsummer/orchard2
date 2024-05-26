@@ -28,6 +28,7 @@
                             <form action="{{ url('oauthlogin:disconnect', args=[connection.provider_key]) }}" method="post" class="profconnections_disconnect">
                                 {{ csrf_input }}
                                 <input type="hidden" name="provider_user_id" value="{{ connection.provider_user_id }}">
+                                <input type="hidden" name="next" value="{{ url('cafe:connections') }}">
                                 <sl-button type="submit">Disconnect</sl-button>
                             </form>
                         {% endif %}
@@ -43,6 +44,7 @@
             <li class="">
                 <form action="/oauth/{{ provider_key }}/connect/" method="post">
                     {{ csrf_input }}
+                    <input type="hidden" name="next" value="{{ url('cafe:connections') }}">
                     <sl-button type="submit">Connect with {{ provider_key.title() }}</sl-button>
                 </form>
             </li>
