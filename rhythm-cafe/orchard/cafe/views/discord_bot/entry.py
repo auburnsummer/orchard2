@@ -1,5 +1,6 @@
 import json
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 from cryptography.exceptions import InvalidSignature
 
@@ -10,6 +11,7 @@ verify_key = Ed25519PublicKey.from_public_bytes(bytes.fromhex(DISCORD_PUBLIC_KEY
 class HttpResponseUnauthorized(HttpResponse):
     status_code = 401
 
+@csrf_exempt
 def entry(request):
     # check the discord headers.
     headers = request.headers
@@ -27,12 +29,12 @@ def entry(request):
     except InvalidSignature:
         return HttpResponseUnauthorized('Signature is incorrect.')
     
-    data = json.loads()
-    # if data['type'] == 0:
-    #     return JsonResponse({
-    #         "type": 0
-    #     })
+    data = json.loads(payload)
 
-    return JsonResponse({
-        "type": 0
-    })
+    # handle ping.
+    if data['type'] == 1:
+        return JsonResponse({
+            "type": 1
+        })
+    
+    return HttpResponseNotFound('Nothing found for this discord request.')
