@@ -1,9 +1,5 @@
 {% extends "cafe/base.jinja" %}
 {% block title %}Page Not Found{% endblock %}
-{% block head %}
-    {{ super() }}
-    <link rel="stylesheet" href="{{ static('cafe/header.css') }}" />
-{% endblock %}
 {% block body %}
     {% include 'cafe/header.jinja' %}
     <h1>404 Not Found</h1>

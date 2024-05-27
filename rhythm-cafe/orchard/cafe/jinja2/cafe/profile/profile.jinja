@@ -1,6 +1,6 @@
+{% include "cafe/shoelace/sl-input.jinja" %}
 {% extends "cafe/profile/layout.jinja" %}
-{% block head %}
-    {{ super() }}
+{% block cssslot_profile_content %}
     <link rel="stylesheet" href="{{ static('cafe/profile/profile.css') }}" />
 {% endblock %}
 {% block content %}

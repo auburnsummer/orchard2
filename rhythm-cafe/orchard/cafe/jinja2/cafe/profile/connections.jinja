@@ -1,6 +1,8 @@
+{% include "cafe/shoelace/sl-details.jinja" %}
+{% include "cafe/shoelace/sl-button.jinja" %}
+{% include "cafe/shoelace/sl-icon.jinja" %}
 {% extends "cafe/profile/layout.jinja" %}
-{% block head %}
-    {{ super() }}
+{% block cssslot_profile_content %}
     <link rel="stylesheet" href="{{ static('cafe/profile/connections.css') }}" />
 {% endblock %}
 {% block content %}

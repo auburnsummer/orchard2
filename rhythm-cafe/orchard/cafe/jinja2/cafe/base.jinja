@@ -2,45 +2,33 @@
 <!DOCTYPE html>
 <html>
     <head>
-        {% block head %}
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <link rel="stylesheet" href="{{ static('vendors/shoelace-light.css') }}" />
-            <link rel="stylesheet" href="{{ static('cafe/style.css') }}" />
-            <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.1/cdn/shoelace-autoloader.js"></script>
-            <script src="{{ static('vendors/htmx.js') }}"></script>
-            <script src="{{ static('vendors/htmx.ext.shoelace.js') }}"></script>
-            <script src="{{ static('vendors/surreal.js') }}"></script>
-            <title>{% block title %}{% endblock %} - Rhythm Café</title>
-            <style>
-            /* https://www.joshwcomeau.com/css/custom-css-reset */
-            *, *::before, *::after {
-            box-sizing: border-box;
-            }
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{{ static('vendors/reset.css') }}" />
+        <link rel="stylesheet" href="{{ static('vendors/shoelace-light.css') }}" />
+        <link rel="stylesheet" href="{{ static('cafe/style.css') }}" />
 
-            * {
-            margin: 0;
-            }
+        {# slots
+        We have includes (like the header, shoelace components, etc.) that fill in these slots.
 
-            body {
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-            }
+        This is so that they are only included once.
+        #}
+        {% block cssslot_header %}{% endblock %}
+        {% block cssslot_page %}{% endblock %}
 
-            img, picture, video, canvas, svg {
-            display: block;
-            max-width: 100%;
-            }
+        {% block jsslot_sl_button %} {% endblock%}
+        {% block jsslot_sl_dropdown %} {% endblock %}
+        {% block jsslot_sl_menu %} {% endblock %}
+        {% block jsslot_sl_input %} {% endblock %}
+        {% block jsslot_sl_icon %} {% endblock %}
+        {% block jsslot_sl_icon_button %} {% endblock %}
+        {% block jsslot_sl_details %} {% endblock %}
 
-            input, button, textarea, select {
-            font: inherit;
-            }
+        <script src="{{ static('vendors/htmx.js') }}"></script>
+        <script src="{{ static('vendors/htmx.ext.shoelace.js') }}"></script>
+        <script src="{{ static('vendors/surreal.js') }}"></script>
 
-            p, h1, h2, h3, h4, h5, h6 {
-            overflow-wrap: break-word;
-            }
-            </style>
-        {% endblock %}
+        <title>{% block title %}{% endblock %} - Rhythm Café</title>
     </head>
     <body hx-ext="shoelace">
         {% block body %}
