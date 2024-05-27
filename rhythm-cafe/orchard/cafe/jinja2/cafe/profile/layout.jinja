@@ -1,9 +1,11 @@
+{% include "cafe/shoelace/sl-icon-button.jinja" %}
 {% extends "cafe/base.jinja" %}
 {% block title %} {{ user.get_short_name() }} Profile {% endblock %}
-{% block head %}
-    {{ super() }}
-    <link rel="stylesheet" href="{{ static('cafe/header.css') }}" />
+{% block cssslot_page %} 
     <link rel="stylesheet" href="{{ static('cafe/profile/layout.css') }}" />
+    {% block cssslot_profile_content%}
+
+    {% endblock %}
 {% endblock %}
 {% block body %}
     {% include 'cafe/header.jinja' %}

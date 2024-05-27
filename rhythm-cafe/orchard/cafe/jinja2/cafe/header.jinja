@@ -1,3 +1,11 @@
+{% include 'cafe/shoelace/sl-button.jinja' %}
+{% include 'cafe/shoelace/sl-dropdown.jinja' %}
+{% include 'cafe/shoelace/sl-menu.jinja' %}
+
+{% block cssslot_header %}
+<link rel="stylesheet" href="{{ static('cafe/header.css') }}" /> 
+{% endblock %}
+
 <div class="he">
     {# logo #}
     <div title="aaa">
