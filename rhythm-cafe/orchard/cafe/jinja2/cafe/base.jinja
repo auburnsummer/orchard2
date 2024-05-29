@@ -5,7 +5,14 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="{{ static('vendors/reset.css') }}" />
-        <link rel="stylesheet" href="{{ static('vendors/shoelace-light.css') }}" />
+        {% if user.profile.theme_pref == 'dark' %}
+            <link
+                rel="stylesheet" href="{{ static('vendors/shoelace-dark.css') }}"
+                onload="document.documentElement.classList.add('sl-theme-dark');"
+            />
+        {% else %}
+            <link rel="stylesheet" href="{{ static('vendors/shoelace-light.css') }}" />
+        {% endif %}
         <link rel="stylesheet" href="{{ static('cafe/style.css') }}" />
 
         {# slots
@@ -23,6 +30,7 @@
         {% block jsslot_sl_icon %} {% endblock %}
         {% block jsslot_sl_icon_button %} {% endblock %}
         {% block jsslot_sl_details %} {% endblock %}
+        {% block jsslot_sl_select %} {% endblock %}
 
         <script src="{{ static('vendors/htmx.js') }}"></script>
         <script src="{{ static('vendors/htmx.ext.shoelace.js') }}"></script>

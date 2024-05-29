@@ -69,6 +69,7 @@
 
 .prof_content {
     position: relative;
+    padding-left: 1.5rem;
     padding-top: 1.5rem;
     width: calc(100% - 16.5rem);
     min-width: 300px;

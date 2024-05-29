@@ -172,3 +172,6 @@ src/frontend_old*
 tmp/
 
 NEXT.txt
+
+
+.DS_Store
