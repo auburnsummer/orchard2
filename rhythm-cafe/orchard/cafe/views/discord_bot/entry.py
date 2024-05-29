@@ -6,6 +6,8 @@ from cryptography.exceptions import InvalidSignature
 
 from orchard.settings import DISCORD_PUBLIC_KEY
 
+from .handlers import HANDLERS
+
 verify_key = Ed25519PublicKey.from_public_bytes(bytes.fromhex(DISCORD_PUBLIC_KEY))
 
 class HttpResponseUnauthorized(HttpResponse):
@@ -37,4 +39,10 @@ def entry(request):
             "type": 1
         })
     
-    return HttpResponseNotFound('Nothing found for this discord request.')
+    # commands.
+    if data['type'] == 2:
+        command_name = data['data']['name']
+        if command_name in HANDLERS:
+            return HANDLERS[command_name]()
+        
+    return HttpResponseNotFound('Not sure how to handle this type.')
