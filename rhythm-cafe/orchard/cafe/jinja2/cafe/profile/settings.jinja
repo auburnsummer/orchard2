@@ -1,9 +1,18 @@
+{% include "cafe/shoelace/sl-select.jinja" %}
+{% include "cafe/shoelace/sl-button.jinja" %}
 {% extends "cafe/profile/layout.jinja" %}
-{# {% block cssslot_profile_content %}
-    <link rel="stylesheet" href="{{ static('cafe/profile/profile.css') }}" />
-{% endblock %} #}
+{% block cssslot_profile_content %}
+    <link rel="stylesheet" href="{{ static('cafe/profile/settings.css') }}" />
+{% endblock %}
 {% block content %}
     <div class="profsettings">
-        <p>settings</p>
+        <form class="profsettings_settings" action="/accounts/profile/settings/" method="post">
+            {{ csrf_input }}
+            <sl-select class="profsettings_theme" label="Theme" value="{{ user.profile.theme_pref }}" name="theme_pref">
+                <sl-option value="light">Light</sl-option>
+                <sl-option value="dark">Dark</sl-option>
+            </sl-select>
+            <sl-button class="profsettings_submit" type="submit">Change settings</sl-button>
+        </form>
     </div>
 {% endblock %}
