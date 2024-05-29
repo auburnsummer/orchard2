@@ -98,12 +98,15 @@ TEMPLATES = [
     },
 ]
 
+DISCORD_CLIENT_ID = environ["DISCORD_CLIENT_ID"]
+DISCORD_CLIENT_SECRET = environ["DISCORD_CLIENT_SECRET"]
+
 OAUTH_LOGIN_PROVIDERS = {
     "discord": {
         "class": "cafe.libs.discord_oauth.DiscordOAuthProvider",
         "kwargs": {
-            "client_id": environ["DISCORD_CLIENT_ID"],
-            "client_secret": environ["DISCORD_CLIENT_SECRET"],
+            "client_id": DISCORD_CLIENT_ID,
+            "client_secret": DISCORD_CLIENT_SECRET,
             "scope": "identify email"
         },
     },
