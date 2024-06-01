@@ -11,7 +11,8 @@ COMMANDS = [
     {
         "name": "version",
         "type": 1,
-        "description": "Show the version of the Rhythm Cafe bot"
+        "description": "Show the version of the Rhythm Cafe bot",
+        "default_member_permissions": "0"
     }
 ]
 
