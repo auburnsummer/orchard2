@@ -21,23 +21,30 @@
                 <ul>
                     <li>
                         <a
-                            href="/accounts/profile/"
+                            href="{{ url('cafe:profile') }}"
                         >
                             Info
                         </a>
                     </li>
                     <li>
                         <a
-                            href="/accounts/profile/connections"
+                            href="{{ url('cafe:connections') }}"
                         >
                             Connections
                         </a>
                     </li>
                     <li>
                         <a
-                            href="/accounts/profile/settings/"
+                            href="{{ url('cafe:settings') }}"
                         >
                             Settings
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="{{ url('cafe:clubs') }}"
+                        >
+                            Groups
                         </a>
                     </li>
                     <script>

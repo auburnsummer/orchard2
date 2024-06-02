@@ -5,7 +5,7 @@
 {% endblock %}
 {% block content %}
     <div class="profinfo">
-        <form action="/accounts/profile/" method="post" class="profinfo_changename">
+        <form action="{{ url('cafe:profile') }}" method="post" class="profinfo_changename">
             {{ csrf_input }}
             <sl-input name="first_name" label="Name" required value="{{ user.first_name }}">
             </sl-input>

@@ -38,6 +38,9 @@ class ClubMembership(models.Model):
         'member': 'Member'
     }, max_length=10)
 
+    def __str__(self):
+        return f"{self.user} -> {self.club} [{self.role}]"
+
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['user', 'club'], name='unique_user_and_club')

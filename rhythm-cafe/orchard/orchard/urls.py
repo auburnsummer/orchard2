@@ -23,7 +23,8 @@ handler500 = "cafe.views.errors.servererror"
 
 urlpatterns = [
     path('cafe_admin/', admin.site.urls),
+    path('hijack/', include('hijack.urls')),
     path("oauth/", include("oauthlogin.urls")),
-    path("accounts/logout/", auth_views.LogoutView.as_view()),
+    path("accounts/logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("", include("cafe.urls")),
 ]

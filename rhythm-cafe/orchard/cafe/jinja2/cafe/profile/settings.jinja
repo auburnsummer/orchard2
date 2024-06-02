@@ -6,7 +6,7 @@
 {% endblock %}
 {% block content %}
     <div class="profsettings">
-        <form class="profsettings_settings" action="/accounts/profile/settings/" method="post">
+        <form class="profsettings_settings" action="{{ url('cafe:settings') }}" method="post">
             {{ csrf_input }}
             <sl-select class="profsettings_theme" label="Theme" value="{{ user.profile.theme_pref }}" name="theme_pref">
                 <sl-option value="light">Light</sl-option>

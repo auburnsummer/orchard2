@@ -25,7 +25,7 @@
 
     {# log in section #}
     {% if user.is_authenticated %}
-        <form method="post" id="logoutForm" action="/accounts/logout/">
+        <form method="post" id="logoutForm" action="{{ url('logout') }}">
             {{ csrf_input }}
         </form>
         <sl-dropdown placement="bottom-right">
