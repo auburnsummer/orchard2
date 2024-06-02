@@ -20,7 +20,8 @@ class IDType(StrEnum):
     """
     Unique prefixes for ids. 
     """
-    PUBLISHER = "p_"  # a publisher
+    PUBLISHER = "p_"  # A publisher. Unused but required for backwards compatability with migrations.
+    CLUB = "c_"  # a club
     USER = "u_"  # a user
     PREFILL = "prefill_"  # a prefill result / also used to make sure an add token is part of the same flow.
     RD_LEVEL = "rd_"  # a Rhythm Doctor level.
