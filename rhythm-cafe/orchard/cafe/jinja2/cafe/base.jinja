@@ -32,13 +32,11 @@
         {% block jsslot_sl_details %} {% endblock %}
         {% block jsslot_sl_select %} {% endblock %}
 
-        <script src="{{ static('vendors/htmx.js') }}"></script>
-        <script src="{{ static('vendors/htmx.ext.shoelace.js') }}"></script>
         <script src="{{ static('vendors/surreal.js') }}"></script>
 
         <title>{% block title %}{% endblock %} - Rhythm Café</title>
     </head>
-    <body hx-ext="shoelace">
+    <body>
         {% block body %}
 
         {% endblock %}
