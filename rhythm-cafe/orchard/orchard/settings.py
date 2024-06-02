@@ -39,7 +39,8 @@ ALLOWED_HOSTS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://seal-epic-luckily.ngrok-free.app'
+    'https://seal-epic-luckily.ngrok-free.app',
+    'http://127.0.0.1:8000'
 ]
 
 LOGOUT_REDIRECT_URL = "/"
