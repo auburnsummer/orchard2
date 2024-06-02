@@ -1,0 +1,23 @@
+{% include "cafe/shoelace/sl-select.jinja" %}
+{% include "cafe/shoelace/sl-button.jinja" %}
+{% extends "cafe/profile/layout.jinja" %}
+{% block cssslot_profile_content %}
+    <link rel="stylesheet" href="{{ static('cafe/profile/clubs.css') }}" />
+{% endblock %}
+{% block content %}
+    <div class="profclubs">
+        <h2>Groups</h2>
+        {% for role in ["owner", "admin", "member"] %}
+            {% with role_memberships = memberships[role] %}
+                {% if role_memberships %}
+                    <h3>{{ role | title }}</h3>
+                    {% for membership in role_memberships %}
+                        {% with club = membership.club %}
+                            <p>{{ club.name }}</p>
+                        {% endwith %}
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        {% endfor %}
+    </div>
+{% endblock %}
