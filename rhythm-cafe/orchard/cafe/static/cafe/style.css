@@ -17,3 +17,18 @@ body {
     visibility: hidden;
 }
   
+a {
+    color: var(--sl-color-primary-500);
+}
+
+a:visited {
+    color: var(--sl-color-purple-500);
+}
+
+a:hover {
+    color: var(--sl-color-primary-600);
+}
+
+a:active {
+    color: var(--sl-color-primary-600);
+}

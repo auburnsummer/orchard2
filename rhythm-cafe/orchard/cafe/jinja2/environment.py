@@ -5,13 +5,18 @@ from django.urls import reverse
 
 from jinja2 import Environment
 
+import datetime
+
+from functools import partial
+
 
 def environment(**options):
     env = Environment(**options)
     env.globals.update(
         {
             "static": static,
-            "url": reverse
+            "url": reverse,
+            "now": partial(datetime.datetime.now, datetime.UTC)
         }
     )
     return env

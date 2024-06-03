@@ -1,23 +1,31 @@
-{% include "cafe/shoelace/sl-select.jinja" %}
 {% include "cafe/shoelace/sl-button.jinja" %}
 {% extends "cafe/profile/layout.jinja" %}
 {% block cssslot_profile_content %}
-    <link rel="stylesheet" href="{{ static('cafe/profile/clubs.css') }}" />
+    <link rel="stylesheet" href="{{ static('cafe/profile/clubs.css') }}?timestamp={{ now() }}" />
 {% endblock %}
 {% block content %}
     <div class="profclubs">
-        <h2>Groups</h2>
-        {% for role in ["owner", "admin", "member"] %}
-            {% with role_memberships = memberships[role] %}
-                {% if role_memberships %}
-                    <h3>{{ role | title }}</h3>
-                    {% for membership in role_memberships %}
-                        {% with club = membership.club %}
-                            <p>{{ club.name }}</p>
-                        {% endwith %}
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-        {% endfor %}
+        <h2>Your groups</h2>
+        <div class="profclubs_roles">
+            {% for role in ["owner", "admin", "member"] %}
+                {% with role_memberships = memberships[role] %}
+                    {% if role_memberships %}
+                        <div class="profclubs_role">
+                            <h3>{{ role | title }}</h3>
+                            <ul class="profclubs_clublist">
+                            {% for membership in role_memberships %}
+                                {% with club = membership.club %}
+                                    <li>
+                                        <a href="/groups/{{ club.id }}">{{ club.name }}</a>
+                                    </li>
+                                {% endwith %}
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            {% endfor %}
+        </div>
+        <sl-button href="/groups/create" class="profclubs_createbutton">Create group</sl-button>
     </div>
 {% endblock %}
