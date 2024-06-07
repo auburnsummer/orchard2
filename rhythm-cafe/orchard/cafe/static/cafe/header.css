@@ -1,4 +1,4 @@
-.he {
+.header {
     position: sticky;
     top: 0;
     z-index: var(--sl-z-index-drawer);
@@ -10,7 +10,7 @@
 	align-items: center;
 }
 
-.he_logo {
+.header_logo {
 	display: block;
 	height: 3.4rem;
 	margin-top: 0.4rem;
@@ -18,6 +18,6 @@
 	opacity: 70%;
 }
 
-.he_spacer {
+.header_spacer {
     flex-grow: 1;
 }
