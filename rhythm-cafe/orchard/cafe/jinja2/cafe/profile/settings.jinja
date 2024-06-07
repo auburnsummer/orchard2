@@ -1,9 +1,4 @@
-{% include "cafe/shoelace/sl-select.jinja" %}
-{% include "cafe/shoelace/sl-button.jinja" %}
 {% extends "cafe/profile/layout.jinja" %}
-{% block cssslot_profile_content %}
-    <link rel="stylesheet" href="{{ static('cafe/profile/settings.css') }}" />
-{% endblock %}
 {% block content %}
     <div class="profsettings">
         <form class="profsettings_settings" action="{{ url('cafe:settings') }}" method="post">

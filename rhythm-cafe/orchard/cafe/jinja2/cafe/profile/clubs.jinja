@@ -1,8 +1,4 @@
-{% include "cafe/shoelace/sl-button.jinja" %}
 {% extends "cafe/profile/layout.jinja" %}
-{% block cssslot_profile_content %}
-    <link rel="stylesheet" href="{{ static('cafe/profile/clubs.css') }}?timestamp={{ now() }}" />
-{% endblock %}
 {% block content %}
     <div class="profclubs">
         <h2>Your groups</h2>

@@ -1,12 +1,5 @@
-{% include "cafe/shoelace/sl-icon-button.jinja" %}
 {% extends "cafe/base.jinja" %}
 {% block title %} {{ user.get_short_name() }} Profile {% endblock %}
-{% block cssslot_page %} 
-    <link rel="stylesheet" href="{{ static('cafe/profile/layout.css') }}" />
-    {% block cssslot_profile_content%}
-
-    {% endblock %}
-{% endblock %}
 {% block body %}
     {% include 'cafe/header.jinja' %}
     <div class="prof">
@@ -18,43 +11,22 @@
                 </sl-icon-button>
             </div>
             <nav class="prof_sidebar-nav">
-                <ul>
-                    <li>
-                        <a
-                            href="{{ url('cafe:profile') }}"
-                        >
-                            Info
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            href="{{ url('cafe:connections') }}"
-                        >
-                            Connections
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            href="{{ url('cafe:settings') }}"
-                        >
-                            Settings
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            href="{{ url('cafe:clubs') }}"
-                        >
-                            Groups
-                        </a>
-                    </li>
-                    <script>
-                        any("a", me())
-                            .run(el => {
-                                if (el.href === location.href) {
-                                    el.classList.add("active-link");
-                                }
-                            });
-                    </script>
+                <ul x-data>
+                    {% for name, href in [
+                        ["Info", url('cafe:profile')],
+                        ["Connections", url('cafe:connections')],
+                        ["Settings", url('cafe:settings')],
+                        ["Groups", url('cafe:clubs')]
+                    ]%}
+                        <li>
+                            <a
+                                :class = "'{{ href }}' === window.location.pathname && 'active-link'"
+                                href="{{ href }}"
+                            >
+                                {{name}}
+                            </a>
+                        </li>
+                    {% endfor %}
                 </ul>
             </nav>
         </div>
