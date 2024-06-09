@@ -8,7 +8,7 @@ from jinja2 import Environment
 import datetime
 
 from functools import partial
-
+from compressor.contrib.jinja2ext import CompressorExtension
 
 def environment(**options):
     env = Environment(**options)
@@ -19,4 +19,5 @@ def environment(**options):
             "now": partial(datetime.datetime.now, datetime.UTC)
         }
     )
+    env.add_extension(CompressorExtension)
     return env

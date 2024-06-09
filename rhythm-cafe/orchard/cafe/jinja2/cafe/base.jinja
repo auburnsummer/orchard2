@@ -38,22 +38,28 @@
         {# todo: vendor this dependency #}
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-        {# other css #}
-        {% for css_file in [
-            'cafe/style.css',
-            'cafe/header.css',
-            'cafe/profile/clubs.css',
-            'cafe/profile/connections.css',
-            'cafe/profile/layout.css',
-            'cafe/profile/profile.css',
-            'cafe/profile/settings.css'
-        ]%}
-            <link rel="stylesheet" href="{{ static(css_file) }}" />
-        {% endfor %}
+            {% for css_file in [
+                'cafe/style.css',
+                'cafe/header.css',
+                'cafe/clubs/create_club.css',
+                'cafe/common/patterns.css',
+                'cafe/layouts/with_header.css',
+                'cafe/layouts/with_header_and_sidebar.css',
+                'cafe/profile/clubs.css',
+                'cafe/profile/connections.css',
+                'cafe/profile/layout.css',
+                'cafe/profile/profile.css',
+                'cafe/profile/settings.css'
+            ]%}
+                <link rel="stylesheet" href="{{ static(css_file) }}" />
+            {% endfor %}
 
         <title>{% block title %}{% endblock %} - Rhythm Café</title>
     </head>
     <body>
+        <script>
+        0; //prevent Firefox FOUC
+        </script>
         {% block body %}
 
         {% endblock %}
