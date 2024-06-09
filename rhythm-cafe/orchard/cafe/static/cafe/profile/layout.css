@@ -1,17 +1,15 @@
 .prof {
     display: flex;
-    height: calc(100vh - 2.75rem);
+    flex-grow: 1;
+    height: 100%;
 }
 
 .prof_sidebar {
     display: flex;
-    width: 16rem;
     flex-direction: column;
-    position: sticky;
-    top: 0px;
     padding-top: 1rem;
-    overflow-y: auto;
     border-right: 1px solid  var(--sl-color-neutral-200);
+    height: 100%;
 }
 
 .prof_sidebar-header {
@@ -71,8 +69,8 @@
     position: relative;
     padding-left: 1.5rem;
     padding-top: 1.5rem;
-    width: calc(100% - 16.5rem);
     min-width: 300px;
     display: flex;
     flex-direction: column;
+    height: 100%;
 }

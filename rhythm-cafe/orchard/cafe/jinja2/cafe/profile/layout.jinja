@@ -1,39 +1,39 @@
-{% extends "cafe/base.jinja" %}
+{% extends "cafe/layouts/with_header_and_sidebar.jinja" %}
 {% block title %} {{ user.get_short_name() }} Profile {% endblock %}
-{% block body %}
-    {% include 'cafe/header.jinja' %}
-    <div class="prof">
-        <div class="prof_sidebar">
-            <div class="prof_sidebar-header">
-                <h1>Profile</h1>
-                <sl-icon-button name="chevron-left" href="/">
-                    Back
-                </sl-icon-button>
-            </div>
-            <nav class="prof_sidebar-nav">
-                <ul x-data>
-                    {% for name, href in [
-                        ["Info", url('cafe:profile')],
-                        ["Connections", url('cafe:connections')],
-                        ["Settings", url('cafe:settings')],
-                        ["Groups", url('cafe:clubs')]
-                    ]%}
-                        <li>
-                            <a
-                                :class = "'{{ href }}' === window.location.pathname && 'active-link'"
-                                href="{{ href }}"
-                            >
-                                {{name}}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </nav>
+{% block whas_sidebar_content_slot %}
+    <div class="prof_sidebar">
+        <div class="prof_sidebar-header">
+            <h1>Profile</h1>
+            <sl-icon-button name="chevron-left" href="/">
+                Back
+            </sl-icon-button>
         </div>
-        <div class="prof_content">
-            {% block content %}
+        <nav class="prof_sidebar-nav">
+            <ul x-data>
+                {% for name, href in [
+                    ["Info", url('cafe:profile')],
+                    ["Connections", url('cafe:connections')],
+                    ["Settings", url('cafe:settings')],
+                    ["Groups", url('cafe:clubs')]
+                ]%}
+                    <li>
+                        <a
+                            :class = "'{{ href }}' === window.location.pathname && 'active-link'"
+                            href="{{ href }}"
+                        >
+                            {{name}}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </nav>
+    </div>
 
-            {% endblock %}
-        </div>
+{% endblock %}
+{% block whas_content_slot %}
+    <div class="prof_content">
+        {% block content %}
+
+        {% endblock %}
     </div>
 {% endblock %}

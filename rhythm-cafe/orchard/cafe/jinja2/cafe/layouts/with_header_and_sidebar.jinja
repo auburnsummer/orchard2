@@ -1,0 +1,11 @@
+{% extends "cafe/layouts/with_header.jinja" %}
+{% block header_content_slot %}
+    <div class="with_header_and_sidebar">
+        <div class="whas_sidebar_container">
+            {% block whas_sidebar_content_slot %}{% endblock %}
+        </div>
+        <div class="whas_main_content">
+            {% block whas_content_slot %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

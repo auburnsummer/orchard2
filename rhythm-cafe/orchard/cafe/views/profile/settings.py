@@ -13,7 +13,6 @@ class ProfileUserProfileForm(ModelForm):
 def settings(request):
     if request.method == 'POST':
         form = ProfileUserProfileForm(request.POST)
-        print(form)
         if form.is_valid():
             user_prof = request.user.profile
             user_prof.theme_pref = form.cleaned_data.get("theme_pref")

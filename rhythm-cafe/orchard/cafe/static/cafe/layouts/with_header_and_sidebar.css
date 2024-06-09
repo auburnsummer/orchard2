@@ -1,0 +1,15 @@
+.with_header_and_sidebar {
+    flex-grow: 1;
+    max-height: calc(100vh - 2.75rem);
+    overflow: hidden;
+
+    display: grid;
+    grid-template-columns: 16rem 1fr;
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px; 
+}
+
+.whas_sidebar_container, .whas_main_content {
+    overflow-y: auto;
+}

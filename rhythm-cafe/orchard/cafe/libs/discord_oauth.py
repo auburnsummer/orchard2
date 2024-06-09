@@ -64,3 +64,24 @@ class DiscordOAuthProvider(OAuthProvider):
             username=display_name,  # doesn't need to be unique
             email=data["email"],
         )
+    
+    def refresh_oauth_token(self, *, oauth_token: OAuthToken) -> OAuthToken:
+        response = httpx.post(
+            "https://discord.com/api/oauth2/token",
+            headers={
+                "Accept": "application/json"
+            },
+            data={
+                "grant_type": "refresh_token",
+                "client_id": self.get_client_id(),
+                "client_secret": self.get_client_secret(),
+                "refresh_token": oauth_token.refresh_token
+            }
+        )
+        response.raise_for_status()
+        data = response.json()
+        return OAuthToken(
+            access_token=data["access_token"],
+            refresh_token=data["refresh_token"],
+            access_token_expires_at=timezone.now() + datetime.timedelta(seconds=data["expires_in"])
+        )

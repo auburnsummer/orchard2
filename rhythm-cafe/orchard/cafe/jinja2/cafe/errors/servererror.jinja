@@ -1,7 +1,6 @@
-{% extends "cafe/base.jinja" %}
+{% extends "cafe/layouts/with_header.jinja" %}
 {% block title %}Server Error{% endblock %}
-{% block body %}
-    {% include 'cafe/header.jinja' %}
+{% block header_content_slot %}
     <h1>Internal Server Error</h1>
     <p>{{ error_message }}</p>
 {% endblock %}

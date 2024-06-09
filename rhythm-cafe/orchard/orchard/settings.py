@@ -20,6 +20,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 from os import environ
 
+import uuid
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -48,6 +50,13 @@ LOGIN_URL = "/"
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 
+STATIC_ROOT = environ['STATIC_ROOT'] if 'STATIC_ROOT' in environ else "/tmp/orchard"
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    # other finders..
+    'compressor.finders.CompressorFinder',
+)
 
 # Application definition
 
@@ -63,7 +72,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'oauthlogin',
     'hijack',
-    'hijack.contrib.admin'
+    'hijack.contrib.admin',
+    'compressor'
 ]
 
 MIDDLEWARE = [

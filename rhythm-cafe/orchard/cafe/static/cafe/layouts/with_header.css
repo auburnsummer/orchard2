@@ -1,0 +1,5 @@
+.header_content_slot {
+    min-height: calc(100vh - 2.75rem);
+    display: flex;
+    flex-direction: column;
+}

@@ -1,0 +1,9 @@
+{% extends "cafe/base.jinja" %}
+{% block body %}
+    {% include 'cafe/header.jinja' %}
+    <div class="header_content_slot">
+        {% block header_content_slot %}
+
+        {% endblock %}
+    </div>
+{% endblock %}

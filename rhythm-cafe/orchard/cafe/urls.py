@@ -9,5 +9,6 @@ urlpatterns = [
     path("accounts/profile/settings/", views.profile.settings, name="settings"),
     path("accounts/profile/connections/", views.profile.connections, name="connections"),
     path("accounts/profile/", views.profile.profile, name="profile"),
+    path("groups/create/", views.clubs.create_club, name="create_club"),
     path("", views.index, name="index")
 ]
