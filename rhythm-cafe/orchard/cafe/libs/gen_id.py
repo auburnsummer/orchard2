@@ -10,11 +10,11 @@ from enum import StrEnum
 from nanoid import generate
 
 
-ALPHABET = string.ascii_lowercase + string.digits
+ALPHABET = string.ascii_lowercase
 
 # probably safe https://zelark.github.io/nano-id-cc/
 # ~293 years or 51M IDs needed, in order to have a 1% probability of at least one collision.
-NANOID_LENGTH = 9
+NANOID_LENGTH = 12
 
 class IDType(StrEnum):
     """

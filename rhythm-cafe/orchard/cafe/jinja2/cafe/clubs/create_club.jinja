@@ -1,8 +1,9 @@
 {% extends "cafe/layouts/with_header.jinja" %}
 {% block header_content_slot %}
     <div class="create_club diag_pattern_1">
-        <form class="create_club_form">
-            <sl-input label="Group name" help-text="You can change this at any time."></sl-input>
+        <form class="create_club_form" action="{{ url('cafe:create_club') }}" method="POST">
+            {{ csrf_input }}
+            <sl-input label="Group name" help-text="You can change this at any time." name="name"></sl-input>
             <sl-button type="submit">Create group</sl-button>
         </form>
     </div>
