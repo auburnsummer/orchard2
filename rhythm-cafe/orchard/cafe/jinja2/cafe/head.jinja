@@ -37,12 +37,12 @@
         {# todo: vendor this dependency #}
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-            {% for css_file in [
-                'cafe/style.css',
-                'cafe/common/patterns.css'
-            ]%}
-                <link rel="stylesheet" href="{{ static(css_file) }}" />
-            {% endfor %}
+        {% for css_file in [
+            'cafe/style.css',
+            'cafe/patterns.css'
+        ]%}
+            <link rel="stylesheet" href="{{ static(css_file) }}" />
+        {% endfor %}
 
         <title>{{ title }}</title>
     </head>
