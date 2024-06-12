@@ -1,5 +1,7 @@
-{% extends "cafe/profile/layout.jinja" %}
-{% block content %}
+{% from "cafe/base.jinja" import base %}
+{% from "cafe/profile/layout.jinja" import layout %}
+
+{% set content %}
     <div class="profclubs">
         <h2>Your groups</h2>
         <div class="profclubs_roles">
@@ -24,4 +26,32 @@
         </div>
         <sl-button href="/groups/create" class="profclubs_createbutton">Create group</sl-button>
     </div>
-{% endblock %}
+{% endset %}
+
+{% call base(title="Rhythm Cafe", user=request.user) %}
+    {% call layout(user=request.user, csrf_input=csrf_input) %}
+        {{ content }}
+    {% endcall %}
+{% endcall %}
+
+<style data-hoist="true">
+.profclubs_createbutton {
+    margin-top: 3rem;
+}
+
+.profclubs_roles {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.profclubs_clublist {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-left: 0;
+    padding-top: 0.25rem;
+    list-style: none;
+}
+</style>

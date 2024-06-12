@@ -1,0 +1,33 @@
+{% from "cafe/layouts/layout_with_header.jinja" import layout_with_header as base_layout %}
+
+{% macro layout_dramatic_form(user, csrf_input) %}
+<!-- BEGIN layout_dramatic_form.jinja -->
+{% set _caller = caller %}
+{% call base_layout(user=user, csrf_input=csrf_input) %}
+    <div class="dramatic_form_bg_container diag_pattern_1">
+        <div class="dramatic_form_container">
+            {{ _caller() }}
+        </div>
+    </div>
+{% endcall %}
+
+<style>
+.dramatic_form_bg_container {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dramatic_form_container {
+    padding: 1.5rem;
+    background-color: var(--sl-color-neutral-100);
+    box-shadow: var(--sl-shadow-large);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+}
+</style>
+<!-- END layout_dramatic_form.jinja -->
+{% endmacro %}
