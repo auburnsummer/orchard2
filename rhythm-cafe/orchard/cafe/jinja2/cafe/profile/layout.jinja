@@ -1,39 +1,46 @@
-{% extends "cafe/layouts/with_header_and_sidebar.jinja" %}
-{% block title %} {{ user.get_short_name() }} Profile {% endblock %}
-{% block whas_sidebar_content_slot %}
-    <div class="prof_sidebar">
-        <div class="prof_sidebar-header">
-            <h1>Profile</h1>
-            <sl-icon-button name="chevron-left" href="/">
-                Back
-            </sl-icon-button>
-        </div>
-        <nav class="prof_sidebar-nav">
-            <ul x-data>
-                {% for name, href in [
-                    ["Info", url('cafe:profile')],
-                    ["Connections", url('cafe:connections')],
-                    ["Settings", url('cafe:settings')],
-                    ["Groups", url('cafe:clubs')]
-                ]%}
-                    <li>
-                        <a
-                            :class = "'{{ href }}' === window.location.pathname && 'active-link'"
-                            href="{{ href }}"
-                        >
-                            {{name}}
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </nav>
-    </div>
 
-{% endblock %}
-{% block whas_content_slot %}
-    <div class="prof_content">
-        {% block content %}
+{% from "cafe/layouts/layout_with_header_and_sidebar.jinja" import layout_with_header_and_sidebar as base_layout %}
+{% from "cafe/components/settings_sidebar.jinja" import settings_sidebar %}
 
-        {% endblock %}
-    </div>
-{% endblock %}
+{% macro layout(user, csrf_input) %}
+<!-- BEGIN profile/layout.jinja -->
+{% set _caller = caller %}
+{% call(slot) base_layout(user=user, csrf_input=csrf_input) %}
+    {% if slot == 'sidebar' %}
+        {% call settings_sidebar([
+            ["Info", url('cafe:profile')],
+            ["Connections", url('cafe:connections')],
+            ["Settings", url('cafe:settings')],
+            ["Groups", url('cafe:clubs')]
+        ]) %}
+            <div class="prof_sidebar-header">
+                <h1>Profile</h1>
+                <sl-icon-button name="chevron-left" href="/">
+                    Back
+                </sl-icon-button>
+            </div>
+        {% endcall %}
+    {% elif slot == 'content' %}
+        {{ _caller() }}
+    {% endif %}
+{% endcall %}
+<style data-hoist="true">   
+.prof_sidebar-header {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: start;
+    align-items: center;
+}
+
+.prof_sidebar-header > h1 {
+    margin-left: 0.5rem;
+    font-weight: var(--sl-font-weight-semibold);
+}
+
+.prof_sidebar-header > sl-icon-button {
+    margin-left: 0.5rem;
+    font-size: 1.25rem;
+}
+</style>
+<!-- END profile/layout.jinja -->
+{% endmacro %}
