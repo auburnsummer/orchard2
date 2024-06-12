@@ -1,6 +1,10 @@
-{% extends "cafe/layouts/with_header.jinja" %}
-{% block title %}Server Error{% endblock %}
-{% block header_content_slot %}
-    <h1>Internal Server Error</h1>
-    <p>{{ error_message }}</p>
-{% endblock %}
+{% from "cafe/base.jinja" import base %}
+{% from "cafe/components/header.jinja" import header %}
+{% from "cafe/layouts/layout_with_header.jinja" import layout_with_header as layout %}
+
+{% call base(title="Rhythm Cafe", user=request.user) %}
+    {% call layout(user=request.user, csrf_input=csrf_input) %}
+        <h1>Internal Server Error</h1>
+        <p>{{ error_message }}</p>
+    {% endcall %}
+{% endcall %}
