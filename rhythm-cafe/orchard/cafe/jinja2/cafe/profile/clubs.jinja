@@ -14,7 +14,7 @@
                             {% for membership in role_memberships %}
                                 {% with club = membership.club %}
                                     <li>
-                                        <a href="/groups/{{ club.id }}">{{ club.name }}</a>
+                                        <a href="/groups/{{ club.id }}/settings">{{ club.name }}</a>
                                     </li>
                                 {% endwith %}
                             {% endfor %}
