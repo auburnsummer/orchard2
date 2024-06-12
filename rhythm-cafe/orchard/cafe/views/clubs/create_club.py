@@ -28,6 +28,6 @@ def create_club(request):
             new_club.save()
             current_user_membership.save()
 
-            return HttpResponseRedirect(f"/groups/{new_club.id}")
+            return HttpResponseRedirect(f"/groups/{new_club.id}/settings")
 
     return render(request, "cafe/clubs/create_club.jinja")
