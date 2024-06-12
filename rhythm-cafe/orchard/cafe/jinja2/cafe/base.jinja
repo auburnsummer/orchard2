@@ -1,67 +1,15 @@
-{% set user = request.user %}
+{% macro base(title, user) %}
+{% from "cafe/head.jinja" import head %}
 <!DOCTYPE html>
+<!-- START base.jinja -->
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="{{ static('vendors/reset.css') }}" />
-        {% if user.is_authenticated and user.profile.theme_pref == 'dark' %}
-            <link
-                rel="stylesheet" href="{{ static('vendors/shoelace-dark.css') }}"
-                onload="document.documentElement.classList.add('sl-theme-dark');"
-            />
-        {% else %}
-            <link rel="stylesheet" href="{{ static('vendors/shoelace-light.css') }}" />
-        {% endif %}
-        {#
-            shoelace components
-        #}
-        {% for component_name in [
-            "button",
-            "dropdown",
-            "menu",
-            "menu-item",
-            "input",
-            "icon",
-            "icon-button",
-            "details",
-            "select",
-            "option"]
-        %}
-            <script
-                type="module"
-                src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.1/cdn/components/{{ component_name }}/{{ component_name }}.js"
-                data-shoelace="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.1/cdn">
-            </script>
-        {% endfor %}
-
-        {# todo: vendor this dependency #}
-        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
-            {% for css_file in [
-                'cafe/style.css',
-                'cafe/header.css',
-                'cafe/clubs/create_club.css',
-                'cafe/common/patterns.css',
-                'cafe/layouts/with_header.css',
-                'cafe/layouts/with_header_and_sidebar.css',
-                'cafe/profile/clubs.css',
-                'cafe/profile/connections.css',
-                'cafe/profile/layout.css',
-                'cafe/profile/profile.css',
-                'cafe/profile/settings.css'
-            ]%}
-                <link rel="stylesheet" href="{{ static(css_file) }}" />
-            {% endfor %}
-
-        <title>{% block title %}{% endblock %} - Rhythm Café</title>
-    </head>
+    {{ head(user, title) }}
     <body>
         <script>
         0; //prevent Firefox FOUC
         </script>
-        {% block body %}
-
-        {% endblock %}
+        {{ caller() }}
     </body>
 </html>
+<!-- END base.jinja -->
+{% endmacro %}

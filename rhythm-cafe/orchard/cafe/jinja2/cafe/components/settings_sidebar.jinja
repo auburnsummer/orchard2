@@ -1,0 +1,68 @@
+{% macro settings_sidebar(links) %}
+<!-- BEGIN settings_sidebar.jinja -->
+<div class="settings_sidebar">
+    <div class="settings_sidebar-header">
+        {{ caller() }}
+    </div>
+    <nav class="settings_sidebar-nav">
+        <ul x-data>
+            {% for name, href in links %}
+                <li>
+                    <a
+                        :class = "'{{ href }}' === window.location.pathname && 'active-link'"
+                        href="{{ href }}"
+                    >
+                        {{name}}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+</div>
+<style>
+.settings_sidebar {
+    display: flex;
+    flex-direction: column;
+    padding-top: 1rem;
+    border-right: 1px solid  var(--sl-color-neutral-200);
+    height: 100%;
+}
+
+.settings_sidebar-nav {
+    padding-top: 1rem;
+}
+
+.settings_sidebar-nav ul {
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin: 0;
+}
+
+.settings_sidebar-nav li {
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+}
+
+.settings_sidebar-nav a {
+    flex-grow: 1;
+    padding: 1rem;
+    padding-left: 2rem;
+    color: var(--sl-color-neutral-700);
+    text-decoration: none;
+    margin: 0.25rem;
+    border-radius: 0.5rem;
+}
+
+.settings_sidebar-nav a:hover {
+    background-color: var(--sl-color-neutral-300);
+}
+
+.settings_sidebar-nav a.active-link {
+    background-color: var(--sl-color-primary-100);
+}
+</style>
+<!-- END settings_sidebar.jinja -->
+{% endmacro %}

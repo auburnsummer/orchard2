@@ -1,3 +1,4 @@
+{% macro header(user, csrf_input) -%}
 <div class="header" x-data>
     {# logo #}
     <div title="aaa">
@@ -41,3 +42,29 @@
         </form>
     {% endif %}
 </div>
+<style data-hoist="true">
+.header {
+    position: sticky;
+    top: 0;
+    z-index: var(--sl-z-index-drawer);
+
+	display: flex;
+	height: 2.75rem;
+    background-color: var(--sl-color-neutral-200);
+    box-shadow: var(--sl-shadow-large);
+	align-items: center;
+}
+
+.header_logo {
+	display: block;
+	height: 3.4rem;
+	margin-top: 0.4rem;
+	fill: var( --sl-color-primary-400);
+	opacity: 70%;
+}
+
+.header_spacer {
+    flex-grow: 1;
+}
+</style>
+{%- endmacro %}
