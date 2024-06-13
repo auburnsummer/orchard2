@@ -5,7 +5,7 @@
     <div class="profclubs">
         <h2>Your groups</h2>
         <div class="profclubs_roles">
-            {% for role in ["owner", "admin", "member"] %}
+            {% for role in ["owner", "admin"] %}
                 {% with role_memberships = memberships[role] %}
                     {% if role_memberships %}
                         <div class="profclubs_role">

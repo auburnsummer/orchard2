@@ -1,11 +1,27 @@
 
-
+from rules.contrib.models import RulesModel
+import rules
 from django.db import models
 
 from .utils import create_pk_field
 from cafe.libs.gen_id import IDType
 
-class Club(models.Model):
+def is_role_of_club(role):
+    @rules.predicate
+    def user_has_role_in_club(user, club):
+        memberships = user.clubmembership_set.filter(role__exact=role, club__exact=club)
+        for membership in memberships:
+            if membership.role == role:
+                return True
+        
+        return False
+
+    return user_has_role_in_club
+
+is_owner = is_role_of_club("owner")
+is_at_least_admin = is_owner | is_role_of_club("admin")
+
+class Club(RulesModel):
     """
     A Club is a group of users and levels.
 
@@ -19,23 +35,32 @@ class Club(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.id})"
+    
+    class Meta:
+        rules_permissions = {
+            "view_member_of": is_at_least_admin
+        }
 
 
 class ClubMembership(models.Model):
     """
-    A User can be a member of any number of Clubs. There are three levels of membership:
+    A User can be a member of any number of Clubs. There are two levels of membership:
 
     - Owner: the user can add, remove and change users in the Club. Owners can demote other Owners.
     - Admin: the user can add/edit/delete levels under the Club.
-    - Member: the user can add levels under the Club.
+    - ~~Member: the user can add levels under the Club.~~ 
+     
+    nb: Member doesn't exist yet, because atm the only way you add levels into a Club is via an
+    attached discord server. So anyone who is in the discord server can add levels, even without
+    needing to be a Member. The Member role will allow non-discord based uploads to add levels to
+    the club. Since those don't exist yet, we don't have members yet.
     """
     user = models.ForeignKey("cafe.User", on_delete=models.CASCADE)
     club = models.ForeignKey("cafe.Club", on_delete=models.CASCADE)
 
     role = models.CharField(choices={
         'owner': 'Owner',
-        'admin': 'Admin',
-        'member': 'Member'
+        'admin': 'Admin'
     }, max_length=10)
 
     def __str__(self):
