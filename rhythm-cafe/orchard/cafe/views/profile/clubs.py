@@ -7,7 +7,7 @@ from cafe.models import User
 
 @login_required
 def clubs(request):
-    roles = ["owner", "admin", "member"]
+    roles = ["owner", "admin"]
 
     memberships = { role: request.user.clubmembership_set.filter(role__exact=role) for role in roles}
 

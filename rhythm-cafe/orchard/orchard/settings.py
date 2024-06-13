@@ -60,6 +60,11 @@ STATICFILES_FINDERS = (
 
 AUTH_USER_MODEL = "cafe.User"
 
+AUTHENTICATION_BACKENDS = (
+    'rules.permissions.ObjectPermissionBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 INSTALLED_APPS = [
     'cafe.apps.CafeConfig',
     'django.contrib.admin',
@@ -71,7 +76,7 @@ INSTALLED_APPS = [
     'oauthlogin',
     'hijack',
     'hijack.contrib.admin',
-    'compressor'
+    'rules'
 ]
 
 MIDDLEWARE = [
