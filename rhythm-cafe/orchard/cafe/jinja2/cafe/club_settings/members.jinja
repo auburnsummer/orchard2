@@ -1,3 +1,16 @@
-hello members
+{% from "cafe/base.jinja" import base %}
+{% from "cafe/club_settings/layout.jinja" import layout %}
 
-{{ memberships }}
+{% set content %}
+    hi members
+{% endset %}
+
+{% call base(title="Rhythm Cafe", user=request.user) %}
+    {% call layout(user=request.user, csrf_input=csrf_input, current_club=current_club) %}
+        {{ content }}
+    {% endcall %}
+{% endcall %}
+
+<style data-hoist="true">
+
+</style>

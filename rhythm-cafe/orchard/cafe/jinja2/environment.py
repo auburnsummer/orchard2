@@ -10,6 +10,8 @@ import datetime
 from functools import partial
 from compressor.contrib.jinja2ext import CompressorExtension
 
+from orchard.settings import DEBUG
+
 def environment(**options):
     env = Environment(**options)
     env.globals.update(
@@ -19,5 +21,7 @@ def environment(**options):
             "now": partial(datetime.datetime.now, datetime.UTC)
         }
     )
+    if DEBUG:
+        env.cache = None
     env.add_extension(CompressorExtension)
     return env

@@ -38,7 +38,8 @@ class Club(RulesModel):
     
     class Meta:
         rules_permissions = {
-            "view_member_of": is_at_least_admin
+            "view_member_of": is_at_least_admin,
+            "view_info_of": is_at_least_admin
         }
 
 
