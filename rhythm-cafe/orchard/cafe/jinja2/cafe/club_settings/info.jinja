@@ -1,0 +1,50 @@
+{% from "cafe/base.jinja" import base %}
+{% from "cafe/club_settings/layout.jinja" import layout %}
+
+{% set content %}
+    <div class="clubsettingsinfo">
+        <form action="{{ url('cafe:club_settings_info', args=[current_club.id]) }}" method="post" class="clubsettingsinfo_changename">
+            {{ csrf_input }}
+            <sl-input name="club_name" label="Group Name" required value="{{ current_club.name }}">
+            </sl-input>
+            <sl-button type="submit">Change name</sl-button>
+        </form>
+        <div class="clubsettingsinfo_spacer"></div>
+        <p class="clubsettingsinfo_clubid">Group id: {{ current_club.id }}</p>
+    </div>
+{% endset %}
+
+{% call base(title="Rhythm Cafe", user=request.user) %}
+    {% call layout(user=request.user, csrf_input=csrf_input, current_club=current_club) %}
+        {{ content }}
+    {% endcall %}
+{% endcall %}
+
+<style data-hoist="true">
+    .clubsettingsinfo {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .clubsettingsinfo_spacer {
+        flex-grow: 1;
+    }
+
+    .clubsettingsinfo_changename {
+        display: flex;
+        flex-direction: row;
+        align-items: end;
+    }
+
+    .clubsettingsinfo_changename > sl-button {
+        margin-left: 1rem;
+    }
+
+    .clubsettingsinfo_clubid {
+        font-size: 0.875rem;
+        font-style: italic;
+        color: var(--sl-color-neutral-500);
+        margin-bottom: 0.25rem;
+    }
+</style>

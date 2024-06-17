@@ -24,16 +24,18 @@
         <form method="post" x-ref="logoutForm" action="{{ url('logout') }}">
             {{ csrf_input }}
         </form>
-        <sl-dropdown placement="bottom-right">
+        <sl-dropdown placement="bottom-right" sync="width">
             <sl-button slot="trigger" caret>{{ user.get_short_name() }}</sl-button>
-            <sl-menu>
-                <sl-menu-item @click="window.location = '/accounts/profile/'">
-                    Profile
-                </sl-menu-item>
-                <sl-menu-item @click="$refs.logoutForm.submit()">
-                    Log out
-                </sl-menu-item>
-            </sl-menu>
+            <div>
+                <nav class="header-user-menu">
+                    <sl-button variant="text" href="/accounts/profile">
+                        <span>Profile</span>
+                    </sl-button>
+                    <sl-button variant="text" @click="$refs.logoutForm.submit()">
+                        <span>Log out</span>
+                    </sl-button>
+                </nav>
+            </div>
         </sl-dropdown>
     {% else %}
         <form action="/oauth/discord/login/" method="post">
@@ -65,6 +67,17 @@
 
 .header_spacer {
     flex-grow: 1;
+}
+
+.header-user-menu {
+    padding-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+}
+
+.header-user-menu sl-button::part(base) {
+    justify-content: start;
 }
 </style>
 {%- endmacro %}

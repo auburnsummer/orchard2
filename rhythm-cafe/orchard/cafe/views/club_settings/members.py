@@ -11,6 +11,7 @@ def members(request, club_id):
     memberships = { role: [membership.user for membership in club.clubmembership_set.filter(role__exact=role)] for role in roles}
 
     render_data = {
-        "memberships": memberships
+        "memberships": memberships,
+        "current_club": club
     }
     return render(request, "cafe/club_settings/members.jinja", render_data)
