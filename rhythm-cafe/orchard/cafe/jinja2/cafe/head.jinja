@@ -1,5 +1,4 @@
 {% macro head(user, title) -%}
-<!-- START head.jinja -->
 <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -44,7 +43,8 @@
             <link rel="stylesheet" href="{{ static(css_file) }}" />
         {% endfor %}
 
+        <!-- HOISTED_CSS -->
+
         <title>{{ title }}</title>
     </head>
-<!-- END head.jinja -->
 {%- endmacro %}

@@ -2,16 +2,30 @@
 {% from "cafe/club_settings/layout.jinja" import layout %}
 
 {% set content %}
-    <div class="clubsettingsinfo">
-        <form action="{{ url('cafe:club_settings_info', args=[current_club.id]) }}" method="post" class="clubsettingsinfo_changename">
-            {{ csrf_input }}
-            <sl-input name="club_name" label="Group Name" required value="{{ current_club.name }}">
-            </sl-input>
-            <sl-button type="submit">Change name</sl-button>
-        </form>
-        <div class="clubsettingsinfo_spacer"></div>
-        <p class="clubsettingsinfo_clubid">Group id: {{ current_club.id }}</p>
-    </div>
+    {% with can_edit = request.user.has_perm("cafe.change_info_of_club", current_club) %}
+        <div class="clubsettingsinfo" x-data='{{ {"can_edit": can_edit} | tojson }}'>
+            <form action="{{ url('cafe:club_settings_info', args=[current_club.id]) }}" method="post" class="clubsettingsinfo_changename">
+                {{ csrf_input }}
+                <sl-input
+                    name="name"
+                    label="Group Name"
+                    :disabled="!can_edit"
+                    required
+                    value="{{ current_club.name }}"
+                >
+                </sl-input>
+                <sl-button
+                    type="submit"
+                    :disabled="!can_edit"
+                    :title="!can_edit && 'Only owners can edit the group info.'"
+                >
+                    Change name
+                </sl-button>
+            </form>
+            <div class="clubsettingsinfo_spacer"></div>
+            <p class="clubsettingsinfo_clubid">Group id: {{ current_club.id }}</p>
+        </div>
+    {% endwith %}
 {% endset %}
 
 {% call base(title="Rhythm Cafe", user=request.user) %}

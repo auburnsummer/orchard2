@@ -18,6 +18,7 @@ django-hijack = "^3.4.5"
 django-compressor = "^4.4"
 rules = "^3.4"
 names = "^0.3.0"
+django-minify-html = "^1.7.1"
 
 
 [build-system]
