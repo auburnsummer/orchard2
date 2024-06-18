@@ -76,7 +76,8 @@ INSTALLED_APPS = [
     'oauthlogin',
     'hijack',
     'hijack.contrib.admin',
-    'rules'
+    'rules',
+    'django_minify_html'
 ]
 
 MIDDLEWARE = [
@@ -87,7 +88,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'hijack.middleware.HijackUserMiddleware'
+    'django_minify_html.middleware.MinifyHtmlMiddleware',
+    'cafe.middleware.hoist_css_middleware',
+    'hijack.middleware.HijackUserMiddleware',
 ]
 
 ROOT_URLCONF = 'orchard.urls'
