@@ -43,7 +43,7 @@
             <link rel="stylesheet" href="{{ static(css_file) }}" />
         {% endfor %}
 
-        <!-- HOISTED_CSS -->
+        <link rel="stylesheet" href="{{ url('cafe:combined_css')}}" />
 
         <title>{{ title }}</title>
     </head>

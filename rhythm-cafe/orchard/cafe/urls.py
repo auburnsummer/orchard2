@@ -16,5 +16,7 @@ urlpatterns = [
     path("groups/<club_id>/settings/", views.club_settings.info, name="club_settings_info"),
     path("groups/<club_id>/settings/members/", views.club_settings.members, name="club_settings_members"),
 
+    path("meta/all_styles.css", views.meta.combined_css, name="combined_css"),
+
     path("", views.index, name="index")
 ]
