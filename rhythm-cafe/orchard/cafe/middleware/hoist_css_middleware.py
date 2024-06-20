@@ -1,6 +1,5 @@
-# css is inline based on each file
-# so this takes all the css and puts it at the top
-# no optimisation, that's a seperate step probably
+# strip the <style data-hoist=true> tags in templates
+# these are parsed and added as part of the meta/all_styles.css route instead
 
 import re
 

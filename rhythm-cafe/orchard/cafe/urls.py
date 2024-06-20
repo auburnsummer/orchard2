@@ -4,7 +4,7 @@ from . import views
 
 app_name = "cafe"
 urlpatterns = [
-    path("discord_interactions", views.discord_bot.entry, name="discord_interactions"),
+    path("discord_interactions/", views.discord_bot.entry, name="discord_interactions"),
 
     path("accounts/profile/", views.profile.profile, name="profile"),
     path("accounts/profile/groups/", views.profile.clubs, name="clubs"),
@@ -15,6 +15,8 @@ urlpatterns = [
 
     path("groups/<club_id>/settings/", views.club_settings.info, name="club_settings_info"),
     path("groups/<club_id>/settings/members/", views.club_settings.members, name="club_settings_members"),
+    path("groups/<club_id>/settings/members/<user_id>/", views.club_settings.alter_membership, name="club_settings_membership"),
+    path("groups/<club_id>/settings/members/<user_id>/delete", views.club_settings.delete_membership, name="club_settings_membership_delete"),
 
     path("meta/all_styles.css", views.meta.combined_css, name="combined_css"),
 
