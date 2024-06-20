@@ -40,11 +40,19 @@ class Club(RulesModel):
         rules_permissions = {
             "view_member_of": is_at_least_admin,
             "view_info_of": is_at_least_admin,
-            "change_info_of": is_owner
+            "change_info_of": is_owner,
         }
 
+@rules.predicate
+def is_owner_of_permission_club(user, clubmembership):
+    club = clubmembership.club
+    return is_role_of_club("owner")(user, club)
 
-class ClubMembership(models.Model):
+@rules.predicate
+def is_permission_subject(user, clubmembership):
+    return clubmembership.user == user
+
+class ClubMembership(RulesModel):
     """
     A User can be a member of any number of Clubs. There are two levels of membership:
 
@@ -72,6 +80,14 @@ class ClubMembership(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['user', 'club'], name='unique_user_and_club')
         ]
+
+        # change permission allows both upgrades and downgrades.
+        # so we can't let a user change their own role (yet)
+        # todo: break this into upgrade and downgrade permissions.
+        rules_permissions = {
+            "change": is_owner_of_permission_club,
+            "delete": is_owner_of_permission_club | is_permission_subject
+        }
 
 class ClubRDLevel(models.Model):
     """

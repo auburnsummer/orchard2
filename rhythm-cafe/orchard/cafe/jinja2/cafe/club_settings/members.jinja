@@ -2,7 +2,84 @@
 {% from "cafe/club_settings/layout.jinja" import layout %}
 
 {% set content %}
-    hi members
+    <div x-data="{
+        activeUserId: '',
+        activeUserName: '',
+        activeUserRole: '',
+        kickUserConfirm: false,
+
+        openDialog(id, name, role) {
+            this.activeUserId = id;
+            this.activeUserName = name;
+            this.activeUserRole = role;
+            this.kickUserConfirm = false;
+            $refs.select.value = this.activeUserRole;
+            $refs.dialog.show();
+        },
+
+        get actionURL() {
+            const urlWithSlot = '{{ url('cafe:club_settings_membership', args=[current_club.id, '__']) }}';
+            return urlWithSlot.replace('__', this.activeUserId);
+        },
+
+        get deleteActionUrl() {
+            const urlWithSlot = '{{ url('cafe:club_settings_membership_delete', args=[current_club.id, '__']) }}';
+            return urlWithSlot.replace('__', this.activeUserId);
+        },
+    }">
+        <h1>{{current_club.name}} members</h1>
+        <sl-dialog :label="`Edit ${activeUserName} (${activeUserId})`" x-ref="dialog">
+            <form
+                id="changeForm"
+                method="post"
+                :action="actionURL"
+            >
+                {{ csrf_input }}
+                <sl-select hoist label="Role" name="role" x-ref="select">
+                    <sl-option value="owner">Owner</sl-option>
+                    <sl-option value="admin">Admin</sl-option>
+                </sl-select>
+            </form>
+            <form
+                id="deleteForm"
+                method="post"
+                :action="deleteActionUrl"
+            >
+                {{ csrf_input }}
+            </form>
+            <div slot="footer">
+                <sl-button @click="kickUserConfirm = true" x-show="!kickUserConfirm" variant="danger">Kick user</sl-button>
+                <sl-button type="submit" form="deleteForm" variant="danger" x-show="kickUserConfirm">Click again to confirm</sl-button>
+                <sl-button type="submit" form="changeForm">Change role</sl-button>
+            </div>
+        </sl-dialog>
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">User</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Role</th>
+                    <th scope="col">Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for membership in memberships %}
+                    <tr>
+                        <th scope="row">{{ membership.user.first_name }}</th>
+                        <td>{{ membership.user.username }}</td>
+                        <td>{{ membership.role | title }}</td>
+                        <td x-data="{
+                            id: '{{ membership.user.username }}',
+                            name: '{{ membership.user.first_name }}',
+                            role: '{{ membership.role }}'
+                        }">
+                            <sl-button @click="openDialog(id, name, role)">Edit</sl-button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endset %}
 
 {% call base(title="Rhythm Cafe", user=request.user) %}
