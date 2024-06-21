@@ -26,8 +26,23 @@
             const urlWithSlot = '{{ url('cafe:club_settings_membership_delete', args=[current_club.id, '__']) }}';
             return urlWithSlot.replace('__', this.activeUserId);
         },
+
+        openAddUserDialog() {
+            $refs.addDialog.show();
+        },
+
+        async generateInviteLink() {
+            return `https://rhythm.cafe/invite/aaaaaaa`;
+        },
+
+        showInviteLink() {
+            // const dataToSend = new FormData($refs.inviteForm);
+            a = this.generateInviteLink();
+            a.then((link) => console.log(link));
+        }
     }">
         <h1>{{current_club.name}} members</h1>
+        <!-- Change / delete dialog -->
         <sl-dialog :label="`Edit ${activeUserName} (${activeUserId})`" x-ref="dialog">
             <form
                 id="changeForm"
@@ -52,6 +67,19 @@
                 <sl-button type="submit" form="deleteForm" variant="danger" x-show="kickUserConfirm">Click again to confirm</sl-button>
                 <sl-button type="submit" form="changeForm">Change role</sl-button>
             </div>
+        </sl-dialog>
+        <!-- Invite dialog -->
+        <sl-dialog x-ref="addDialog" label="Add member" @submit.prevent="showInviteLink">
+            <p>Clicking the button will generate an invite link. Send the invite link to the person you wish to invite.</p>
+            <p><strong>The link will expire in 24 hours.</strong></p>
+            <form x-ref="inviteForm" method="post" action="{{ url('cafe:club_settings_membership_invite', args=[current_club.id]) }}">
+                {{ csrf_input }}
+                <sl-select hoist label="Invite role" name="role" x-ref="select" value="admin">
+                    <sl-option value="owner">Owner</sl-option>
+                    <sl-option value="admin">Admin</sl-option>
+                </sl-select>
+                <sl-button type="submit">Create link</sl-button>
+            </form>
         </sl-dialog>
         <table>
             <thead>
@@ -79,6 +107,7 @@
                 {% endfor %}
             </tbody>
         </table>
+        <sl-button @click="openAddUserDialog()">Add member</sl-button>
     </div>
 {% endset %}
 

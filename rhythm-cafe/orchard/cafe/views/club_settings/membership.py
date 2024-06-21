@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.forms import ModelForm
+from django.db import transaction
 from rules.contrib.views import permission_required, objectgetter
 
 from django.urls import reverse
@@ -23,6 +24,11 @@ def alter_membership(request, club_id, user_id):
     form = AlterMembershipForm(request.POST)
     if form.is_valid():
         membership = get_object_or_404(ClubMembership, user=user_id, club=club_id)
+        
+        owners = list(ClubMembership.objects.filter(club=club_id, role="owner"))
+        if len(owners) < 2 and form.cleaned_data.get("role") != "owner" and membership.role == "owner":
+            return HttpResponseForbidden("Cannot demote this user as it would result in the group having no owners")
+
         membership.role = form.cleaned_data.get("role")
         membership.save()
 
@@ -32,6 +38,11 @@ def alter_membership(request, club_id, user_id):
 def delete_membership(request, club_id, user_id):
     if request.method != 'POST':
         return HttpResponseForbidden()
+    
+
+    owners = list(ClubMembership.objects.filter(club=club_id, role="owner"))
+    if len(owners) < 2:
+        return HttpResponseForbidden("Cannot kick this user as it would result in the group having no owners")
     
     membership = get_object_or_404(ClubMembership, user=user_id, club=club_id)
     membership.delete()
