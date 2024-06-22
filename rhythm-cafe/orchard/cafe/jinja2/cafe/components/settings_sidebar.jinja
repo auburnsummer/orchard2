@@ -1,15 +1,15 @@
 {% macro settings_sidebar(links) %}
 <!-- BEGIN settings_sidebar.jinja -->
-<div class="settings_sidebar">
-    <div class="settings_sidebar-header">
+<div class="cse">
+    <div class="cse__header">
         {{ caller() }}
     </div>
-    <nav class="settings_sidebar-nav">
-        <ul x-data>
+    <nav class="cse__nav">
+        <ul x-data class="cse__list">
             {% for name, href in links %}
                 <li>
                     <a
-                        :class = "'{{ href }}' === window.location.pathname && 'active-link'"
+                        :class = "'{{ href }}' === window.location.pathname ? 'cse__link cse__link--active' : 'cse__link'"
                         href="{{ href }}"
                     >
                         {{name}}
@@ -20,7 +20,7 @@
     </nav>
 </div>
 <style>
-.settings_sidebar {
+.cse {
     display: flex;
     flex-direction: column;
     padding-top: 1rem;
@@ -28,11 +28,11 @@
     height: 100%;
 }
 
-.settings_sidebar-nav {
+.cse__nav {
     padding-top: 1rem;
 }
 
-.settings_sidebar-nav ul {
+.cse__list {
     list-style-type: none;
     display: flex;
     flex-direction: column;
@@ -40,27 +40,27 @@
     margin: 0;
 }
 
-.settings_sidebar-nav li {
+.cse__list li {
     display: flex;
     justify-content: stretch;
     align-items: stretch;
 }
 
-.settings_sidebar-nav a {
+.cse__link {
     flex-grow: 1;
     padding: 1rem;
     padding-left: 2rem;
-    color: var(--sl-color-neutral-700);
+    color: var(--sl-color-neutral-700) !important;
     text-decoration: none;
     margin: 0.25rem;
     border-radius: 0.5rem;
 }
 
-.settings_sidebar-nav a:hover {
+.cse__link:hover {
     background-color: var(--sl-color-neutral-300);
 }
 
-.settings_sidebar-nav a.active-link {
+.cse__link--active {
     background-color: var(--sl-color-primary-100);
 }
 </style>

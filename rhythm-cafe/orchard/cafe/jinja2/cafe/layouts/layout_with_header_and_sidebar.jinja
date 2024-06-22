@@ -4,17 +4,17 @@
 <!-- BEGIN layout_with_header_and_sidebar.jinja -->
 {% set _caller = caller %}
 {% call base_layout(user=user, csrf_input=csrf_input) %}
-    <div class="whas">
-        <div class="whas_sidebar_container">
+    <div class="lhs">
+        <div class="lhs__sidebar">
             {{ _caller("sidebar") }}
         </div>
-        <div class="whas_main_content">
+        <div class="lhs__content">
             {{ _caller("content") }}
         </div>
     </div>
 {% endcall %}
 <style data-hoist="true">
-.whas {
+.lhs {
     flex-grow: 1;
     max-height: calc(100vh - 2.75rem);
     overflow: hidden;
@@ -26,11 +26,11 @@
     grid-row-gap: 0px; 
 }
 
-.whas_sidebar_container, .whas_main_content {
+.lhs__sidebar, .lhs__content {
     overflow-y: auto;
 }
 
-.whas_main_content {
+.lhs__content {
     padding-left: 1.5rem;
     padding-top: 1.5rem;
 }

@@ -3,12 +3,12 @@
 {% macro layout_with_header(user, csrf_input) %}
 <!-- BEGIN layout_with_header.jinja -->
 {{ header(user, csrf_input) }}
-<div class="header_content_slot">
+<div class="lhh">
     {{ caller() }}
 </div>
 
 <style data-hoist="true">
-.header_content_slot {
+.lhh {
     min-height: calc(100vh - 2.75rem);
     display: flex;
     flex-direction: column;

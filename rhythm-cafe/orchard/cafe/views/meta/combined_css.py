@@ -4,9 +4,15 @@ from django.http import HttpResponse
 from django.utils.cache import patch_cache_control
 import re
 
-from functools import cache
+from functools import cache as _cache
 
 from orchard.settings import DEBUG
+
+def cache(func):
+    if DEBUG:
+        return func
+    else:
+        return _cache(func)
 
 @cache
 def _get_combined_css():

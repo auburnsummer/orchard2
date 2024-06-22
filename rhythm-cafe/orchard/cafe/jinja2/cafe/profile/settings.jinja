@@ -2,14 +2,14 @@
 {% from "cafe/profile/layout.jinja" import layout %}
 
 {% set content %}
-    <div class="profsettings">
-        <form class="profsettings_settings" action="{{ url('cafe:settings') }}" method="post">
+    <div class="pse">
+        <form class="pse__form" action="{{ url('cafe:settings') }}" method="post">
             {{ csrf_input }}
-            <sl-select class="profsettings_theme" label="Theme" value="{{ request.user.profile.theme_pref }}" name="theme_pref">
+            <sl-select class="pse__theme" label="Theme" value="{{ request.user.profile.theme_pref }}" name="theme_pref">
                 <sl-option value="light">Light</sl-option>
                 <sl-option value="dark">Dark</sl-option>
             </sl-select>
-            <sl-button class="profsettings_submit" type="submit">Change settings</sl-button>
+            <sl-button class="pse__submit" type="submit">Change settings</sl-button>
         </form>
     </div>
 {% endset %}
@@ -21,7 +21,7 @@
 {% endcall %}
 
 <style data-hoist="true">
-.profsettings_settings {
+.pse__form {
     display: flex;
     flex-direction: column;
     align-items: start;

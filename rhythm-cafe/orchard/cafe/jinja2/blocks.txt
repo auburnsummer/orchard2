@@ -1,0 +1,10 @@
+che - components/header.jinja
+cse - components/settings_sidebar.jinja
+pcl - profile/clubs.jinja
+pco - profile/connections.jinja
+pla - profile/layout.jinja
+ppr - profile/profile.jinja
+pse - profile/settings.jinja
+ldf - layouts/layout_dramatic_form.jinja
+lhh - layouts/layout_with_header.jinja
+lhs - layouts/layout_with_header_and_sidebar.jinja

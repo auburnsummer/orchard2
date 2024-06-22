@@ -5,16 +5,14 @@
     <div x-data="{
         activeUserId: '',
         activeUserName: '',
-        activeUserRole: '',
         kickUserConfirm: false,
 
         openDialog(id, name, role) {
             this.activeUserId = id;
             this.activeUserName = name;
-            this.activeUserRole = role;
             this.kickUserConfirm = false;
-            $refs.select.value = this.activeUserRole;
             $refs.dialog.show();
+            $refs.select.value = role;
         },
 
         get actionURL() {
@@ -30,17 +28,22 @@
         openAddUserDialog() {
             $refs.addDialog.show();
         },
-
-        async generateInviteLink() {
-            return `https://rhythm.cafe/invite/aaaaaaa`;
-        },
-
-        showInviteLink() {
-            // const dataToSend = new FormData($refs.inviteForm);
-            a = this.generateInviteLink();
-            a.then((link) => console.log(link));
-        }
     }">
+        {% with invite_url = request.GET.get("invite_url") %}
+            {% if invite_url is not none %}
+                <div x-data='{ invite_url: window.origin + "{{ invite_url }}" }'>
+                    <div class="c">
+                        <sl-input disabled :value="invite_url">
+                            <span slot="label">
+                                <span>Here's the invite URL!</span>
+                                <span>(copy it now, this is the only time you can see it)</span>
+                            </span>
+                        </sl-input>
+                        <sl-copy-button :value="invite_url"></sl-copy-button>
+                    </div>
+                </div>
+            {% endif %}
+        {% endwith %}
         <h1>{{current_club.name}} members</h1>
         <!-- Change / delete dialog -->
         <sl-dialog :label="`Edit ${activeUserName} (${activeUserId})`" x-ref="dialog">
@@ -50,10 +53,13 @@
                 :action="actionURL"
             >
                 {{ csrf_input }}
-                <sl-select hoist label="Role" name="role" x-ref="select">
-                    <sl-option value="owner">Owner</sl-option>
-                    <sl-option value="admin">Admin</sl-option>
-                </sl-select>
+                <!-- not sure why but without this x-if, the sl-select doesn't take on a value when we set it -->
+                <template x-if="true"> 
+                    <sl-select hoist label="Role" name="role" x-ref="select">
+                        <sl-option value="owner">Owner</sl-option>
+                        <sl-option value="admin">Admin</sl-option>
+                    </sl-select>
+                </template>
             </form>
             <form
                 id="deleteForm"
@@ -69,7 +75,7 @@
             </div>
         </sl-dialog>
         <!-- Invite dialog -->
-        <sl-dialog x-ref="addDialog" label="Add member" @submit.prevent="showInviteLink">
+        <sl-dialog x-ref="addDialog" label="Add member">
             <p>Clicking the button will generate an invite link. Send the invite link to the person you wish to invite.</p>
             <p><strong>The link will expire in 24 hours.</strong></p>
             <form x-ref="inviteForm" method="post" action="{{ url('cafe:club_settings_membership_invite', args=[current_club.id]) }}">

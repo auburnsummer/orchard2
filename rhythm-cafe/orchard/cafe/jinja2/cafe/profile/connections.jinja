@@ -2,19 +2,19 @@
 {% from "cafe/profile/layout.jinja" import layout %}
 
 {% set content %}
-    <div class="profconnections">
-        <h2>Existing connections</h2>
-        <ul class="profconnections_existing">
+    <div class="pco">
+        <h2 class="pco__title">Existing connections</h2>
+        <ul class="pco__exists">
             {% for connection in request.user.oauth_connections.all() %}
             <li>
-                <sl-details class="profconnections_connection">
+                <sl-details class="pco__details">
                     {% with data = connection_map[connection.provider_user_id] %}
-                        <div slot="summary" class="profconnections_connection-summary">
+                        <div slot="summary" class="pco__summary">
                             {# for now, assume discord as we have no other connection types yet. #}
-                            <sl-icon name="discord"></sl-icon>
-                            <p>{{ data['global_name'] }}</p>
+                            <sl-icon name="discord" class="pco__icon"></sl-icon>
+                            <p class="pco__name">{{ data['global_name'] }}</p>
                         </div>
-                        <ul class="profconnections_connection-info">
+                        <ul class="pco__info">
                             <li>
                                 <p><strong>Username: </strong><span>{{ data['username'] }}</span></p>
                             </li>
@@ -23,7 +23,7 @@
                             </li>
                         </ul>
                         {% if connection.can_be_disconnected() %}
-                            <form action="{{ url('oauthlogin:disconnect', args=[connection.provider_key]) }}" method="post" class="profconnections_disconnect">
+                            <form action="{{ url('oauthlogin:disconnect', args=[connection.provider_key]) }}" method="post" class="pco__disconnect">
                                 {{ csrf_input }}
                                 <input type="hidden" name="provider_user_id" value="{{ connection.provider_user_id }}">
                                 <input type="hidden" name="next" value="{{ url('cafe:connections') }}">
@@ -37,7 +37,7 @@
         </ul>
 
         <h2>Add a connection</h2>
-        <ul class="profconnections_connection-add">
+        <ul class="pco__add">
             {% for provider_key in oauth_provider_keys %}
             <li class="">
                 <form action="/oauth/{{ provider_key }}/connect/" method="post">
@@ -58,17 +58,17 @@
 {% endcall %}
 
 <style>
-    .profconnections {
+    .pco {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
     }
 
-    .profconnections h2 {
+    .pco__title {
         font-weight: var(--sl-font-weight-semibold);
     }
 
-    .profconnections_existing {
+    .pco__exists {
         list-style: none;
         margin: 0;
         padding: 0;
@@ -78,42 +78,42 @@
         max-width: 24rem;
     }
 
-    .profconnections_connection-summary {
+    .pco__summary {
         display: flex;
         flex-direction: row;
         align-items: center;
     }
 
-    .profconnections_connection-summary > sl-icon {
+    .pco__icon {
         font-size: 1.25rem;
         color: var(--sl-color-indigo-600);
     }
 
-    .profconnections_connection-summary > p {
+    .pco__name {
         margin-left: 0.75rem;
         font-weight: var(--sl-font-weight-semibold);
     }
 
-    .profconnections_connection-info {
+    .pco__info {
         padding: 0;
         font-size: 0.875rem;
     }
 
-    .profconnections_connection-info > li {
+    .pco__info > li {
         list-style-type: none;
     }
 
-    .profconnections_disconnect {
+    .pco__disconnect {
         padding-top: 1.5rem;
     }
 
-    .profconnections_connection-add {
+    .pco__add {
         padding: 0;
         list-style: none;
 
     }
 
-    .profconnections_connection-add > li {
+    .pco__add > li {
         list-style-type: none;
     }
 </style>
