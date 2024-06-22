@@ -41,6 +41,7 @@ class Club(RulesModel):
             "view_member_of": is_at_least_admin,
             "view_info_of": is_at_least_admin,
             "change_info_of": is_owner,
+            "create_invite_for": is_owner,
         }
 
 @rules.predicate
@@ -104,3 +105,15 @@ class ClubRDLevel(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['rdlevel', 'club'], name='unique_rdlevel_and_club')
         ]
+
+class ClubInvite(models.Model):
+    """
+    A ClubInvite allows a user to join a Club. They can only be used once; it's deleted from the db after use.
+    """
+    club = models.ForeignKey("cafe.Club", on_delete=models.CASCADE)
+    role = models.CharField(choices={
+        'owner': 'Owner',
+        'admin': 'Admin'
+    }, max_length=10)
+    expiry = models.DateTimeField()
+    code = models.CharField(max_length=100)

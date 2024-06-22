@@ -2,15 +2,15 @@
 {% from "cafe/profile/layout.jinja" import layout %}
 
 {% set content %}
-    <div class="profclubs">
+    <div class="pcl">
         <h2>Your groups</h2>
-        <div class="profclubs_roles">
+        <div class="pcl__roles">
             {% for role in ["owner", "admin"] %}
                 {% with role_memberships = memberships[role] %}
                     {% if role_memberships %}
-                        <div class="profclubs_role">
+                        <div class="pcl__role">
                             <h3>{{ role | title }}</h3>
-                            <ul class="profclubs_clublist">
+                            <ul class="pcl__club_list">
                             {% for membership in role_memberships %}
                                 {% with club = membership.club %}
                                     <li>
@@ -24,7 +24,7 @@
                 {% endwith %}
             {% endfor %}
         </div>
-        <sl-button href="/groups/create" class="profclubs_createbutton">Create group</sl-button>
+        <sl-button href="/groups/create" class="pcl__create">Create group</sl-button>
     </div>
 {% endset %}
 
@@ -35,18 +35,18 @@
 {% endcall %}
 
 <style data-hoist="true">
-.profclubs_createbutton {
+.pcl__create {
     margin-top: 3rem;
 }
 
-.profclubs_roles {
+.pcl__roles {
     margin-top: 1rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.profclubs_clublist {
+.pcl__club_list {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;

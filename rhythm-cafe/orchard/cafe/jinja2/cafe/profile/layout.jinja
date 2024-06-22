@@ -13,9 +13,9 @@
             ["Settings", url('cafe:settings')],
             ["Groups", url('cafe:clubs')]
         ]) %}
-            <div class="prof_sidebar-header">
-                <h1>Profile</h1>
-                <sl-icon-button name="chevron-left" href="/">
+            <div class="pla__header">
+                <h1 class="pla__title">Profile</h1>
+                <sl-icon-button name="chevron-left" href="/" class="pla__back">
                     Back
                 </sl-icon-button>
             </div>
@@ -25,19 +25,19 @@
     {% endif %}
 {% endcall %}
 <style data-hoist="true">   
-.prof_sidebar-header {
+.pla__header {
     display: flex;
     flex-direction: row-reverse;
     justify-content: start;
     align-items: center;
 }
 
-.prof_sidebar-header > h1 {
+.pla__title {
     margin-left: 0.5rem;
     font-weight: var(--sl-font-weight-semibold);
 }
 
-.prof_sidebar-header > sl-icon-button {
+.pla__back {
     margin-left: 0.5rem;
     font-size: 1.25rem;
 }

@@ -2,15 +2,15 @@
 {% from "cafe/profile/layout.jinja" import layout %}
 
 {% set content %}
-    <div class="profinfo">
-        <form action="{{ url('cafe:profile') }}" method="post" class="profinfo_changename">
+    <div class="ppr">
+        <form action="{{ url('cafe:profile') }}" method="post" class="ppr__form">
             {{ csrf_input }}
             <sl-input name="first_name" label="Name" required value="{{ request.user.first_name }}">
             </sl-input>
-            <sl-button type="submit">Change name</sl-button>
+            <sl-button type="submit" class="ppr_button">Change name</sl-button>
         </form>
-        <div class="procinfo_spacer"></div>
-        <p class="profinfo_userid">User id: {{ request.user.username }}</p>
+        <div class="ppr__spacer"></div>
+        <p class="ppr__user_id">User id: {{ request.user.username }}</p>
     </div>
 {% endset %}
 
@@ -21,27 +21,27 @@
 {% endcall %}
 
 <style data-hoist="true">
-    .profinfo {
+    .ppr {
         height: 100%;
         display: flex;
         flex-direction: column;
     }
 
-    .procinfo_spacer {
+    .ppr__spacer {
         flex-grow: 1;
     }
 
-    .profinfo_changename {
+    .ppr__form {
         display: flex;
         flex-direction: row;
         align-items: end;
     }
 
-    .profinfo_changename > sl-button {
+    .ppr_button {
         margin-left: 1rem;
     }
 
-    .profinfo_userid {
+    .ppr__user_id {
         font-size: 0.875rem;
         font-style: italic;
         color: var(--sl-color-neutral-500);

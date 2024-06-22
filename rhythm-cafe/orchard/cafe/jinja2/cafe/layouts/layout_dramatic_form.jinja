@@ -4,22 +4,22 @@
 <!-- BEGIN layout_dramatic_form.jinja -->
 {% set _caller = caller %}
 {% call base_layout(user=user, csrf_input=csrf_input) %}
-    <div class="dramatic_form_bg_container diag_pattern_1">
-        <div class="dramatic_form_container">
+    <div class="ldf__bg diag_pattern_1">
+        <div class="ldf__form">
             {{ _caller() }}
         </div>
     </div>
 {% endcall %}
 
 <style>
-.dramatic_form_bg_container {
+.ldf__bg {
     flex-grow: 1;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.dramatic_form_container {
+.ldf__form {
     padding: 1.5rem;
     background-color: var(--sl-color-neutral-100);
     box-shadow: var(--sl-shadow-large);

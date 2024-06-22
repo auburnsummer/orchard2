@@ -1,9 +1,9 @@
 {% macro header(user, csrf_input) -%}
-<div class="header" x-data>
+<div class="che" x-data>
     {# logo #}
     <div title="aaa">
         <svg
-            class='header_logo'
+            class='che__logo'
             fill-rule='evenodd'
             stroke-linejoin='round'
             stroke-miterlimit='2'
@@ -17,7 +17,7 @@
         </svg>
     </div>
 
-    <div class="header_spacer"></div>
+    <div class="che__spacer"></div>
 
     {# log in section #}
     {% if user.is_authenticated %}
@@ -27,7 +27,7 @@
         <sl-dropdown placement="bottom-right" sync="width">
             <sl-button slot="trigger" caret>{{ user.get_short_name() }}</sl-button>
             <div>
-                <nav class="header-user-menu">
+                <nav class="che__menu">
                     <sl-button variant="text" href="/accounts/profile">
                         <span>Profile</span>
                     </sl-button>
@@ -45,7 +45,7 @@
     {% endif %}
 </div>
 <style data-hoist="true">
-.header {
+.che {
     position: sticky;
     top: 0;
     z-index: var(--sl-z-index-drawer);
@@ -57,7 +57,7 @@
 	align-items: center;
 }
 
-.header_logo {
+.che__logo {
 	display: block;
 	height: 3.4rem;
 	margin-top: 0.4rem;
@@ -65,18 +65,18 @@
 	opacity: 70%;
 }
 
-.header_spacer {
+.che__spacer {
     flex-grow: 1;
 }
 
-.header-user-menu {
+.che__menu {
     padding-top: 0.5rem;
     display: flex;
     flex-direction: column;
     justify-content: stretch;
 }
 
-.header-user-menu sl-button::part(base) {
+.che__menu sl-button::part(base) {
     justify-content: start;
 }
 </style>
