@@ -1,4 +1,5 @@
 che - components/header.jinja
+cri - components/redeem_invite.jinja
 cse - components/settings_sidebar.jinja
 pcl - profile/clubs.jinja
 pco - profile/connections.jinja
@@ -8,3 +9,6 @@ pse - profile/settings.jinja
 ldf - layouts/layout_dramatic_form.jinja
 lhh - layouts/layout_with_header.jinja
 lhs - layouts/layout_with_header_and_sidebar.jinja
+sin - club_settings/info.jinja
+sla - club_settings/layout.jinja
+sme - club_settings/members.jinja

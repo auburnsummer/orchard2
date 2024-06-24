@@ -13,7 +13,7 @@ urlpatterns = [
 
     path("groups/create/", views.clubs.create_club, name="create_club"),
 
-    path("groups/redeem_invite/<code>", views.index, name="redeem_invite"),
+    path("groups/redeem_invite/<code>", views.clubs.redeem_invite, name="redeem_invite"),
 
     path("groups/<club_id>/settings/", views.club_settings.info, name="club_settings_info"),
     path("groups/<club_id>/settings/invite/", views.club_settings.create_invite, name="club_settings_membership_invite"),

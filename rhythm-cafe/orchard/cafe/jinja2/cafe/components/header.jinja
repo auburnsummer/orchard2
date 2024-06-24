@@ -28,9 +28,14 @@
             <sl-button slot="trigger" caret>{{ user.get_short_name() }}</sl-button>
             <div>
                 <nav class="che__menu">
-                    <sl-button variant="text" href="/accounts/profile">
+                    <sl-button variant="text" href="{{ url('cafe:profile') }}">
                         <span>Profile</span>
                     </sl-button>
+                    {% if user.is_staff %}
+                        <sl-button variant="text" href="/cafe_admin">
+                            <span>Admin site</span>
+                        </sl-button>
+                    {% endif %}
                     <sl-button variant="text" @click="$refs.logoutForm.submit()">
                         <span>Log out</span>
                     </sl-button>

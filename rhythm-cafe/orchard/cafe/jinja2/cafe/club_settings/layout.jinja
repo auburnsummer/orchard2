@@ -13,7 +13,7 @@
             ["Members", url('cafe:club_settings_members', args=[current_club.id])],
             ["Settings", url('cafe:settings')]
         ]) %}
-            <h1 class="club_settings_name">{{ current_club.name }}</h1>
+            <h1 class="sla__name">{{ current_club.name }}</h1>
         {% endcall %}
     {% elif slot == 'content' %}
         {{ _caller() }}
@@ -21,7 +21,7 @@
 {% endcall %}
 
 <style data-hoist="true">   
-.club_settings_name {
+.sla__name {
     margin-left: 0.5rem;
     font-weight: var(--sl-font-weight-semibold);
 }
