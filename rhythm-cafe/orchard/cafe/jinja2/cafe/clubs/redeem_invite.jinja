@@ -1,0 +1,33 @@
+{% from "cafe/base.jinja" import base %}
+{% from "cafe/layouts/layout_dramatic_form.jinja" import layout_dramatic_form as layout %}
+
+{% set content %}
+    <div class="cri">
+    {% if invite is not none %}
+        <p>You have been invited to join</p>
+        <h2>{{invite.club.name}}</h2>
+        <form method="post" action="{{ url('cafe:redeem_invite', args=[code]) }}">
+            {{ csrf_input }}
+            <sl-button type="submit">Join</sl-button>
+        </form>
+    {% else %}
+        <p><strong>Could not find invite.</strong></p>
+        <p>This could be because:</p>
+        <ul>
+            <li>The link has expired;</li>
+            <li>The link has already been used;</li>
+            <li>The group the link was for has been deleted.</li>
+        </ul>
+        <p>Please ask the group owner to create another link. If it still doesn't work, ping auburn for help.</p>
+    {% endif %}
+</div>
+{% endset %}
+
+{% call base(title="Rhythm Cafe", user=request.user) %}
+    {% call layout(user=request.user, csrf_input=csrf_input) %}
+        {{ content }}
+    {% endcall %}
+{% endcall %}
+
+<style>
+</style>
