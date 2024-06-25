@@ -38,7 +38,6 @@ def alter_membership(request, club_id, user_id):
 def delete_membership(request, club_id, user_id):
     if request.method != 'POST':
         return HttpResponseForbidden()
-    
 
     owners = list(ClubMembership.objects.filter(club=club_id, role="owner"))
     if len(owners) < 2:

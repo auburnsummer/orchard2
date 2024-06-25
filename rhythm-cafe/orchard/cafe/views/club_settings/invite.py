@@ -8,7 +8,8 @@ import string
 
 from cafe.models import Club, ClubInvite
 
-from datetime import datetime, timedelta
+from django.utils import timezone
+from datetime import timedelta
 
 from urllib.parse import urlencode
 
@@ -19,7 +20,6 @@ class CreateInviteForm(ModelForm):
 
 @permission_required("cafe.create_invite_for_club", fn=objectgetter(Club, 'club_id'))
 def create_invite(request, club_id):
-    print("create_invite")
     if request.method != "POST":
         return HttpResponseForbidden()
 
@@ -28,7 +28,7 @@ def create_invite(request, club_id):
         new_invite = ClubInvite(
             club = get_object_or_404(Club, pk=club_id),
             role = form.cleaned_data.get("role"),
-            expiry = datetime.now() + timedelta(hours=24),
+            expiry = timezone.now() + timedelta(hours=24),
             code = get_random_string(30, string.ascii_letters)
         )
         new_invite.save()
