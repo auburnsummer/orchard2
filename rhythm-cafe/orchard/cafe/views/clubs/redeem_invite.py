@@ -13,6 +13,7 @@ class RedeemInviteView(View):
     @method_decorator(login_required)
     def get(self, request, code):
         invite = ClubInvite.objects.filter(code=code).first()
+        print(invite)
         if invite.has_expired():
             invite = None
 
@@ -49,6 +50,6 @@ class RedeemInviteView(View):
 
         invite.delete()
 
-        return HttpResponseRedirect(reverse('cafe.club_settings_members', args=[invite.club.id]))
+        return HttpResponseRedirect(reverse('cafe:club_settings_members', args=[invite.club.id]))
     
 redeem_invite = RedeemInviteView.as_view()

@@ -6,7 +6,7 @@ from django.db import models
 from .utils import create_pk_field
 from cafe.libs.gen_id import IDType
 
-from datetime import datetime
+from django.utils import timezone
 
 def is_role_of_club(role):
     @rules.predicate
@@ -121,7 +121,7 @@ class ClubInvite(models.Model):
     code = models.CharField(max_length=100)
 
     def has_expired(self):
-        return self.expiry > datetime.now()
+        return timezone.now() > self.expiry
 
     def __str__(self):
         return f"Invite to {self.club} as {self.role}, expires {self.expiry}"

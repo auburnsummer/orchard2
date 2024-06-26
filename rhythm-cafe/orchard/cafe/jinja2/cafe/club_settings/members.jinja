@@ -2,7 +2,7 @@
 {% from "cafe/club_settings/layout.jinja" import layout %}
 
 {% set content %}
-    <div x-data="{
+    <div class="sme" x-data="{
         activeUserId: '',
         activeUserName: '',
         kickUserConfirm: false,
@@ -32,19 +32,19 @@
         {% with invite_url = request.GET.get("invite_url") %}
             {% if invite_url is not none %}
                 <div x-data='{ invite_url: window.origin + "{{ invite_url }}" }'>
-                    <div class="c">
-                        <sl-input disabled :value="invite_url">
-                            <span slot="label">
+                    <div class="sme__invite_container">
+                        <sl-input :value="invite_url" class="sme__invite_input">
+                            <span slot="label" class="sme__invite_label">
                                 <span>Here's the invite URL!</span>
-                                <span>(copy it now, this is the only time you can see it)</span>
+                                <span>(copy it now; this is the only time you can see it)</span>
                             </span>
                         </sl-input>
-                        <sl-copy-button :value="invite_url"></sl-copy-button>
+                        <sl-copy-button :value="invite_url" class="sme__invite_button"></sl-copy-button>
                     </div>
                 </div>
             {% endif %}
         {% endwith %}
-        <h1>{{current_club.name}} members</h1>
+        <h1 class="sme__title">{{current_club.name}} members</h1>
         <!-- Change / delete dialog -->
         <sl-dialog :label="`Edit ${activeUserName} (${activeUserId})`" x-ref="dialog">
             <form
@@ -87,7 +87,7 @@
                 <sl-button type="submit">Create link</sl-button>
             </form>
         </sl-dialog>
-        <table>
+        <table class="sme__table">
             <thead>
                 <tr>
                     <th scope="col">User</th>
@@ -124,5 +124,44 @@
 {% endcall %}
 
 <style data-hoist="true">
+.sme__invite_container {
+    background-color: var(--sl-color-primary-100);
+    box-shadow: var(--sl-shadow-medium);
+    padding: 1rem;
+    margin-right: 1rem;
+    margin-bottom: 1.5rem;
 
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+}
+
+.sme__invite_label > span {
+    font-size: var(--sl-font-size-small);
+}
+
+.sme__invite_label > span:first-child {
+    font-weight: var(--sl-font-weight-semibold);
+}
+
+.sme__invite_button {
+    padding-bottom: 0.25rem;
+    padding-left: 0.125rem;
+}
+
+.sme__title {
+    font-size: var(--sl-font-size-large);
+    margin-bottom: 1rem;
+}
+
+.sme__table {
+    text-align: justify;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.sme__table td, .sme__table th {
+    padding: 0.5em;
+    border-bottom: 1px solid var(--sl-color-neutral-200);
+}
 </style>
