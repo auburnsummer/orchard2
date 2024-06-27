@@ -1,14 +1,31 @@
-{% macro base(title, user) %}
+{% macro base(title) %}
 {% from "cafe/head.jinja" import head %}
 <!DOCTYPE html>
 <!-- START base.jinja -->
 <html>
-    {{ head(user, title) }}
+    {{ head(request.user, title) }}
     <body>
         <script>
         0; //prevent Firefox FOUC
         </script>
         {{ caller() }}
+        {% with messages = get_messages(request) %}
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.level == 25 %}  {# success #}
+                        <sl-alert
+                            variant="success"
+                            closable
+                            duration="5000"
+                            x-init="$el.toast()"
+                        >
+                            <sl-icon slot="icon" name="check2-circle"></sl-icon>
+                            <span>{{ message.message }}</span>
+                        </sl-alert>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
     </body>
 </html>
 <!-- END base.jinja -->

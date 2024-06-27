@@ -9,7 +9,7 @@ import datetime
 
 from functools import partial
 from compressor.contrib.jinja2ext import CompressorExtension
-
+from django.contrib import messages
 from orchard.settings import DEBUG
 
 def environment(**options):
@@ -18,7 +18,8 @@ def environment(**options):
         {
             "static": static,
             "url": reverse,
-            "now": partial(datetime.datetime.now, datetime.UTC)
+            "now": partial(datetime.datetime.now, datetime.UTC),
+            "get_messages": messages.get_messages
         }
     )
     if DEBUG:

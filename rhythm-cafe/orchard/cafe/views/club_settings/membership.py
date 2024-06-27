@@ -8,6 +8,8 @@ from django.urls import reverse
 
 from cafe.models import ClubMembership
 
+from django.contrib import messages
+
 class AlterMembershipForm(ModelForm):
     class Meta:
         model = ClubMembership
@@ -31,6 +33,8 @@ def alter_membership(request, club_id, user_id):
 
         membership.role = form.cleaned_data.get("role")
         membership.save()
+        messages.add_message(request, messages.SUCCESS, "Member role changed successfully.")
+
 
     return HttpResponseRedirect(reverse("cafe:club_settings_members", args=[club_id]))
 
@@ -45,5 +49,6 @@ def delete_membership(request, club_id, user_id):
     
     membership = get_object_or_404(ClubMembership, user=user_id, club=club_id)
     membership.delete()
+    messages.add_message(request, messages.SUCCESS, "Member removed from group successfully.")
 
     return HttpResponseRedirect(reverse("cafe:club_settings_members", args=[club_id]))
