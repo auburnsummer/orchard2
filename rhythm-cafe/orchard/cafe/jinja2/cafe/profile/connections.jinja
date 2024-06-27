@@ -1,4 +1,4 @@
-{% from "cafe/base.jinja" import base %}
+{% from "cafe/base.jinja" import base with context %}
 {% from "cafe/profile/layout.jinja" import layout %}
 
 {% set content %}
@@ -51,7 +51,7 @@
     </div>
 {% endset %}
 
-{% call base(title="Rhythm Cafe", user=request.user) %}
+{% call base(title="Rhythm Cafe") %}
     {% call layout(user=request.user, csrf_input=csrf_input) %}
         {{ content }}
     {% endcall %}

@@ -7,6 +7,8 @@ from django.views import View
 from django.utils.decorators import method_decorator
 from django.forms import ModelForm
 
+from django.contrib import messages
+
 
 
 class ClubInfoForm(ModelForm):
@@ -32,6 +34,7 @@ class ClubSettingsInfoView(View):
         if form.is_valid():
             club.name = form.cleaned_data.get("name")
             club.save()
+            messages.add_message(request, messages.SUCCESS, f"Group update successful")
 
         render_data = {
             "current_club": club

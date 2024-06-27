@@ -13,8 +13,8 @@ class RedeemInviteView(View):
     @method_decorator(login_required)
     def get(self, request, code):
         invite = ClubInvite.objects.filter(code=code).first()
-        print(invite)
-        if invite.has_expired():
+        
+        if invite is not None and invite.has_expired():
             invite = None
 
         context = {

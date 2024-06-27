@@ -1,4 +1,4 @@
-{% from "cafe/base.jinja" import base %}
+{% from "cafe/base.jinja" import base with context %}
 {% from "cafe/layouts/layout_dramatic_form.jinja" import layout_dramatic_form as layout %}
 
 {% set content %}
@@ -23,7 +23,7 @@
 </div>
 {% endset %}
 
-{% call base(title="Rhythm Cafe", user=request.user) %}
+{% call base(title="Rhythm Cafe") %}
     {% call layout(user=request.user, csrf_input=csrf_input) %}
         {{ content }}
     {% endcall %}
