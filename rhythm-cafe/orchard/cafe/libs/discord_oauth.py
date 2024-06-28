@@ -1,5 +1,4 @@
-from django.http import HttpRequest
-from django.urls import reverse
+
 import httpx
 from django.utils import timezone
 import datetime

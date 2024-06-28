@@ -1,9 +1,9 @@
-{% from "cafe/layouts/layout_with_header.jinja" import layout_with_header as base_layout %}
+{% from "cafe/layouts/layout_with_header.jinja" import layout_with_header as base_layout with context %}
 
-{% macro layout_dramatic_form(user, csrf_input) %}
+{% macro layout_dramatic_form() %}
 <!-- BEGIN layout_dramatic_form.jinja -->
 {% set _caller = caller %}
-{% call base_layout(user=user, csrf_input=csrf_input) %}
+{% call base_layout() %}
     <div class="ldf__bg diag_pattern_1">
         <div class="ldf__form">
             {{ _caller() }}
@@ -21,7 +21,7 @@
 
 .ldf__form {
     padding: 1.5rem;
-    background-color: var(--sl-color-neutral-100);
+    background-color: var(--sl-color-neutral-50);
     box-shadow: var(--sl-shadow-large);
     display: flex;
     flex-direction: column;

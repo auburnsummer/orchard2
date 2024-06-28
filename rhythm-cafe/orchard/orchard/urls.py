@@ -16,7 +16,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.contrib.auth import views as auth_views
 
 handler404 = "cafe.views.errors.notfound"
 handler500 = "cafe.views.errors.servererror"
@@ -25,6 +24,5 @@ urlpatterns = [
     path('cafe_admin/', admin.site.urls),
     path('hijack/', include('hijack.urls')),
     path("oauth/", include("oauthlogin.urls")),
-    path("accounts/logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("", include("cafe.urls")),
 ]

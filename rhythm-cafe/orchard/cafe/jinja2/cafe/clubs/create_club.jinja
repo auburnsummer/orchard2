@@ -1,5 +1,5 @@
 {% from "cafe/base.jinja" import base with context %}
-{% from "cafe/layouts/layout_dramatic_form.jinja" import layout_dramatic_form as layout %}
+{% from "cafe/layouts/layout_dramatic_form.jinja" import layout_dramatic_form as layout with context %}
 
 {% set content %}
     <form class="create_club_form" action="{{ url('cafe:create_club') }}" method="POST">
@@ -10,7 +10,7 @@
 {% endset %}
 
 {% call base(title="Rhythm Cafe") %}
-    {% call layout(user=request.user, csrf_input=csrf_input) %}
+    {% call layout() %}
         {{ content }}
     {% endcall %}
 {% endcall %}

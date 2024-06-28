@@ -1,3 +1,4 @@
+alo - accounts/login.jinja
 che - components/header.jinja
 cri - components/redeem_invite.jinja
 cse - components/settings_sidebar.jinja

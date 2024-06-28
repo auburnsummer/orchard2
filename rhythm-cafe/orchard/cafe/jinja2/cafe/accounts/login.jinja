@@ -1,0 +1,45 @@
+{% from "cafe/base.jinja" import base with context %}
+{% from "cafe/components/header.jinja" import header with context %}
+{% from "cafe/layouts/layout_dramatic_form.jinja" import layout_dramatic_form as layout with context %}
+
+{% call base(title="Rhythm Cafe") %}
+    {% call layout() %}
+        <div class="alo">
+            {% with next_url = request.GET.get("next") %}
+                {% if next_url is not none %}
+                    <h1 class="alo__title_continue">You need to log in to view this page</h1>
+                {% else %}
+                    <h1 class="alo__title">Login</h1>
+                {% endif %}
+                <form action="/oauth/discord/login/" method="post" class="alo__form">
+                    {{ csrf_input }}
+                    {% if next_url is not none %}
+                        <input type="hidden" name="next" value="{{ next_url }}"/>
+                    {% endif %}
+                    <sl-button type="submit" class="alo__button">Log in with Discord</sl-button>
+                </form>
+            {% endwith %}
+        </div>
+    {% endcall %}
+{% endcall %}
+
+<style data-hoist="true">
+.alo {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    gap: 1rem;
+}
+
+.alo__title_continue {
+    font-size: 1.25rem;
+}
+
+.alo__form {
+    display: flex;
+}
+
+.alo__button {
+    flex-grow: 1;
+}
+</style>
