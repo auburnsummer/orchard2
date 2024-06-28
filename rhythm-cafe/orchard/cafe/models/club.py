@@ -5,6 +5,7 @@ from django.db import models
 
 from .utils import create_pk_field
 from cafe.libs.gen_id import IDType
+from cafe.models.predicates import not_anonymous
 
 from django.utils import timezone
 
@@ -20,8 +21,8 @@ def is_role_of_club(role):
 
     return user_has_role_in_club
 
-is_owner = is_role_of_club("owner")
-is_at_least_admin = is_owner | is_role_of_club("admin")
+is_owner = not_anonymous & is_role_of_club("owner")
+is_at_least_admin = not_anonymous & (is_owner | is_role_of_club("admin"))
 
 class Club(RulesModel):
     """

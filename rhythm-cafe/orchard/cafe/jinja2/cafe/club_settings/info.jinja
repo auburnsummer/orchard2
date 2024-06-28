@@ -1,5 +1,5 @@
 {% from "cafe/base.jinja" import base with context %}
-{% from "cafe/club_settings/layout.jinja" import layout %}
+{% from "cafe/club_settings/layout.jinja" import layout with context %}
 
 {% set content %}
     {% with can_edit = request.user.has_perm("cafe.change_info_of_club", current_club) %}
@@ -30,7 +30,7 @@
 {% endset %}
 
 {% call base(title="Rhythm Cafe") %}
-    {% call layout(user=request.user, csrf_input=csrf_input, current_club=current_club) %}
+    {% call layout(current_club=current_club) %}
         {{ content }}
     {% endcall %}
 {% endcall %}

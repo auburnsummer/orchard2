@@ -44,7 +44,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 LOGOUT_REDIRECT_URL = "/"
-LOGIN_URL = "/"
+LOGIN_URL = "/accounts/login"
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 

@@ -1,9 +1,9 @@
-{% from "cafe/layouts/layout_with_header.jinja" import layout_with_header as base_layout %}
+{% from "cafe/layouts/layout_with_header.jinja" import layout_with_header as base_layout with context %}
 
-{% macro layout_with_header_and_sidebar(user, csrf_input) %}
+{% macro layout_with_header_and_sidebar() %}
 <!-- BEGIN layout_with_header_and_sidebar.jinja -->
 {% set _caller = caller %}
-{% call base_layout(user=user, csrf_input=csrf_input) %}
+{% call base_layout() %}
     <div class="lhs">
         <div class="lhs__sidebar">
             {{ _caller("sidebar") }}

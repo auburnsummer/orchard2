@@ -1,9 +1,8 @@
 {% from "cafe/base.jinja" import base with context %}
-{% from "cafe/components/header.jinja" import header %}
-{% from "cafe/layouts/layout_with_header_and_sidebar.jinja" import layout_with_header_and_sidebar as layout %}
+{% from "cafe/layouts/layout_with_header_and_sidebar.jinja" import layout_with_header_and_sidebar as layout with context %}
 
 {% call base(title="Rhythm Cafe") %}
-    {% call(slot) layout(user=request.user, csrf_input=csrf_input) %}
+    {% call(slot) layout() %}
         {% if slot == "content" %}
             Hello content!
         {% elif slot == "sidebar" %}

@@ -1,11 +1,14 @@
 from django.urls import path
 
 from . import views
+from django.contrib.auth import views as auth_views
 
 app_name = "cafe"
 urlpatterns = [
     path("discord_interactions/", views.discord_bot.entry, name="discord_interactions"),
 
+    path("accounts/login/", views.accounts.login, name="login"),
+    path("accounts/logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("accounts/profile/", views.profile.profile, name="profile"),
     path("accounts/profile/groups/", views.profile.clubs, name="clubs"),
     path("accounts/profile/settings/", views.profile.settings, name="settings"),

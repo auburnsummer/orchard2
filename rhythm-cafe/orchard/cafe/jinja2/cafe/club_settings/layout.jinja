@@ -1,11 +1,11 @@
 
-{% from "cafe/layouts/layout_with_header_and_sidebar.jinja" import layout_with_header_and_sidebar as base_layout %}
+{% from "cafe/layouts/layout_with_header_and_sidebar.jinja" import layout_with_header_and_sidebar as base_layout with context %}
 {% from "cafe/components/settings_sidebar.jinja" import settings_sidebar %}
 
-{% macro layout(user, csrf_input, current_club) %}
+{% macro layout(current_club) %}
 <!-- BEGIN club_settings/layout.jinja -->
 {% set _caller = caller %}
-{% call(slot) base_layout(user=user, csrf_input=csrf_input) %}
+{% call(slot) base_layout() %}
     {% if slot == 'sidebar' %}
         {% call settings_sidebar([
             ["Info", url('cafe:club_settings_info', args=[current_club.id])],

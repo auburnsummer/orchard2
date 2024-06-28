@@ -1,5 +1,5 @@
 {% from "cafe/base.jinja" import base with context %}
-{% from "cafe/profile/layout.jinja" import layout %}
+{% from "cafe/profile/layout.jinja" import layout with context %}
 
 {% set content %}
     <div class="ppr">
@@ -15,7 +15,7 @@
 {% endset %}
 
 {% call base(title="Rhythm Cafe") %}
-    {% call layout(user=request.user, csrf_input=csrf_input) %}
+    {% call layout() %}
         {{ content }}
     {% endcall %}
 {% endcall %}

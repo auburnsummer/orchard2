@@ -1,8 +1,8 @@
-{% from 'cafe/components/header.jinja' import header %}
+{% from 'cafe/components/header.jinja' import header with context %}
 
-{% macro layout_with_header(user, csrf_input) %}
+{% macro layout_with_header() %}
 <!-- BEGIN layout_with_header.jinja -->
-{{ header(user, csrf_input) }}
+{{ header() }}
 <div class="lhh">
     {{ caller() }}
 </div>
