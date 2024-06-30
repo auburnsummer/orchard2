@@ -1,3 +1,5 @@
+{% from "cafe/components/login_with_discord.jinja" import login_with_discord with context %}
+
 {% macro header() -%}
 {% with user = request.user %}
     <div class="che" x-data>
@@ -44,15 +46,9 @@
                 </div>
             </sl-dropdown>
         {% else %}
-            <form action="/oauth/discord/login/" method="post">
-                {{ csrf_input }}
-                {% with next_url = request.GET.get("next") %}
-                    {% if next_url is not none %}
-                        <input type="hidden" name="next" value="{{ next_url }}"/>
-                    {% endif %}
-                {% endwith %}
+            {% call login_with_discord() %}
                 <sl-button type="submit">Log in with Discord</sl-button>
-            </form>
+            {% endcall %}
         {% endif %}
     </div>
 {% endwith %}
