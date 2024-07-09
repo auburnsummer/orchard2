@@ -1,7 +1,6 @@
 from django.db import models
 
-from .utils import create_pk_field
-from cafe.libs.gen_id import IDType
+from cafe.models import Club
 
 
 class DiscordGuild(models.Model):
@@ -10,8 +9,9 @@ class DiscordGuild(models.Model):
 
     The id is the discord id.
 
-    There isn't anything else here yet, but we're using it in case we end up storing
-    discord-specific info in the future.
+    Guilds can be associated with up to one Club. This allows certain slash commands
+    used within the guild to work with the Club.
     """
     id = models.TextField(primary_key=True)
-    
+
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, null=True)

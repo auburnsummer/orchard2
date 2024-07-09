@@ -37,7 +37,7 @@ class RedeemInviteView(View):
             user=request.user,
             club=invite.club
         ).first()
-        if existing_membership is not None:
+        if existing_membership is not None and existing_membership.role != "owner":
             existing_membership.role = invite.role
             existing_membership.save()
         else:

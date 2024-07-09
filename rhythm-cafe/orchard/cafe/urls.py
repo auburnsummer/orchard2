@@ -16,10 +16,12 @@ urlpatterns = [
 
     path("groups/create/", views.clubs.create_club, name="create_club"),
 
-    path("groups/redeem_invite/<code>", views.clubs.redeem_invite, name="redeem_invite"),
-
+    path("groups/redeem_invite/<code>/", views.clubs.redeem_invite, name="redeem_invite"),
+    path("groups/connect_discord/<code>/", views.clubs.connect_discord_form, name="connect_club_discord"),
+    
     path("groups/<club_id>/settings/", views.club_settings.info, name="club_settings_info"),
     path("groups/<club_id>/settings/invite/", views.club_settings.create_invite, name="club_settings_membership_invite"),
+    path("groups/<club_id>/settings/connections/", views.club_settings.connections, name="club_settings_connections"),
     path("groups/<club_id>/settings/members/", views.club_settings.members, name="club_settings_members"),
     path("groups/<club_id>/settings/members/<user_id>/", views.club_settings.alter_membership, name="club_settings_membership"),
     path("groups/<club_id>/settings/members/<user_id>/delete/", views.club_settings.delete_membership, name="club_settings_membership_delete"),

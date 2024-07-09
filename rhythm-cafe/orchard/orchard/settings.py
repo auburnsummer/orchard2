@@ -38,6 +38,8 @@ ALLOWED_HOSTS = [
   'seal-epic-luckily.ngrok-free.app'
 ]
 
+DOMAIN = 'https://seal-epic-luckily.ngrok-free.app'
+
 CSRF_TRUSTED_ORIGINS = [
     'https://seal-epic-luckily.ngrok-free.app',
     'http://127.0.0.1:8000'
@@ -120,6 +122,8 @@ TEMPLATES = [
 
 DISCORD_CLIENT_ID = environ["DISCORD_CLIENT_ID"]
 DISCORD_CLIENT_SECRET = environ["DISCORD_CLIENT_SECRET"]
+
+DISCORD_BOT_INVITE_URL = f"https://discord.com/oauth2/authorize?client_id={DISCORD_CLIENT_ID}&integration_type=0&scope=applications.commands"
 
 OAUTH_LOGIN_PROVIDERS = {
     "discord": {

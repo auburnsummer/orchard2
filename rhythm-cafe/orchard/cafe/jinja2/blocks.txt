@@ -10,6 +10,7 @@ pse - profile/settings.jinja
 ldf - layouts/layout_dramatic_form.jinja
 lhh - layouts/layout_with_header.jinja
 lhs - layouts/layout_with_header_and_sidebar.jinja
+sco - club_settings/connections.jinja
 sin - club_settings/info.jinja
 sla - club_settings/layout.jinja
 sme - club_settings/members.jinja

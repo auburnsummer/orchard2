@@ -9,7 +9,7 @@
     {% if slot == 'sidebar' %}
         {% call settings_sidebar([
             ["Info", url('cafe:club_settings_info', args=[current_club.id])],
-            ["Connections", '/'],
+            ["Connections", url('cafe:club_settings_connections', args=[current_club.id])],
             ["Members", url('cafe:club_settings_members', args=[current_club.id])],
             ["Settings", url('cafe:settings')]
         ]) %}
