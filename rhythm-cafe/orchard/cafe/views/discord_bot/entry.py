@@ -43,6 +43,6 @@ def entry(request):
     if data['type'] == 2:
         command_name = data['data']['name']
         if command_name in HANDLERS:
-            return HANDLERS[command_name]()
+            return HANDLERS[command_name](data)
         
     return HttpResponseNotFound('Not sure how to handle this type.')

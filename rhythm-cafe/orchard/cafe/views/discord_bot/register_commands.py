@@ -13,6 +13,12 @@ COMMANDS = [
         "type": 1,
         "description": "Show the version of the Rhythm Cafe bot",
         "default_member_permissions": "0"
+    },
+    {
+        "name": "connectgroup",
+        "type": 1,
+        "description": "Connect this Discord server to a group",
+        "default_member_permissions": "0"
     }
 ]
 

@@ -1,0 +1,30 @@
+{% from "cafe/base.jinja" import base with context %}
+{% from "cafe/layouts/layout_dramatic_form.jinja" import layout_dramatic_form as layout with context %}
+
+{% set content %}
+    <div class="ccd">
+        {% if guild_id is not none %}
+            <form method="post"> 
+                {{ csrf_input }}
+                <sl-select label="Select group to link the discord server to:" required name="club_id">
+                    {% for club in clubs %}
+                        <sl-option value="{{ club.id }}">
+                            <span>{{ club.name }}</span>
+                            <span>({{club.id}})</span>
+                        </sl-option>
+                    {% endfor %}
+                </sl-select>
+                <sl-button variant="primary" type="submit">Link</sl-button>
+            </form>
+        {% else %}
+            <p>Signature not valid or has expired. Try running the command again.</p>
+            <p>If it still doesn't work, please ping auburn!</p>
+        {% endif %}
+    </div>
+{% endset %}
+
+{% call base(title="Rhythm Cafe") %}
+    {% call layout() %}
+        {{ content }}
+    {% endcall %}
+{% endcall %}
