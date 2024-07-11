@@ -1,1 +1,0 @@
-Simple API for managing files backed by a Bunny Storage bucket.
