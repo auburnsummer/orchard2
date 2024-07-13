@@ -24,17 +24,15 @@ adjust who can use which commands by going to Server Settings -> Integrations.
    here are some recommendations:
 
    - Restrict to server owners only: `/connectgroup`
-   - Restrict to moderators: 
+   - Restrict to moderators: `/viewgroup`
    - Allow for everyone: `/version`
 
 [img]: {{ static('cafe/a1.png') }}
             </script>
         </wc-markdown>
 
-4. Run the command `/connectgroup`. Select this group.
-5. You can use the form below to verify that your server is connected to the group. To use it,
-enable Discord Developer Mode (Settings -> Advanced) and then right click on your server and
-select "Copy ID".
+4. Run the command `/connectgroup`. Select this group in the page that opens.
+5. You can use the `/viewgroup` command in the server to verify the link is complete.
     </div>
 </div>
 {% endset %}
@@ -46,5 +44,7 @@ select "Copy ID".
 {% endcall %}
 
 <style data-hoist="true">
-
+.sco__md img {
+    max-width: 300px;
+}
 </style>
