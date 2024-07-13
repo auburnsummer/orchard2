@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, RDLevel, Club, UserProfile, ClubMembership, ClubRDLevel, ClubInvite
+from .models import User, RDLevel, Club, UserProfile, ClubMembership, ClubRDLevel, ClubInvite, DiscordGuild
 
 # Register your models here.
 
@@ -12,3 +12,4 @@ admin.site.register(ClubMembership)
 admin.site.register(ClubInvite)
 admin.site.register(ClubRDLevel)
 admin.site.register(UserProfile)
+admin.site.register(DiscordGuild)

@@ -5,7 +5,7 @@ from urllib.parse import urlencode
 
 from django.urls import reverse
 
-from orchard.settings import DOMAIN
+from orchard.settings import DOMAIN_URL
 
 connectgroup_signer = TimestampSigner(salt="connectgroup")
 
@@ -26,7 +26,7 @@ def connectgroup(data):
     guild_id = data['guild']['id']
     signed_token = connectgroup_signer.sign(guild_id)
 
-    url = DOMAIN + reverse("cafe:connect_club_discord", args=[signed_token])
+    url = DOMAIN_URL + reverse("cafe:connect_club_discord", args=[signed_token])
     return JsonResponse({
         "type": 4,
         "data": {
