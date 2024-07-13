@@ -32,16 +32,19 @@ DEBUG = True
 
 environ['HTTPS'] = "on"
 
+DOMAIN = environ['DOMAIN']
+
+DOMAIN_URL = f"https://{DOMAIN}"
+
 ALLOWED_HOSTS = [
   'localhost',
   '127.0.0.1',
-  'seal-epic-luckily.ngrok-free.app'
+  DOMAIN,
 ]
 
-DOMAIN = 'https://seal-epic-luckily.ngrok-free.app'
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://seal-epic-luckily.ngrok-free.app',
+    DOMAIN_URL,
     'http://127.0.0.1:8000'
 ]
 

@@ -1,26 +1,29 @@
-[tool.poetry]
+[project]
 name = "rhythm-cafe"
 version = "0.1.0"
-description = ""
-authors = ["aub <37142182+auburnsummer@users.noreply.github.com>"]
+description = "Add your description here"
+authors = [
+    { name = "auburn", email = "37142182+auburnsummer@users.noreply.github.com" }
+]
+dependencies = [
+    "django>=5.0.7",
+    "nanoid>=2.0.0",
+    "jinja2>=3.1.4",
+    "django-oauth-login>=0.2.4",
+    "httpx>=0.27.0",
+    "python-dotenv>=1.0.1",
+    "cryptography>=42.0.8",
+    "django-hijack>=3.6.0",
+    "django-compressor>=4.5",
+    "rules>=3.4",
+    "names>=0.3.0",
+    "django-minify-html>=1.8.0",
+]
 readme = "README.md"
+requires-python = ">= 3.8"
 
-[tool.poetry.dependencies]
-python = "^3.12"
-Django = "^5.0.6"
-nanoid = "^2.0.0"
-jinja2 = "^3.1.4"
-django-oauth-login = "^0.2.4"
-httpx = "^0.27.0"
-python-dotenv = "^1.0.1"
-cryptography = "^42.0.7"
-django-hijack = "^3.4.5"
-django-compressor = "^4.4"
-rules = "^3.4"
-names = "^0.3.0"
-django-minify-html = "^1.7.1"
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.rye]
+managed = true
+virtual = true
+dev-dependencies = []
+universal = true
