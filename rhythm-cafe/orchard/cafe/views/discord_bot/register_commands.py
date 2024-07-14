@@ -25,6 +25,11 @@ COMMANDS = [
         "type": 1,
         "description": "View this server's connected group",
         "default_member_permissions": "0"
+    },
+    {
+        "name": "Add level to Rhythm Café",
+        "type": 3,
+        "default_member_permissions": "0"
     }
 ]
 
