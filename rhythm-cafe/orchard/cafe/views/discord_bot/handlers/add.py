@@ -24,6 +24,7 @@ def add(data):
     for attachment in attachments:
         secret = addlevel_signer.sign_object({
             "level_url": attachment['proxy_url'],
+            "discord_user_id": data['member']['user']['id'],
             "club_id": club.id
         })
         url = DOMAIN_URL + reverse("cafe:level_add", args=[secret])

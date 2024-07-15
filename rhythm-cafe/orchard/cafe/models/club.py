@@ -44,7 +44,7 @@ class Club(RulesModel):
             "view_member_of": is_at_least_admin,
             "view_info_of": is_at_least_admin,
             "change_info_of": is_owner,
-            "create_invite_for": is_owner,
+            "create_invite_for": is_owner
         }
 
 @rules.predicate
