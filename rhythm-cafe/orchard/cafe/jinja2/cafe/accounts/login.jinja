@@ -8,7 +8,13 @@
         <div class="alo">
             {% with next_url = request.GET.get("next") %}
                 {% if next_url is not none %}
-                    <h1 class="alo__title_continue">You need to log in to view this page</h1>
+                    <h1 class="alo__title_continue">
+                        {% if request.user.is_authenticated %}
+                        The current user does not have permissions to view this page
+                        {% else %}
+                        You need to log in to view this page
+                        {% endif %}
+                    </h1>
                 {% else %}
                     <h1 class="alo__title">Login</h1>
                 {% endif %}

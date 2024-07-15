@@ -26,7 +26,7 @@ urlpatterns = [
     path("groups/<club_id>/settings/members/<user_id>/", views.club_settings.alter_membership, name="club_settings_membership"),
     path("groups/<club_id>/settings/members/<user_id>/delete/", views.club_settings.delete_membership, name="club_settings_membership_delete"),
 
-    path("levels/add/<code>/", views.index, name="level_add"),
+    path("levels/add/<code>/", views.levels.add, name="level_add"),
 
     path("meta/all_styles.css", views.meta.combined_css, name="combined_css"),
 
