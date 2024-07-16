@@ -1,1 +1,36 @@
-yo
+{% from "cafe/base.jinja" import base with context %}
+{% from "cafe/layouts/layout_dramatic_form.jinja" import layout_dramatic_form as layout with context %}
+
+{% set content %}
+<script>
+const data = {
+    prefillUrl: "{{ url('cafe:level_prefill', args=[code]) }}"
+}
+</script>
+<div class="ead" x-data="data">
+    <sl-spinner class="ead__spinner"></sl-spinner>
+    <p class="ead__analyzing">Analyzing level...</p>
+</div>
+{% endset %}
+
+{% call base(title="Rhythm Cafe") %}
+    {% call layout() %}
+        {{ content }}
+    {% endcall %}
+{% endcall %}
+
+<style data-hoist="true">
+.ead {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ead__spinner {
+    font-size: 2rem;
+}
+
+.ead__analyzing {
+    padding-top: 1rem;
+}
+</style>
