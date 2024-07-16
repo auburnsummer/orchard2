@@ -55,4 +55,4 @@ def add(request, code):
     if not ok_to_continue(discord_user_id, request.user, club):
         raise BadRequest("User does not have permissions to do this action")
     
-    return render(request, "levels/add.jinja", {})
+    return render(request, "cafe/levels/add.jinja", {})
