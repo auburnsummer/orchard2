@@ -26,7 +26,9 @@ requires-python = ">= 3.8"
 [tool.rye]
 managed = true
 virtual = true
-dev-dependencies = []
+dev-dependencies = [
+    "pytest>=8.2.2",
+]
 universal = true
 
 [tool.rye.workspace]
