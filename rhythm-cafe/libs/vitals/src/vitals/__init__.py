@@ -1,2 +1,1 @@
-def hello() -> str:
-    return "Hello from vitals!"
+from .vitals import main as analyze

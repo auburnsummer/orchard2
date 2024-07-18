@@ -10,6 +10,7 @@
 #   universal: true
 
 -e file:libs/rdlevel_parse
+-e file:libs/utils
 -e file:libs/vitals
 anyio==4.4.0
     # via httpx
@@ -21,6 +22,8 @@ certifi==2024.7.4
     # via httpx
 cffi==1.16.0 ; platform_python_implementation != 'PyPy'
     # via cryptography
+colorama==0.4.6 ; sys_platform == 'win32'
+    # via loguru
 cryptography==42.0.8
 django==5.0.7
     # via django-appconf
@@ -43,12 +46,17 @@ idna==3.7
     # via anyio
     # via httpx
 jinja2==3.1.4
+loguru==0.7.2
 markupsafe==2.1.5
     # via jinja2
 minify-html==0.15.0
     # via django-minify-html
+msgspec==0.18.6
+    # via vitals
 names==0.3.0
 nanoid==2.0.0
+pillow==10.4.0
+    # via vitals
 pycparser==2.22 ; platform_python_implementation != 'PyPy'
     # via cffi
 python-dotenv==1.0.1
@@ -64,3 +72,5 @@ sqlparse==0.5.0
     # via django
 tzdata==2024.1 ; sys_platform == 'win32'
     # via django
+win32-setctime==1.1.0 ; sys_platform == 'win32'
+    # via loguru
