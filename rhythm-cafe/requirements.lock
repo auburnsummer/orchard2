@@ -9,6 +9,7 @@
 #   generate-hashes: false
 #   universal: true
 
+-e file:libs/rdlevel_parse
 -e file:libs/vitals
 anyio==4.4.0
     # via httpx
