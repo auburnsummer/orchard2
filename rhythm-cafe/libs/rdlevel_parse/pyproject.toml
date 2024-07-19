@@ -22,3 +22,6 @@ allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/rdlevel_parse"]
+
+[project.scripts]
+rdlevel-parse = 'rdlevel_parse:main'
