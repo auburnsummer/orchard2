@@ -1,0 +1,47 @@
+# serializer version: 1
+# name: test_snapshot[orchard2-testfiles.b-cdn.net_rdzips_inertia-YDxuTyTvdrM.rdzip]
+  dict({
+    'artist': 'AJR',
+    'artist_tokens': list([
+      'AJR',
+    ]),
+    'authors': list([
+      'crimsonDestroyer',
+    ]),
+    'authors_raw': 'crimsonDestroyer',
+    'description': 'When Lucky hits his final home run out on the field, a little someone was also there, watching from the background. When they have to choose between staying where they are and following Lucky to new heights at the hospital, how can they choose?',
+    'difficulty': 2,
+    'has_classics': True,
+    'has_freetimes': True,
+    'has_freezeshots': True,
+    'has_holds': False,
+    'has_oneshots': True,
+    'has_skipshots': True,
+    'has_squareshots': True,
+    'has_window_dance': False,
+    'hue': 0.6,
+    'icon': 'c2725cee7163c2d81a08ae6a72a051eaa07c6643',
+    'image': '7af17056cdc93fdbe6c0a8bc5c476a8ffee66645',
+    'is_animated': False,
+    'last_updated': datetime.datetime(2024, 7, 14, 9, 25, 34),
+    'max_bpm': 58.66666,
+    'min_bpm': 58.66666,
+    'rdlevel_sha1': 'fc44c6bb10fad05aa06ddb9efc677e6bb3ab7ca0',
+    'seizure_warning': False,
+    'sha1': 'ba34197f3b35b86bd7c8ea85d5ce28d3ed281d1c',
+    'single_player': True,
+    'song': 'Inertia',
+    'tags': list([
+      'ajr',
+      'the maybe man',
+      'squareshots',
+      'freezeshots',
+      'burn beats',
+      'subdivisions',
+      'skipshots',
+      '8beat',
+    ]),
+    'thumb': '16d0b53a0e8d5f6ee77b8c15cd37eb154f78f485',
+    'two_player': False,
+  })
+# ---
