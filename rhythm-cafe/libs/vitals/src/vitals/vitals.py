@@ -1,5 +1,3 @@
-import pprint
-import sys
 import zipfile
 from typing import IO
 import msgspec
@@ -21,8 +19,6 @@ from .facets.updated_facet import updated_facet
 
 from .msgspec_schema import VitalsLevel
 
-from loguru import logger
-
 import msgspec
 
 
@@ -30,7 +26,7 @@ class VitalsException(Exception):
     pass
 
 
-def main(f: IO[bytes]) -> VitalsLevel:
+def vitals(f: IO[bytes]) -> VitalsLevel:
     facets = {
         "artist": make_color_enabled_key_facet(["settings", "artist"]),
         "artist_tokens": artist_list_facet,
