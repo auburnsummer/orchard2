@@ -14,6 +14,8 @@ from cafe.models.club import is_at_least_admin
 
 from django.shortcuts import render
 
+from .check import check_if_ok_to_continue
+
 def ok_to_continue(discord_user_id, user, club):
     # one of these two conditions must be true:
     #    a. the user is linked to the discord account that posted the message.
@@ -34,26 +36,8 @@ def ok_to_continue(discord_user_id, user, club):
 
 @login_required
 def add(request, code):
-    # 1. the code must be valid.
-    try:
-        result = addlevel_signer.unsign_object(code, max_age=timedelta(days=7))
-    except BadSignature:
-        raise BadRequest("Code invalid, try running command again")
-
-    # 2. the club must exist.
-    club_id = result['club_id']
-    try:
-        club = Club.objects.get(id=club_id)
-    except Club.DoesNotExist:
-        raise ObjectDoesNotExist("club does not exist")
-    
-    # 3. one of these two conditions must be true:
-    #    a. the user is linked to the discord account that posted the message.
-    #    b. the user is an admin or owner of the club.
-    discord_user_id = result['discord_user_id']
-
-    if not ok_to_continue(discord_user_id, request.user, club):
-        raise BadRequest("User does not have permissions to do this action")
+    # throws if we can't continue
+    check_if_ok_to_continue(code, request.user)
     
     render_data = {
         "code": code
