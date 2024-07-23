@@ -20,6 +20,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 from os import environ
 
+from huey import SqliteHuey
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -82,7 +84,8 @@ INSTALLED_APPS = [
     'hijack',
     'hijack.contrib.admin',
     'rules',
-    'django_minify_html'
+    'django_minify_html',
+    'huey.contrib.djhuey'
 ]
 
 MIDDLEWARE = [
@@ -99,6 +102,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'orchard.urls'
+
+HUEY = SqliteHuey('orchard-huey', store_none=True)
 
 TEMPLATES = [
     {
