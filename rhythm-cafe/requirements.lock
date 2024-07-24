@@ -9,6 +9,7 @@
 #   generate-hashes: false
 #   universal: true
 
+-e file:libs/bunny_storage
 -e file:libs/rdlevel_parse
 -e file:libs/utils
 -e file:libs/vitals
@@ -70,6 +71,8 @@ sniffio==1.3.1
     # via httpx
 sqlparse==0.5.0
     # via django
+tenacity==8.5.0
+    # via bunny-storage
 tzdata==2024.1 ; sys_platform == 'win32'
     # via django
 win32-setctime==1.1.0 ; sys_platform == 'win32'
