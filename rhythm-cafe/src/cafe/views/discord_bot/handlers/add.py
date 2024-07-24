@@ -1,4 +1,5 @@
 from django.core.signing import TimestampSigner
+from loguru import logger
 from .utils import ephemeral_response, get_club_from_guild_id
 
 from orchard.settings import DOMAIN_URL
@@ -23,7 +24,7 @@ def add(data):
     lines = []
     for attachment in attachments:
         secret = addlevel_signer.sign_object({
-            "level_url": attachment['proxy_url'],
+            "level_url": attachment['url'],
             "discord_user_id": data['member']['user']['id'],
             "club_id": club.id
         })

@@ -4,7 +4,16 @@
 {% set content %}
 <script>
 const data = {
-    prefillUrl: "{{ url('cafe:level_prefill', args=[code]) }}"
+    prefillUrl: "{{ url('cafe:level_prefill', args=[code]) }}",
+    csrfToken: "{{ csrf_token }}",
+    init() {
+        fetch(this.prefillUrl, {
+            method: 'POST',
+            headers:  {
+                'X-CSRFToken': this.csrfToken
+            }
+        })
+    }
 }
 </script>
 <div class="ead" x-data="data">

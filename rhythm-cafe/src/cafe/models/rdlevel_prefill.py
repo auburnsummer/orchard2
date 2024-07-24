@@ -21,3 +21,5 @@ class RDLevelPrefillResult(RulesModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, default=None)
     # the club that the prefill is allowed to be used for.
     club = models.ForeignKey(Club, on_delete=models.CASCADE, blank=True, null=True, default=None)
+    # errors that occurred during the prefill.
+    errors = models.TextField(default="")

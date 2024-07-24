@@ -101,10 +101,7 @@ class BunnyStorage:
 
 
     def upload_file_by_hash(self, file: BinaryIO, namespace: str, file_extension: str):
-        dir1, dir2, rest = self._get_hash_parts(file)
-        self._get_hash_path_and_file_name(file, namespace, file_extension)
+        path, file_name = self._get_hash_path_and_file_name(file, namespace, file_extension)
 
-        path = f"{path}/{dir1}/{dir2}"
-        file_name = f"{rest}.{file_extension}"
         self.upload_file(file, path, file_name, True)
         return self.get_url_by_hash(file, namespace, file_extension)
