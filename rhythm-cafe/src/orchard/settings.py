@@ -103,7 +103,16 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'orchard.urls'
 
-HUEY = SqliteHuey('orchard-huey', store_none=True)
+HUEY = {
+    'huey_class': SqliteHuey,
+    'results': True,
+    'store_none': True,
+    'filename': 'huey.db',
+    'consumer': {
+        'workers': 2,
+        'worker_type': 'process'
+    }
+}
 
 TEMPLATES = [
     {
@@ -149,6 +158,10 @@ DISCORD_PUBLIC_KEY = environ["DISCORD_PUBLIC_KEY"]
 
 WSGI_APPLICATION = 'orchard.wsgi.application'
 
+BUNNY_STORAGE_BASE_ENDPOINT = environ["BUNNY_STORAGE_BASE_ENDPOINT"]
+BUNNY_STORAGE_API_KEY = environ["BUNNY_STORAGE_API_KEY"]
+BUNNY_STORAGE_ZONE_NAME = environ["BUNNY_STORAGE_ZONE_NAME"]
+BUNNY_STORAGE_CDN_URL = environ["BUNNY_STORAGE_CDN_URL"]
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
