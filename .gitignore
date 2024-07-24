@@ -177,3 +177,5 @@ NEXT.txt
 .DS_Store
 
 huey.db
+huey.db-shm
+huey.db-wal
