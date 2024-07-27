@@ -16,6 +16,8 @@ from django.shortcuts import render
 
 from .check import check_if_ok_to_continue
 
+from django_minify_html.decorators import no_html_minification
+
 def ok_to_continue(discord_user_id, user, club):
     # one of these two conditions must be true:
     #    a. the user is linked to the discord account that posted the message.
@@ -33,7 +35,7 @@ def ok_to_continue(discord_user_id, user, club):
 
     return is_at_least_admin(user, club)
 
-
+@no_html_minification
 @login_required
 def add(request, code):
     # throws if we can't continue
