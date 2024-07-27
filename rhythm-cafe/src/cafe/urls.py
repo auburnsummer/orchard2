@@ -27,6 +27,7 @@ urlpatterns = [
     path("groups/<club_id>/settings/members/<user_id>/delete/", views.club_settings.delete_membership, name="club_settings_membership_delete"),
 
     path("levels/add/<code>/", views.levels.add, name="level_add"),
+    path("levels/add/from_prefill/<prefill_id>/", views.index, name="level_add_from_prefill"),
     path("levels/add/<code>/prefill/", views.levels.run_prefill, name="level_prefill"),
 
     path("prefill/<prefill_id>/", views.levels.prefill_status, name="prefill"),

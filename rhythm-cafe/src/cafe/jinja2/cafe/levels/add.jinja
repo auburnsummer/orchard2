@@ -25,8 +25,7 @@ const data = {
         const resp = await fetch(this.prefillStatusUrl + '?_=' + Date.now());
         const data = await resp.json();
         if (data.ready === true) {
-            // i don't have this yet so for now
-            alert('prefill ready');
+            window.location = data.redirect_url;
         }
         if (data.errors !== "") {
             alert('prefill errors: ' + data.errors);
