@@ -5,15 +5,34 @@
 <script>
 const data = {
     prefillUrl: "{{ url('cafe:level_prefill', args=[code]) }}",
+    prefillStatusUrl: "{{ url('cafe:prefill', args=['REPLACE_ME']) }}",
     csrfToken: "{{ csrf_token }}",
-    init() {
-        fetch(this.prefillUrl, {
+    prefillId: "",
+    async init() {
+        const resp = await fetch(this.prefillUrl, {
             method: 'POST',
             headers:  {
                 'X-CSRFToken': this.csrfToken
             }
-        })
+        });
+        const data = await resp.json();
+        this.prefillId = data.id;
+        this.prefillStatusUrl = this.prefillStatusUrl.replace('REPLACE_ME', this.prefillId);
+        setInterval(this.checkPrefillStatus.bind(this), 2000);
+    },
+    async checkPrefillStatus() {
+        // add a cache buster
+        const resp = await fetch(this.prefillStatusUrl + '?_=' + Date.now());
+        const data = await resp.json();
+        if (data.ready === true) {
+            // i don't have this yet so for now
+            alert('prefill ready');
+        }
+        if (data.errors !== "") {
+            alert('prefill errors: ' + data.errors);
+        }
     }
+
 }
 </script>
 <div class="ead" x-data="data">

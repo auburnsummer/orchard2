@@ -67,7 +67,7 @@ def _run_prefill(level_url: str, prefill_result: RDLevelPrefillResult):
 
 
 @login_required
-def prefill(request, code):
+def run_prefill(request, code):
     if request.method != "POST":
         return HttpResponseNotAllowed()
 
@@ -80,5 +80,6 @@ def prefill(request, code):
         user=request.user,
         club=Club.objects.get(id=club_id)
     )
+    prefill_result.save()
     _run_prefill(level_url, prefill_result)
     return JsonResponse(model_to_dict(prefill_result))
