@@ -17,9 +17,18 @@
                 {% else %}
                     <h1 class="alo__title">Login</h1>
                 {% endif %}
-                {% call login_with_discord("alo__form") %}
-                    <sl-button type="submit" class="alo__button">Log in with Discord</sl-button>
-                {% endcall %}
+                {% if request.user.is_authenticated %}
+                    <p>Click the button below to log out, then log in as a different user</p>
+                    <form method="post" action="{{ url('cafe:logout') }}">
+                        {{ csrf_input }}
+                        <input type="hidden" name="next" x-init :value="window.location"/>
+                        <sl-button type="submit" class="alo__button">Log out</sl-button>
+                    </form>
+                {% else %}
+                    {% call login_with_discord("alo__form") %}
+                        <sl-button type="submit" class="alo__button">Log in with Discord</sl-button>
+                    {% endcall %}
+                {% endif %}
             {% endwith %}
         </div>
     {% endcall %}
