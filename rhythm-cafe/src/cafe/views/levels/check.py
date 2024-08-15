@@ -8,6 +8,8 @@ from cafe.models import Club
 from cafe.models.club import is_at_least_admin
 from oauthlogin.models import OAuthConnection
 
+import rules
+
 def _user_allowed(discord_user_id, user, club):
     # a. the user is linked to the discord account that posted the message.
     try:
@@ -36,7 +38,7 @@ def check_if_ok_to_continue(code, user):
     try:
         club = Club.objects.get(id=club_id)
     except Club.DoesNotExist:
-        raise ObjectDoesNotExist("club does not exist")
+        raise Club.DoesNotExist("club does not exist")
     
     # 3. one of these two conditions must be true:
     #    a. the user is linked to the discord account that posted the message.
@@ -47,3 +49,13 @@ def check_if_ok_to_continue(code, user):
         raise BadRequest("User does not have permissions to do this action")
 
     return None
+
+@rules.predicate
+def ok_to_continue_rule(user, code):
+    try:
+        check_if_ok_to_continue(code, user)
+        return True
+    except:
+        return False
+    
+rules.add_perm('prefill.ok', ok_to_continue_rule)

@@ -2,8 +2,22 @@
 {% from 'cafe/layouts/layout_with_header.jinja' import layout_with_header as base_layout with context %}
 
 {% set content %}
+<script>
+const data = {
+    prefillData: {
+        "data": "{{ prefill.result }}"
+    }
+}
+</script>
 <div class="efp">
-hi
+    <div class="efp__form">
+        <form>
+            <sl-input></sl-input>
+        </form>
+    </div>
+    <div class="efp__preview">
+        Preview!!
+    </div>
 </div>
 {% endset %}
 
@@ -16,5 +30,7 @@ hi
 <style data-hoist="true">
 .efp {
     background-color: red;
+    display: flex;
+    flex-direction: row;
 }
 </style>

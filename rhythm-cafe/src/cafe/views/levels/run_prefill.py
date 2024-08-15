@@ -21,6 +21,8 @@ from django.forms.models import model_to_dict
 
 from loguru import logger
 
+from rules.contrib.views import permission_required
+
 @db_task()
 def _run_prefill(level_url: str, prefill_result: RDLevelPrefillResult):    
     try:
@@ -66,19 +68,19 @@ def _run_prefill(level_url: str, prefill_result: RDLevelPrefillResult):
         prefill_result.save()
 
 
-@login_required
+@permission_required('prefill.ok', fn=lambda _, code: code)
 def run_prefill(request, code):
     if request.method != "POST":
         return HttpResponseNotAllowed()
-
-    check_if_ok_to_continue(code, request.user)
 
     result = addlevel_signer.unsign_object(code)
     level_url = result['level_url']
     club_id = result['club_id']
     prefill_result = RDLevelPrefillResult(
         user=request.user,
-        club=Club.objects.get(id=club_id)
+        club=Club.objects.get(id=club_id),
+        version=1,
+        url=level_url
     )
     prefill_result.save()
     _run_prefill(level_url, prefill_result)

@@ -2,6 +2,7 @@ from django.urls import path
 
 from . import views
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.views import logout_then_login
 
 app_name = "cafe"
 urlpatterns = [
