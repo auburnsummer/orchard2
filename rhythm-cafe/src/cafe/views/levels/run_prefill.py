@@ -1,9 +1,11 @@
 from email.mime import image
-from io import BytesIO
+from io import BufferedRandom, BytesIO
 from tempfile import TemporaryFile
+from typing import NamedTuple
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotAllowed, JsonResponse
 import msgspec
+from vitals.msgspec_schema import VitalsLevel
 
 from .check import check_if_ok_to_continue
 
@@ -23,42 +25,83 @@ from loguru import logger
 
 from rules.contrib.views import permission_required
 
+from asgiref.sync import async_to_sync
+
+class UploadFilesURLs(NamedTuple):
+    rdzip_url: str
+    image_url: str
+    icon_url: str | None
+    thumb_url: str
+    rdzip_url_public: str
+    image_url_public: str
+    icon_url_public: str | None
+    thumb_url_public: str
+
+@async_to_sync
+async def upload_files(level: VitalsLevel, f: BufferedRandom):
+    async with httpx.AsyncClient() as client:
+        bun = BunnyStorage(
+            api_key=BUNNY_STORAGE_API_KEY,
+            base_endpoint=BUNNY_STORAGE_BASE_ENDPOINT,
+            storage_zone_name=BUNNY_STORAGE_ZONE_NAME,
+            public_cdn_base=BUNNY_STORAGE_CDN_URL,
+            client=client
+        )
+        rdzip_url = await bun.upload_file_by_hash(f, "rdzips", ".rdzip")
+        image_url = await bun.upload_file_by_hash(BytesIO(level.image), "images", ".png")
+        icon_url = await bun.upload_file_by_hash(BytesIO(level.icon), "icons", ".png") if level.icon else None
+        thumb_url = await bun.upload_file_by_hash(BytesIO(level.thumb), "thumbs", ".webp")
+        rdzip_url_public = bun.get_public_url(rdzip_url)
+        image_url_public = bun.get_public_url(image_url)
+        icon_url_public = bun.get_public_url(icon_url) if icon_url else None
+        thumb_url_public = bun.get_public_url(thumb_url)
+
+    # public urls return as well
+    return UploadFilesURLs(
+        rdzip_url,
+        image_url,
+        icon_url,
+        thumb_url,
+        rdzip_url_public,
+        image_url_public,
+        icon_url_public,
+        thumb_url_public
+    )
+
+
 @db_task()
 def _run_prefill(level_url: str, prefill_result: RDLevelPrefillResult):    
     try:
-        with httpx.Client() as client:
-            with TemporaryFile(mode="w+b") as f:
-                bun = BunnyStorage(
-                    api_key=BUNNY_STORAGE_API_KEY,
-                    base_endpoint=BUNNY_STORAGE_BASE_ENDPOINT,
-                    storage_zone_name=BUNNY_STORAGE_ZONE_NAME,
-                    public_cdn_base=BUNNY_STORAGE_CDN_URL,
-                    client=client
-                )
+        with TemporaryFile(mode="w+b") as f:
+            with httpx.Client() as client:
+                # bun = BunnyStorage(
+                #     api_key=BUNNY_STORAGE_API_KEY,
+                #     base_endpoint=BUNNY_STORAGE_BASE_ENDPOINT,
+                #     storage_zone_name=BUNNY_STORAGE_ZONE_NAME,
+                #     public_cdn_base=BUNNY_STORAGE_CDN_URL,
+                #     client=client
+                # )
                 resp = client.get(level_url)
                 resp.raise_for_status()
                 for chunk in resp.iter_bytes():
                     f.write(chunk)
-                f.seek(0)
-                level = vitals(f)
+            f.seek(0)
+            level = vitals(f)
 
-                rdzip_url = bun.upload_file_by_hash(f, "rdzips", ".rdzip")
-                image_url = bun.upload_file_by_hash(BytesIO(level.image), "images", ".png")
-                icon_url = bun.upload_file_by_hash(BytesIO(level.icon), "icons", ".png") if level.icon else None
-                thumb_url = bun.upload_file_by_hash(BytesIO(level.thumb), "thumbs", ".webp")
+            urls = upload_files(level, f)
 
-                payload = msgspec.structs.asdict(level)
-                payload['rdzip_url'] = bun.get_public_url(rdzip_url)
-                payload['image_url'] = bun.get_public_url(image_url)
-                payload['icon_url'] = bun.get_public_url(icon_url)
-                payload['thumb_url'] = bun.get_public_url(thumb_url)
-                del payload['image']
-                del payload['thumb']
-                del payload['icon']
+            payload = msgspec.structs.asdict(level)
+            payload['rdzip_url'] = urls.rdzip_url_public
+            payload['image_url'] = urls.image_url_public
+            payload['icon_url'] = urls.icon_url_public
+            payload['thumb_url'] = urls.thumb_url_public
+            del payload['image']
+            del payload['thumb']
+            del payload['icon']
 
-                prefill_result.data = msgspec.json.encode(payload)
-                prefill_result.ready = True
-                prefill_result.save()
+            prefill_result.data = msgspec.json.encode(payload)
+            prefill_result.ready = True
+            prefill_result.save()
     except Exception as e:
         # print traceback
         import traceback
