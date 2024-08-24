@@ -1,3 +1,4 @@
+import asyncio
 from email.mime import image
 from io import BufferedRandom, BytesIO
 from tempfile import TemporaryFile
@@ -47,10 +48,16 @@ async def upload_files(level: VitalsLevel, f: BufferedRandom):
             public_cdn_base=BUNNY_STORAGE_CDN_URL,
             client=client
         )
-        rdzip_url = await bun.upload_file_by_hash(f, "rdzips", ".rdzip")
-        image_url = await bun.upload_file_by_hash(BytesIO(level.image), "images", ".png")
-        icon_url = await bun.upload_file_by_hash(BytesIO(level.icon), "icons", ".png") if level.icon else None
-        thumb_url = await bun.upload_file_by_hash(BytesIO(level.thumb), "thumbs", ".webp")
+        async with asyncio.TaskGroup() as tg:
+            rdzip_task = tg.create_task(bun.upload_file_by_hash(f, "rdzips", ".rdzip"))
+            image_task = tg.create_task(bun.upload_file_by_hash(BytesIO(level.image), "images", ".png"))
+            icon_task = tg.create_task(bun.upload_file_by_hash(BytesIO(level.icon), "icons", ".png")) if level.icon else None
+            thumb_task = tg.create_task(bun.upload_file_by_hash(BytesIO(level.thumb), "thumbs", ".webp"))
+
+        rdzip_url = rdzip_task.result()
+        image_url = image_task.result()
+        icon_url = icon_task.result() if icon_task else None
+        thumb_url = thumb_task.result()
         rdzip_url_public = bun.get_public_url(rdzip_url)
         image_url_public = bun.get_public_url(image_url)
         icon_url_public = bun.get_public_url(icon_url) if icon_url else None
