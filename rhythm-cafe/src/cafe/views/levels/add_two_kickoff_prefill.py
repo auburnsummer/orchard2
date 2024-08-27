@@ -119,7 +119,8 @@ def _run_prefill(level_url: str, prefill_result: RDLevelPrefillResult):
 
 
 @permission_required('prefill.ok', fn=lambda _, code: code)
-def run_prefill(request, code):
+def add_two_kickoff_prefill(request, code):
+    "Stage 2: Kick off the prefill process and return a prefill id that can be polled for the result."
     if request.method != "POST":
         return HttpResponseNotAllowed()
 

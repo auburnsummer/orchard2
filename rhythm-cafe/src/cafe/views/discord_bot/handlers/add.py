@@ -28,7 +28,7 @@ def add(data):
             "discord_user_id": data['member']['user']['id'],
             "club_id": club.id
         })
-        url = DOMAIN_URL + reverse("cafe:level_add", args=[secret])
+        url = DOMAIN_URL + reverse("cafe:level_add_s1", args=[secret])
         line = f"`{attachment['filename']}`: [click here]({url})"
         lines.append(line)
 
