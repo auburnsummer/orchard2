@@ -4,8 +4,8 @@
 {% set content %}
 <script>
 const data = {
-    prefillUrl: "{{ url('cafe:level_prefill', args=[code]) }}",
-    prefillStatusUrl: "{{ url('cafe:prefill', args=['REPLACE_ME']) }}",
+    prefillUrl: "{{ url('cafe:level_add_s2', args=[code]) }}",
+    prefillStatusUrl: "{{ url('cafe:level_add_s3', args=['REPLACE_ME']) }}",
     csrfToken: "{{ csrf_token }}",
     prefillId: "",
     async init() {
