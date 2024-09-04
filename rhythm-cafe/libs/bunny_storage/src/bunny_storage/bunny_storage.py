@@ -85,7 +85,7 @@ class BunnyStorage:
         except HTTPStatusError:
             return False
 
-    @retry(wait=wait_exponential(multiplier=1, min=4, max=10), stop=stop_after_attempt(5))
+    @retry(wait=wait_exponential(multiplier=1, min=4, max=10), stop=stop_after_attempt(2), reraise=True)
     async def upload_file(self, file: BinaryIO, path: str, file_name: str, skip_if_already_exists: bool):
         if skip_if_already_exists:
             already_exists = await self.file_exists(path, file_name)

@@ -9,13 +9,13 @@ const data = {
     }
 }
 </script>
-<div class="efp">
-    <div class="efp__form">
+<div class="eap" x-data="data">
+    <div class="eap__form">
         <form>
-            <sl-input></sl-input>
+            <sl-input label="song_name"></sl-input>
         </form>
     </div>
-    <div class="efp__preview">
+    <div class="eap__preview">
         Preview!!
     </div>
 </div>
@@ -28,7 +28,7 @@ const data = {
 {% endcall %}
 
 <style data-hoist="true">
-.efp {
+.eap {
     background-color: red;
     display: flex;
     flex-direction: row;
