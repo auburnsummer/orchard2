@@ -18,6 +18,10 @@ anyio==4.4.0
 asgiref==3.8.1
     # via django
     # via django-minify-html
+asyncore-wsgi==0.0.11
+    # via web-pdb
+bottle==0.12.25
+    # via web-pdb
 certifi==2024.7.4
     # via httpcore
     # via httpx
@@ -75,5 +79,6 @@ tenacity==8.5.0
     # via bunny-storage
 tzdata==2024.1 ; sys_platform == 'win32'
     # via django
+web-pdb==1.6.2
 win32-setctime==1.1.0 ; sys_platform == 'win32'
     # via loguru

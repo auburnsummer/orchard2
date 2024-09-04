@@ -110,11 +110,9 @@ def _run_prefill(level_url: str, prefill_result: RDLevelPrefillResult):
             prefill_result.ready = True
             prefill_result.save()
     except Exception as e:
-        # print traceback
         import traceback
-        traceback.print_exc()
-        logger.error(e)
-        prefill_result.errors = str(e)
+        s = traceback.format_exception(e)
+        prefill_result.errors = "\n".join(s)
         prefill_result.save()
 
 

@@ -12,6 +12,6 @@ def add_four_level_form(request, prefill_id):
     render_data = {
         "result": json.loads(prefill.data)
     }
-    return render(request, "cafe/levels/from_prefill.jinja", {
+    return render(request, "cafe/levels/after_prefill.jinja", {
         "prefill": render_data
     })
