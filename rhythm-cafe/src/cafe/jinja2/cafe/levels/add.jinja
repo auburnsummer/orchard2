@@ -8,6 +8,8 @@ const data = {
     prefillStatusUrl: "{{ url('cafe:level_add_s3', args=['REPLACE_ME']) }}",
     csrfToken: "{{ csrf_token }}",
     prefillId: "",
+    errors: "",
+    intervalId: null,
     async init() {
         const resp = await fetch(this.prefillUrl, {
             method: 'POST',
@@ -18,7 +20,7 @@ const data = {
         const data = await resp.json();
         this.prefillId = data.id;
         this.prefillStatusUrl = this.prefillStatusUrl.replace('REPLACE_ME', this.prefillId);
-        setInterval(this.checkPrefillStatus.bind(this), 2000);
+        this.intervalId = setInterval(this.checkPrefillStatus.bind(this), 2000);
     },
     async checkPrefillStatus() {
         // add a cache buster
@@ -28,15 +30,23 @@ const data = {
             window.location = data.redirect_url;
         }
         if (data.errors !== "") {
-            alert('prefill errors: ' + data.errors);
+            this.errors = data.errors;
+            clearInterval(this.intervalId);
         }
     }
 
 }
 </script>
 <div class="ead" x-data="data">
-    <sl-spinner class="ead__spinner"></sl-spinner>
-    <p class="ead__analyzing">Analyzing level...</p>
+    <div x-show="errors === ''" class="ead__inprogress">
+        <sl-spinner class="ead__spinner"></sl-spinner>
+        <p class="ead__analyzing">Analyzing level...</p>
+    </div>
+    <div x-show="errors !== ''">
+        <p>An error occurred while analyzing the level. <strong>This is likely a bug, sorry!</strong>
+        <p>Please try again, and if it still errors, ping Auburn with the following info:</p>
+        <textarea readonly class="ead__error" x-text="'Trace for: ' + prefillId + '\n' + errors"></textarea>
+    </div>
 </div>
 {% endset %}
 
@@ -47,7 +57,7 @@ const data = {
 {% endcall %}
 
 <style data-hoist="true">
-.ead {
+.ead__inprogress {
     display: flex;
     flex-direction: column;
     align-items: center;

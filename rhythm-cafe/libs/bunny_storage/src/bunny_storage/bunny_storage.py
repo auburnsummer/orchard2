@@ -11,7 +11,7 @@ from loguru import logger
 BUF_SIZE = 65536  # lets read stuff in 64kb chunks!
 
 
-def io_to_generator(f: BinaryIO):
+async def io_to_generator(f: BinaryIO):
     f.seek(0)
     while True:
         data = f.read(BUF_SIZE)
@@ -92,12 +92,14 @@ class BunnyStorage:
             if already_exists:
                 logger.info(f"Skipping upload of {path}/{file_name} as it already exists.")
                 return
+        logger.info(f"Uploading {path}/{file_name}")
         url = self._build_path(path, file_name)
         file_hash = sha256(file).upper()
+        gen = io_to_generator(file)
         await self.client.put(url, headers={
             "AccessKey": self.api_key,
             "Checksum": file_hash
-        }, content=io_to_generator(file))
+        }, content=gen)
 
     async def upload_file_by_hash(self, file: BinaryIO, namespace: str, file_extension: str):
         path, file_name = self._get_hash_path_and_file_name(file, namespace, file_extension)
