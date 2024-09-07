@@ -4,15 +4,13 @@
 {% set content %}
 <script>
 const data = {
-    prefillData: {
-        "data": "{{ prefill.result }}"
-    }
+    prefill: {{ prefill.result | safe }}
 }
 </script>
 <div class="eap" x-data="data">
     <div class="eap__form">
         <form>
-            <sl-input label="song_name"></sl-input>
+            <sl-input label="Song"></sl-input>
         </form>
     </div>
     <div class="eap__preview">
