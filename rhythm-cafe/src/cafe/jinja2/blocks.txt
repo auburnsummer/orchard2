@@ -1,5 +1,6 @@
 alo - accounts/login.jinja
 che - components/header.jinja
+clb - components/level_box.jinja
 cri - components/redeem_invite.jinja
 cse - components/settings_sidebar.jinja
 pcl - profile/clubs.jinja

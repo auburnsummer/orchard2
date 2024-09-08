@@ -3,18 +3,32 @@
 
 {% set content %}
 <script>
+const INITIAL_PREFILL_DATA = {{ prefill.result | safe }};
 const data = {
-    prefill: {{ prefill.result | safe }}
+    data: {},
+    get initialData() {
+        return {
+            song_alt: "",
+            ...INITIAL_PREFILL_DATA
+        }
+    },
+    reset() {
+        this.data = this.initialData;
+    },
+    init() {
+        this.reset();
+    },
 }
 </script>
 <div class="eap" x-data="data">
     <div class="eap__form">
         <form>
-            <sl-input label="Song"></sl-input>
+            <sl-input label="Song" x-model="data.song"></sl-input>
+            <sl-input label="Song (alternate)" x-model="data.song_alt"></sl-input>
         </form>
     </div>
     <div class="eap__preview">
-        Preview!!
+        <textarea x-text="JSON.stringify($data)"></textarea>
     </div>
 </div>
 {% endset %}
