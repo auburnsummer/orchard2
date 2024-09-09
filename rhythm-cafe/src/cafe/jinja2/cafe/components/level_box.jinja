@@ -1,6 +1,6 @@
 
-{% macro level_box(level_json) %}
-    <div class="clb" x-data="{{ level_json | safe }}">
-        <pre x-text="JSON.stringify($data)"></pre>
+{% macro level_box(level) %}
+    <div class="clb" x-data="{}">
+        <p x-text="JSON.stringify($data)"></p>
     </div>
 {% endmacro %}
