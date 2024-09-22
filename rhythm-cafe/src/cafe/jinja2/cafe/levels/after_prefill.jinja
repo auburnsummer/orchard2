@@ -29,6 +29,13 @@ const state = {
         </form>
     </div>
     <div class="eap__preview">
+        <div class="clb" x-data="{'level': level}">
+            <div x-effect="console.log(level.artist)"></div>
+            <textarea disabled="true" id="preview" name="preview" rows="5" cols="33" x-text="JSON.stringify(level)">
+                It was a dark and stormy night...
+            </textarea>
+
+        </div>
         {# {{ level_box(data) }} #}
     </div>
 </div>
