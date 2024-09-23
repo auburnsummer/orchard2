@@ -25,6 +25,12 @@ const state = {
     deleteArtist(index) {
         this.level.artist_tokens.splice(index, 1);
     },
+    get difficultyModel() {
+        return this.level.difficulty.toString();
+    },
+    setDifficultyModel(value) {
+        this.level.difficulty = parseInt(value);
+    },
     reset() {
         this.level = this.initialLevel;
     },
@@ -56,6 +62,34 @@ const state = {
             <!-- end artists -->
             <sl-input type="number" label="Min BPM" x-model.number="level.min_bpm" :max="level.max_bpm"></sl-input>
             <sl-input type="number" label="Max BPM" x-model.number="level.max_bpm" :min="level.min_bpm"></sl-input>
+
+            <sl-select label="Difficulty" :value="difficultyModel" @sl-change="e => setDifficultyModel(e.target.value)">
+                <sl-option value="0">Easy</sl-option>
+                <sl-option value="1">Medium</sl-option>
+                <sl-option value="2">Tough</sl-option>
+                <sl-option value="3">Very Tough</sl-option>
+            </sl-select>
+
+            <!-- these are always fixed, so we can generate it serverside -->
+            {% for (field, field_name) in [
+                ("single_player", "Single Player"),
+                ("two_player", "Two Player"),
+                ("has_classics", "Classic"),
+                ("has_oneshots", "Oneshots"),
+                ("has_squareshots", "Squareshots"),
+                ("has_freezeshots", "Freezeshots"),
+                ("has_freetimes", "Freetimes"),
+                ("has_holds", "Holds"),
+                ("has_skipshots", "Skipshots"),
+                ("has_window_dance", "Window Dance"),
+            ]%}
+                <sl-checkbox
+                    :checked="level.{{ field }}"
+                    @sl-change="e => {level.{{ field }} = e.target.checked}"
+                >
+                    {{ field_name }}
+                </sl-checkbox>
+            {% endfor %}
 
         </form>
     </div>
