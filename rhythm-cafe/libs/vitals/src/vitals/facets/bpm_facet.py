@@ -1,5 +1,5 @@
 from vitals.utils import try_dig
-
+from math import ceil, floor
 
 def is_bpm_event(evt):
     return evt["type"] in ["PlaySong", "SetBeatsPerMinute"]
@@ -26,4 +26,4 @@ def bpm_facet(obj, toml, **kwargs):
     # then, the bpm is either in the ["bpm"] or ["beatsPerMinute"] key
     if len(bpms) == 0:
         return 0, 0
-    return max(bpms), min(bpms)
+    return ceil(max(bpms)), floor(min(bpms))

@@ -13,6 +13,18 @@ const state = {
             ...INITIAL_PREFILL_DATA
         }
     },
+    artistLabel(number) {
+        return number === 0 ? 'Artist' : `Artist (${number+1})`;
+    },
+    get canAddNewArtist() {
+        return this.level.artist_tokens.at(-1).length > 0;
+    },
+    get canDeleteArtist() {
+        return this.level.artist_tokens.map(artist => artist.length).some(length => length > 0) && this.level.artist_tokens.length > 1;
+    },
+    deleteArtist(index) {
+        this.level.artist_tokens.splice(index, 1);
+    },
     reset() {
         this.level = this.initialLevel;
     },
@@ -26,6 +38,25 @@ const state = {
         <form>
             <sl-input label="Song" x-model="level.song"></sl-input>
             <sl-input label="Song (alternate)" x-model="level.song_alt"></sl-input>
+            <sl-textarea label="Description" x-model="level.description"></sl-textarea>
+            <!-- artists -->
+            <template x-for="(artist, index) in level.artist_tokens" :key="index">
+                <sl-input :label="artistLabel(index)" x-model="level.artist_tokens[index]">
+                    <sl-icon-button
+                        name="trash3"
+                        label="Settings"
+                        slot="suffix"
+                        :disabled="!canDeleteArtist"
+                        @click="deleteArtist(index)"
+                    >
+                    </sl-icon-button>
+                </sl-input>
+            </template>
+            <sl-button @click="level.artist_tokens.push('')" :disabled="!canAddNewArtist">Add Artist</sl-button>
+            <!-- end artists -->
+            <sl-input type="number" label="Min BPM" x-model.number="level.min_bpm" :max="level.max_bpm"></sl-input>
+            <sl-input type="number" label="Max BPM" x-model.number="level.max_bpm" :min="level.min_bpm"></sl-input>
+
         </form>
     </div>
     <div class="eap__preview">
