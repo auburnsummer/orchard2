@@ -1,6 +1,12 @@
 
 {% macro level_box(level) %}
-    <div class="clb" x-data="{}">
-        <p x-text="JSON.stringify($data)"></p>
+    <div class="clb" x-data="{'level': {{ level }}}">
+        <textarea disabled="true" id="preview" name="preview" rows="5" cols="33" x-text="JSON.stringify(level)">
+            It was a dark and stormy night...
+        </textarea>
     </div>
+
+<style data-hoist="true">
+
+</style>
 {% endmacro %}
