@@ -85,7 +85,7 @@ const state = {
             ]%}
                 <sl-checkbox
                     :checked="level.{{ field }}"
-                    @sl-change="e => {level.{{ field }} = e.target.checked}"
+                    @sl-change="level.{{ field }} = $event.target.checked"
                 >
                     {{ field_name }}
                 </sl-checkbox>
