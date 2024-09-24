@@ -1,3 +1,3 @@
 server: ./rhythm-cafe/.venv/bin/python ./rhythm-cafe/src/manage.py runserver
 huey: ./rhythm-cafe/.venv/bin/python ./rhythm-cafe/src/manage.py run_huey
-ngrok: ngrok http --domain=url --log=stdout 8000
+ngrok: ngrok http --domain=url 8000
