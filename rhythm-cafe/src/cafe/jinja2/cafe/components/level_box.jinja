@@ -31,32 +31,47 @@ document.addEventListener('alpine:init', () => {
                 'clb__difficulty--vtough',
             ][this.level.difficulty];
         },
-        get artistPieces() {
-            let formattedString = formatter.format(this.level.artist_tokens);
-            // now turn it into an array of parts
-            // this is so we can iterate over it in the template and make them links
+        getPiecesFromFormattedString(formattedString, pieces) {
             const parts = [];
-            for (const artistToken of level.artist_tokens) {
+            for (const piece of pieces) {
                 // search for it in the formatted string
-                const index = formattedString.indexOf(artistToken);
+                const index = formattedString.indexOf(piece);
                 // anything between 0 and the index must be a literal
                 if (index > 0) {
                     const lit = formattedString.slice(0, index);
                     if (lit.length > 0) {
                         parts.push({
                             type: 'literal',
-                            value: formattedString.slice(0, index),
+                            value: lit,
                         })
                     }
                 }
+                // the rest is an element which must be the same as piece
                 parts.push({
                     type: 'element',
-                    value: artistToken,
+                    value: piece,
                 });
                 // remove from 0 to the index + artistToken.length
-                formattedString = formattedString.slice(index + artistToken.length);
+                formattedString = formattedString.slice(index + piece.length);
             }
             return parts;
+        },
+        get artistPieces() {
+            let formattedString = formatter.format(this.level.artist_tokens);
+            return this.getPiecesFromFormattedString(formattedString, this.level.artist_tokens);
+        },
+        get authorIcon() {
+            return this.level.authors.length > 1 ? 'people-fill' : 'person-fill';   
+        },
+        get authorPieces() {
+            let formattedString = formatter.format(this.level.authors);
+            return this.getPiecesFromFormattedString(formattedString, this.level.authors);
+        },
+        get bpmText() {
+            if (this.max_bpm === this.min_bpm) {
+                return `${this.max_bpm} BPM`;
+            }
+            return `${this.min_bpm} - ${this.max_bpm} BPM`;
         }
     }))
 })
@@ -65,7 +80,7 @@ document.addEventListener('alpine:init', () => {
 
 {% macro level_box(level) %}
     <article class="clb" x-data="levelBox({{ level }})">
-        <div class="clb__imagebox">
+        <div class="clb__imagebox" x-effect="console.log(level)">
             <img class="clb__image" :src="level.thumb_url" alt="Level image" loading="lazy" />
             <div class="clb__overlay">
                 <div class="clb__description">
@@ -111,6 +126,32 @@ document.addEventListener('alpine:init', () => {
                             </span>
                         </template>
                     </ul>
+                </div>
+            </div>
+            <div class="clb__metadata">
+                <div class="clb__metaitem clb__authors">
+                    <sl-icon :name="authorIcon" class="clb__metaicon"></sl-icon>
+                    <ul class="clb__author-list">
+                        <template x-for="piece in authorPieces">
+                            <span class="fragment" :class="piece.type">
+                                <template x-if="piece.type === 'element'">
+                                    <li>
+                                        <button disabled="true" class="clb__metabutton" x-text="piece.value">
+                                        </button>
+                                    </li>
+                                </template>
+                                <template x-if="piece.type === 'literal'">
+                                    <li>
+                                        <span class="clb__metatext" x-text="piece.value"></span>
+                                    </li>
+                                </template>
+                            </span>
+                        </template>
+                    </ul>
+                </div>
+                <div class="clb__metaitem clb__bpm">
+                    <sl-icon name="heart-pulse-fill" class="clb__metaicon"></sl-icon>
+                    <span class="clb__metatext" x-text="bpmText"></span>
                 </div>
             </div>
         </div>
@@ -346,7 +387,7 @@ document.addEventListener('alpine:init', () => {
     order: 1;
 }
 
-.clb__artist-list {
+.clb__artist-list, .clb__author-list {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -374,7 +415,7 @@ properties for Flexbox
 
 Benface is still the Patron Saint of CSS though
 */
-.lb_metadata {
+.clb__metadata {
     margin-top: 0.5rem;
     display: flex;
     flex-wrap: wrap;
@@ -382,20 +423,20 @@ Benface is still the Patron Saint of CSS though
     row-gap: 0rem;
 }
 
-.lb_metaitem {
+.clb__metaitem {
     display: flex;
     margin: 0;
     list-style: none;
     column-gap: 0.125rem;
 }
 
-.lb_metaicon {
+.clb__metaicon {
     width: 1rem;
     height: 1rem;
     margin-right: 0.125rem;
 }
 
-.lb_authors, .lb_bpm, .lb_source {
+.clb__authors, .clb__bpm, .clb__source {
     color: var(--sl-color-neutral-700);
     display: flex;
     align-items: center;
@@ -405,7 +446,7 @@ Benface is still the Patron Saint of CSS though
 }
 
 
-.lb_metabutton, .lb_metatext {
+.clb__metabutton, .clb__metatext {
     all: unset;
     white-space: pre;
     color: var(--sl-color-neutral-500);
@@ -413,30 +454,30 @@ Benface is still the Patron Saint of CSS though
     text-overflow: ellipsis;
 }
 
-.lb_metabutton:enabled:hover {
+.clb__metabutton:enabled:hover {
     color: var(--sl-color-neutral-700);
     text-decoration: underline;
     cursor: pointer;
 }
 
-.lb_approval > span {
+.clb__approval > span {
     display: flex;
     align-items: center;
 }
 
-.yay\!lb_approval {
+.lb_approval--yay {
     color: var(--sl-color-success-400);
 }
 
-.nope\!lb_approval {
+.clb_approval--nope {
     color: var(--sl-color-danger-600);
 }
 
-.lb_spacer {
+.clb__spacer {
     flex-grow: 1;
 }
 
-.lb_tags {
+.clb__tags {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -449,7 +490,7 @@ Benface is still the Patron Saint of CSS though
     margin-top: 1rem;
 }
 
-.lb_tag {
+.clb__tag {
     all: unset;
     font-size: 0.75rem;
     line-height: 1rem;
@@ -464,46 +505,31 @@ Benface is still the Patron Saint of CSS though
     align-items: center;
 }
 
-.lb_tag:enabled:hover {
+.clb__tag:enabled:hover {
     background-color: var(--sl-color-neutral-300);
     color: var(--sl-color-neutral-600);
     cursor: pointer;
 }
 
-.caution\!lb_tag {
+.clb__tag--caution {
     background-color: var(--sl-color-warning-100);
     color: var(--sl-color-warning-600);
 }
 
-.caution\!lb_tag > .lb_metaicon {
+.clb__tag--caution > .lb_metaicon {
     color: var(--sl-color-warning-500);
 }
 
-.caution\!lb_tag span {
+.clb__tag--caution span {
     margin-left: 0.25rem;
 }
 
-.lb_id {
+.clb__id {
     position: absolute;
     bottom: 0;
     right: 0.25rem;
     font-size: 0.65rem;
     color: var(--sl-color-neutral-300);
-}
-
-.row\!lb {
-    flex-direction: row;
-    width: 100%;
-    height: 12rem;
-}
-
-.row\!lb .lb_imagebox {
-    border-bottom-left-radius: 0.5rem;
-    border-top-right-radius: 0;
-}
-
-.row\!lb .lb_decorator {
-    border-top-right-radius: 0.5rem;
 }
 
 </style>
