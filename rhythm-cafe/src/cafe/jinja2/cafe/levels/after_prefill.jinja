@@ -13,6 +13,7 @@ const state = {
             ...INITIAL_PREFILL_DATA
         }
     },
+    // artists
     artistLabel(number) {
         return number === 0 ? 'Artist' : `Artist (${number+1})`;
     },
@@ -27,6 +28,7 @@ const state = {
     deleteArtist(index) {
         this.level.artist_tokens.splice(index, 1);
     },
+    // tags
     tagLabel(number) {
         return number === 0 ? 'Tag' : `Tag (${number+1})`;
     },
@@ -38,6 +40,19 @@ const state = {
     },
     deleteTag(index) {
         this.level.tags.splice(index, 1);
+    },
+    // authors
+    authorLabel(number) {
+        return number === 0 ? 'Author' : `Author (${number+1})`;
+    },
+    get canAddNewAuthor() {
+        return this.level.authors.every(author => author.length > 0);
+    },
+    canDeleteAuthor(index) {
+        return this.level.authors.filter((author, i) => i !== index && author.length > 0).length > 0;
+    },
+    deleteAuthor(index) {
+        this.level.authors.splice(index, 1);
     },
     get difficultyModel() {
         return this.level.difficulty.toString();
@@ -83,6 +98,21 @@ const state = {
                 <sl-option value="2">Tough</sl-option>
                 <sl-option value="3">Very Tough</sl-option>
             </sl-select>
+
+            <!-- authors -->
+            <template x-for="(artist, index) in level.authors">
+                <sl-input :label="authorLabel(index)" x-model="level.authors[index]">
+                <sl-icon-button
+                name="trash3"
+                label="Settings"
+                slot="suffix"
+                :disabled="!canDeleteAuthor(index)"
+                @click="deleteAuthor(index)"
+                >
+                </sl-icon-button>
+                </sl-input>
+            </template>
+            <sl-button @click="level.authors.push('')" :disabled="!canAddNewAuthor">Add Author</sl-button>
 
             <!-- tags -->
             <template x-for="(artist, index) in level.tags">
