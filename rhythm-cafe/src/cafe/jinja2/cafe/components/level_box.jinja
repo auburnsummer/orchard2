@@ -68,10 +68,21 @@ document.addEventListener('alpine:init', () => {
             return this.getPiecesFromFormattedString(formattedString, this.level.authors);
         },
         get bpmText() {
-            if (this.max_bpm === this.min_bpm) {
-                return `${this.max_bpm} BPM`;
+            const { min_bpm, max_bpm } = this.level;
+            if (max_bpm === min_bpm) {
+                return `${max_bpm} BPM`;
             }
-            return `${this.min_bpm} - ${this.max_bpm} BPM`;
+            return `${min_bpm} - ${max_bpm} BPM`;
+        },
+        get approvalClass() {
+            const { approval } = this.level;
+            if (approval < 0) {
+                return 'clb__approval--nope';
+            }
+            if (approval >= 10) {
+                return 'clb__approval--yay';
+            }
+            return 'clb__approval--none';
         }
     }))
 })
@@ -153,7 +164,44 @@ document.addEventListener('alpine:init', () => {
                     <sl-icon name="heart-pulse-fill" class="clb__metaicon"></sl-icon>
                     <span class="clb__metatext" x-text="bpmText"></span>
                 </div>
+                <div class="clb__metaitem clb__club">
+                    <sl-icon name="discord" class="clb__metaicon"></sl-icon>
+                    <span class="clb__metatext" x-text="level.club_name"></span>
+                </div>
+                <div
+                    class="clb__metaitem clb__approval"
+                    :class="approvalClass"
+                >
+                    <template x-if="level.approval >= 10">
+                        <span title="Peer-Reviewed: a trusted member of the community has checked for correct BPM/offset, metadata, and cues to ensure playability.">
+                            <sl-icon name="check" class="clb__metaicon"></sl-icon>
+                        </span>
+                    </template>
+                    <template x-if="level.approval < 0">
+                        <span title="Non-Referred: a trusted member of the community has checked for correct BPM/offset, metadata, and cues to ensure playability, and has found that this level does not meet standards.">
+                            <sl-icon name="x" class="clb__metaicon"></sl-icon>
+                        </span>
+                    </template>
+                </div>
             </div>
+            <div clas="clb__spacer"></div>
+            <ul class="clb__tags">
+                <li x-show="level.seizure_warning">
+                    <button class="clb__tag clb__tag--caution" disabled>
+                        <sl-icon name="exclamation-triangle-fill" class="clb__metaicon"></sl-icon>
+                        <span
+                            title="This level contains flashing lights which may potentially trigger seizures in people with photosensitive epilepsy. Discretion advised.">
+                            Seizure Warning
+                        </span>
+                    </button>
+                </li>
+                <template x-for="tag in level.tags">
+                    <li>
+                        <button class="clb__tag" x-text="tag" disabled>
+                        </button>
+                    </li>
+                </template>
+            </ul>
         </div>
     </article>
 
@@ -436,7 +484,7 @@ Benface is still the Patron Saint of CSS though
     margin-right: 0.125rem;
 }
 
-.clb__authors, .clb__bpm, .clb__source {
+.clb__authors, .clb__bpm, .clb__club {
     color: var(--sl-color-neutral-700);
     display: flex;
     align-items: center;
@@ -465,11 +513,11 @@ Benface is still the Patron Saint of CSS though
     align-items: center;
 }
 
-.lb_approval--yay {
+.clb__approval--yay {
     color: var(--sl-color-success-400);
 }
 
-.clb_approval--nope {
+.clb__approval--nope {
     color: var(--sl-color-danger-600);
 }
 
