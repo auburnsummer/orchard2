@@ -73,90 +73,97 @@ const state = {
 </script>
 <div class="eap" x-data="state">
     <div class="eap__form">
-        <form>
-            <sl-input label="Song" x-model="level.song"></sl-input>
-            <sl-input label="Song (alternate)" x-model="level.song_alt"></sl-input>
-            <sl-textarea label="Description" x-model="level.description"></sl-textarea>
-            <!-- artists -->
-            <template x-for="(artist, index) in level.artist_tokens">
-                <sl-input :label="artistLabel(index)" x-model="level.artist_tokens[index]">
-                    <sl-icon-button
-                        name="trash3"
-                        label="Settings"
-                        slot="suffix"
-                        :disabled="!canDeleteArtist(index)"
-                        @click="deleteArtist(index)"
-                    >
-                    </sl-icon-button>
-                </sl-input>
-            </template>
-            <sl-button @click="level.artist_tokens.push('')" :disabled="!canAddNewArtist">Add Artist</sl-button>
-            <!-- end artists -->
-            <sl-input type="number" label="Min BPM" x-model.number="level.min_bpm" :max="level.max_bpm"></sl-input>
-            <sl-input type="number" label="Max BPM" x-model.number="level.max_bpm" :min="level.min_bpm"></sl-input>
-
-            <sl-select label="Difficulty" :value="difficultyModel" @sl-change="e => setDifficultyModel(e.target.value)">
-                <sl-option value="0">Easy</sl-option>
-                <sl-option value="1">Medium</sl-option>
-                <sl-option value="2">Tough</sl-option>
-                <sl-option value="3">Very Tough</sl-option>
-            </sl-select>
-
-            <!-- authors -->
-            <template x-for="(artist, index) in level.authors">
-                <sl-input :label="authorLabel(index)" x-model="level.authors[index]">
+        <div class="eap__form-titles">
+            <sl-input class="eap__form-title" label="Song" x-model="level.song"></sl-input>
+            <sl-input class="eap__form-title" x-model="level.song_alt">
+                <span slot="label">
+                    Song (alternate)
+                    <sl-tooltip class="eap__form-tip" content="Alternate name of the song, such as a localised or romanized name.">
+                        <sl-icon name="info-circle"></sl-icon>
+                    </sl-tooltip>
+                </span>
+            </sl-input>
+        </div>
+        <sl-textarea label="Description" x-model="level.description"></sl-textarea>
+        <!-- artists -->
+        <template x-for="(artist, index) in level.artist_tokens">
+            <sl-input :label="artistLabel(index)" x-model="level.artist_tokens[index]">
                 <sl-icon-button
-                name="trash3"
-                label="Settings"
-                slot="suffix"
-                :disabled="!canDeleteAuthor(index)"
-                @click="deleteAuthor(index)"
+                    name="trash3"
+                    label="Settings"
+                    slot="suffix"
+                    :disabled="!canDeleteArtist(index)"
+                    @click="deleteArtist(index)"
                 >
                 </sl-icon-button>
-                </sl-input>
-            </template>
-            <sl-button @click="level.authors.push('')" :disabled="!canAddNewAuthor">Add Author</sl-button>
+            </sl-input>
+        </template>
+        <sl-button @click="level.artist_tokens.push('')" :disabled="!canAddNewArtist">Add Artist</sl-button>
+        <!-- end artists -->
+        <sl-input type="number" label="Min BPM" x-model.number="level.min_bpm" :max="level.max_bpm"></sl-input>
+        <sl-input type="number" label="Max BPM" x-model.number="level.max_bpm" :min="level.min_bpm"></sl-input>
 
-            <!-- tags -->
-            <template x-for="(artist, index) in level.tags">
-                <sl-input :label="tagLabel(index)" x-model="level.tags[index]">
-                    <sl-icon-button
-                        name="trash3"
-                        label="Settings"
-                        slot="suffix"
-                        :disabled="!canDeleteTag(index)"
-                        @click="deleteTag(index)"
-                    >
-                    </sl-icon-button>
-                </sl-input>
-            </template>
-            <sl-button @click="level.tags.push('')" :disabled="!canAddNewTag">Add Tag</sl-button>
+        <sl-select label="Difficulty" :value="difficultyModel" @sl-change="e => setDifficultyModel(e.target.value)">
+            <sl-option value="0">Easy</sl-option>
+            <sl-option value="1">Medium</sl-option>
+            <sl-option value="2">Tough</sl-option>
+            <sl-option value="3">Very Tough</sl-option>
+        </sl-select>
 
-            <!-- end tags -->
+        <!-- authors -->
+        <template x-for="(artist, index) in level.authors">
+            <sl-input :label="authorLabel(index)" x-model="level.authors[index]">
+            <sl-icon-button
+            name="trash3"
+            label="Settings"
+            slot="suffix"
+            :disabled="!canDeleteAuthor(index)"
+            @click="deleteAuthor(index)"
+            >
+            </sl-icon-button>
+            </sl-input>
+        </template>
+        <sl-button @click="level.authors.push('')" :disabled="!canAddNewAuthor">Add Author</sl-button>
 
-            <!-- these are always fixed, so we can generate it serverside -->
-            {% for (field, field_name) in [
-                ("single_player", "Single Player"),
-                ("two_player", "Two Player"),
-                ("seizure_warning", "Seizure Warning"),
-                ("has_classics", "Classic"),
-                ("has_oneshots", "Oneshots"),
-                ("has_squareshots", "Squareshots"),
-                ("has_freezeshots", "Freezeshots"),
-                ("has_freetimes", "Freetimes"),
-                ("has_holds", "Holds"),
-                ("has_skipshots", "Skipshots"),
-                ("has_window_dance", "Window Dance"),
-            ]%}
-                <sl-checkbox
-                    :checked="level.{{ field }}"
-                    @sl-change="level.{{ field }} = $event.target.checked"
+        <!-- tags -->
+        <template x-for="(artist, index) in level.tags">
+            <sl-input :label="tagLabel(index)" x-model="level.tags[index]">
+                <sl-icon-button
+                    name="trash3"
+                    label="Settings"
+                    slot="suffix"
+                    :disabled="!canDeleteTag(index)"
+                    @click="deleteTag(index)"
                 >
-                    {{ field_name }}
-                </sl-checkbox>
-            {% endfor %}
+                </sl-icon-button>
+            </sl-input>
+        </template>
+        <sl-button @click="level.tags.push('')" :disabled="!canAddNewTag">Add Tag</sl-button>
 
-        </form>
+        <!-- end tags -->
+
+        <!-- these are always fixed, so we can generate it serverside -->
+        {% for (field, field_name) in [
+            ("single_player", "Single Player"),
+            ("two_player", "Two Player"),
+            ("seizure_warning", "Seizure Warning"),
+            ("has_classics", "Classic"),
+            ("has_oneshots", "Oneshots"),
+            ("has_squareshots", "Squareshots"),
+            ("has_freezeshots", "Freezeshots"),
+            ("has_freetimes", "Freetimes"),
+            ("has_holds", "Holds"),
+            ("has_skipshots", "Skipshots"),
+            ("has_window_dance", "Window Dance"),
+        ]%}
+            <sl-checkbox
+                :checked="level.{{ field }}"
+                @sl-change="level.{{ field }} = $event.target.checked"
+            >
+                {{ field_name }}
+            </sl-checkbox>
+        {% endfor %}
+
     </div>
     <div class="eap__preview">
         {# <div class="clb" x-data="{'level': level}">
@@ -182,10 +189,22 @@ const state = {
     display: flex;
     flex-direction: row;
     min-height: 100vh;
+    background-color: var(--sl-color-neutral-50);
 }
 
 .eap__form {
     flex-grow: 1;
+    background-color: var(--sl-color-neutral-0);
+    box-shadow: var(--sl-shadow-medium);
+    margin: 2cqh 2cqw 2cqh 2cqw;
+    padding: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+
+    overflow-y: auto;
 }
 
 .eap__preview {
@@ -195,9 +214,30 @@ const state = {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
     background-color: var(--sl-color-primary-100);
     background-image: linear-gradient(45deg, var(--other-color) 25%, transparent 25%, transparent 75%, var(--other-color) 75%), linear-gradient(45deg, var(--other-color) 25%, transparent 25%, transparent 75%, var(--other-color) 75%);
     background-size: 36px 36px;
     background-position: 0 0, 18px 18px;
+}
+
+.eap__form-titles {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.eap__form-title {
+    flex-grow: 1;
+}
+
+.eap__form-tip {
+    color: var(--sl-color-neutral-500);
+}
+
+.eap__form-tip:hover {
+    color: var(--sl-color-neutral-800);
 }
 </style>
