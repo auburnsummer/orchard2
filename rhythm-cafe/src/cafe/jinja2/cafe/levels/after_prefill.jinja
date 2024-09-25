@@ -4,12 +4,15 @@
 
 {% set content %}
 <script>
-const INITIAL_PREFILL_DATA = {{ prefill.result | safe }};
+const INITIAL_PREFILL_DATA = {{ prefill | safe }};
 const state = {
     level: {},
     get initialLevel() {
         return {
             song_alt: "",
+            club_id: "{{ club.id }}",
+            club_name: "{{ club.name }}",
+            approval: 0,
             ...INITIAL_PREFILL_DATA
         }
     },
@@ -135,6 +138,7 @@ const state = {
             {% for (field, field_name) in [
                 ("single_player", "Single Player"),
                 ("two_player", "Two Player"),
+                ("seizure_warning", "Seizure Warning"),
                 ("has_classics", "Classic"),
                 ("has_oneshots", "Oneshots"),
                 ("has_squareshots", "Squareshots"),
