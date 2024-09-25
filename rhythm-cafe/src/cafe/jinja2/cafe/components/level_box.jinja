@@ -3,6 +3,18 @@
 document.addEventListener('alpine:init', () => {
     Alpine.data('levelBox', (level) => ({
         level,
+        copyEffect: false,
+        async onCopyClick() {
+            try {
+                await navigator.clipboard.writeText(this.level.rdzip_url);
+                this.copyEffect = false;
+                await this.$nextTick();
+                this.copyEffect = true;
+            }
+            catch (e) {
+                console.error(e);
+            }
+        }
     }))
 })
 </script>
@@ -19,7 +31,12 @@ document.addEventListener('alpine:init', () => {
                     </template>
                 </div>
                 <div class="clb__buttons">
-                    <button class="clb__button clb__copy" type="button">
+                    <button
+                        class="clb__button clb__copy"
+                        :class="copyEffect ? 'clb__copy--active' : ''"
+                        @click="onCopyClick"
+                        type="button"
+                    >
                         <sl-icon name="clipboard2-pulse-fill" class="clb__overlayicon"></sl-icon>
                     </button>
                     <a :href="level.rdzip_url" :download="level.song + '.rdzip'" class="clb__button clb__download">
@@ -127,6 +144,38 @@ document.addEventListener('alpine:init', () => {
 .clb__button:hover {
     background-color: var(--sl-color-violet-400);
     cursor: pointer;
+}
+
+.clb__copy {
+    position: relative;
+}
+
+.clb__copy::after {
+    content: "copied!";
+    position: absolute;
+    display: flex;
+    visibility: hidden;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: var(--sl-color-success-400);
+    font-weight: 600;
+    z-index: 10;
+    transform: translateY(-0.5rem);
+    opacity: 1;
+    transition-property: transform, opacity;
+    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+.clb__copy--active::after {
+    visibility: visible;
+    opacity: 0;
+    transform: translateY(-2.5rem);
+    transition-duration: 1s;
 }
 
 .clb__download:hover, .clb__download:visited {
