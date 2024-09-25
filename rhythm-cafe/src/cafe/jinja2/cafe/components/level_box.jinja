@@ -1,5 +1,7 @@
 {% macro level_box_init () %}
 <script>
+const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' });
+
 document.addEventListener('alpine:init', () => {
     Alpine.data('levelBox', (level) => ({
         level,
@@ -14,6 +16,47 @@ document.addEventListener('alpine:init', () => {
             catch (e) {
                 console.error(e);
             }
+        },
+        get songAltString() {
+            return `(${this.level.song_alt})`;
+        },
+        get difficultyString() {
+            return ['Easy', 'Medium', 'Tough', 'Very Tough'][this.level.difficulty];
+        },
+        get difficultyClass() {
+            return [
+                'clb__difficulty--easy',
+                'clb__difficulty--medium',
+                'clb__difficulty--tough',
+                'clb__difficulty--vtough',
+            ][this.level.difficulty];
+        },
+        get artistPieces() {
+            let formattedString = formatter.format(this.level.artist_tokens);
+            // now turn it into an array of parts
+            // this is so we can iterate over it in the template and make them links
+            const parts = [];
+            for (const artistToken of level.artist_tokens) {
+                // search for it in the formatted string
+                const index = formattedString.indexOf(artistToken);
+                // anything between 0 and the index must be a literal
+                if (index > 0) {
+                    const lit = formattedString.slice(0, index);
+                    if (lit.length > 0) {
+                        parts.push({
+                            type: 'literal',
+                            value: formattedString.slice(0, index),
+                        })
+                    }
+                }
+                parts.push({
+                    type: 'element',
+                    value: artistToken,
+                });
+                // remove from 0 to the index + artistToken.length
+                formattedString = formattedString.slice(index + artistToken.length);
+            }
+            return parts;
         }
     }))
 })
@@ -33,7 +76,7 @@ document.addEventListener('alpine:init', () => {
                 <div class="clb__buttons">
                     <button
                         class="clb__button clb__copy"
-                        :class="copyEffect ? 'clb__copy--active' : ''"
+                        :class="copyEffect && 'clb__copy--active'"
                         @click="onCopyClick"
                         type="button"
                     >
@@ -44,7 +87,32 @@ document.addEventListener('alpine:init', () => {
                     </a>
                 </div>
             </div>
-
+        </div>
+        <div class="clb__info">
+            <div class="clb__difficulty" :class="difficultyClass">
+            	<span role='presentation' class='clb__difficulty-triangle'></span>
+			    <span class='clb__difficulty-text' x-text="difficultyString"></span>
+            </div>
+            <div class="clb__cast">
+                <div class="clb__song-wrapper">
+                    <h1 class="clb__song" x-text="level.song"></h1>
+                    <h2 class="clb__song-alt" x-text="level.songAltString" x-show="level.song_alt"></h2>
+                </div>
+                <div class="clb__artist-wrapper">
+                    <ul class="clb__artist-list">
+                        <template x-for="piece in artistPieces">
+                            <span class="fragment" :class="piece.type">
+                                <template x-if="piece.type === 'element'">
+                                    <li class="clb__artist-item" x-text="piece.value"></li>
+                                </template>
+                                <template x-if="piece.type === 'literal'">
+                                    <li class="clb__artist-literal" x-text="piece.value"></li>
+                                </template>
+                            </span>
+                        </template>
+                    </ul>
+                </div>
+            </div>
         </div>
     </article>
 
@@ -185,6 +253,257 @@ document.addEventListener('alpine:init', () => {
 .clb__overlayicon {
     width: 1.25rem;
     height: 1.25rem;
+}
+
+.clb__info {
+    padding: 1rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.clb__difficulty {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+}
+
+.clb__difficulty > * {
+    background-color: var(--sl-color-neutral-100);
+}
+
+.clb__difficulty--easy > * {
+    background-color: var(--sl-color-teal-100);
+    color: var(--sl-color-teal-600);
+}
+
+.clb__difficulty--medium > * {
+    background-color: var(--sl-color-amber-100);
+    color: var(--sl-color-amber-600);
+}
+
+.clb__difficulty--tough > * {
+    background-color: var(--sl-color-rose-100);
+    color: var(--sl-color-rose-500);
+}
+
+.clb__difficulty--vtough > * {
+    background-color: var(--sl-color-violet-100);
+    color: var(--sl-color-violet-500);
+}
+
+.clb__difficulty-text {
+	font-size: 0.75rem;
+	line-height: 1rem;
+	padding-top: 0.125rem;
+	padding-bottom: 0.125rem;
+	padding-left: 0.25rem;
+	padding-right: 0.25rem;
+	text-transform: lowercase;
+    font-weight: 300;
+    border-radius: inherit;
+}
+
+.clb__difficulty-triangle {
+    width: 1.5rem;
+    clip-path: polygon(0% -4%, 104% -4%, 104% 100%, 100% 100%);
+}
+
+.clb__cast {
+    display: flex;
+    flex-direction: column;
+}
+
+/* visually, the artist should be above the song. */
+
+.clb__song-wrapper {
+    order: 2;
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    margin-top: 0.125rem;
+}
+
+.clb__song {
+    font-weight: 600;
+    font-size: 1.125rem;
+    line-height: 1.25rem;
+    overflow-wrap: break-word;
+    margin: 0;
+}
+
+.clb__song-alt {
+    font-size: 0.875rem;
+    margin: 0;
+    font-weight: 400;
+    margin-left: 0.25rem;
+    color: var(--sl-color-neutral-600);
+}
+
+.clb__artist-wrapper {
+    order: 1;
+}
+
+.clb__artist-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.clb__artist-item, .clb__artist-literal {
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: var(--sl-color-neutral-500);
+    margin: 0;
+    font-weight: 400;
+    white-space: pre;
+}
+
+.cls__artist-list :nth-last-child(1 of .literal) {
+    margin-
+}
+/*
+The Benface maneuver is no longer required as there is now the column-gap and row-gap
+properties for Flexbox
+
+Benface is still the Patron Saint of CSS though
+*/
+.lb_metadata {
+    margin-top: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 1.25rem;
+    row-gap: 0rem;
+}
+
+.lb_metaitem {
+    display: flex;
+    margin: 0;
+    list-style: none;
+    column-gap: 0.125rem;
+}
+
+.lb_metaicon {
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.125rem;
+}
+
+.lb_authors, .lb_bpm, .lb_source {
+    color: var(--sl-color-neutral-700);
+    display: flex;
+    align-items: center;
+    font-size: 0.75rem;
+    line-height: 1.125rem;
+    max-width: 100%;
+}
+
+
+.lb_metabutton, .lb_metatext {
+    all: unset;
+    white-space: pre;
+    color: var(--sl-color-neutral-500);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lb_metabutton:enabled:hover {
+    color: var(--sl-color-neutral-700);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.lb_approval > span {
+    display: flex;
+    align-items: center;
+}
+
+.yay\!lb_approval {
+    color: var(--sl-color-success-400);
+}
+
+.nope\!lb_approval {
+    color: var(--sl-color-danger-600);
+}
+
+.lb_spacer {
+    flex-grow: 1;
+}
+
+.lb_tags {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    column-gap: 0.25rem;
+    row-gap: 0.25rem;
+    padding-top: 0.75rem;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    margin-top: 1rem;
+}
+
+.lb_tag {
+    all: unset;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    background-color: var(--sl-color-neutral-200);
+    color: var(--sl-color-neutral-500);
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-top: 0.125rem;
+    padding-bottom: 0.125rem;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+}
+
+.lb_tag:enabled:hover {
+    background-color: var(--sl-color-neutral-300);
+    color: var(--sl-color-neutral-600);
+    cursor: pointer;
+}
+
+.caution\!lb_tag {
+    background-color: var(--sl-color-warning-100);
+    color: var(--sl-color-warning-600);
+}
+
+.caution\!lb_tag > .lb_metaicon {
+    color: var(--sl-color-warning-500);
+}
+
+.caution\!lb_tag span {
+    margin-left: 0.25rem;
+}
+
+.lb_id {
+    position: absolute;
+    bottom: 0;
+    right: 0.25rem;
+    font-size: 0.65rem;
+    color: var(--sl-color-neutral-300);
+}
+
+.row\!lb {
+    flex-direction: row;
+    width: 100%;
+    height: 12rem;
+}
+
+.row\!lb .lb_imagebox {
+    border-bottom-left-radius: 0.5rem;
+    border-top-right-radius: 0;
+}
+
+.row\!lb .lb_decorator {
+    border-top-right-radius: 0.5rem;
 }
 
 </style>

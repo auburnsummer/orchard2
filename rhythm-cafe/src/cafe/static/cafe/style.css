@@ -32,3 +32,11 @@ a:hover {
 a:active {
     color: var(--sl-color-primary-600);
 }
+
+/*
+https://github.com/alpinejs/alpine/discussions/3826#discussioncomment-7376662
+*/
+
+span.fragment {
+    display: content;
+}
