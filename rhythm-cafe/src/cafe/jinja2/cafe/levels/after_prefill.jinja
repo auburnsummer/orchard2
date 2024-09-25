@@ -17,13 +17,27 @@ const state = {
         return number === 0 ? 'Artist' : `Artist (${number+1})`;
     },
     get canAddNewArtist() {
-        return this.level.artist_tokens.at(-1).length > 0;
+        // are none of the artists empty?
+        return this.level.artist_tokens.every(artist => artist.length > 0);
     },
-    get canDeleteArtist() {
-        return this.level.artist_tokens.map(artist => artist.length).some(length => length > 0) && this.level.artist_tokens.length > 1;
+    canDeleteArtist(index) {
+        // are there any non-empty artists, excluding the one at index?
+        return this.level.artist_tokens.filter((artist, i) => i !== index && artist.length > 0).length > 0;
     },
     deleteArtist(index) {
         this.level.artist_tokens.splice(index, 1);
+    },
+    tagLabel(number) {
+        return number === 0 ? 'Tag' : `Tag (${number+1})`;
+    },
+    get canAddNewTag() {
+        return this.level.tags.every(tag => tag.length > 0);
+    },
+    canDeleteTag(index) {
+        return this.level.tags.filter((tag, i) => i !== index && tag.length > 0).length > 0;
+    },
+    deleteTag(index) {
+        this.level.tags.splice(index, 1);
     },
     get difficultyModel() {
         return this.level.difficulty.toString();
@@ -46,13 +60,13 @@ const state = {
             <sl-input label="Song (alternate)" x-model="level.song_alt"></sl-input>
             <sl-textarea label="Description" x-model="level.description"></sl-textarea>
             <!-- artists -->
-            <template x-for="(artist, index) in level.artist_tokens" :key="index">
+            <template x-for="(artist, index) in level.artist_tokens">
                 <sl-input :label="artistLabel(index)" x-model="level.artist_tokens[index]">
                     <sl-icon-button
                         name="trash3"
                         label="Settings"
                         slot="suffix"
-                        :disabled="!canDeleteArtist"
+                        :disabled="!canDeleteArtist(index)"
                         @click="deleteArtist(index)"
                     >
                     </sl-icon-button>
@@ -69,6 +83,23 @@ const state = {
                 <sl-option value="2">Tough</sl-option>
                 <sl-option value="3">Very Tough</sl-option>
             </sl-select>
+
+            <!-- tags -->
+            <template x-for="(artist, index) in level.tags">
+                <sl-input :label="tagLabel(index)" x-model="level.tags[index]">
+                    <sl-icon-button
+                        name="trash3"
+                        label="Settings"
+                        slot="suffix"
+                        :disabled="!canDeleteTag(index)"
+                        @click="deleteTag(index)"
+                    >
+                    </sl-icon-button>
+                </sl-input>
+            </template>
+            <sl-button @click="level.tags.push('')" :disabled="!canAddNewTag">Add Tag</sl-button>
+
+            <!-- end tags -->
 
             <!-- these are always fixed, so we can generate it serverside -->
             {% for (field, field_name) in [
