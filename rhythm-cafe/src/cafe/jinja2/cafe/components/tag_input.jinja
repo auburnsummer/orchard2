@@ -1,0 +1,42 @@
+{% macro tag_input_init () %}
+<script>
+document.addEventListener('alpine:init', () => {
+    Alpine.data('tagInput', (tags) => ({
+        tags,
+        tagLabel(index) {
+            return index === 0 ? 'Tag' : `Tag (${index+1})`;
+        },
+        canDeleteTag(index) {
+            return this.tags.filter((tag, i) => i !== index && tag.length > 0).length > 0;
+        },
+        deleteTag(index) {
+            this.tags.splice(index, 1);
+        },
+        get canAddNewTag() {
+            return this.tags.every(tag => tag.length > 0);
+        },
+        addTag(index) {
+            this.tags.push('');
+        }
+    }));
+});
+</script>
+{% endmacro %}
+
+{% macro tag_input (tags) %}
+    <div class="tag-input" x-data="tagInput({{ tags }})">
+        <template x-for="(tag, index) in tags">
+            <sl-input :label="tagLabel(index)" x-model="tags[index]">
+                <sl-icon-button
+                    name="trash3"
+                    label="Settings"
+                    slot="suffix"
+                    :disabled="!canDeleteTag(index)"
+                    @click="deleteTag(index)"
+                >
+                </sl-icon-button>
+            </sl-input>
+        </template>
+        <sl-button @click="addTag" :disabled="!canAddNewTag">Add Artist</sl-button>
+    </div>
+{% endmacro %}
