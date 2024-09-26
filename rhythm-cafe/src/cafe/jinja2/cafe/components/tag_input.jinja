@@ -1,10 +1,10 @@
 {% macro tag_input_init () %}
 <script>
 document.addEventListener('alpine:init', () => {
-    Alpine.data('tagInput', (tags) => ({
+    Alpine.data('tagInput', (tags, name) => ({
         tags,
         tagLabel(index) {
-            return index === 0 ? 'Tag' : `Tag (${index+1})`;
+            return index === 0 ? name : `${name} (${index+1})`;
         },
         canDeleteTag(index) {
             return this.tags.filter((tag, i) => i !== index && tag.length > 0).length > 0;
@@ -17,14 +17,17 @@ document.addEventListener('alpine:init', () => {
         },
         addTag(index) {
             this.tags.push('');
+        },
+        get addTagButtonLabel() {
+            return `Add ${name}`;
         }
     }));
 });
 </script>
 {% endmacro %}
 
-{% macro tag_input (tags) %}
-    <div class="tag-input" x-data="tagInput({{ tags }})">
+{% macro tag_input (tags, name) %}
+    <div class="tag-input" x-data="tagInput({{ tags }}, {{ name }})">
         <template x-for="(tag, index) in tags">
             <sl-input :label="tagLabel(index)" x-model="tags[index]">
                 <sl-icon-button
@@ -37,6 +40,6 @@ document.addEventListener('alpine:init', () => {
                 </sl-icon-button>
             </sl-input>
         </template>
-        <sl-button @click="addTag" :disabled="!canAddNewTag">Add Artist</sl-button>
+        <sl-button @click="addTag" :disabled="!canAddNewTag" x-text="addTagButtonLabel"></sl-button>
     </div>
 {% endmacro %}

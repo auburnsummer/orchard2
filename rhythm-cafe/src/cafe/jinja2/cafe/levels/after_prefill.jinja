@@ -1,6 +1,7 @@
 {% from "cafe/base.jinja" import base with context %}
 {% from 'cafe/layouts/layout_with_header.jinja' import layout_with_header as base_layout with context %}
 {% from 'cafe/components/level_box.jinja' import level_box %}
+{% from 'cafe/components/tag_input.jinja' import tag_input %}
 
 {% set content %}
 <script>
@@ -85,21 +86,7 @@ const state = {
             </sl-input>
         </div>
         <sl-textarea label="Description" x-model="level.description"></sl-textarea>
-        <!-- artists -->
-        <template x-for="(artist, index) in level.artist_tokens">
-            <sl-input :label="artistLabel(index)" x-model="level.artist_tokens[index]">
-                <sl-icon-button
-                    name="trash3"
-                    label="Settings"
-                    slot="suffix"
-                    :disabled="!canDeleteArtist(index)"
-                    @click="deleteArtist(index)"
-                >
-                </sl-icon-button>
-            </sl-input>
-        </template>
-        <sl-button @click="level.artist_tokens.push('')" :disabled="!canAddNewArtist">Add Artist</sl-button>
-        <!-- end artists -->
+        {{ tag_input("level.artist_tokens", "\"Artist\"") }}
         <sl-input type="number" label="Min BPM" x-model.number="level.min_bpm" :max="level.max_bpm"></sl-input>
         <sl-input type="number" label="Max BPM" x-model.number="level.max_bpm" :min="level.min_bpm"></sl-input>
 
@@ -110,37 +97,9 @@ const state = {
             <sl-option value="3">Very Tough</sl-option>
         </sl-select>
 
-        <!-- authors -->
-        <template x-for="(artist, index) in level.authors">
-            <sl-input :label="authorLabel(index)" x-model="level.authors[index]">
-            <sl-icon-button
-            name="trash3"
-            label="Settings"
-            slot="suffix"
-            :disabled="!canDeleteAuthor(index)"
-            @click="deleteAuthor(index)"
-            >
-            </sl-icon-button>
-            </sl-input>
-        </template>
-        <sl-button @click="level.authors.push('')" :disabled="!canAddNewAuthor">Add Author</sl-button>
+        {{ tag_input("level.authors", "\"Author\"") }}
 
-        <!-- tags -->
-        <template x-for="(artist, index) in level.tags">
-            <sl-input :label="tagLabel(index)" x-model="level.tags[index]">
-                <sl-icon-button
-                    name="trash3"
-                    label="Settings"
-                    slot="suffix"
-                    :disabled="!canDeleteTag(index)"
-                    @click="deleteTag(index)"
-                >
-                </sl-icon-button>
-            </sl-input>
-        </template>
-        <sl-button @click="level.tags.push('')" :disabled="!canAddNewTag">Add Tag</sl-button>
-
-        <!-- end tags -->
+        {{ tag_input("level.tags", "\"Tag\"") }}
 
         <!-- these are always fixed, so we can generate it serverside -->
         {% for (field, field_name) in [
