@@ -86,7 +86,10 @@ const state = {
             </sl-input>
         </div>
         <sl-textarea label="Description" x-model="level.description"></sl-textarea>
-        {{ tag_input("level.artist_tokens", "\"Artist\"") }}
+        <fieldset>
+            <legend>Artists</legend>
+            {{ tag_input("level.artist_tokens", "\"Artist\"") }}
+        </fieldset>
         <sl-input type="number" label="Min BPM" x-model.number="level.min_bpm" :max="level.max_bpm"></sl-input>
         <sl-input type="number" label="Max BPM" x-model.number="level.max_bpm" :min="level.min_bpm"></sl-input>
 
@@ -97,9 +100,15 @@ const state = {
             <sl-option value="3">Very Tough</sl-option>
         </sl-select>
 
-        {{ tag_input("level.authors", "\"Author\"") }}
+        <fieldset>
+            <legend>Authors</legend>
+            {{ tag_input("level.authors", "\"Author\"") }}
+        </fieldset>
 
-        {{ tag_input("level.tags", "\"Tag\"") }}
+        <fieldset>
+            <legend>Tags</legend>
+            {{ tag_input("level.tags", "\"Tag\"") }}
+        </fieldset>
 
         <!-- these are always fixed, so we can generate it serverside -->
         {% for (field, field_name) in [

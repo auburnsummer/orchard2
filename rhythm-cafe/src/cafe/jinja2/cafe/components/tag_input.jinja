@@ -27,19 +27,27 @@ document.addEventListener('alpine:init', () => {
 {% endmacro %}
 
 {% macro tag_input (tags, name) %}
-    <div class="tag-input" x-data="tagInput({{ tags }}, {{ name }})">
-        <template x-for="(tag, index) in tags">
-            <sl-input :label="tagLabel(index)" x-model="tags[index]">
-                <sl-icon-button
-                    name="trash3"
-                    label="Settings"
-                    slot="suffix"
-                    :disabled="!canDeleteTag(index)"
-                    @click="deleteTag(index)"
-                >
-                </sl-icon-button>
-            </sl-input>
-        </template>
-        <sl-button @click="addTag" :disabled="!canAddNewTag" x-text="addTagButtonLabel"></sl-button>
-    </div>
+<div x-data="tagInput({{ tags }}, {{ name }})" class="cti">
+    <template x-for="(tag, index) in tags">
+        <sl-input :placeholder="tagLabel(index)" x-model="tags[index]">
+            <sl-icon-button
+                name="trash3"
+                label="Settings"
+                slot="suffix"
+                :disabled="!canDeleteTag(index)"
+                @click="deleteTag(index)"
+            >
+            </sl-icon-button>
+        </sl-input>
+    </template>
+    <sl-button @click="addTag" :disabled="!canAddNewTag" x-text="addTagButtonLabel"></sl-button>
+</div>
+
+<style data-hoist="true">
+    .cti {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+</style>
 {% endmacro %}
