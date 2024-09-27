@@ -3,6 +3,7 @@ che - components/header.jinja
 clb - components/level_box.jinja
 cri - components/redeem_invite.jinja
 cse - components/settings_sidebar.jinja
+cti - components/tag_input.jinja
 pcl - profile/clubs.jinja
 pco - profile/connections.jinja
 pla - profile/layout.jinja
