@@ -18,7 +18,7 @@ document.addEventListener('alpine:init', () => {
             }
         },
         get songAltString() {
-            return `(${this.level.song_alt})`;
+            return this.level.song_alt ? `(${this.level.song_alt})` : '';
         },
         get difficultyString() {
             return ['Easy', 'Medium', 'Tough', 'Very Tough'][this.level.difficulty];
@@ -61,7 +61,7 @@ document.addEventListener('alpine:init', () => {
             return this.getPiecesFromFormattedString(formattedString, this.level.artist_tokens);
         },
         get authorIcon() {
-            return this.level.authors.length > 1 ? 'people-fill' : 'person-fill';   
+            return this.level.authors.length > 1 ? 'pen-fill' : 'pen-fill';   
         },
         get authorPieces() {
             let formattedString = formatter.format(this.level.authors);
@@ -122,7 +122,7 @@ document.addEventListener('alpine:init', () => {
             <div class="clb__cast">
                 <div class="clb__song-wrapper">
                     <h1 class="clb__song" x-text="level.song"></h1>
-                    <h2 class="clb__song-alt" x-text="level.songAltString" x-show="level.song_alt"></h2>
+                    <h2 class="clb__song-alt" x-text="songAltString"></h2>
                 </div>
                 <div class="clb__artist-wrapper">
                     <ul class="clb__artist-list">
