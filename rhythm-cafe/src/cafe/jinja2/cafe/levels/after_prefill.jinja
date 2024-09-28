@@ -7,7 +7,7 @@
 <script>
 const INITIAL_PREFILL_DATA = {{ prefill | safe }};
 const state = {
-    level: {},
+    currentLevel: {},
     get initialLevel() {
         return {
             song_alt: "",
@@ -23,60 +23,67 @@ const state = {
     },
     get canAddNewArtist() {
         // are none of the artists empty?
-        return this.level.artist_tokens.every(artist => artist.length > 0);
+        return this.currentLevel.artist_tokens.every(artist => artist.length > 0);
     },
     canDeleteArtist(index) {
         // are there any non-empty artists, excluding the one at index?
-        return this.level.artist_tokens.filter((artist, i) => i !== index && artist.length > 0).length > 0;
+        return this.currentLevel.artist_tokens.filter((artist, i) => i !== index && artist.length > 0).length > 0;
     },
     deleteArtist(index) {
-        this.level.artist_tokens.splice(index, 1);
+        this.currentLevel.artist_tokens.splice(index, 1);
     },
     // tags
     tagLabel(number) {
         return number === 0 ? 'Tag' : `Tag (${number+1})`;
     },
     get canAddNewTag() {
-        return this.level.tags.every(tag => tag.length > 0);
+        return this.currentLevel.tags.every(tag => tag.length > 0);
     },
     canDeleteTag(index) {
-        return this.level.tags.filter((tag, i) => i !== index && tag.length > 0).length > 0;
+        return this.currentLevel.tags.filter((tag, i) => i !== index && tag.length > 0).length > 0;
     },
     deleteTag(index) {
-        this.level.tags.splice(index, 1);
+        this.currentLevel.tags.splice(index, 1);
     },
     // authors
     authorLabel(number) {
         return number === 0 ? 'Author' : `Author (${number+1})`;
     },
     get canAddNewAuthor() {
-        return this.level.authors.every(author => author.length > 0);
+        return this.currentLevel.authors.every(author => author.length > 0);
     },
     canDeleteAuthor(index) {
-        return this.level.authors.filter((author, i) => i !== index && author.length > 0).length > 0;
+        return this.currentLevel.authors.filter((author, i) => i !== index && author.length > 0).length > 0;
     },
     deleteAuthor(index) {
-        this.level.authors.splice(index, 1);
+        this.currentLevel.authors.splice(index, 1);
     },
     get difficultyModel() {
-        return this.level.difficulty.toString();
+        return this.currentLevel.difficulty.toString();
     },
     setDifficultyModel(value) {
-        this.level.difficulty = parseInt(value);
+        this.currentLevel.difficulty = parseInt(value);
     },
     reset() {
-        this.level = this.initialLevel;
+        this.currentLevel = this.initialLevel;
     },
     init() {
         this.reset();
     },
+    submit() {
+        alert("TODO: submit");
+    }
 }
 </script>
 <div class="eap" x-data="state">
     <div class="eap__form">
+        <div class="eap__form-controls">
+            <sl-button @click="submit" variant="primary">Submit</sl-button>
+            <sl-button @click="reset">Reset</sl-button>
+        </div>
         <div class="eap__form-titles">
-            <sl-input class="eap__form-title" label="Song" x-model="level.song"></sl-input>
-            <sl-input class="eap__form-title" x-model="level.song_alt">
+            <sl-input class="eap__form-title" label="Song" x-model="currentLevel.song"></sl-input>
+            <sl-input class="eap__form-title" x-model="currentLevel.song_alt">
                 <span slot="label">
                     Song (alternate)
                     <sl-tooltip class="eap__form-tip" content="Alternate name of the song, such as a localised or romanized name.">
@@ -85,16 +92,16 @@ const state = {
                 </span>
             </sl-input>
         </div>
-        <sl-textarea label="Description" x-model="level.description"></sl-textarea>
+        <sl-textarea label="Description" x-model="currentLevel.description"></sl-textarea>
 
         <fieldset>
             <legend>Artists</legend>
-            {{ tag_input("level.artist_tokens", "\"Artist\"") }}
+            {{ tag_input("currentLevel.artist_tokens", "\"Artist\"") }}
         </fieldset>
 
         <div class="eap__form-bpm-and-difficulty">
-            <sl-input type="number" label="Min BPM" x-model.number="level.min_bpm" :max="level.max_bpm"></sl-input>
-            <sl-input type="number" label="Max BPM" x-model.number="level.max_bpm" :min="level.min_bpm"></sl-input>
+            <sl-input type="number" label="Min BPM" x-model.number="currentLevel.min_bpm" :max="currentLevel.max_bpm"></sl-input>
+            <sl-input type="number" label="Max BPM" x-model.number="currentLevel.max_bpm" :min="currentLevel.min_bpm"></sl-input>
 
             <sl-select label="Difficulty" :value="difficultyModel" @sl-change="e => setDifficultyModel(e.target.value)">
                 <sl-option value="0">Easy</sl-option>
@@ -106,12 +113,12 @@ const state = {
 
         <fieldset>
             <legend>Authors</legend>
-            {{ tag_input("level.authors", "\"Author\"") }}
+            {{ tag_input("currentLevel.authors", "\"Author\"") }}
         </fieldset>
 
         <fieldset class="eap__form-tags">
             <legend>Tags</legend>
-            {{ tag_input("level.tags", "\"Tag\"") }}
+            {{ tag_input("currentLevel.tags", "\"Tag\"") }}
         </fieldset>
 
         <div class="eap__form-checkboxes">
@@ -130,8 +137,8 @@ const state = {
                 ("has_window_dance", "Has Window Dance"),
             ]%}
                 <sl-checkbox
-                    :checked="level.{{ field }}"
-                    @sl-change="level.{{ field }} = $event.target.checked"
+                    :checked="currentLevel.{{ field }}"
+                    @sl-change="currentLevel.{{ field }} = $event.target.checked"
                 >
                     {{ field_name }}
                 </sl-checkbox>
@@ -140,7 +147,7 @@ const state = {
 
     </div>
     <div class="eap__preview">
-        {{ level_box("level") }}
+        {{ level_box("currentLevel") }}
     </div>
 </div>
 {% endset %}
