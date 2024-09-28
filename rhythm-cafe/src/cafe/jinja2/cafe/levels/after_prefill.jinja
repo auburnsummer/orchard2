@@ -86,61 +86,60 @@ const state = {
             </sl-input>
         </div>
         <sl-textarea label="Description" x-model="level.description"></sl-textarea>
+
         <fieldset>
             <legend>Artists</legend>
             {{ tag_input("level.artist_tokens", "\"Artist\"") }}
         </fieldset>
-        <sl-input type="number" label="Min BPM" x-model.number="level.min_bpm" :max="level.max_bpm"></sl-input>
-        <sl-input type="number" label="Max BPM" x-model.number="level.max_bpm" :min="level.min_bpm"></sl-input>
 
-        <sl-select label="Difficulty" :value="difficultyModel" @sl-change="e => setDifficultyModel(e.target.value)">
-            <sl-option value="0">Easy</sl-option>
-            <sl-option value="1">Medium</sl-option>
-            <sl-option value="2">Tough</sl-option>
-            <sl-option value="3">Very Tough</sl-option>
-        </sl-select>
+        <div class="eap__form-bpm-and-difficulty">
+            <sl-input type="number" label="Min BPM" x-model.number="level.min_bpm" :max="level.max_bpm"></sl-input>
+            <sl-input type="number" label="Max BPM" x-model.number="level.max_bpm" :min="level.min_bpm"></sl-input>
+
+            <sl-select label="Difficulty" :value="difficultyModel" @sl-change="e => setDifficultyModel(e.target.value)">
+                <sl-option value="0">Easy</sl-option>
+                <sl-option value="1">Medium</sl-option>
+                <sl-option value="2">Tough</sl-option>
+                <sl-option value="3">Very Tough</sl-option>
+            </sl-select>
+        </div>
 
         <fieldset>
             <legend>Authors</legend>
             {{ tag_input("level.authors", "\"Author\"") }}
         </fieldset>
 
-        <fieldset>
+        <fieldset class="eap__form-tags">
             <legend>Tags</legend>
             {{ tag_input("level.tags", "\"Tag\"") }}
         </fieldset>
 
-        <!-- these are always fixed, so we can generate it serverside -->
-        {% for (field, field_name) in [
-            ("single_player", "Single Player"),
-            ("two_player", "Two Player"),
-            ("seizure_warning", "Seizure Warning"),
-            ("has_classics", "Classic"),
-            ("has_oneshots", "Oneshots"),
-            ("has_squareshots", "Squareshots"),
-            ("has_freezeshots", "Freezeshots"),
-            ("has_freetimes", "Freetimes"),
-            ("has_holds", "Holds"),
-            ("has_skipshots", "Skipshots"),
-            ("has_window_dance", "Window Dance"),
-        ]%}
-            <sl-checkbox
-                :checked="level.{{ field }}"
-                @sl-change="level.{{ field }} = $event.target.checked"
-            >
-                {{ field_name }}
-            </sl-checkbox>
-        {% endfor %}
+        <div class="eap__form-checkboxes">
+            <!-- these are always fixed, so we can generate it serverside -->
+            {% for (field, field_name) in [
+                ("single_player", "Single Player"),
+                ("two_player", "Two Player"),
+                ("seizure_warning", "Seizure Warning"),
+                ("has_classics", "Has classic beats"),
+                ("has_oneshots", "Has Oneshots"),
+                ("has_squareshots", "Has Squareshots"),
+                ("has_freezeshots", "Has Freezeshots"),
+                ("has_freetimes", "Has Freetimes"),
+                ("has_holds", "Has Holds"),
+                ("has_skipshots", "Skipshots"),
+                ("has_window_dance", "Has Window Dance"),
+            ]%}
+                <sl-checkbox
+                    :checked="level.{{ field }}"
+                    @sl-change="level.{{ field }} = $event.target.checked"
+                >
+                    {{ field_name }}
+                </sl-checkbox>
+            {% endfor %}
+        </div>
 
     </div>
     <div class="eap__preview">
-        {# <div class="clb" x-data="{'level': level}">
-            <div x-effect="console.log(level.artist)"></div>
-            <textarea disabled="true" id="preview" name="preview" rows="5" cols="33" x-text="JSON.stringify(level)">
-                It was a dark and stormy night...
-            </textarea>
-
-        </div> #}
         {{ level_box("level") }}
     </div>
 </div>
@@ -170,7 +169,7 @@ const state = {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 0.5rem;
+    gap: 1rem;
 
     overflow-y: auto;
 }
@@ -207,5 +206,24 @@ const state = {
 
 .eap__form-tip:hover {
     color: var(--sl-color-neutral-800);
+}
+
+.eap__form-bpm-and-difficulty {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.eap__form-tags .cti__input {
+    width: 13rem;
+}
+
+.eap__form-checkboxes {
+    display: grid;
+    grid-template-columns: repeat( auto-fit, minmax(12rem, 1fr));
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
 }
 </style>
