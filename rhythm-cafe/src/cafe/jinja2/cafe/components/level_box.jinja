@@ -91,7 +91,7 @@ document.addEventListener('alpine:init', () => {
 
 {% macro level_box(level) %}
     <article class="clb" x-data="levelBox({{ level }})">
-        <div class="clb__imagebox" x-effect="console.log(level)">
+        <div class="clb__imagebox" >
             <img class="clb__image" :src="level.thumb_url" alt="Level image" loading="lazy" />
             <div class="clb__overlay">
                 <div class="clb__description">
