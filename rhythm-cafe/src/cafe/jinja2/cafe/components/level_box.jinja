@@ -4,7 +4,7 @@ const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction'
 
 document.addEventListener('alpine:init', () => {
     Alpine.data('levelBox', (level) => ({
-        level,
+        level: level,
         copyEffect: false,
         async onCopyClick() {
             try {
