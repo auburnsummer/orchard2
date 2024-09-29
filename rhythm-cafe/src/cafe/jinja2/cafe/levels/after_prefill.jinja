@@ -76,75 +76,86 @@ const state = {
 }
 </script>
 <div class="eap" x-data="state">
-    <div class="eap__form">
-        <div class="eap__form-controls">
-            <sl-button @click="submit" variant="primary">Submit</sl-button>
-            <sl-button @click="reset">Reset</sl-button>
+    <div class="eap__form-wrapper">
+        <div class="eap__form-help">
+            <sl-alert open closable>
+                <sl-icon slot="icon" name="info-circle"></sl-icon>
+                <p>We've filled out the fields below based on the rdzip file.</p>
+                <p>If it all looks okay, you can simply click "Add Level" now to add the level.</p>
+                <p>Otherwise, make changes, and then click "Add Level".</p>
+                <p><strong>You can come back to edit after adding the level.</strong></p>
+            </sl-alert>
         </div>
-        <div class="eap__form-titles">
-            <sl-input class="eap__form-title" label="Song" x-model="currentLevel.song"></sl-input>
-            <sl-input class="eap__form-title" x-model="currentLevel.song_alt">
-                <span slot="label">
-                    Song (alternate)
-                    <sl-tooltip class="eap__form-tip" content="Alternate name of the song, such as a localised or romanized name.">
-                        <sl-icon name="info-circle"></sl-icon>
-                    </sl-tooltip>
-                </span>
-            </sl-input>
+        <div class="eap__form">
+            <div class="eap__form-controls">
+                <sl-button @click="submit" variant="primary">Submit</sl-button>
+                <sl-button @click="reset">Reset</sl-button>
+            </div>
+            <div class="eap__form-titles">
+                <sl-input class="eap__form-title" label="Song Name" x-model="currentLevel.song"></sl-input>
+                <sl-input class="eap__form-title" x-model="currentLevel.song_alt">
+                    <span slot="label">
+                        Song Name (alternate)
+                        <sl-tooltip class="eap__form-tip" content="Alternate name of the song, such as a localised or romanized name.">
+                            <sl-icon name="info-circle"></sl-icon>
+                        </sl-tooltip>
+                    </span>
+                </sl-input>
+            </div>
+            <sl-textarea label="Description" x-model="currentLevel.description"></sl-textarea>
+
+            <fieldset>
+                <legend>Artists</legend>
+                {{ tag_input("currentLevel.artist_tokens", "\"Artist\"") }}
+            </fieldset>
+
+            <div class="eap__form-bpm-and-difficulty">
+                <sl-input type="number" label="Min BPM" x-model.number="currentLevel.min_bpm" :max="currentLevel.max_bpm"></sl-input>
+                <sl-input type="number" label="Max BPM" x-model.number="currentLevel.max_bpm" :min="currentLevel.min_bpm"></sl-input>
+
+                <sl-select label="Difficulty" :value="difficultyModel" @sl-change="e => setDifficultyModel(e.target.value)">
+                    <sl-option value="0">Easy</sl-option>
+                    <sl-option value="1">Medium</sl-option>
+                    <sl-option value="2">Tough</sl-option>
+                    <sl-option value="3">Very Tough</sl-option>
+                </sl-select>
+            </div>
+
+            <fieldset>
+                <legend>Authors</legend>
+                {{ tag_input("currentLevel.authors", "\"Author\"") }}
+            </fieldset>
+
+            <fieldset class="eap__form-tags">
+                <legend>Tags</legend>
+                {{ tag_input("currentLevel.tags", "\"Tag\"") }}
+            </fieldset>
+
+            <div class="eap__form-checkboxes">
+                <!-- these are always fixed, so we can generate it serverside -->
+                {% for (field, field_name) in [
+                    ("single_player", "Single Player"),
+                    ("two_player", "Two Player"),
+                    ("seizure_warning", "Seizure Warning"),
+                    ("has_classics", "Has classic beats"),
+                    ("has_oneshots", "Has Oneshots"),
+                    ("has_squareshots", "Has Squareshots"),
+                    ("has_freezeshots", "Has Freezeshots"),
+                    ("has_freetimes", "Has Freetimes"),
+                    ("has_holds", "Has Holds"),
+                    ("has_skipshots", "Skipshots"),
+                    ("has_window_dance", "Has Window Dance"),
+                ]%}
+                    <sl-checkbox
+                        :checked="currentLevel.{{ field }}"
+                        @sl-change="currentLevel.{{ field }} = $event.target.checked"
+                    >
+                        {{ field_name }}
+                    </sl-checkbox>
+                {% endfor %}
+            </div>
+
         </div>
-        <sl-textarea label="Description" x-model="currentLevel.description"></sl-textarea>
-
-        <fieldset>
-            <legend>Artists</legend>
-            {{ tag_input("currentLevel.artist_tokens", "\"Artist\"") }}
-        </fieldset>
-
-        <div class="eap__form-bpm-and-difficulty">
-            <sl-input type="number" label="Min BPM" x-model.number="currentLevel.min_bpm" :max="currentLevel.max_bpm"></sl-input>
-            <sl-input type="number" label="Max BPM" x-model.number="currentLevel.max_bpm" :min="currentLevel.min_bpm"></sl-input>
-
-            <sl-select label="Difficulty" :value="difficultyModel" @sl-change="e => setDifficultyModel(e.target.value)">
-                <sl-option value="0">Easy</sl-option>
-                <sl-option value="1">Medium</sl-option>
-                <sl-option value="2">Tough</sl-option>
-                <sl-option value="3">Very Tough</sl-option>
-            </sl-select>
-        </div>
-
-        <fieldset>
-            <legend>Authors</legend>
-            {{ tag_input("currentLevel.authors", "\"Author\"") }}
-        </fieldset>
-
-        <fieldset class="eap__form-tags">
-            <legend>Tags</legend>
-            {{ tag_input("currentLevel.tags", "\"Tag\"") }}
-        </fieldset>
-
-        <div class="eap__form-checkboxes">
-            <!-- these are always fixed, so we can generate it serverside -->
-            {% for (field, field_name) in [
-                ("single_player", "Single Player"),
-                ("two_player", "Two Player"),
-                ("seizure_warning", "Seizure Warning"),
-                ("has_classics", "Has classic beats"),
-                ("has_oneshots", "Has Oneshots"),
-                ("has_squareshots", "Has Squareshots"),
-                ("has_freezeshots", "Has Freezeshots"),
-                ("has_freetimes", "Has Freetimes"),
-                ("has_holds", "Has Holds"),
-                ("has_skipshots", "Skipshots"),
-                ("has_window_dance", "Has Window Dance"),
-            ]%}
-                <sl-checkbox
-                    :checked="currentLevel.{{ field }}"
-                    @sl-change="currentLevel.{{ field }} = $event.target.checked"
-                >
-                    {{ field_name }}
-                </sl-checkbox>
-            {% endfor %}
-        </div>
-
     </div>
     <div class="eap__preview">
         {{ level_box("currentLevel") }}
@@ -166,17 +177,27 @@ const state = {
     background-color: var(--sl-color-neutral-50);
 }
 
-.eap__form {
+.eap__form-wrapper {
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    padding: 0.5rem;
+    margin: 2cqh 2cqw 2cqh 2cqw;
+}
+
+
+.eap__form {
     background-color: var(--sl-color-neutral-0);
     box-shadow: var(--sl-shadow-medium);
-    margin: 2cqh 2cqw 2cqh 2cqw;
-    padding: 1rem;
+    flex-grow: 1;
 
     display: flex;
     flex-direction: column;
     align-items: stretch;
     gap: 1rem;
+    padding: 1rem;
 
     overflow-y: auto;
 }
