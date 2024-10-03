@@ -42,7 +42,10 @@
                 data-shoelace="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.1/cdn">
             </script>
         {% endfor %}
-        {# todo: vendor this dependency #}
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=atkinson-hyperlegible:400,400i,700,700i" rel="stylesheet" />
+       
+       {# todo: vendor this dependency #}
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
         {% for css_file in [

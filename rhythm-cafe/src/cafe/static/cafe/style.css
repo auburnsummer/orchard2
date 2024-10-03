@@ -9,6 +9,7 @@ html {
 
 body {
     margin: 0;
+    --sl-font-sans: "Atkinson Hyperlegible", sans-serif;
     font-family: var(--sl-font-sans);
 }
 

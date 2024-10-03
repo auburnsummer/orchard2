@@ -8,6 +8,8 @@ from orchard.settings import DISCORD_PUBLIC_KEY
 
 from .handlers import HANDLERS
 
+from .handlers.utils import ephemeral_response
+
 verify_key = Ed25519PublicKey.from_public_bytes(bytes.fromhex(DISCORD_PUBLIC_KEY))
 
 class HttpResponseUnauthorized(HttpResponse):
@@ -44,5 +46,8 @@ def entry(request):
         command_name = data['data']['name']
         if command_name in HANDLERS:
             return HANDLERS[command_name](data)
+        
+        resp = ephemeral_response(f"Unknown command: {command_name} (if you see this, it's a bug!)")
+        return resp
         
     return HttpResponseNotFound('Not sure how to handle this type.')
