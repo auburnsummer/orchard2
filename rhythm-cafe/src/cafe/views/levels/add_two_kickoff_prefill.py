@@ -1,14 +1,11 @@
 import asyncio
-from email.mime import image
 from io import BufferedRandom, BytesIO
 from tempfile import TemporaryFile
 from typing import NamedTuple
-from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotAllowed, JsonResponse
 import msgspec
 from vitals.msgspec_schema import VitalsLevel
 
-from .check import check_if_ok_to_continue
 
 from huey.contrib.djhuey import db_task
 from cafe.views.discord_bot.handlers.add import addlevel_signer
@@ -81,13 +78,6 @@ def _run_prefill(level_url: str, prefill_result: RDLevelPrefillResult):
     try:
         with TemporaryFile(mode="w+b") as f:
             with httpx.Client() as client:
-                # bun = BunnyStorage(
-                #     api_key=BUNNY_STORAGE_API_KEY,
-                #     base_endpoint=BUNNY_STORAGE_BASE_ENDPOINT,
-                #     storage_zone_name=BUNNY_STORAGE_ZONE_NAME,
-                #     public_cdn_base=BUNNY_STORAGE_CDN_URL,
-                #     client=client
-                # )
                 resp = client.get(level_url)
                 resp.raise_for_status()
                 for chunk in resp.iter_bytes():

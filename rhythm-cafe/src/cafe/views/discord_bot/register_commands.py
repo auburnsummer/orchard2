@@ -27,7 +27,12 @@ COMMANDS = [
         "default_member_permissions": "0"
     },
     {
-        "name": "Add level to Rhythm Café",
+        "name": "Add to Rhythm Café",
+        "type": 3,
+        "default_member_permissions": "0"
+    },
+    {
+        "name": "Add to Rhythm Café (delegated)",
         "type": 3,
         "default_member_permissions": "0"
     }

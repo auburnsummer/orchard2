@@ -8,6 +8,8 @@ from cafe.models import Club
 from cafe.models.club import is_at_least_admin
 from oauthlogin.models import OAuthConnection
 
+from loguru import logger
+
 import rules
 
 def _user_allowed(discord_user_id, user, club):
@@ -55,7 +57,8 @@ def ok_to_continue_rule(user, code):
     try:
         check_if_ok_to_continue(code, user)
         return True
-    except:
+    except Exception as e:
         return False
+    
     
 rules.add_perm('prefill.ok', ok_to_continue_rule)

@@ -83,12 +83,12 @@ const state = {
                 <p>We've filled out the fields below based on the rdzip file.</p>
                 <p>If it all looks okay, you can simply click "Add Level" now to add the level.</p>
                 <p>Otherwise, make changes, and then click "Add Level".</p>
-                <p><strong>You can come back to edit after adding the level.</strong></p>
+                <p><strong>You can always come back to edit after adding the level.</strong></p>
             </sl-alert>
         </div>
         <div class="eap__form">
             <div class="eap__form-controls">
-                <sl-button @click="submit" variant="primary">Submit</sl-button>
+                <sl-button @click="submit" variant="primary">Add Level</sl-button>
                 <sl-button @click="reset">Reset</sl-button>
             </div>
             <div class="eap__form-titles">
@@ -202,9 +202,19 @@ const state = {
     overflow-y: auto;
 }
 
+.eap__form-controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.eap__form fieldset {
+    border: 1px solid var(--sl-color-neutral-300);
+}
+
 .eap__preview {
     --other-color: var(--sl-color-primary-50);
-    width: 30rem;
+    min-width: 30rem;
     display: flex;
     flex-direction: column;
     align-items: center;
