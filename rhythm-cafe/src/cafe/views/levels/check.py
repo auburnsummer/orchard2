@@ -6,6 +6,7 @@ from django.core.exceptions import BadRequest, ObjectDoesNotExist
 
 from cafe.models import Club
 from cafe.models.club import is_at_least_admin
+from cafe.models.rdlevel_prefill import RDLevelPrefillResult
 from oauthlogin.models import OAuthConnection
 
 from loguru import logger
@@ -59,6 +60,15 @@ def ok_to_continue_rule(user, code):
         return True
     except Exception as e:
         return False
-    
+
+@rules.predicate
+def can_access_prefill(user, prefill: RDLevelPrefillResult):
+    if user == prefill.user:
+        return True
+    if is_at_least_admin(user, prefill.club):
+        return True
+    return False
+
+rules.add_perm('prefill.can_access_prefill', can_access_prefill)
     
 rules.add_perm('prefill.ok', ok_to_continue_rule)

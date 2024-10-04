@@ -171,13 +171,12 @@ const state = {
 
 <style data-hoist="true">
 .eap {
-    display: flex;
-    flex-direction: row;
     min-height: 100vh;
     background-color: var(--sl-color-neutral-50);
 }
 
 .eap__form-wrapper {
+    width: calc(100vw - 32rem);
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -213,8 +212,12 @@ const state = {
 }
 
 .eap__preview {
+    position: fixed;
+    top: 2.5rem;
+    right: 0;
+    min-height: calc(100vh - 2.5rem);
     --other-color: var(--sl-color-primary-50);
-    min-width: 30rem;
+    width: 30rem;
     display: flex;
     flex-direction: column;
     align-items: center;

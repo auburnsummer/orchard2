@@ -44,10 +44,11 @@ def delete_membership(request, club_id, user_id):
         return HttpResponseForbidden()
 
     owners = list(ClubMembership.objects.filter(club=club_id, role="owner"))
-    if len(owners) < 2:
+    membership = get_object_or_404(ClubMembership, user=user_id, club=club_id)
+
+    if len(owners) < 2 and membership.role == "owner":
         return HttpResponseForbidden("Cannot kick this user as it would result in the group having no owners")
     
-    membership = get_object_or_404(ClubMembership, user=user_id, club=club_id)
     membership.delete()
     messages.add_message(request, messages.SUCCESS, "Member removed from group successfully.")
 
