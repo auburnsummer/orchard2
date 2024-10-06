@@ -45,6 +45,7 @@ class RDLevel(RulesModel):
     rdlevel_sha1 = models.TextField(blank=False)
     is_animated = models.BooleanField(blank=False)
 
+    rdzip_url = models.TextField(blank=False)
     image_url = models.TextField(blank=False)
     thumb_url = models.TextField(blank=False)
     icon_url = models.TextField(blank=True)
