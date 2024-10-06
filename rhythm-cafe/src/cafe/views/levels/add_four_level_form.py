@@ -10,6 +10,7 @@ from rules.contrib.views import permission_required, objectgetter
 from vitals.msgspec_schema import VitalsLevelBaseMutable
 
 import msgspec
+import json
 
 class AddLevelPayload(VitalsLevelBaseMutable):
     song_alt: str
@@ -34,7 +35,7 @@ def add_four_level_form(request, prefill_id):
         return add_level_route(request, prefill)
     else:
         render_data = {
-            "prefill": prefill.data.decode("utf-8"),
+            "prefill": json.dumps(prefill.data),
             "club": prefill.club
         }
         return render(request, "cafe/levels/after_prefill.jinja", render_data)

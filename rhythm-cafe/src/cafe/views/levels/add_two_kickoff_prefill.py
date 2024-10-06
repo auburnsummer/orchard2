@@ -96,7 +96,7 @@ def _run_prefill(level_url: str, prefill_result: RDLevelPrefillResult):
             del payload['thumb']
             del payload['icon']
 
-            prefill_result.data = msgspec.json.encode(payload)
+            prefill_result.data = payload
             prefill_result.ready = True
             prefill_result.save()
     except Exception as e:
