@@ -8,6 +8,7 @@
 const INITIAL_PREFILL_DATA = {{ prefill | safe }};
 const state = {
     currentLevel: {},
+    csrfToken: "{{ csrf_token }}",
     get initialLevel() {
         return {
             song_alt: "",
@@ -71,7 +72,15 @@ const state = {
         this.reset();
     },
     submit() {
-        alert("TODO: submit");
+        delete this.currentLevel['song']
+        void fetch(window.location.href, {
+            method: "POST",
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': this.csrfToken
+            },
+            body: JSON.stringify(this.currentLevel)
+        });
     }
 }
 </script>
