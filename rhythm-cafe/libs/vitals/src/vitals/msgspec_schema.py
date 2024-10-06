@@ -13,12 +13,11 @@ class VitalsLevelBaseMutable(msgspec.Struct):
     hue: float
     authors: Annotated[List[str], msgspec.Meta(min_length=1)]
     authors_raw: str
-    max_bpm: float
-    min_bpm: float
+    max_bpm: int
+    min_bpm: int
     difficulty: int
     single_player: bool
     two_player: bool
-    last_updated: datetime
     tags: List[str]
     has_classics: bool
     has_oneshots: bool
@@ -30,10 +29,11 @@ class VitalsLevelBaseMutable(msgspec.Struct):
     has_window_dance: bool
 
 class VitalsLevelBase(VitalsLevelBaseMutable):
-    "VitalsLevelBaseMutable + immutable properties"
+    "VitalsLevelBaseMutable + immutable properties / properties that are managed by us"
     sha1: str
     rdlevel_sha1: str
     is_animated: bool
+    last_updated: datetime
     
 class VitalsLevel(VitalsLevelBase):
     "VitalsLevelBaseMutable + VitalsLevelBase + image data"

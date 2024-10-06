@@ -12,8 +12,11 @@ from rules.contrib.views import permission_required, objectgetter
 def add_four_level_form(request, prefill_id):
     "Stage 4: This is the form that the user fills out, and then submits."
     prefill = get_object_or_404(RDLevelPrefillResult, id=prefill_id)
-    render_data = {
-        "prefill": prefill.data.decode("utf-8"),
-        "club": prefill.club
-    }
-    return render(request, "cafe/levels/after_prefill.jinja", render_data)
+    if request.method == 'POST':
+        pass
+    else:
+        render_data = {
+            "prefill": prefill.data.decode("utf-8"),
+            "club": prefill.club
+        }
+        return render(request, "cafe/levels/after_prefill.jinja", render_data)
