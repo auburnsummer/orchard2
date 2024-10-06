@@ -1,3 +1,4 @@
+from operator import is_
 from django.db import models
 
 from .utils import create_pk_field
@@ -10,4 +11,40 @@ class RDLevel(RulesModel):
     An RDLevel represents a single Rhythm Doctor level.
     """
     id = create_pk_field(IDType.RD_LEVEL)
+
+    artist = models.TextField(blank=False)
+    artist_tokens = models.JSONField(blank=False)
+
     song = models.TextField(blank=False)
+    song_alt = models.TextField(blank=True)
+
+    seizure_warning = models.BooleanField(blank=False)
+    description = models.TextField(blank=True)
+
+    hue = models.FloatField(blank=False)
+    authors = models.JSONField(blank=False)
+    authors_raw = models.TextField(blank=False)
+    max_bpm = models.IntegerField(blank=False)
+    min_bpm = models.IntegerField(blank=False)
+
+    difficulty = models.IntegerField(blank=False)
+    single_player = models.BooleanField(blank=False)
+    two_player = models.BooleanField(blank=False)
+    last_updated = models.DateTimeField(blank=False)
+    tags = models.JSONField(blank=False)
+    has_classics = models.BooleanField(blank=False)
+    has_oneshots = models.BooleanField(blank=False)
+    has_squareshots = models.BooleanField(blank=False)
+    has_freezeshots = models.BooleanField(blank=False)
+    has_freetimes = models.BooleanField(blank=False)
+    has_holds = models.BooleanField(blank=False)
+    has_skipshots = models.BooleanField(blank=False)
+    has_window_dance = models.BooleanField(blank=False)
+
+    sha1 = models.TextField(blank=False)
+    rdlevel_sha1 = models.TextField(blank=False)
+    is_animated = models.BooleanField(blank=False)
+
+    image_url = models.TextField(blank=False)
+    thumb_url = models.TextField(blank=False)
+    icon_url = models.TextField(blank=True)
