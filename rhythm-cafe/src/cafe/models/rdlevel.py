@@ -41,11 +41,13 @@ class RDLevel(RulesModel):
     has_skipshots = models.BooleanField(blank=False)
     has_window_dance = models.BooleanField(blank=False)
 
-    sha1 = models.TextField(blank=False)
+    sha1 = models.TextField(blank=False, unique=True)
     rdlevel_sha1 = models.TextField(blank=False)
     is_animated = models.BooleanField(blank=False)
 
     rdzip_url = models.TextField(blank=False)
     image_url = models.TextField(blank=False)
     thumb_url = models.TextField(blank=False)
-    icon_url = models.TextField(blank=True)
+    icon_url = models.TextField(blank=True, default="")
+
+    submitter = models.ForeignKey("cafe.User", on_delete=models.CASCADE)

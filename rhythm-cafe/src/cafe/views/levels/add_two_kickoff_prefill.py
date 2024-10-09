@@ -90,7 +90,10 @@ def _run_prefill(level_url: str, prefill_result: RDLevelPrefillResult):
             payload = msgspec.structs.asdict(level)
             payload['rdzip_url'] = urls.rdzip_url_public
             payload['image_url'] = urls.image_url_public
-            payload['icon_url'] = urls.icon_url_public
+            # the other three are required but icon is optional
+            # we don't want to send None, just leave it out
+            if urls.icon_url_public:
+                payload['icon_url'] = urls.icon_url_public
             payload['thumb_url'] = urls.thumb_url_public
             del payload['image']
             del payload['thumb']

@@ -72,7 +72,6 @@ const state = {
         this.reset();
     },
     submit() {
-        delete this.currentLevel['song']
         void fetch(window.location.href, {
             method: "POST",
             credentials: 'include',
