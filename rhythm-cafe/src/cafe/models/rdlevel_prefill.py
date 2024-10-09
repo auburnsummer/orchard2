@@ -8,6 +8,7 @@ from cafe.models import User, Club
 
 from django.core.serializers.json import DjangoJSONEncoder
 
+from django.utils.timezone import now
 
 class RDLevelPrefillResult(RulesModel):
     """
@@ -16,6 +17,8 @@ class RDLevelPrefillResult(RulesModel):
     id = create_pk_field(IDType.PREFILL)
     # url of the level that's being prefilled
     url = models.TextField(default="")
+    # datetime that the prefill was initiated. this is used to cleanup old prefill results.
+    created_at = models.DateTimeField(blank=False, default=now)
     # version of the prefill task that ran.
     version = models.IntegerField()
     # task will set to True when the task is complete.
