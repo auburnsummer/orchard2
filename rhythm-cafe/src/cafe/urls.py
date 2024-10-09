@@ -27,11 +27,13 @@ urlpatterns = [
     path("groups/<club_id>/settings/members/<user_id>/", views.club_settings.alter_membership, name="club_settings_membership"),
     path("groups/<club_id>/settings/members/<user_id>/delete/", views.club_settings.delete_membership, name="club_settings_membership_delete"),
 
-    path("levels/add/<code>/", views.levels.add_one_render_waiting_screen, name="level_add_s1"),
-    path("levels/add/<code>/prefill/", views.levels.add_two_kickoff_prefill, name="level_add_s2"),
-    path("prefill/<prefill_id>/", views.levels.add_three_get_prefill_status, name="level_add_s3"),
-    path("levels/add/from_prefill/<prefill_id>/", views.levels.add_four_level_form, name="level_add_s4"),
+    path("levels/add/<code>/", views.levels.prefill.add_one_render_waiting_screen, name="level_add_s1"),
+    path("levels/add/<code>/prefill/", views.levels.prefill.add_two_kickoff_prefill, name="level_add_s2"),
+    path("prefill/<prefill_id>/", views.levels.prefill.add_three_get_prefill_status, name="level_add_s3"),
+    path("levels/add/from_prefill/<prefill_id>/", views.levels.prefill.add_four_level_form, name="level_add_s4"),
     path("meta/all_styles.css/", views.meta.combined_css, name="combined_css"),
+
+    path("levels/<level_id>", views.index, name="level_view"),
 
     path("", views.index, name="index")
 ]
