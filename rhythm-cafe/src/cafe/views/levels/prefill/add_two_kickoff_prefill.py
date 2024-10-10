@@ -12,7 +12,6 @@ from essfree import Essfree
 from huey.contrib.djhuey import db_task
 from cafe.views.discord_bot.handlers.add import addlevel_signer
 from vitals import vitals
-from bunny_storage import BunnyStorage
 
 from cafe.models import Club, RDLevelPrefillResult
 
@@ -52,8 +51,6 @@ async def upload_files(level: VitalsLevel, f: BufferedRandom):
             thumb_task = tg.create_task(esfree.upload_file(BytesIO(level.thumb), "thumbs", ".webp"))
 
         rdzip_url = rdzip_task.result()
-        print("!!!!")
-        print(rdzip_url)
         image_url = image_task.result()
         icon_url = icon_task.result() if icon_task else None
         thumb_url = thumb_task.result()
