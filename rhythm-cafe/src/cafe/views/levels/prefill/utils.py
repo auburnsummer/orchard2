@@ -29,6 +29,17 @@ def _user_allowed(discord_user_id, user, club):
     # b. the user is an admin or owner of the club.
     return is_at_least_admin(user, club)
 
+# def get_or_create_user_for_discord_user(discord_user_id):
+#     "must be called from POST request"
+#     try:
+#         oauth_connection = OAuthConnection.objects.get(
+#             provider_key='discord',
+#             provider_user_id=discord_user_id,
+#         )
+#         return oauth_connection.user
+#     except OAuthConnection.DoesNotExist:
+#         return None
+
 def check_if_ok_to_continue(code, user):
     # 1. the code must be valid.
     try:

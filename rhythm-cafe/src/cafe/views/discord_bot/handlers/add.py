@@ -35,7 +35,6 @@ def _add(data, check_user_is_poster):
             "discord_user_id": poster_id,
             "club_id": club.id
         }
-        print(payload)
         secret = addlevel_signer.sign_object(payload)
         url = DOMAIN_URL + reverse("cafe:level_add_s1", args=[secret])
         line = f"`{attachment['filename']}`: [click here]({url})"
