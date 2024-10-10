@@ -2,10 +2,12 @@ import asyncio
 from io import BufferedRandom, BytesIO
 from tempfile import TemporaryFile
 from typing import NamedTuple
+from aiohttp import ClientSession
+from aiohttp_s3_client import S3Client
 from django.http import HttpResponseNotAllowed, JsonResponse
 import msgspec
 from vitals.msgspec_schema import VitalsLevel
-
+from essfree import Essfree
 
 from huey.contrib.djhuey import db_task
 from cafe.views.discord_bot.handlers.add import addlevel_signer
@@ -16,7 +18,7 @@ from cafe.models import Club, RDLevelPrefillResult
 
 import httpx
 
-from orchard.settings import BUNNY_STORAGE_API_KEY, BUNNY_STORAGE_BASE_ENDPOINT, BUNNY_STORAGE_CDN_URL, BUNNY_STORAGE_ZONE_NAME
+from orchard.settings import S3_ACCESS_KEY_ID, S3_API_URL, S3_PUBLIC_CDN_URL, S3_REGION, S3_SECRET_ACCESS_KEY
 from django.forms.models import model_to_dict
 
 from loguru import logger
@@ -30,48 +32,37 @@ class UploadFilesURLs(NamedTuple):
     image_url: str
     icon_url: str | None
     thumb_url: str
-    rdzip_url_public: str
-    image_url_public: str
-    icon_url_public: str | None
-    thumb_url_public: str
 
 @async_to_sync
 async def upload_files(level: VitalsLevel, f: BufferedRandom):
-    async with httpx.AsyncClient() as client:
-        bun = BunnyStorage(
-            api_key=BUNNY_STORAGE_API_KEY,
-            base_endpoint=BUNNY_STORAGE_BASE_ENDPOINT,
-            storage_zone_name=BUNNY_STORAGE_ZONE_NAME,
-            public_cdn_base=BUNNY_STORAGE_CDN_URL,
-            client=client
+    async with ClientSession(raise_for_status=True) as session:
+        client = S3Client(
+            url=S3_API_URL,
+            session=session,
+            access_key_id=S3_ACCESS_KEY_ID,
+            secret_access_key=S3_SECRET_ACCESS_KEY,
+            region=S3_REGION
         )
+        esfree = Essfree(client, S3_PUBLIC_CDN_URL)
+
         async with asyncio.TaskGroup() as tg:
-            rdzip_task = tg.create_task(bun.upload_file_by_hash(f, "rdzips", ".rdzip"))
-            image_task = tg.create_task(bun.upload_file_by_hash(BytesIO(level.image), "images", ".png"))
-            icon_task = tg.create_task(bun.upload_file_by_hash(BytesIO(level.icon), "icons", ".png")) if level.icon else None
-            thumb_task = tg.create_task(bun.upload_file_by_hash(BytesIO(level.thumb), "thumbs", ".webp"))
+            rdzip_task = tg.create_task(esfree.upload_file(f, "rdzips", ".rdzip"))
+            image_task = tg.create_task(esfree.upload_file(BytesIO(level.image), "images", ".png"))
+            icon_task = tg.create_task(esfree.upload_file(BytesIO(level.icon), "icons", ".png")) if level.icon else None
+            thumb_task = tg.create_task(esfree.upload_file(BytesIO(level.thumb), "thumbs", ".webp"))
 
         rdzip_url = rdzip_task.result()
+        print("!!!!")
+        print(rdzip_url)
         image_url = image_task.result()
         icon_url = icon_task.result() if icon_task else None
         thumb_url = thumb_task.result()
-        rdzip_url_public = bun.get_public_url(rdzip_url)
-        image_url_public = bun.get_public_url(image_url)
-        icon_url_public = bun.get_public_url(icon_url) if icon_url else None
-        thumb_url_public = bun.get_public_url(thumb_url)
-
-    # public urls return as well
-    return UploadFilesURLs(
-        rdzip_url,
-        image_url,
-        icon_url,
-        thumb_url,
-        rdzip_url_public,
-        image_url_public,
-        icon_url_public,
-        thumb_url_public
-    )
-
+        return UploadFilesURLs(
+            rdzip_url,
+            image_url,
+            icon_url,
+            thumb_url
+        )
 
 @db_task()
 def _run_prefill(level_url: str, prefill_result: RDLevelPrefillResult):    
@@ -88,13 +79,13 @@ def _run_prefill(level_url: str, prefill_result: RDLevelPrefillResult):
             urls = upload_files(level, f)
 
             payload = msgspec.structs.asdict(level)
-            payload['rdzip_url'] = urls.rdzip_url_public
-            payload['image_url'] = urls.image_url_public
+            payload['rdzip_url'] = urls.rdzip_url
+            payload['image_url'] = urls.image_url
             # the other three are required but icon is optional
             # we don't want to send None, just leave it out
-            if urls.icon_url_public:
-                payload['icon_url'] = urls.icon_url_public
-            payload['thumb_url'] = urls.thumb_url_public
+            if urls.icon_url:
+                payload['icon_url'] = urls.icon_url
+            payload['thumb_url'] = urls.thumb_url
             del payload['image']
             del payload['thumb']
             del payload['icon']

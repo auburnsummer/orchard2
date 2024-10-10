@@ -162,6 +162,12 @@ BUNNY_STORAGE_API_KEY = environ["BUNNY_STORAGE_API_KEY"]
 BUNNY_STORAGE_ZONE_NAME = environ["BUNNY_STORAGE_ZONE_NAME"]
 BUNNY_STORAGE_CDN_URL = environ["BUNNY_STORAGE_CDN_URL"]
 
+S3_API_URL = environ["S3_API_URL"]
+S3_ACCESS_KEY_ID = environ["S3_ACCESS_KEY_ID"]
+S3_SECRET_ACCESS_KEY = environ["S3_SECRET_ACCESS_KEY"]
+S3_REGION = environ["S3_REGION"]
+S3_PUBLIC_CDN_URL = environ["S3_PUBLIC_CDN_URL"]
+
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
