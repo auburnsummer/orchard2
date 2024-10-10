@@ -9,7 +9,6 @@
 #   generate-hashes: false
 #   universal: true
 
--e file:libs/bunny_storage
 -e file:libs/essfree
 -e file:libs/rdlevel_parse
 -e file:libs/utils
@@ -130,8 +129,8 @@ sniffio==1.3.1
 sqlparse==0.5.0
     # via django
 syrupy==4.6.1
-tenacity==8.5.0
-    # via bunny-storage
+tenacity==9.0.0
+    # via essfree
 tzdata==2024.1 ; sys_platform == 'win32'
     # via django
 urllib3==2.2.3 ; python_version >= '3.10'

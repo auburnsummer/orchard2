@@ -1,5 +1,6 @@
 from typing import Any, BinaryIO
 
+from tenacity import retry, stop_after_attempt
 from utils.hash import sha256, sha1
 
 from loguru import logger
@@ -68,6 +69,7 @@ class Essfree:
         except Exception:
             return False
 
+    @retry(stop=stop_after_attempt(2))
     async def upload_file(self, file: BinaryIO, namespace: str, file_extension: str):
         path = get_path(file, namespace, file_extension)
         if await self.file_exists(path):
