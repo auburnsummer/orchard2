@@ -22,7 +22,7 @@ def add_level_route(request, prefill: RDLevelPrefillResult):
         args = {
             **prefill.data,
             **msgspec.structs.asdict(body),
-            "submitter": request.user
+            "submitter": prefill.user
         }
         
         new_level = RDLevel(**args)
