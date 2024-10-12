@@ -26,6 +26,8 @@ from rules.contrib.views import permission_required
 
 from asgiref.sync import async_to_sync
 
+from .utils import get_or_create_user_for_discord_user
+
 class UploadFilesURLs(NamedTuple):
     rdzip_url: str
     image_url: str
@@ -107,8 +109,9 @@ def add_two_kickoff_prefill(request, code):
     result = addlevel_signer.unsign_object(code)
     level_url = result['level_url']
     club_id = result['club_id']
+    code_user = get_or_create_user_for_discord_user(result['discord_user_id'], result['discord_user_name_hint'])
     prefill_result = RDLevelPrefillResult(
-        user=request.user,
+        user=code_user,
         club=Club.objects.get(id=club_id),
         version=1,
         url=level_url
