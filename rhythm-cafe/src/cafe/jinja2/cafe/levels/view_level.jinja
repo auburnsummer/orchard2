@@ -1,0 +1,72 @@
+{% from "cafe/base.jinja" import base with context %}
+{% from 'cafe/layouts/layout_with_header.jinja' import layout_with_header as base_layout with context %}
+
+{% set content %}
+<script>
+// formatter is defined in level_box
+const format = s => formatter.format(s)
+const formatDiff = d => ['Easy', 'Medium', 'Tough', 'Very Tough'][d]
+</script>
+<div class="evl">
+    <div class="evl__wrapper1">
+        <div class="evl__titlebox">
+            <img src="{{ level.image_url }}" class="evl__image"/>
+            <div class="evl__titles">
+                <h3 x-data x-text="format({{level.artist_tokens}})"></h3>
+                <h1>{{ level.song }}</h1>
+                {% if level.song_alt %}
+                    <h2>{{ level.song_alt }}</h2>
+                {% endif %}
+            </div>
+        </div>
+        <dl class="evl__info" x-data>
+            <dt>Author(s)</dt>
+            <dd x-text="format({{level.authors}})"></dd>
+            <dt>Difficulty</dt>
+            <dd x-text="formatDiff({{level.difficulty}})"></dd>
+        </dl>
+    </div>
+</div>
+{% endset %}
+
+{% call base(title="Rhythm Cafe") %}
+    {% call base_layout() %} 
+    {{ content }}
+    {% endcall %}
+{% endcall %}
+
+<style data-hoist="true">
+.evl {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.evl__wrapper1 {
+    flex-grow: 1;
+    max-width: 1024px;
+    background-color: red;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.evl__titlebox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.evl__image {
+    aspect-ratio: 16 / 9;
+    max-width: 30%;
+}
+
+.evl__titles {
+    display: flex;
+    flex-direction: column;
+    padding-left: 1rem;
+}
+
+</style>
