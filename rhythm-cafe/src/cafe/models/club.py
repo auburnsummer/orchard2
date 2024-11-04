@@ -41,9 +41,13 @@ class Club(RulesModel):
     
     class Meta:
         rules_permissions = {
+            # cafe.view_member_of_club
             "view_member_of": is_at_least_admin,
-            "view_info_of": is_at_least_admin,
+            # cafe.view_info_of_club
+            "view_info_of": is_at_least_admin,  
+            # cafe.change_info_of_club
             "change_info_of": is_owner,
+            # cafe.create_invite_for_club
             "create_invite_for": is_owner
         }
 
@@ -89,7 +93,9 @@ class ClubMembership(RulesModel):
         # so we can't let a user change their own role (yet)
         # todo: break this into upgrade and downgrade permissions.
         rules_permissions = {
+            # cafe.change_clubmembership
             "change": is_owner_of_permission_club,
+            # cafe.delete_clubmembership
             "delete": is_owner_of_permission_club | is_permission_subject
         }
 

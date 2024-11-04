@@ -4,8 +4,15 @@
 {% set content %}
 <script>
 // formatter is defined in level_box
-const format = s => formatter.format(s)
-const formatDiff = d => ['Easy', 'Medium', 'Tough', 'Very Tough'][d]
+const format = s => formatter.format(s);
+const formatDiff = d => ['Easy', 'Medium', 'Tough', 'Very Tough'][d];
+
+const copyToClipboard = async () => {
+    const urlToCopy = "{{ level.rdzip_url }}";
+    await navigator.clipboard.writeText(urlToCopy);
+    alert("Copied to clipboard!");
+}
+
 </script>
 <div class="evl">
     <div class="evl__wrapper1">
@@ -19,11 +26,46 @@ const formatDiff = d => ['Easy', 'Medium', 'Tough', 'Very Tough'][d]
                 {% endif %}
             </div>
         </div>
+        <div class="evl__buttons" x-data>
+            <sl-button class="evl__button evl__button--download" variant="primary" href="{{level.rdzip_url}}">Download</sl-button>
+            <sl-button class="evl__button evl__button--copy" @click="copyToClipboard">Copy URL</sl-button>
+            {% if has_permission("cafe.change_rdlevel") %}
+                <sl-button class="evl__button evl__button--edit" @click="onCopyClick" variant="primary">Edit</sl-button>
+            {% endif %}
+            <sl-button class="evl__button evl__button--delete" @click="onCopyClick" variant="warning">Delete</sl-button>
+
+        </div>
         <dl class="evl__info" x-data>
-            <dt>Author(s)</dt>
-            <dd x-text="format({{level.authors}})"></dd>
-            <dt>Difficulty</dt>
-            <dd x-text="formatDiff({{level.difficulty}})"></dd>
+            <div>
+                <dt>Author(s)</dt>
+                <dd x-text="format({{level.authors}})"></dd>
+            </div>
+            <div>
+                <dt>Difficulty</dt>
+                <dd x-text="formatDiff({{level.difficulty}})"></dd>
+            </div>
+            <div>
+                <dt>BPM</dt>
+                <dd>{{level.min_bpm}} - {{level.max_bpm}}</dd>
+            </div>
+            <div>
+                <dt>Players</dt>
+                {% if level.single_player %}
+                    <dd>Single Player</dd>
+                {% else %}
+                    <dd>Two Player</dd>
+                {% endif %}
+            </div>
+            <div class="evl__groups">
+                <dt>Groups</dt>
+                <dd>
+                    <ul>
+                    {% for club in clubs %}
+                        <li>{{club.name}}</li>
+                    {% endfor %}
+                    </ul>
+                </dd>
+            </div>
         </dl>
     </div>
 </div>
@@ -40,12 +82,15 @@ const formatDiff = d => ['Easy', 'Medium', 'Tough', 'Very Tough'][d]
     display: flex;
     flex-direction: row;
     justify-content: center;
+    background-color: var(--sl-color-neutral-100);
+    min-height: 100vh;
 }
 
 .evl__wrapper1 {
     flex-grow: 1;
     max-width: 1024px;
-    background-color: red;
+    background-color: var(--sl-color-neutral-0);
+    margin-top: 1rem;
 
     display: flex;
     flex-direction: column;
@@ -56,6 +101,12 @@ const formatDiff = d => ['Easy', 'Medium', 'Tough', 'Very Tough'][d]
     display: flex;
     flex-direction: row;
     align-items: center;
+    padding: 1rem;
+    background-color: var(--sl-color-primary-100);
+}
+
+.evl__info {
+    padding: 1rem;
 }
 
 .evl__image {
@@ -68,5 +119,33 @@ const formatDiff = d => ['Easy', 'Medium', 'Tough', 'Very Tough'][d]
     flex-direction: column;
     padding-left: 1rem;
 }
+
+.evl__buttons {
+    margin: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    gap: 1rem;
+    padding: 0.75rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    box-shadow: var(--sl-shadow-medium);
+    background-color: var(--sl-color-primary-100);
+    width: fit-content;
+}
+
+.evl__info {
+    margin-top: 0;
+}
+
+.evl__info dt {
+    font-weight: bold;
+}
+
+.evl__groups dd ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
 
 </style>
