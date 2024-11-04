@@ -1,7 +1,8 @@
 from http.client import HTTPResponse
-from django.http import HttpResponseBadRequest
-from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponseBadRequest, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from cafe.models import RDLevelPrefillResult, RDLevel, ClubRDLevel
+from django.urls import reverse
 
 from django.contrib.auth.decorators import login_required
 from django_minify_html.decorators import no_html_minification
@@ -34,8 +35,12 @@ def add_level_route(request, prefill: RDLevelPrefillResult):
         )
         club_rd_level.save()
 
-        # todo: should probably contain a redirect to the level instead
-        return HTTPResponse("Success")
+        payload = {
+            "id": new_level.id,
+            "url": reverse("cafe:level_view", args=[new_level.id])
+        }
+
+        return JsonResponse(payload)
     except msgspec.ValidationError as e:
         # return 401 error response
         return HttpResponseBadRequest(str(e))

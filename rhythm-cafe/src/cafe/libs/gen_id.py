@@ -8,11 +8,12 @@ import functools
 from enum import StrEnum
 from nanoid import generate
 
+from .bad_words import BAD_WORDS
 
-ALPHABET = "6789BCDFGHJKLMNPQRTWbcdfghjkmnpqrtwz"
+ALPHABET = "abcdefghijklmnopqrstuvwxyz"
 
 # probably safe https://zelark.github.io/nano-id-cc/
-NANOID_LENGTH = 10
+NANOID_LENGTH = 12
 
 class IDType(StrEnum):
     """
@@ -25,9 +26,18 @@ class IDType(StrEnum):
     RD_LEVEL = "rd_"  # a Rhythm Doctor level.
     HS_LEVEL = "hs_"  # a Heaven Studio level. currently unused.
 
-def gen_id(id_type: IDType):
+def _gen_id(id_type: IDType):
     """Generate an id, id_type is the unique prefix."""
     return f"{id_type.value}{generate(alphabet=ALPHABET, size=NANOID_LENGTH)}"
+
+def gen_id(id_type: IDType):
+    while True:
+        id = _gen_id(id_type)
+        for word in BAD_WORDS:
+            if word in id:
+                continue
+        else:
+            return id
 
 def default_id(id_type: IDType):
     """Returns a default function for a django model."""
