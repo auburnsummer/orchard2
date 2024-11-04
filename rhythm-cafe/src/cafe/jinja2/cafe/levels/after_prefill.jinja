@@ -71,8 +71,10 @@ const state = {
     init() {
         this.reset();
     },
-    submit() {
-        void fetch(window.location.href, {
+    submitting: false,
+    async submit() {
+        this.submitting = true;
+        const resp = await fetch(window.location.href, {
             method: "POST",
             credentials: 'include',
             headers: {
@@ -80,6 +82,14 @@ const state = {
             },
             body: JSON.stringify(this.currentLevel)
         });
+        if (!resp.ok) {
+            throw new Error("Failed to submit level");
+            this.submitting = false;
+        } else {
+            const data = await resp.json();
+            const url = data['url'];
+            window.location.href = url;
+        }
     }
 }
 </script>
@@ -96,7 +106,7 @@ const state = {
         </div>
         <div class="eap__form">
             <div class="eap__form-controls">
-                <sl-button @click="submit" variant="primary">Add Level</sl-button>
+                <sl-button @click="submit" variant="primary" :disabled="submitting" :loading="submitting">Add Level</sl-button>
                 <sl-button @click="reset">Reset</sl-button>
             </div>
             <div class="eap__form-titles">
