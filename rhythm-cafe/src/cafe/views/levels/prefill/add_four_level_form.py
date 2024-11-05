@@ -57,6 +57,7 @@ def add_four_level_form(request, prefill_id):
     else:
         render_data = {
             "prefill": json.dumps(prefill.data),
-            "club": prefill.club
+            "club": prefill.club,
+            "mode": 'prefill'
         }
         return render(request, "cafe/levels/after_prefill.jinja", render_data)
