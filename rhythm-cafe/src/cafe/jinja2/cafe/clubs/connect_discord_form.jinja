@@ -4,18 +4,23 @@
 {% set content %}
     <div class="ccd">
         {% if guild_id is not none %}
-            <form method="post"> 
-                {{ csrf_input }}
-                <sl-select label="Select group to link the discord server to:" required name="club_id">
-                    {% for club in clubs %}
-                        <sl-option value="{{ club.id }}">
-                            <span>{{ club.name }}</span>
-                            <span>({{club.id}})</span>
-                        </sl-option>
-                    {% endfor %}
-                </sl-select>
-                <sl-button variant="primary" type="submit">Link</sl-button>
-            </form>
+            {% if clubs | length > 0 %}
+                <form method="post"> 
+                    {{ csrf_input }}
+                    <sl-select label="Select group to link the discord server to:" required name="club_id">
+                        {% for club in clubs %}
+                            <sl-option value="{{ club.id }}">
+                                <span>{{ club.name }}</span>
+                                <span>({{club.id}})</span>
+                            </sl-option>
+                        {% endfor %}
+                    </sl-select>
+                    <sl-button variant="primary" type="submit">Link</sl-button>
+                </form>
+            {% else %}
+                <p>No owned groups found. You should create a group first.</p>
+                <p>Click <a href="{{ url('cafe:create_club') }}">here</a> to continue.</p>
+            {% endif %}
         {% else %}
             <p>Signature not valid or has expired. Try running the command again.</p>
             <p>If it still doesn't work, please ping auburn!</p>
