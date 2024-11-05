@@ -19,24 +19,32 @@ class IDType(StrEnum):
     """
     Unique prefixes for ids. 
     """
-    PUBLISHER = "p_"  # A publisher. Unused but required for backwards compatability with migrations.
-    CLUB = "c_"  # a club
-    USER = "u_"  # a user
-    PREFILL = "prefill_"  # a prefill result / also used to make sure an add token is part of the same flow.
-    RD_LEVEL = "rd_"  # a Rhythm Doctor level.
-    HS_LEVEL = "hs_"  # a Heaven Studio level. currently unused.
+    PUBLISHER = "p-"  # A publisher. Unused but required for backwards compatability with migrations.
+    CLUB = "c-"  # a club
+    USER = "u-"  # a user
+    PREFILL = "prefill-"  # a prefill result / also used to make sure an add token is part of the same flow.
+    RD_LEVEL = "rd-"  # a Rhythm Doctor level.
+    HS_LEVEL = "hs-"  # a Heaven Studio level. currently unused.
+
+def is_ok(s: str):
+    """Returns true if the string is ok to use as an id."""
+    test_string = s.replace("_", "").replace('-', "").lower()
+    for word in BAD_WORDS:
+        if word in test_string:
+            return False
+    return True
+
 
 def _gen_id(id_type: IDType):
     """Generate an id, id_type is the unique prefix."""
-    return f"{id_type.value}{generate(alphabet=ALPHABET, size=NANOID_LENGTH)}"
+    id_part = generate(alphabet=ALPHABET, size=NANOID_LENGTH)
+    with_dashes = '-'.join(id_part[i:i+4] for i in range(0, len(id_part), 4))
+    return f"{id_type.value}{with_dashes}"
 
 def gen_id(id_type: IDType):
     while True:
         id = _gen_id(id_type)
-        for word in BAD_WORDS:
-            if word in id:
-                continue
-        else:
+        if is_ok(id):
             return id
 
 def default_id(id_type: IDType):

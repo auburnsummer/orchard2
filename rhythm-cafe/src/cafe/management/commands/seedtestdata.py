@@ -20,7 +20,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # superuser
         superuser = User.objects.create_superuser(
-            username="u_admin",
+            username="u-admin",
             first_name="Marina Distort",
             email="admin@rhythm.cafe",
             password="aaadmin12345!"

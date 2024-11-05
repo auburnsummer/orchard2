@@ -78,7 +78,7 @@ class User(AbstractUser):
     class Meta:
         constraints = [
             models.CheckConstraint(
-                check=Q(username__startswith="u_"),
+                check=Q(username__startswith=IDType.USER.value),
                 name="cafe__user__username_startswith_u_"
             )
         ]

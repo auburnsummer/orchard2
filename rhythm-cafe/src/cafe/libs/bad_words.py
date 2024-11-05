@@ -1,5 +1,5 @@
 # https://www.cs.cmu.edu/~biglou/resources/bad-words.txt
-BAD_WORDS = """
+bad_words_unfiltered = """
 abbo
 abo
 abortion
@@ -1315,7 +1315,6 @@ twink
 twinkie
 twobitwhore
 uck
-uk
 unfuckable
 upskirt
 uptheass
@@ -1384,3 +1383,5 @@ yellowman
 zigabo
 zipperhead
 """.splitlines()
+
+BAD_WORDS = [x for x in bad_words_unfiltered if len(x) > 0]
