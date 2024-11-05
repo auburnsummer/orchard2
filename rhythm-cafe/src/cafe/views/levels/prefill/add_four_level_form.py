@@ -60,4 +60,4 @@ def add_four_level_form(request, prefill_id):
             "club": prefill.club,
             "mode": 'prefill'
         }
-        return render(request, "cafe/levels/after_prefill.jinja", render_data)
+        return render(request, "cafe/levels/edit_level.jinja", render_data)
