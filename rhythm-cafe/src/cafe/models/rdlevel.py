@@ -23,7 +23,7 @@ def is_at_least_admin_of_connected_club(user, level: "RDLevel"):
 def is_submitter(user, level: "RDLevel"):
     return level.submitter == user
 
-can_change = rules.is_superuser | is_at_least_admin_of_connected_club | is_submitter
+can_change = rules.is_authenticated & (rules.is_superuser | is_at_least_admin_of_connected_club | is_submitter)
 
 class RDLevel(RulesModel):
     """

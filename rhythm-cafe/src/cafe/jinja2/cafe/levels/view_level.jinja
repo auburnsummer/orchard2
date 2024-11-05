@@ -32,7 +32,9 @@ const copyToClipboard = async () => {
             {% if has_permission("cafe.change_rdlevel") %}
                 <sl-button class="evl__button evl__button--edit" @click="onCopyClick" variant="primary">Edit</sl-button>
             {% endif %}
-            <sl-button class="evl__button evl__button--delete" @click="onCopyClick" variant="warning">Delete</sl-button>
+            {% if has_permission("cafe.delete_rdlevel") %}
+                <sl-button class="evl__button evl__button--delete" @click="onCopyClick" variant="warning">Delete</sl-button>
+            {% endif %}
 
         </div>
         <dl class="evl__info" x-data>
