@@ -63,10 +63,14 @@ const copyToClipboard = async () => {
                 <dd>
                     <ul>
                     {% for club in clubs %}
-                        <li>{{club.name}}</li>
+                        <li>{{ club.name }}</li>
                     {% endfor %}
                     </ul>
                 </dd>
+            </div>
+            <div>
+                <dt>ID</dt>
+                <dd>{{ level.id }}</dd>
             </div>
         </dl>
     </div>
