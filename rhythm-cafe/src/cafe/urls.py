@@ -34,6 +34,7 @@ urlpatterns = [
     path("meta/all_styles.css/", views.meta.combined_css, name="combined_css"),
 
     path("levels/<level_id>", views.levels.level.view_level, name="level_view"),
+    path("levels/<level_id>/edit/", views.levels.level.edit_level, name="level_edit"),
 
     path("", views.index, name="index")
 ]
