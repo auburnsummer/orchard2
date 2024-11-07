@@ -11,7 +11,8 @@ import rules
 
 @rules.predicate
 def is_at_least_admin_of_connected_club(user, level: "RDLevel"):
-    return True
+    memberships = user.memberships.filter(club__exact=level.club, role__in=["owner", "admin"])
+    return len(memberships) > 0
 
 @rules.predicate
 def is_submitter(user, level: "RDLevel"):

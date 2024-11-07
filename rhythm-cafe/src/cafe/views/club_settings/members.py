@@ -11,7 +11,7 @@ def members(request, club_id):
     def sort(membership):
         return roles.index(membership.role)
 
-    memberships = sorted(club.clubmembership_set.all(), key=sort)
+    memberships = sorted(club.memberships.all(), key=sort)
 
     render_data = {
         "memberships": memberships,

@@ -1,5 +1,3 @@
-
-import re
 from rules.contrib.models import RulesModel
 import rules
 from django.db import models
@@ -13,7 +11,7 @@ from django.utils import timezone
 def is_role_of_club(role):
     @rules.predicate
     def user_has_role_in_club(user, club):
-        memberships = user.club_memberships.filter(role__exact=role, club__exact=club)
+        memberships = user.memberships.filter(role__exact=role, club__exact=club)
         for membership in memberships:
             if membership.role == role:
                 return True
@@ -74,8 +72,8 @@ class ClubMembership(RulesModel):
     needing to be a Member. The Member role will allow non-discord based uploads to add levels to
     the club. Since those don't exist yet, we don't have members yet.
     """
-    user = models.ForeignKey("cafe.User", on_delete=models.CASCADE)
-    club = models.ForeignKey("cafe.Club", on_delete=models.CASCADE)
+    user = models.ForeignKey("cafe.User", on_delete=models.CASCADE, related_name="memberships")
+    club = models.ForeignKey("cafe.Club", on_delete=models.CASCADE, related_name="memberships")
 
     role = models.CharField(choices={
         'owner': 'Owner',
