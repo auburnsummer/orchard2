@@ -3,7 +3,6 @@ from django.db import models
 
 from django.db.models import Q
 
-from cafe.models.club import ClubRDLevel
 
 from .utils import create_pk_field
 from cafe.libs.gen_id import IDType
@@ -12,12 +11,7 @@ import rules
 
 @rules.predicate
 def is_at_least_admin_of_connected_club(user, level: "RDLevel"):
-    user_clubs = user.clubmembership_set.filter(Q(role__exact="admin") | Q(role__exact="owner"))
-    level_clubs = ClubRDLevel.objects.filter(rdlevel=level)
-    for user_club in user_clubs:
-        for level_club in level_clubs:
-            if user_club.club == level_club.club:
-                return True
+    return True
 
 @rules.predicate
 def is_submitter(user, level: "RDLevel"):
@@ -70,6 +64,8 @@ class RDLevel(RulesModel):
     icon_url = models.TextField(blank=True, default="")
 
     submitter = models.ForeignKey("cafe.User", on_delete=models.CASCADE)
+
+    club = models.ForeignKey("cafe.Club", on_delete=models.CASCADE)
 
     class Meta:
         rules_permissions = {

@@ -1,4 +1,5 @@
 
+import re
 from rules.contrib.models import RulesModel
 import rules
 from django.db import models
@@ -12,7 +13,7 @@ from django.utils import timezone
 def is_role_of_club(role):
     @rules.predicate
     def user_has_role_in_club(user, club):
-        memberships = user.clubmembership_set.filter(role__exact=role, club__exact=club)
+        memberships = user.club_memberships.filter(role__exact=role, club__exact=club)
         for membership in memberships:
             if membership.role == role:
                 return True
@@ -98,22 +99,6 @@ class ClubMembership(RulesModel):
             # cafe.delete_clubmembership
             "delete": is_owner_of_permission_club | is_permission_subject
         }
-
-class ClubRDLevel(models.Model):
-    """
-    An RDLevel can be included in more than one Club. Any Admin of the Club can edit/remove/etc any
-    level within the Club.
-
-    There's no additional metadata stored for now, but I'm making the through table now in anticipation
-    to avoid a potentially annoying migration in the future.
-    """
-    rdlevel = models.ForeignKey("cafe.RDLevel", on_delete=models.CASCADE)
-    club = models.ForeignKey("cafe.Club", on_delete=models.CASCADE)
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['rdlevel', 'club'], name='unique_rdlevel_and_club')
-        ]
 
 class ClubInvite(models.Model):
     """

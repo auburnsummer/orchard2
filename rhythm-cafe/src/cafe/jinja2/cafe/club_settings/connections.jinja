@@ -17,22 +17,24 @@ the server owner maximum flexibility in how they want to set up the commands. Yo
 adjust who can use which commands by going to Server Settings -> Integrations.
 3. The default status of any command looks like this:
 
-![][img]
+   ![][img]
 
-   This means only admins can use the command. You need to add role or member overrides.
-   The exact way you set up your overrides depends on the structure of your server, but
-   here are some recommendations:
+     This means only admins can use the command. You need to add role or member overrides.
+     The exact way you set up your overrides depends on the structure of your server, but
+     here are some recommendations:
 
-   - Restrict to server owners only: `/connectgroup`
-   - Restrict to moderators: `/viewgroup`
-   - Allow for everyone: `/version`
+     - Restrict to server owners only: `/connectgroup`
+     - Restrict to moderators: `/viewgroup`
+     - Allow for everyone: `/version`
 
-[img]: {{ static('cafe/a1.png') }}
+   [img]: {{ static('cafe/a1.png') }}
+  4. Run the command `/connectgroup`. Select this group in the page that opens.
+
+  5. You can use the `/viewgroup` command in the server to verify the link is complete.
+
             </script>
         </wc-markdown>
 
-4. Run the command `/connectgroup`. Select this group in the page that opens.
-5. You can use the `/viewgroup` command in the server to verify the link is complete.
     </div>
 </div>
 {% endset %}

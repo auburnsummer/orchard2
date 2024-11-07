@@ -1,7 +1,7 @@
 from http.client import HTTPResponse
 from django.http import HttpResponseBadRequest, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from cafe.models import RDLevelPrefillResult, RDLevel, ClubRDLevel
+from cafe.models import RDLevelPrefillResult, RDLevel
 from django.urls import reverse
 
 from django.contrib.auth.decorators import login_required
@@ -23,17 +23,12 @@ def add_level_route(request, prefill: RDLevelPrefillResult):
         args = {
             **prefill.data,
             **msgspec.structs.asdict(body),
-            "submitter": prefill.user
+            "submitter": prefill.user,
+            "club": prefill.club
         }
         
         new_level = RDLevel(**args)
         new_level.save()
-
-        club_rd_level = ClubRDLevel(
-            rdlevel=new_level,
-            club=prefill.club
-        )
-        club_rd_level.save()
 
         payload = {
             "id": new_level.id,
