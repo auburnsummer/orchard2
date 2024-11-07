@@ -14,4 +14,4 @@ class DiscordGuild(models.Model):
     """
     id = models.TextField(primary_key=True)
 
-    club = models.ForeignKey(Club, on_delete=models.CASCADE, null=True)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, null=True, related_name="discord_guilds")

@@ -6,7 +6,6 @@ from .models import (
     Club,
     UserProfile,
     ClubMembership,
-    ClubRDLevel,
     ClubInvite,
     DiscordGuild,
     RDLevelPrefillResult,
@@ -20,7 +19,6 @@ admin.site.register(RDLevel)
 admin.site.register(Club)
 admin.site.register(ClubMembership)
 admin.site.register(ClubInvite)
-admin.site.register(ClubRDLevel)
 admin.site.register(UserProfile)
 admin.site.register(DiscordGuild)
 admin.site.register(RDLevelPrefillResult)

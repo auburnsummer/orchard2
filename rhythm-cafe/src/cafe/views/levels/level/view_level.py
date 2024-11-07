@@ -1,14 +1,13 @@
 import rules
 
 from django.shortcuts import render
-from cafe.models.club import ClubRDLevel
 from cafe.models.rdlevel import RDLevel
 
 
 def view_level(request, level_id):
     level = RDLevel.objects.get(id=level_id)
 
-    clubs = [crl.club for crl in ClubRDLevel.objects.filter(rdlevel=level)]
+    # clubs = [crl.club for crl in ClubRDLevel.objects.filter(rdlevel=level)]
 
     def has_permission(perm):
         return rules.has_perm(perm, request.user, level)
@@ -18,7 +17,6 @@ def view_level(request, level_id):
 
     payload = {
         "has_permission": has_permission,
-        "level": level,
-        "clubs": clubs
+        "level": level
     }
     return render(request, 'cafe/levels/view_level.jinja', payload)

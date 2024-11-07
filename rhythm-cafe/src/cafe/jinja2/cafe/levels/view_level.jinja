@@ -59,14 +59,8 @@ const copyToClipboard = async () => {
                 {% endif %}
             </div>
             <div class="evl__groups">
-                <dt>Groups</dt>
-                <dd>
-                    <ul>
-                    {% for club in clubs %}
-                        <li>{{ club.name }}</li>
-                    {% endfor %}
-                    </ul>
-                </dd>
+                <dt>Group</dt>
+                <dd>{{ level.club.name }}</dd>
             </div>
             <div>
                 <dt>ID</dt>
