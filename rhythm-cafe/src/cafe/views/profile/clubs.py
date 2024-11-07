@@ -9,7 +9,7 @@ from cafe.models import User
 def clubs(request):
     roles = ["owner", "admin"]
 
-    memberships = { role: request.user.clubmembership_set.filter(role__exact=role) for role in roles}
+    memberships = { role: request.user.memberships.filter(role__exact=role) for role in roles}
 
     render_data = {
         "memberships": memberships,

@@ -44,6 +44,8 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     first_name = models.CharField(blank=False, max_length=100)
 
+    clubs = models.ManyToManyField("cafe.Club", through="cafe.ClubMembership")
+
     REQUIRED_FIELDS = ["first_name", "email"]
 
     def get_full_name(self) -> str:
