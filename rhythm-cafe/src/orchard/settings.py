@@ -94,7 +94,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_minify_html.middleware.MinifyHtmlMiddleware',
+    'cafe.middleware.ProjectMinifyHtmlMiddleware',
     'cafe.middleware.hoist_css_middleware',
     'hijack.middleware.HijackUserMiddleware',
 ]

@@ -6,6 +6,7 @@ from rules.contrib.views import permission_required, objectgetter
 from django.shortcuts import render
 from cafe.models.rdlevel import RDLevel
 from django.forms.models import model_to_dict
+from django_minify_html.decorators import no_html_minification
 
 from django.core.serializers.json import DjangoJSONEncoder
 
@@ -16,12 +17,11 @@ def edit_level(request, level_id):
     dict = model_to_dict(level)
     serialized = json.dumps(dict, cls=DjangoJSONEncoder)
 
-    def has_permission(perm):
-        return rules.has_perm(perm, request.user, level)
+    print(serialized)
     
-    payload = {
-        "has_permission": has_permission,
-        "level": level,
-        "clubs": []
+    render_data = {
+        "prefill": serialized,
+        "club": level.club,
+        "mode": "edit"
     }
-    return render(request, 'cafe/levels/view_level.jinja', payload)
+    return render(request, 'cafe/levels/edit_level.jinja', render_data)
