@@ -41,7 +41,6 @@ def add_level_route(request, prefill: RDLevelPrefillResult):
         return HttpResponseBadRequest(str(e))
     pass
 
-@no_html_minification
 @permission_required('prefill.can_access_prefill', fn=objectgetter(RDLevelPrefillResult, 'prefill_id'))
 @login_required
 def add_four_level_form(request, prefill_id):
@@ -53,6 +52,6 @@ def add_four_level_form(request, prefill_id):
         render_data = {
             "prefill": json.dumps(prefill.data),
             "club": prefill.club,
-            "mode": 'prefill'
+            "mode": 'new'
         }
         return render(request, "cafe/levels/edit_level.jinja", render_data)
