@@ -33,7 +33,7 @@ urlpatterns = [
     path("levels/add/from_prefill/<prefill_id>/", views.levels.prefill.add_four_level_form, name="level_add_s4"),
     path("meta/all_styles.css/", views.meta.combined_css, name="combined_css"),
 
-    path("levels/<level_id>", views.levels.level.view_level, name="level_view"),
+    path("levels/<level_id>/", views.levels.level.view_level, name="level_view"),
     path("levels/<level_id>/edit/", views.levels.level.edit_level, name="level_edit"),
 
     path("", views.index, name="index")

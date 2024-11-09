@@ -97,17 +97,33 @@ const state = {
     <div x-effect="console.log(currentLevel)"></div>
     <div class="eap__form-wrapper">
         <div class="eap__form-help">
+            {% if mode == 'new' %}
             <sl-alert open closable>
-                <sl-icon slot="icon" name="info-circle"></sl-icon>
-                <p>We've filled out the fields below based on the rdzip file.</p>
-                <p>If it all looks okay, you can simply click "Add Level" now to add the level.</p>
-                <p>Otherwise, make changes, and then click "Add Level".</p>
-                <p><strong>You can always come back to edit after adding the level.</strong></p>
-            </sl-alert>
+                    <sl-icon slot="icon" name="info-circle"></sl-icon>
+                    <p>We've filled out the fields below based on the rdzip file.</p>
+                    <p>If it all looks okay, you can simply click "Add Level" now to add the level.</p>
+                    <p>Otherwise, make changes, and then click "Add Level".</p>
+                    <p><strong>You can always come back to edit after adding the level.</strong></p>
+                </sl-alert>
+            {% endif %}
+            {% if mode == 'edit' %}
+                <sl-alert open closable>
+                    <sl-icon slot="icon" name="info-circle"></sl-icon>
+                    <p>This page is for editing the metadata (e.g. tags, etc.) of an existing level, without changing the rdzip file.</p>
+                    <p>If you need to change the rdzip file, please use the Discord "Add to Rhythm Cafe" command.</p>
+                </sl-alert>
+            {% endif %}
         </div>
         <div class="eap__form">
             <div class="eap__form-controls">
-                <sl-button @click="submit" variant="primary" :disabled="submitting" :loading="submitting">Add Level</sl-button>
+                <sl-button @click="submit" variant="primary" :disabled="submitting" :loading="submitting">
+                {% if mode == 'new' %}
+                    Add Level
+                {% endif %}
+                {% if mode == 'edit' %}
+                    Save Changes
+                {% endif %}
+                </sl-button>
                 <sl-button @click="reset">Reset</sl-button>
             </div>
             <div class="eap__form-titles">

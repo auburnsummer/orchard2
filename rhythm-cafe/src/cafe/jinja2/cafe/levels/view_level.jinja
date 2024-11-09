@@ -30,7 +30,7 @@ const copyToClipboard = async () => {
             <sl-button class="evl__button evl__button--download" variant="primary" href="{{level.rdzip_url}}">Download</sl-button>
             <sl-button class="evl__button evl__button--copy" @click="copyToClipboard">Copy URL</sl-button>
             {% if has_permission("cafe.change_rdlevel") %}
-                <sl-button class="evl__button evl__button--edit" @click="onCopyClick" variant="primary">Edit</sl-button>
+                <sl-button class="evl__button evl__button--edit" @click="onCopyClick" variant="primary">Edit Metadata</sl-button>
             {% endif %}
             {% if has_permission("cafe.delete_rdlevel") %}
                 <sl-button class="evl__button evl__button--delete" @click="onCopyClick" variant="warning">Delete</sl-button>
