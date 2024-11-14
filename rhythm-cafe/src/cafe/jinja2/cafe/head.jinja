@@ -1,5 +1,6 @@
 {% from "cafe/components/level_box.jinja" import level_box_init %}
 {% from "cafe/components/tag_input.jinja" import tag_input_init %}
+{% from "cafe/components/common_js.jinja" import common_js %}
 
 {% macro head(user, title) -%}
 <head>
@@ -57,6 +58,7 @@
 
         <link rel="stylesheet" href="{{ url('cafe:combined_css')}}" />
 
+        {{ common_js() }}
         {{ level_box_init() }}
         {{ tag_input_init() }}
 

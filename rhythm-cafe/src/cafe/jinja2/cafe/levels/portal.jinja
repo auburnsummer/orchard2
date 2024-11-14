@@ -1,0 +1,24 @@
+{% from "cafe/base.jinja" import base with context %}
+{% from "cafe/layouts/layout_dramatic_form.jinja" import layout_dramatic_form as layout with context %}
+
+{% set content %}
+<div class="epo" x-data="data">
+    <div class="epo__choices">
+        <h1 class="epo__title">Select one of the following:</h1>
+        <div class="epo__buttons">
+            <sl-button>This is a new level</sl-button>
+            <sl-button>This is an update to an existing level</sl-button>
+        </div>
+    </div>
+</div>
+{% endset %}
+
+{% call base(title="Rhythm Cafe") %}
+    {% call layout() %}
+        {{ content }}
+    {% endcall %}
+{% endcall %}
+
+<style data-hoist="true">
+
+</style>

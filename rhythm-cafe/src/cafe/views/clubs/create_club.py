@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.forms import ModelForm
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.contrib import messages
 from cafe.models import Club, ClubMembership
 
 class CreateClubForm(ModelForm):
@@ -27,6 +28,8 @@ def create_club(request):
             )
             new_club.save()
             current_user_membership.save()
+
+            messages.success(request, "Club created!")
 
             return HttpResponseRedirect(f"/groups/{new_club.id}/settings")
 

@@ -13,8 +13,15 @@ def members(request, club_id):
 
     memberships = sorted(club.memberships.all(), key=sort)
 
+    user_role = None
+    for membership in memberships:
+        if membership.user == request.user:
+            user_role = membership.role
+            break
+
     render_data = {
         "memberships": memberships,
-        "current_club": club
+        "current_club": club,
+        "user_role": user_role
     }
     return render(request, "cafe/club_settings/members.jinja", render_data)

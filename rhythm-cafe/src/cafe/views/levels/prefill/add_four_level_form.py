@@ -1,3 +1,4 @@
+from pyexpat.errors import messages
 from django.http import HttpResponseBadRequest, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from cafe.models import RDLevelPrefillResult, RDLevel
@@ -12,6 +13,8 @@ import msgspec
 import json
 
 from cafe.views.levels.level.common import AddLevelPayload
+
+from django.contrib import messages
 
 
 def add_level_post(request, prefill: RDLevelPrefillResult):
@@ -31,6 +34,8 @@ def add_level_post(request, prefill: RDLevelPrefillResult):
             "id": new_level.id,
             "url": reverse("cafe:level_view", args=[new_level.id])
         }
+
+        messages.success(request, "Level added!")
 
         return JsonResponse(payload)
     except msgspec.ValidationError as e:

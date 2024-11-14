@@ -71,7 +71,13 @@
             <div slot="footer">
                 <sl-button @click="kickUserConfirm = true" x-show="!kickUserConfirm" variant="danger">Kick user</sl-button>
                 <sl-button type="submit" form="deleteForm" variant="danger" x-show="kickUserConfirm">Click again to confirm</sl-button>
-                <sl-button type="submit" form="changeForm">Change role</sl-button>
+                <sl-button
+                    type="submit"
+                    form="changeForm"
+                    :disabled="'{{ user_role }}' !== 'owner' && activeUserId === '{{ request.user.username }}'"
+                >
+                    Change role
+                </sl-button>
             </div>
         </sl-dialog>
         <!-- Invite dialog -->
@@ -107,13 +113,23 @@
                             name: '{{ membership.user.first_name }}',
                             role: '{{ membership.role }}'
                         }">
-                            <sl-button @click="openDialog(id, name, role)">Edit</sl-button>
+                            <sl-button
+                                @click="openDialog(id, name, role)"
+                                :disabled="'{{ user_role }}' !== 'owner' && id !== '{{ request.user.username }}'"
+                            >
+                                Edit
+                            </sl-button>
                         </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
-        <sl-button @click="openAddUserDialog()">Add member</sl-button>
+        <sl-button
+            @click="openAddUserDialog()"
+            :disabled="'{{ user_role }}' !== 'owner'"
+        >
+            Add member
+        </sl-button>
     </div>
 {% endset %}
 
