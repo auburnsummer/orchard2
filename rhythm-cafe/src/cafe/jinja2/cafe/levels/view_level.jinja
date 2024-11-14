@@ -4,7 +4,6 @@
 {% set content %}
 <script>
 // formatter is defined in level_box
-const format = s => formatter.format(s);
 const formatDiff = d => ['Easy', 'Medium', 'Tough', 'Very Tough'][d];
 
 const copyToClipboard = async () => {
@@ -44,18 +43,27 @@ const copyToClipboard = async () => {
             {% endif %}
 
         </div>
+        <blockquote class="evl__description">
+            {% for line in level.description.split('\n') %}
+                <p>{{line}}</p>
+            {% endfor %}
+        </blockquote>
         <dl class="evl__info" x-data>
             <div>
                 <dt>Author(s)</dt>
-                <dd x-text="format({{level.authors}})"></dd>
+                <dd x-text="formatLongConjunction({{ level.authors }})"></dd>
             </div>
             <div>
                 <dt>Difficulty</dt>
-                <dd x-text="formatDiff({{level.difficulty}})"></dd>
+                <dd x-text="formatDiff({{ level.difficulty }})"></dd>
             </div>
             <div>
                 <dt>BPM</dt>
                 <dd>{{level.min_bpm}} - {{level.max_bpm}}</dd>
+            </div>
+            <div>
+                <dt>Tags</dt>
+                <dd x-text="formatShortUnit({{ level.tags }})"></dd>
             </div>
             <div>
                 <dt>Players</dt>
@@ -110,6 +118,12 @@ const copyToClipboard = async () => {
     align-items: center;
     padding: 1rem;
     background-color: var(--sl-color-primary-100);
+}
+
+.evl__description {
+    margin: 1rem;
+    padding: 1rem;
+    border-left: 4px solid var(--sl-color-primary-400);
 }
 
 .evl__info {

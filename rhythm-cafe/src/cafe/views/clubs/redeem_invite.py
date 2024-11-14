@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import render, get_object_or_404
 from django.db import transaction
+from django.contrib import messages
 
 from cafe.models import ClubInvite, ClubMembership
 
@@ -49,6 +50,8 @@ class RedeemInviteView(View):
             new_membership.save()
 
         invite.delete()
+
+        messages.success(request, f"You have successfully joined the group {invite.club.name}!")
 
         return HttpResponseRedirect(reverse('cafe:club_settings_members', args=[invite.club.id]))
     

@@ -14,6 +14,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 
 import msgspec
 from cafe.views.levels.level.common import AddLevelPayload
+from django.contrib import messages
 
 def edit_level_post(request, level: RDLevel):
     try:
@@ -26,6 +27,8 @@ def edit_level_post(request, level: RDLevel):
             "id": level.id,
             "url": reverse("cafe:level_view", args=[level.id])
         }
+
+        messages.success(request, "Level metadata updated!")
 
         return JsonResponse(payload)
     except msgspec.ValidationError as e:

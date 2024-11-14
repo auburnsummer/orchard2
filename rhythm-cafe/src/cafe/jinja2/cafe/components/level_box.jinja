@@ -1,6 +1,5 @@
 {% macro level_box_init () %}
 <script>
-const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' });
 
 document.addEventListener('alpine:init', () => {
     Alpine.data('levelBox', (level) => ({
@@ -57,14 +56,14 @@ document.addEventListener('alpine:init', () => {
             return parts;
         },
         get artistPieces() {
-            let formattedString = formatter.format(this.level.artist_tokens);
+            let formattedString = formatLongConjunction(this.level.artist_tokens);
             return this.getPiecesFromFormattedString(formattedString, this.level.artist_tokens);
         },
         get authorIcon() {
             return this.level.authors.length > 1 ? 'pen-fill' : 'pen-fill';   
         },
         get authorPieces() {
-            let formattedString = formatter.format(this.level.authors);
+            let formattedString = formatLongConjunction(this.level.authors);
             return this.getPiecesFromFormattedString(formattedString, this.level.authors);
         },
         get bpmText() {

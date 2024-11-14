@@ -20,7 +20,7 @@ const data = {
         const data = await resp.json();
         this.prefillId = data.id;
         this.prefillStatusUrl = this.prefillStatusUrl.replace('REPLACE_ME', this.prefillId);
-        this.intervalId = setInterval(this.checkPrefillStatus.bind(this), 2000);
+        this.intervalId = setInterval(this.checkPrefillStatus.bind(this), 1000);
     },
     async checkPrefillStatus() {
         // add a cache buster
