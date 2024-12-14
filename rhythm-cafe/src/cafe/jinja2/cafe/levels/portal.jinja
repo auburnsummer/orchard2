@@ -4,9 +4,9 @@
 {% set content %}
 <div class="epo" x-data="data">
     <div class="epo__choices">
-        <h1 class="epo__title">Select one of the following:</h1>
+        <h1 class="epo__title">Select upload type:</h1>
         <div class="epo__buttons">
-            <sl-button>This is a new level</sl-button>
+            <sl-button href="{{ url('cafe:level_add_s1', args=[code]) }}">This is a new level</sl-button>
             <sl-button>This is an update to an existing level</sl-button>
         </div>
     </div>
@@ -20,5 +20,8 @@
 {% endcall %}
 
 <style data-hoist="true">
-
+.epo__title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
 </style>
