@@ -1,2 +1,0 @@
-from .hoist_css_middleware import hoist_css_middleware
-from .minify_middleware import ProjectMinifyHtmlMiddleware

@@ -1,4 +1,0 @@
-.diag_pattern_1 {
-    background: linear-gradient(45deg, var(--sl-color-blue-100) 12.5%, #fff 12.5%, #fff 37.5%, var(--sl-color-blue-100) 37.5%, var(--sl-color-blue-100) 62.5%, #fff 62.5%, #fff 87.5%, var(--sl-color-blue-100) 87.5%);
-    background-size: 180px 180px;
-}
