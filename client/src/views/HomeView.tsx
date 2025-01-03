@@ -1,8 +1,11 @@
+import { AppShell } from '@mantine/core';
+import { Shell } from '../components/Shell';
+
 export default function HomeView() {
     return (
-        <>
-            <h1>This is the home page</h1>
-        </>
+        <Shell>
+            hello world
+        </Shell>
     );
 }
   

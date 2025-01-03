@@ -1,5 +1,6 @@
 from nanoid import generate
 
+# no vowels to prevent accidental profanity
 ALPHABET = "123456789BCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz"
 
 USER_ID_PREFIX = "u"
