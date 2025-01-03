@@ -11,4 +11,9 @@ export default defineConfig({
     },
   },
   plugins: [react()],
+  resolve: {
+    alias: {
+      "@cafe": "/src",
+    }
+  }
 })

@@ -1,8 +1,14 @@
-from django.contrib.auth.models import AbstractUser
-from django.db.models import CharField, EmailField
+from django.contrib.auth.models import AbstractUser, UserManager
+from django.db.models import Q, CharField, CheckConstraint, EmailField
+
+from .id_utils import generate_user_id, USER_ID_PREFIX
 
 class CafeUserManager(UserManager):
-    pass
+    def create_user(self, username, password=None, **extra_fields):
+        return super().create_user(username, email=None, password=password, **extra_fields)
+    
+    def create_superuser(self, username, password, **extra_fields):
+        return super().create_superuser(username, email=None, password=password, **extra_fields)
 
 class User(AbstractUser):
     """
@@ -21,7 +27,17 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"{self.username} ({self.id})"
+    
+    objects = CafeUserManager()
 
     USERNAME_FIELD = "id"
 
     REQUIRED_FIELDS = ["username"]
+
+    class Meta:
+        constraints = [
+            CheckConstraint(
+                name="cafe__user_id_starts_with_u",
+                check=Q(id__startswith=USER_ID_PREFIX),
+            )
+        ]

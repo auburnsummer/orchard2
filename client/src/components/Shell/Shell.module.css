@@ -1,0 +1,14 @@
+.header.header {
+    background-color: var(--mantine-color-indigo-0);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.spacer {
+    flex-grow: 1;
+}
+
+.userSection {
+    margin-right: 0.5rem;
+}

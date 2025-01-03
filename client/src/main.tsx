@@ -1,11 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import * as DjangoBridge from "@django-bridge/react";
-import { CSRFTokenContext } from "./contexts";
+import { CSRFTokenContext } from "@cafe/hooks/useCSRFToken";
 import HomeView from "./views/HomeView";
 import '@mantine/core/styles.css';
+import './style.css';
 
 import { MantineProvider } from '@mantine/core';
+
+import { shadcnTheme } from './theme/theme';
+import { shadcnCssVariableResolver } from "./theme/cssVariableResolver";
+import { UserContext } from "@cafe/hooks/useUser";
+
 
 const config = new DjangoBridge.Config();
 
@@ -13,6 +19,7 @@ const config = new DjangoBridge.Config();
 config.addView("Home", HomeView);
 
 // Add your context providers here
+config.addContextProvider("user", UserContext);
 config.addContextProvider("csrf_token", CSRFTokenContext);
 
 const rootElement = document.getElementById("root")!;
@@ -22,7 +29,7 @@ const initialResponse = JSON.parse(
 
 ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
-        <MantineProvider>
+        <MantineProvider theme={shadcnTheme} cssVariablesResolver={shadcnCssVariableResolver}>
             <DjangoBridge.App config={config} initialResponse={initialResponse} />
         </MantineProvider>
     </React.StrictMode>
