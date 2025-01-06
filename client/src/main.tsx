@@ -11,12 +11,14 @@ import { MantineProvider } from '@mantine/core';
 import { shadcnTheme } from './theme/theme';
 import { shadcnCssVariableResolver } from "./theme/cssVariableResolver";
 import { UserContext } from "@cafe/hooks/useUser";
+import ProfileView from "./views/ProfileView";
 
 
 const config = new DjangoBridge.Config();
 
 // Add your views here
 config.addView("Home", HomeView);
+config.addView("Profile", ProfileView);
 
 // Add your context providers here
 config.addContextProvider("user", UserContext);

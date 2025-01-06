@@ -7,7 +7,8 @@ type UnauthenticatedUser = {
 type AuthenticatedUser = {
     authenticated: true;
     id: string;
-    username: string;
+    displayName: string;
+    avatarURL: string | null;
 }
 
 export type User = UnauthenticatedUser | AuthenticatedUser;

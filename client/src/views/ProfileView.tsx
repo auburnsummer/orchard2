@@ -1,9 +1,9 @@
 import { Shell } from '../components/Shell';
 
-export default function HomeView() {
+export default function ProfileView() {
     return (
         <Shell>
-            hello world
+            profile
         </Shell>
     );
 }

@@ -9,3 +9,8 @@ export const useCSRFToken = () => {
     }
     return csrfToken;
 }
+
+export const useCSRFTokenInput = () => {
+    const csrfToken = useCSRFToken();
+    return <input type="hidden" name="csrfmiddlewaretoken" value={csrfToken} />;
+}

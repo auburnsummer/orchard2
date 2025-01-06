@@ -10,7 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,6 +33,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
 
 # Application definition
 
@@ -41,6 +52,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.discord',
+
+    'hijack',
+    'hijack.contrib.admin'
 ]
 
 MIDDLEWARE = [
@@ -52,7 +71,30 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_bridge.middleware.DjangoBridgeMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
+    'hijack.middleware.HijackUserMiddleware'
 ]
+
+ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_USERNAME_REQUIRED = False
+
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+SOCIALACCOUNT_ADAPTER = 'cafe.social_adapter.CafeSocialAccountAdapter'
+SOCIALACCOUNT_ONLY = True
+SOCIALACCOUNT_PROVIDERS = {
+    'discord': {
+        'EMAIL_AUTHENTICATION': True,
+        'VERIFIED_EMAIL': True,
+        'SCOPE': ['email', 'identify'],
+        'APP': {
+            'client_id': os.getenv('DISCORD_CLIENT_ID'),
+            'secret': os.getenv('DISCORD_CLIENT_SECRET'),
+            'key': ''
+        }
+    }
+}
 
 DJANGO_BRIDGE = {
     "CONTEXT_PROVIDERS": {
