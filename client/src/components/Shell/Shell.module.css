@@ -11,4 +11,16 @@
 
 .userSection {
     margin-right: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.userSectionButton:hover > * {
+    /* add light filter with transition */
+    filter: brightness(1.2);
+    transition: filter 0.2s, transform 0.2s;
+}
+/* when they click the button, shift it down a bit */
+.userSectionButton:active {
+    transform: translateY(1px);
 }
