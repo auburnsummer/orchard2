@@ -5,4 +5,5 @@
 	margin-left: 0.1rem;
 	fill: var(--mantine-color-indigo-3);
 	opacity: 70%;
+	z-index: 1000;
 }

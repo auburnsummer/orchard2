@@ -7,19 +7,26 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDiscord } from '@fortawesome/free-brands-svg-icons'
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { useRef } from "react";
+import { Link } from "@django-bridge/react";
+import { Notifications } from "../Notifications/Notifications";
 
 type ShellProps = {
     children: React.ReactNode;
+    navbar?: React.ReactNode;
 }
 
-export function Shell({children}: ShellProps) {
+export function Shell({children, navbar}: ShellProps) {
     const user = useUser();
     const csrfInput = useCSRFTokenInput();
 
     const logOutForm = useRef<HTMLFormElement>(null);
 
     return (
-        <AppShell header={{height: '3rem'}}>
+        <AppShell
+            header={{height: '3rem'}}
+            navbar={{ width: '16rem', breakpoint: 'sm' }}
+        >
+            <Notifications />
             <AppShell.Header className={styles.header}>
                 <Logo />
                 <div className={styles.spacer} />
@@ -34,13 +41,13 @@ export function Shell({children}: ShellProps) {
                                     <Menu shadow="md" width={200}>
                                         <Menu.Target>
                                             <UnstyledButton className={styles.userSectionButton}>
-                                                <Avatar src={user.avatarURL} name={user.displayName} alt={user.username} radius="xl" />
+                                                <Avatar src={user.avatarURL} name={user.displayName} alt={user.displayName} radius="xl" />
                                             </UnstyledButton>
                                         </Menu.Target>
                                         <Menu.Dropdown>
                                             <Menu.Label>{user.displayName}</Menu.Label>
                                             <Menu.Item
-                                                component="a"
+                                                component={Link}
                                                 href="/accounts/profile/"
                                             >
                                                 Profile
@@ -72,6 +79,11 @@ export function Shell({children}: ShellProps) {
                     }
                 </div>
             </AppShell.Header>
+            { navbar && (
+                <AppShell.Navbar>
+                    {navbar}
+                </AppShell.Navbar>
+            ) }
             <AppShell.Main>
                 {children}
             </AppShell.Main>

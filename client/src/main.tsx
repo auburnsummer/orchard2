@@ -4,6 +4,7 @@ import * as DjangoBridge from "@django-bridge/react";
 import { CSRFTokenContext } from "@cafe/hooks/useCSRFToken";
 import HomeView from "./views/HomeView";
 import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 import './style.css';
 
 import { MantineProvider } from '@mantine/core';
@@ -11,7 +12,8 @@ import { MantineProvider } from '@mantine/core';
 import { shadcnTheme } from './theme/theme';
 import { shadcnCssVariableResolver } from "./theme/cssVariableResolver";
 import { UserContext } from "@cafe/hooks/useUser";
-import ProfileView from "./views/ProfileView";
+import { ProfileView } from "./views/ProfileView/ProfileView";
+import { Notifications } from "./components/Notifications/Notifications";
 
 
 const config = new DjangoBridge.Config();
