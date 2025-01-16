@@ -31,7 +31,8 @@ SECRET_KEY = 'django-insecure-0%u5im)hfu55qv54d4f+$3@ijy+%gxq%49cm#b@-vq)z7g6y93
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['seal-epic-luckily.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['https://seal-epic-luckily.ngrok-free.app']
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -40,6 +41,8 @@ AUTHENTICATION_BACKENDS = [
     # `allauth` specific authentication methods, such as login by email
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+
+LOGIN_REDIRECT_URL = "/"
 
 # Application definition
 
