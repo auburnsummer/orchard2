@@ -22,6 +22,10 @@ class User(AbstractUser):
     username = CharField(max_length=150, unique=False, blank=True)
     display_name = CharField(max_length=150, unique=False, blank=True)
     email = EmailField(default=None, null=True, unique=True, blank=True)
+    theme_preference = CharField(choices={
+        'light': 'Light',
+        'dark': 'Dark'
+    }, max_length=100, default='light')
 
     def get_full_name(self) -> str:
         return self.display_name
