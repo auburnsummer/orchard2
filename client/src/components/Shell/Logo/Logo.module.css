@@ -6,4 +6,8 @@
 	fill: var(--mantine-color-indigo-3);
 	opacity: 70%;
 	z-index: 1000;
+
+	@mixin dark {
+		fill: var(--mantine-color-indigo-5);
+	}
 }

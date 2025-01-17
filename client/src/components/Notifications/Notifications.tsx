@@ -16,7 +16,6 @@ export function Notifications() {
 
     useEffect(() => {
         messages.forEach((message, i) => {
-            console.log(message)
             notifications.show({
                 id: `from-django-bridge-${i}`,
                 message: getMessageText(message)
