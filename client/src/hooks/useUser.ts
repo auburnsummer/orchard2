@@ -9,6 +9,7 @@ type AuthenticatedUser = {
     id: string;
     displayName: string;
     avatarURL: string | null;
+    theme_preference: "light" | "dark";
 }
 
 export type User = UnauthenticatedUser | AuthenticatedUser;

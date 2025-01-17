@@ -7,20 +7,21 @@ import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import './style.css';
 
-import { MantineProvider } from '@mantine/core';
-
-import { shadcnTheme } from './theme/theme';
-import { shadcnCssVariableResolver } from "./theme/cssVariableResolver";
 import { UserContext } from "@cafe/hooks/useUser";
 import { ProfileView } from "./views/ProfileView/ProfileView";
-import { Notifications } from "./components/Notifications/Notifications";
+import { Prelude } from "./components/Prelude/Prelude";
 
 
 const config = new DjangoBridge.Config();
 
-// Add your views here
-config.addView("Home", HomeView);
-config.addView("Profile", ProfileView);
+const views: { [key: string]: React.ComponentType<any> } = {
+    "Home": HomeView,
+    "Profile": ProfileView
+}
+
+Object.keys(views).forEach(key => {
+    config.addView(key, Prelude(views[key]))
+});
 
 // Add your context providers here
 config.addContextProvider("user", UserContext);
@@ -33,8 +34,6 @@ const initialResponse = JSON.parse(
 
 ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
-        <MantineProvider theme={shadcnTheme} cssVariablesResolver={shadcnCssVariableResolver}>
-            <DjangoBridge.App config={config} initialResponse={initialResponse} />
-        </MantineProvider>
+        <DjangoBridge.App config={config} initialResponse={initialResponse} />
     </React.StrictMode>
 );

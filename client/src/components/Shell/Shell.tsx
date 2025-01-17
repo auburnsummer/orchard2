@@ -8,7 +8,6 @@ import { faDiscord } from '@fortawesome/free-brands-svg-icons'
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { useRef } from "react";
 import { Link } from "@django-bridge/react";
-import { Notifications } from "../Notifications/Notifications";
 
 type ShellProps = {
     children: React.ReactNode;
@@ -25,8 +24,8 @@ export function Shell({children, navbar}: ShellProps) {
         <AppShell
             header={{height: '3rem'}}
             navbar={{ width: '16rem', breakpoint: 'sm' }}
+            className={styles.shell}
         >
-            <Notifications />
             <AppShell.Header className={styles.header}>
                 <Logo />
                 <div className={styles.spacer} />

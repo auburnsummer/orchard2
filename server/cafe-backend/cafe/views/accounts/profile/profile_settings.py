@@ -9,7 +9,7 @@ from cafe.models.user import User
 class PostSettingsForm(ModelForm):
     class Meta:
         model = User
-        fields = ["display_name"]
+        fields = ["display_name", "theme_preference"]
 
 
 @login_required
