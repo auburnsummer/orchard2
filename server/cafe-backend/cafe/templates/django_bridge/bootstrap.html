@@ -1,0 +1,23 @@
+{% extends "django_bridge/bootstrap.html" %}
+
+{% block extra_head %}
+<link rel="preconnect" href="https://fonts.bunny.net">
+<link href="https://fonts.bunny.net/css?family=atkinson-hyperlegible:400,400i,700,700i" rel="stylesheet" />
+
+{% if request.user.is_authenticated %}
+    {% if request.user.theme_preference == 'dark' %}
+        <style>
+            body {
+                background-color: #1e1f21;
+                /* prevent flash of white in dark theme as mantine css is injected before react root is rendered */
+                --mantine-color-body: #1e1f21;
+            }
+            .django-bridge-load__text {
+                color: white;
+            }
+        </style>
+    {% endif %}
+{% endif %}
+{% endblock %}
+
+{# <!-- https://github.com/django-bridge/django-bridge/blob/main/python/django_bridge/templates/django_bridge/bootstrap.html --> #}

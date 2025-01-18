@@ -40,6 +40,8 @@ AUTHENTICATION_BACKENDS = [
 
     # `allauth` specific authentication methods, such as login by email
     'allauth.account.auth_backends.AuthenticationBackend',
+
+    'rules.permissions.ObjectPermissionBackend',
 ]
 
 LOGIN_REDIRECT_URL = "/"
@@ -61,6 +63,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.discord',
 
+    'rules',
+
     'hijack',
     'hijack.contrib.admin'
 ]
@@ -81,6 +85,7 @@ MIDDLEWARE = [
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USER_DISPLAY = lambda user: user.get_short_name()
 
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
@@ -112,7 +117,9 @@ ROOT_URLCONF = 'orchard.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'cafe/templates/')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

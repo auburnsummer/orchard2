@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Redirect</title>
+        <style>
+            body {
+                font-family: sans-serif;
+            }
+        </style>
+    </head>
+    <body>
+        <p>You have reached a page that requires the user to be signed in.</p>
+        <p>You should be redirected automatically. If you are not, click the below button:</p>
+        <form method="post" action="/accounts/discord/login/" id="submitform">
+            {% csrf_token %}
+            <button
+                type="submit"
+            >
+                Sign in with Discord
+            </button>
+        </form>
+        <script>
+            const form = document.getElementById("submitform");
+            if (form !== undefined) {
+                form.submit();
+            }
+        </script>
+    </body>
+</html>
