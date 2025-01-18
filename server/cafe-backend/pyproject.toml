@@ -12,4 +12,5 @@ dependencies = [
     "python-dotenv>=1.0.1",
     "django-hijack>=3.7.1",
     "debugpy>=1.8.11",
+    "rules>=3.5",
 ]

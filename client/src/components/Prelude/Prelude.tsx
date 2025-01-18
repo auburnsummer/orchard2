@@ -1,7 +1,3 @@
-/**
- * wraps a django-bridge view component with some universal contexts, etc.  
- */
-
 import { shadcnCssVariableResolver } from "@cafe/theme/cssVariableResolver";
 import { shadcnTheme } from "@cafe/theme/theme";
 import { MantineProvider } from "@mantine/core";

@@ -1,6 +1,5 @@
 import { Shell } from '@cafe/components/Shell';
 import { Avatar, Group, NavLink, Stack, Text } from '@mantine/core';
-import { Link } from "@django-bridge/react";
 import { useLoggedInUser } from '@cafe/hooks/useUser';
 
 import styles from './ProfileView.module.css';
@@ -8,6 +7,7 @@ import { useNavigationContext } from '@cafe/hooks/useNavigationContext';
 import { ProfileSubpage } from '../ProfileSubpage/ProfileSubpage';
 import { SettingsSubpage } from '../SettingsSubpage/SettingsSubpage';
 import { Spacer } from '@cafe/components/Spacer/Spacer';
+import { Link } from '@cafe/components/Link/Link';
 
 function ProfileNavbar( ){
     const user = useLoggedInUser();
@@ -33,7 +33,14 @@ function ProfileNavbar( ){
             <Stack className={styles.navbarLinks} gap={0}>
                 {
                     links.map(link => (
-                        <NavLink key={link.href} component={Link} href={link.href} label={link.label} active={path === link.href} />
+                        <NavLink
+                            key={link.href}
+                            component={Link}
+                            skipDirtyFormCheck={true}
+                            href={link.href}
+                            label={link.label}
+                            active={path === link.href}
+                        />
                     ))
                 }
             </Stack>

@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDiscord } from '@fortawesome/free-brands-svg-icons'
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { useRef } from "react";
-import { Link } from "@django-bridge/react";
+import { Link } from "../Link/Link";
 
 type ShellProps = {
     children: React.ReactNode;

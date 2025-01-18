@@ -1,5 +1,3 @@
-@import url(https://fonts.bunny.net/css?family=atkinson-hyperlegible:400,400i,700,700i);
-
 /* Checkbox */
 .mantine-Checkbox-root {
   --checkbox-color: var(--mantine-primary-color-filled);

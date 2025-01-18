@@ -18,7 +18,7 @@ def user(request):
         return {
             "authenticated": True,
             "id": request.user.id,
-            "displayName": request.user.display_name,
+            "displayName": request.user.get_short_name(),
             "avatarURL": try_get_avatar(request.user),
             "theme_preference": request.user.theme_preference
         }
