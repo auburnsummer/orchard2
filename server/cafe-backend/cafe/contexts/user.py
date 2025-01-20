@@ -1,6 +1,7 @@
 from django.urls import reverse
 
 from allauth.socialaccount.models import SocialAccount
+from cafe.views.types import HttpRequest
 
 def try_get_avatar(user):
     try:
@@ -13,7 +14,7 @@ def try_get_avatar(user):
     except SocialAccount.DoesNotExist:
         return None
 
-def user(request):
+def user(request: HttpRequest):
     if request.user.is_authenticated:
         return {
             "authenticated": True,

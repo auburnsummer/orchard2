@@ -23,7 +23,7 @@
     "noUncheckedSideEffectImports": true,
 
     "paths": {
-      "@cafe/*": ["src/*"]
+      "@cafe/*": ["./src/*"]
     }
   },
   "include": ["src"]

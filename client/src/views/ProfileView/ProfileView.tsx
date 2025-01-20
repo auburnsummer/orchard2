@@ -4,8 +4,8 @@ import { useLoggedInUser } from '@cafe/hooks/useUser';
 
 import styles from './ProfileView.module.css';
 import { useNavigationContext } from '@cafe/hooks/useNavigationContext';
-import { ProfileSubpage } from '../ProfileSubpage/ProfileSubpage';
-import { SettingsSubpage } from '../SettingsSubpage/SettingsSubpage';
+import { ProfileSubpage } from './ProfileSubpage/ProfileSubpage';
+import { SettingsSubpage } from './SettingsSubpage/SettingsSubpage';
 import { Spacer } from '@cafe/components/Spacer/Spacer';
 import { Link } from '@cafe/components/Link/Link';
 
