@@ -19,7 +19,7 @@ class ClubMembership(RulesModel):
     A User can be a member of any number of Clubs. There are two levels of membership:
 
     - Owner: the user can add, remove and change users in the Club. Owners can demote other Owners.
-    - Admin: the user can add/edit/delete levels under the Club.
+    - Admin: the user can add/edit/delete levels under the Club, even levels they didn't post.
 
     nb: a club can also be linked to a discord server. Anyone who has access to the
     discord server can also add levels, even if they're not an Admin.

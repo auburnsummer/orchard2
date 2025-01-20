@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
+from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db.models import Q, CharField, CheckConstraint, EmailField, QuerySet
 
@@ -23,6 +24,8 @@ class User(AbstractUser):
      - The PK is replaced with an ID field that starts with "u".
      - the username field still exists, for compat with the rest of the Django ecosystem, but we don't use it.
      - instead, the display_name field is used for the user's display name, and most things are hooked up to that.
+     - ...generally speaking, if a Django integration is a good citzen and uses the get_short_name() function it
+       shouldn't need to know about this display_name/username trickery.
     """
     id = CharField(max_length=10, primary_key=True, default=generate_user_id)
     username = CharField(max_length=150, unique=False, blank=True)
@@ -44,6 +47,17 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"{self.display_name} ({self.id})"
+
+    
+    def to_dict(self):
+        return {
+            "authenticated": True,
+            "id": self.id,
+            "displayName": self.get_short_name(),
+            "avatarURL": try_get_avatar(self),
+            "theme_preference": self.theme_preference
+        }
+
     
     objects = CafeUserManager()
 
@@ -57,3 +71,14 @@ class User(AbstractUser):
                 check=Q(id__startswith=USER_ID_PREFIX),
             )
         ]
+
+def try_get_avatar(user):
+    try:
+        social_account = SocialAccount.objects.get(user=user)
+        avatar_url = social_account.get_avatar_url()
+        if avatar_url:
+            return avatar_url
+        else:
+            return None
+    except SocialAccount.DoesNotExist:
+        return None

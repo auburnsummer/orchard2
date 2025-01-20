@@ -28,6 +28,12 @@ class Club(RulesModel):
     def __str__(self):
         return f"{self.name} ({self.id})"
     
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name
+        }
+    
     class Meta:
         rules_permissions = {
             # cafe.view_member_of_club
