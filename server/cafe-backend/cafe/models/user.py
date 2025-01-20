@@ -1,7 +1,13 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
 from django.contrib.auth.models import AbstractUser, UserManager
-from django.db.models import Q, CharField, CheckConstraint, EmailField
+from django.db.models import Q, CharField, CheckConstraint, EmailField, QuerySet
 
 from .id_utils import generate_user_id, USER_ID_PREFIX
+
+if TYPE_CHECKING:
+    from cafe.models.clubs.club_membership import ClubMembership 
+    from django.db.models.manager import RelatedManager
 
 class CafeUserManager(UserManager):
     def create_user(self, username, password=None, **extra_fields):
@@ -26,6 +32,9 @@ class User(AbstractUser):
         'light': 'Light',
         'dark': 'Dark'
     }, max_length=100, default='light')
+
+    # from cafe.ClubMembership
+    memberships: RelatedManager[ClubMembership]
 
     def get_full_name(self) -> str:
         return self.display_name

@@ -1,4 +1,4 @@
-import { Button, Group, Stack, TextInput, Select } from "@mantine/core"
+import { Button, Group, Stack, TextInput, Select } from "@mantine/core";
 
 import styles from './SettingsSubpage.module.css';
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";

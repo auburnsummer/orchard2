@@ -3,17 +3,18 @@ from django_bridge.response import Response
 
 from django.forms import ModelForm
 from django.contrib import messages
+from django.http import HttpResponse
 
 from cafe.models.user import User
+from cafe.views.types import AuthenticatedHttpRequest
 
 class PostSettingsForm(ModelForm):
     class Meta:
         model = User
         fields = ["display_name", "theme_preference"]
 
-
 @login_required
-def settings(request):
+def settings(request: AuthenticatedHttpRequest) -> HttpResponse:
     if request.method == "POST":
         form = PostSettingsForm(request.POST)
         # check whether it's valid:

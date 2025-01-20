@@ -23,7 +23,7 @@ export function Shell({children, navbar}: ShellProps) {
     return (
         <AppShell
             header={{height: '3rem'}}
-            navbar={{ width: '16rem', breakpoint: 'sm' }}
+            navbar={navbar !== undefined ? { width: '16rem', breakpoint: 'sm' } : undefined}
             className={styles.shell}
         >
             <AppShell.Header className={styles.header}>
