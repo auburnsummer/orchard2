@@ -7,9 +7,10 @@ import { useNavigationContext } from '@cafe/hooks/useNavigationContext';
 import { ProfileSubpage } from './ProfileSubpage/ProfileSubpage';
 import { SettingsSubpage } from './SettingsSubpage/SettingsSubpage';
 import { Spacer } from '@cafe/components/Spacer/Spacer';
+import { GroupsSubpage, GroupsSubpageProps } from './GroupsSubpage/GroupsSubpage';
 import { Link } from '@cafe/components/Link/Link';
 
-function ProfileNavbar( ){
+function ProfileNavbar(){
     const user = useLoggedInUser();
     const { path } = useNavigationContext();
 
@@ -21,6 +22,10 @@ function ProfileNavbar( ){
         {
             label: "Settings",
             href: "/accounts/profile/settings/"
+        },
+        {
+            label: "Groups",
+            href: "/accounts/profile/groups/"
         }
     ]
 
@@ -50,21 +55,36 @@ function ProfileNavbar( ){
     );
 }
 
-type ProfileViewProps = {
-    subpage: 'profile' | 'settings'
+type ProfileSubpageProps = {
+    subpage: 'profile'
+};
+
+type SettingSubpageProps = {
+    subpage: 'settings'
 }
 
-export function ProfileView({subpage}: ProfileViewProps) {
-    const page = {
-        profile: <ProfileSubpage />,
-        settings: <SettingsSubpage />
+type ProfileViewProps = ProfileSubpageProps | SettingSubpageProps | GroupsSubpageProps;
+
+export function ProfileView(props: ProfileViewProps) {
+    let content = <></>;
+
+    if (props.subpage === 'profile') {
+        content = <ProfileSubpage />;
     }
+    if (props.subpage === 'settings') {
+        content = <SettingsSubpage />;
+    }
+
+    if (props.subpage === 'groups') {
+        content = <GroupsSubpage {...props} />;
+    }
+
     return (
         <Shell
             navbar={<ProfileNavbar />}
         >
             <div className={styles.mainArea}>
-                { page[subpage] }
+                { content }
             </div>
         </Shell>
     );

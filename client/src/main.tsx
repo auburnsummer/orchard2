@@ -11,6 +11,7 @@ import { UserContext } from "@cafe/hooks/useUser";
 import { ProfileView } from "./views/ProfileView/ProfileView";
 import { Prelude } from "./components/Prelude/Prelude";
 import { CreateClubView } from "./views/CreateClubView/CreateClub";
+import { ClubSettingsInfoView } from "./views/ClubSettingsInfoView/ClubSettingsInfoView";
 
 
 const config = new DjangoBridge.Config();
@@ -18,7 +19,8 @@ const config = new DjangoBridge.Config();
 const views: { [key: string]: React.ComponentType<any> } = {
     "Home": HomeView,
     "Profile": ProfileView,
-    "CreateClub": CreateClubView
+    "CreateClub": CreateClubView,
+    "ClubSettingsInfo": ClubSettingsInfoView
 }
 
 Object.keys(views).forEach(key => {
