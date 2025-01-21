@@ -33,7 +33,7 @@ export function GroupsSubpage({ clubs }: GroupsSubpageProps) {
                         <List>
                             {
                                 ownerClubs.map(c => (
-                                    <List.Item>
+                                    <List.Item key={c.club.id}>
                                         <LinkToClub club={c.club} />
                                     </List.Item>
                                 ))
