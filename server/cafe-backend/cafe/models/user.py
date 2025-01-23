@@ -12,10 +12,19 @@ if TYPE_CHECKING:
 
 class CafeUserManager(UserManager):
     def create_user(self, username, password=None, **extra_fields):
-        return super().create_user(username, email=None, password=password, **extra_fields)
+        user = super().create_user(username, password=password, **extra_fields)
+        if user.email == "":
+            user.email = None
+            user.save()
+        return user
     
     def create_superuser(self, username, password, **extra_fields):
-        return super().create_superuser(username, email=None, password=password, **extra_fields)
+        user = super().create_superuser(username, password=password, **extra_fields)
+        if user.email == "":
+            user.email = None
+            user.save()
+        return user
+
 
 class User(AbstractUser):
     """
