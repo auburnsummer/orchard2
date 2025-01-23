@@ -12,6 +12,9 @@
                 /* prevent flash of white in dark theme as mantine css is injected before react root is rendered */
                 --mantine-color-body: #1e1f21;
             }
+            html[data-mantine-color-scheme] body {
+                --mantine-color-body: unset;
+            }
             .django-bridge-load__text {
                 color: white;
             }

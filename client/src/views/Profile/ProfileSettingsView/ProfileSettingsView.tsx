@@ -1,18 +1,22 @@
-import { Button, Group, Stack, TextInput, Select } from "@mantine/core";
+import { Shell } from "@cafe/components/Shell/Shell";
+import { ProfileNavbar } from "../ProfileNavbar/ProfileNavbar";
 
-import styles from './SettingsSubpage.module.css';
+import styles from "./ProfileSettingsView.module.css";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
+import { Stack, TextInput, Select, Button } from "@mantine/core";
 import { useLoggedInUser } from "@cafe/hooks/useUser";
+import { Form } from "@django-bridge/react";
 
-
-export function SettingsSubpage() {
-    const input = useCSRFTokenInput();
+export function ProfileSettingsView() {
     const user = useLoggedInUser();
+    const input = useCSRFTokenInput();
 
     return (
-        <>
+        <Shell
+            navbar={<ProfileNavbar />}
+        >
             <h2>Settings</h2>
-            <form className={styles.base} method="post">
+            <Form className={styles.base} method="post">
                 { input }
                 <Stack align="flex-start" gap="1rem">
                     <TextInput
@@ -23,6 +27,7 @@ export function SettingsSubpage() {
 
                 <Select
                     label="Theme"
+                    allowDeselect={false}
                     defaultValue={user.theme_preference}
                     name="theme_preference"
                     data={[
@@ -39,7 +44,7 @@ export function SettingsSubpage() {
 
                     <Button type="submit">Save</Button>
                 </Stack>
-            </form>
-        </>
-    )
+            </Form>
+        </Shell>
+    );
 }
