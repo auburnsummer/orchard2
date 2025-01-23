@@ -1,6 +1,6 @@
 import { Shell } from '../components/Shell';
 
-export default function HomeView() {
+export function HomeView() {
     return (
         <Shell>
             hello world

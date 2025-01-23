@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDiscord } from '@fortawesome/free-brands-svg-icons'
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { useRef } from "react";
-import { Link } from "../Link/Link";
+import { Link } from "@django-bridge/react";
 
 type ShellProps = {
     children: React.ReactNode;
@@ -84,7 +84,9 @@ export function Shell({children, navbar}: ShellProps) {
                 </AppShell.Navbar>
             ) }
             <AppShell.Main>
-                {children}
+                <div className={styles.mainArea}>
+                    {children}
+                </div>
             </AppShell.Main>
         </AppShell>
     )

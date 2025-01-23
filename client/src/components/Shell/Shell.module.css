@@ -35,3 +35,7 @@
 .userSectionButton:active {
     transform: translateY(1px);
 }
+
+.mainArea {
+    padding-left: 1rem;
+}
