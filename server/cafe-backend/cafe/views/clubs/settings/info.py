@@ -3,6 +3,7 @@ from django_bridge.response import Response
 from rules.contrib.views import permission_required, objectgetter
 
 from cafe.models import Club
+from cafe.views.types import AuthenticatedHttpRequest
 
 from django.views import View
 from django.utils.decorators import method_decorator
@@ -19,16 +20,16 @@ class ClubInfoForm(ModelForm):
 
 class ClubSettingsInfoView(View):
     @method_decorator(permission_required('cafe.view_info_of_club', fn=objectgetter(Club, 'club_id')))
-    def get(self, request, club_id):
+    def get(self, request: AuthenticatedHttpRequest, club_id):
         club = get_object_or_404(Club, pk=club_id)
 
         render_data = {
             "club": club.to_dict()
         }
-        return Response(request, "ClubSettingsInfo", render_data)
+        return Response(request, request.resolver_match.view_name, render_data)
     
     @method_decorator(permission_required('cafe.change_info_of_club', fn=objectgetter(Club, 'club_id')))
-    def post(self, request, club_id):
+    def post(self, request: AuthenticatedHttpRequest, club_id):
         form = ClubInfoForm(request.POST)
         club = get_object_or_404(Club, pk=club_id)
         if form.is_valid():
@@ -39,6 +40,6 @@ class ClubSettingsInfoView(View):
         render_data = {
             "club": club.to_dict()
         }
-        return Response(request, "ClubSettingsInfo", render_data)
+        return Response(request, request.resolver_match.view_name, render_data)
 
 info = ClubSettingsInfoView.as_view()

@@ -1,9 +1,10 @@
 import { shadcnCssVariableResolver } from "@cafe/theme/cssVariableResolver";
 import { shadcnTheme } from "@cafe/theme/theme";
-import { MantineProvider } from "@mantine/core";
+import { MantineProvider, Overlay } from "@mantine/core";
 import { ComponentType } from "react";
 import { Notifications } from "../Notifications/Notifications";
 import { useUser } from "@cafe/hooks/useUser";
+import { useNavigationContext } from "@cafe/hooks/useNavigationContext";
 
 /**
  * Wraps a component to add global contexts, etc.
