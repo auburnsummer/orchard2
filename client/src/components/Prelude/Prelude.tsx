@@ -9,15 +9,17 @@ import { LoadingBarContainer, useLoadingBar } from "react-top-loading-bar";
 
 function LoadingBar() {
     const theme = useMantineTheme();
-    const color = theme.colors.blue[4];
     const { pageLoading } = useNavigationContext();
     const [barStarted, setBarStarted] = useState(false);
+
+    const color = theme.colors.blue[4];
     const { start, complete } = useLoadingBar({ color, height: 1 });
+
 
     useEffect(() => {
         if (pageLoading && !barStarted) {
             setBarStarted(true);
-            start('static');
+            start('continuous');
         } else {
             if (!pageLoading && barStarted) {
                 setBarStarted(false);

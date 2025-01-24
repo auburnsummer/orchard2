@@ -12,6 +12,7 @@
                 /* prevent flash of white in dark theme as mantine css is injected before react root is rendered */
                 --mantine-color-body: #1e1f21;
             }
+            /* once mantine loads, it injects this into the html tag, stop overriding the variable */
             html[data-mantine-color-scheme] body {
                 --mantine-color-body: unset;
             }
