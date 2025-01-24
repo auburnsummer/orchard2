@@ -16,9 +16,16 @@ export function Notifications() {
 
     useEffect(() => {
         messages.forEach((message, i) => {
+            let color = {
+                "error": "red",
+                "success": "green",
+                "info": "blue",
+                "warning": "yellow"
+            }[message.level];
             notifications.show({
                 id: `from-django-bridge-${i}`,
-                message: getMessageText(message)
+                message: getMessageText(message),
+                color
               })
         })
     }, [messages]);

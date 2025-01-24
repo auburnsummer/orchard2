@@ -13,6 +13,9 @@
         <p>You should be redirected automatically. If you are not, click the below button:</p>
         <form method="post" action="/accounts/discord/login/" id="submitform">
             {% csrf_token %}
+            {% if next %}
+                <input type="hidden" name="next" value="{{ next }}" />
+            {% endif %}
             <button
                 type="submit"
             >

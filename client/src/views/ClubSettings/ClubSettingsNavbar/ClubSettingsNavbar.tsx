@@ -1,34 +1,36 @@
 import { Spacer } from "@cafe/components/Spacer/Spacer";
 import { useNavigationContext } from "@cafe/hooks/useNavigationContext";
-import { useLoggedInUser } from "@cafe/hooks/useUser";
-import { Stack, Group, Avatar, NavLink, Text } from "@mantine/core";
-import styles from "./ProfileNavbar.module.css";
+import { Stack, Group,  NavLink, Text } from "@mantine/core";
+import styles from "./ClubSettingsNavbar.module.css";
 import { Link } from "@django-bridge/react";
+import { Club } from "@cafe/types/club";
 
-export function ProfileNavbar(){
-    const user = useLoggedInUser();
+type ClubSettingsNavbarProps = {
+    club: Club
+}
+
+export function ClubSettingsNavbar({club}: ClubSettingsNavbarProps){
     const { path } = useNavigationContext();
 
     const links = [
         {
-            label: "Profile",
-            href: "/accounts/profile/"
-        },
-        {
             label: "Settings",
-            href: "/accounts/profile/settings/"
+            href: `/groups/${club.id}/settings/`
         },
         {
-            label: "Groups",
-            href: "/accounts/profile/groups/"
+            label: "Members",
+            href: `/groups/${club.id}/settings/members/`
+        },
+        {
+            label: "Connected Discord servers",
+            href: `/groups/${club.id}/settings/connections/discord/`
         }
     ]
 
     return (
         <Stack className={styles.navbarBase}>
             <Group className={styles.navbarTitle}>
-                <Avatar size="lg" src={user.avatarURL} />
-                <h2>{ user.displayName }</h2>
+                <h2>{club.name}</h2>
             </Group>
             <Stack className={styles.navbarLinks} gap={0}>
                 {
@@ -45,7 +47,7 @@ export function ProfileNavbar(){
                 }
             </Stack>
             <Spacer />
-            <Text c="dimmed" className={styles.navbarId}>Your ID: { user.id }</Text>
+            <Text c="dimmed" className={styles.navbarId}>Club ID: { club.id }</Text>
         </Stack>
     );
 }

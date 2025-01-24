@@ -2,6 +2,7 @@
  * Mapping of url path names (from server/cafe-backend/cafe/urls.py) to components to render.
  */
 
+import { ClubSettingsInfoView } from "./views/ClubSettings/ClubSettingsInfoView/ClubSettingsInfoView";
 import { CreateClubView } from "./views/CreateClubView/CreateClubView";
 import { HomeView } from "./views/HomeView";
 import { ProfileClubsView } from "./views/Profile/ProfileClubsView/ProfileClubsView";
@@ -14,5 +15,6 @@ export const routeMap: { [key: string]: React.ComponentType<any> } = {
     "profile_settings": ProfileSettingsView,
     "profile_clubs": ProfileClubsView,
     
-    "create_club": CreateClubView
+    "create_club": CreateClubView,
+    "club_settings_info": ClubSettingsInfoView
 }
