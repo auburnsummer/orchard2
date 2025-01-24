@@ -22,9 +22,11 @@ class ClubSettingsInfoView(View):
     @method_decorator(permission_required('cafe.view_info_of_club', fn=objectgetter(Club, 'club_id')))
     def get(self, request: AuthenticatedHttpRequest, club_id):
         club = get_object_or_404(Club, pk=club_id)
+        can_edit = request.user.has_perm("cafe.change_info_of_club", club)
 
         render_data = {
-            "club": club.to_dict()
+            "club": club.to_dict(),
+            "can_edit": can_edit
         }
         return Response(request, request.resolver_match.view_name, render_data)
     
@@ -32,13 +34,16 @@ class ClubSettingsInfoView(View):
     def post(self, request: AuthenticatedHttpRequest, club_id):
         form = ClubInfoForm(request.POST)
         club = get_object_or_404(Club, pk=club_id)
+        can_edit = request.user.has_perm("cafe.change_info_of_club", club)
+
         if form.is_valid():
             club.name = form.cleaned_data.get("name")
             club.save()
             messages.add_message(request, messages.SUCCESS, f"Group update successful")
 
         render_data = {
-            "club": club.to_dict()
+            "club": club.to_dict(),
+            "can_edit": can_edit
         }
         return Response(request, request.resolver_match.view_name, render_data)
 

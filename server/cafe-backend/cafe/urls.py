@@ -9,11 +9,12 @@ from .views.clubs.create_club import create_club
 
 from .views.clubs.settings.info import info
 
+from .views.login import login
 
 urlpatterns = [
     path("", index, name="index"),
 
-    path("accounts/login/", TemplateView.as_view(template_name="cafe/login.html"), name="login"),
+    path("accounts/login/", login, name="login"),
     path("accounts/profile/", profile, name="profile"),
     path("accounts/profile/settings/", profile_settings, name="profile_settings"),
     path("accounts/profile/groups/", profile_clubs, name="profile_clubs"),
