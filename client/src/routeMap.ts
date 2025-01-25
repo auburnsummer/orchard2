@@ -9,7 +9,7 @@ import { ProfileClubsView } from "./views/Profile/ProfileClubsView/ProfileClubsV
 import { ProfileIndexView } from "./views/Profile/ProfileIndexView/ProfileIndexView";
 import { ProfileSettingsView } from "./views/Profile/ProfileSettingsView/ProfileSettingsView";
 
-export const routeMap: { [key: string]: React.ComponentType<any> } = {
+export const routeMap: { [key: string]: React.FunctionComponent<any> } = {
     "index": HomeView,
     "profile": ProfileIndexView,
     "profile_settings": ProfileSettingsView,
