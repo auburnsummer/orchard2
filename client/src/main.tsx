@@ -13,7 +13,7 @@ import { routeMap } from "./routeMap";
 const config = new DjangoBridge.Config();
 
 Object.keys(routeMap).forEach(key => {
-    config.addView(key, Prelude(routeMap[key]))
+    config.addView(key, routeMap[key])
 });
 
 // Add your context providers here
@@ -25,8 +25,13 @@ const initialResponse = JSON.parse(
     document.getElementById("initial-response")!.textContent!
 );
 
+
 ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
-        <DjangoBridge.App config={config} initialResponse={initialResponse} />
+        <DjangoBridge.App config={config} initialResponse={initialResponse}>
+            <Prelude>
+                <DjangoBridge.Outlet />
+            </Prelude>
+        </DjangoBridge.App>
     </React.StrictMode>
 );
