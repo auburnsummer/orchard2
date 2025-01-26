@@ -6,7 +6,6 @@ import { Button, Group, Modal, Select, Stack, Table } from "@mantine/core";
 
 import styles from "./ClubSettingsMembersView.module.css";
 import { useRef, useState } from "react";
-import { AuthenticatedUser } from "@cafe/hooks/useUser";
 import { Form } from "@django-bridge/react";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 
@@ -96,9 +95,8 @@ export function ClubSettingsMembersView({ club, memberships, user_role }: ClubSe
                                                         color="red"
                                                         type="button"
                                                         onClick={() => {
-                                                            console.log(deleteFormRef.current);
                                                             if (deleteFormRef.current) {
-                                                                deleteFormRef.current.submit();
+                                                                deleteFormRef.current.requestSubmit();
                                                             }
                                                         }}
                                                     >
