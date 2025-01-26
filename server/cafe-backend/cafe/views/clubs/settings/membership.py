@@ -19,7 +19,7 @@ def get_membership_by_club_and_user(_: AuthenticatedHttpRequest, club_id: str, u
     return get_object_or_404(ClubMembership, user=user_id, club=club_id)
 
 @permission_required("cafe.change_clubmembership", fn=get_membership_by_club_and_user)
-def alter_membership(request, club_id, user_id):
+def alter_membership(request: AuthenticatedHttpRequest, club_id: str, user_id: str):
     if request.method != 'POST':
         return HttpResponseForbidden()
 
@@ -38,7 +38,7 @@ def alter_membership(request, club_id, user_id):
     return redirect("club_settings_members", club_id=club_id)
 
 @permission_required("cafe.delete_clubmembership", fn=get_membership_by_club_and_user)
-def delete_membership(request, club_id, user_id):
+def delete_membership(request: AuthenticatedHttpRequest, club_id: str, user_id: str):
     if request.method != 'POST':
         return HttpResponseForbidden()
 
@@ -46,9 +46,13 @@ def delete_membership(request, club_id, user_id):
     membership = get_object_or_404(ClubMembership, user=user_id, club=club_id)
 
     if len(owners) < 2 and membership.role == "owner":
-        return HttpResponseForbidden("Cannot kick this user as it would result in the group having no owners")
-    
-    membership.delete()
-    messages.add_message(request, messages.SUCCESS, "Member removed from group successfully.")
+        messages.add_message(request, messages.WARNING, "Cannot kick this user as it would result in the group having no owners")
+    else:    
+        membership.delete()
+        messages.add_message(request, messages.SUCCESS, "Member removed from group successfully.")
 
-    return HttpResponseRedirect(reverse("cafe:club_settings_members", args=[club_id]))
+    # if the membership that was just deleted was the user, redirect to home instead.
+    if user_id == request.user.id:
+        return redirect("index")
+
+    return redirect("club_settings_members", club_id=club_id)
