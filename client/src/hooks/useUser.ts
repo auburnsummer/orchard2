@@ -1,10 +1,10 @@
 import React from "react";
 
-type UnauthenticatedUser = {
+export type UnauthenticatedUser = {
     authenticated: false;
 }
 
-type AuthenticatedUser = {
+export type AuthenticatedUser = {
     authenticated: true;
     id: string;
     displayName: string;

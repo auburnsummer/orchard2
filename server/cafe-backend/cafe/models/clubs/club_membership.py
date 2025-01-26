@@ -1,8 +1,11 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, TypeAlias
 
+import rules
 from rules.contrib.models import RulesModel
 from django.db import models
+
+from cafe.models.clubs.predicates import is_owner_of_permission_club, is_permission_subject
 
 if TYPE_CHECKING:
     from cafe.models.user import User
@@ -12,7 +15,6 @@ if TYPE_CHECKING:
 # https://github.com/microsoft/pylance-release/issues/5124#issuecomment-1814901159
 _User: TypeAlias = "User"
 _Club: TypeAlias = "Club"
-
 
 class ClubMembership(RulesModel):
     """
@@ -34,8 +36,22 @@ class ClubMembership(RulesModel):
 
     def __str__(self):
         return f"{self.user} -> {self.club} [{self.role}]"
+    
+    def to_dict(self):
+        return {
+            "user": self.user.to_dict(),
+            "club": self.club.to_dict(),
+            "role": self.role
+        }
 
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['user', 'club'], name='unique_user_and_club')
         ]
+
+        rules_permissions = {
+            # cafe.change_clubmembership
+            "change": is_owner_of_permission_club,
+            # cafe.delete_clubmembership
+            "delete": is_owner_of_permission_club | is_permission_subject
+        }
