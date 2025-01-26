@@ -8,6 +8,8 @@ from .views.accounts.profile.profile_clubs import profile_clubs
 from .views.clubs.create_club import create_club
 
 from .views.clubs.settings.info import info
+from .views.clubs.settings.members import members
+from .views.clubs.settings.membership import alter_membership, delete_membership
 
 from .views.login import login
 
@@ -22,4 +24,7 @@ urlpatterns = [
     path("groups/create/", create_club, name="create_club"),
 
     path("groups/<club_id>/settings/", info, name="club_settings_info"),
+    path("groups/<club_id>/settings/members/", members, name="club_settings_members"),
+    path("groups/<club_id>/settings/members/<user_id>/edit/", alter_membership, name="club_settings_alter_membership"),
+    path("groups/<club_id>/settings/members/<user_id>/delete/", delete_membership, name="club_settings_delete_membership")
 ]
