@@ -11,7 +11,7 @@ import { LoadingBar } from "./LoadingBar";
 export function Prelude({children}: {children: ReactNode}) {
     const user = useUser();
     const theme = user.authenticated ? user.theme_preference : 'light';
-
+    
     return (
         <>
             <MantineProvider theme={shadcnTheme} cssVariablesResolver={shadcnCssVariableResolver} forceColorScheme={theme}>

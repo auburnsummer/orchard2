@@ -45,14 +45,17 @@ def delete_membership(request: AuthenticatedHttpRequest, club_id: str, user_id: 
     owners = list(ClubMembership.objects.filter(club=club_id, role="owner"))
     membership = get_object_or_404(ClubMembership, user=user_id, club=club_id)
 
+    deletion_successful = False
+
     if len(owners) < 2 and membership.role == "owner":
         messages.add_message(request, messages.WARNING, "Cannot kick this user as it would result in the group having no owners")
     else:    
         membership.delete()
+        deletion_successful = True
         messages.add_message(request, messages.SUCCESS, "Member removed from group successfully.")
 
     # if the membership that was just deleted was the user, redirect to home instead.
-    if user_id == request.user.id:
+    if user_id == request.user.id and deletion_successful:
         return redirect("index")
 
     return redirect("club_settings_members", club_id=club_id)

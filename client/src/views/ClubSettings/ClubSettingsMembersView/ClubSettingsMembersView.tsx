@@ -2,40 +2,53 @@ import { Shell } from "@cafe/components/Shell";
 import { Club } from "@cafe/types/club";
 import { ClubSettingsNavbar } from "../ClubSettingsNavbar/ClubSettingsNavbar";
 import { ClubMembership, ClubMembershipRole } from "@cafe/types/clubMembership";
-import { Button, Group, Modal, Select, Stack, Table } from "@mantine/core";
+import { ActionIcon, Alert, Button, CopyButton, Group, Stack, Table, Text, TextInput, Tooltip } from "@mantine/core";
 
 import styles from "./ClubSettingsMembersView.module.css";
-import { useRef, useState } from "react";
-import { Form } from "@django-bridge/react";
-import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
+import { useState } from "react";
+import { useLoggedInUser } from "@cafe/hooks/useUser";
+import { useSearchParams } from "@cafe/hooks/useNavigationContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faCopy } from "@fortawesome/free-solid-svg-icons";
+import { AddMemberForm } from "./AddMemberForm/AddMemberForm";
+import { EditMemberForm } from "./EditMemberForm/EditMemberForm";
+
+type MembershipPermission = {
+    can_change: boolean;
+    can_delete: boolean;
+}
 
 type ClubSettingsMembersViewProps = {
     club: Club,
-    memberships: ClubMembership[];
-    user_role: ClubMembershipRole;
+    memberships: {
+        membership: ClubMembership,
+        permissions: MembershipPermission
+    }[];
+    can_add: boolean;
 };
 
-export function ClubSettingsMembersView({ club, memberships, user_role }: ClubSettingsMembersViewProps) {
-
+export function ClubSettingsMembersView({ club, memberships, can_add }: ClubSettingsMembersViewProps) {
     const [editMemberFormOpen, setEditMemberFormOpen] = useState(false);
     const [membershipBeingEdited, setMembershipBeingEdited] = useState<ClubMembership | null>(null);
-    const [deleteWarningClicked, setDeleteWarningClicked] = useState(false);
-    const deleteFormRef = useRef<HTMLFormElement>(null);
-    const csrfInput = useCSRFTokenInput();
+    const [addMemberFormOpen, setAddMemberFormOpen] = useState(false);
+    const searchParams = useSearchParams();
 
-    const rows = memberships.map(membership => (
+    const inviteCode = searchParams.get("invite_code")
+    const inviteUrl = new URL(`/groups/redeem_invite/${inviteCode}/`, window.location.origin).toString();
+
+    const rows = memberships.map(({membership, permissions}) => (
         <Table.Tr key={membership.user.id}>
             <Table.Td>{membership.user.displayName}</Table.Td>
-            <Table.Td>{membership.user.id}</Table.Td>
+            <Table.Td className={styles.tableId}>{membership.user.id}</Table.Td>
             <Table.Td className={styles.tableRole}>{membership.role}</Table.Td>
             <Table.Td>
                 <Button
                     variant="light"
                     onClick={() => {
-                        setDeleteWarningClicked(false);
                         setMembershipBeingEdited(membership);
                         setEditMemberFormOpen(true);
                     }}
+                    disabled={!permissions.can_change && !permissions.can_delete}
                 >
                     Edit
                 </Button>
@@ -47,79 +60,46 @@ export function ClubSettingsMembersView({ club, memberships, user_role }: ClubSe
         <Shell
             navbar={<ClubSettingsNavbar club={club} />}
         >
-            <Modal
+            <EditMemberForm
                 opened={editMemberFormOpen}
                 onClose={() => setEditMemberFormOpen(false)}
-                centered
-                title={`Editing user ${membershipBeingEdited && membershipBeingEdited.user.displayName}`}
-            >
+                membership={membershipBeingEdited}
+                canEdit={memberships.find(m => m.membership.user === membershipBeingEdited?.user)?.permissions.can_change || false}
+                club={club}
+            />
+            <AddMemberForm
+                club={club}
+                opened={addMemberFormOpen}
+                onClose={() => setAddMemberFormOpen(false)}
+            />
+            <Stack align="start">
                 {
-                    membershipBeingEdited && (
-                        <>
-                            <Form
-                                action={`/groups/${club.id}/settings/members/${membershipBeingEdited.user.id}/delete/`}
-                                method="POST"
-                                ref={deleteFormRef}
-                            >
-                                {csrfInput}
-                            </Form>
-                            <Form
-                                action={`/groups/${club.id}/settings/members/${membershipBeingEdited.user.id}/edit/`}
-                                method="POST"
-                            >
-                                {csrfInput}
-                                <Stack align="start">
-                                    <Select
-                                        label="User role"
-                                        allowDeselect={false}
-                                        defaultValue={membershipBeingEdited.role}
-                                        name="role"
-                                        data={[
-                                            {
-                                                label: 'Owner',
-                                                value: 'owner'
-                                            },
-                                            {
-                                                label: 'Admin',
-                                                value: 'admin'
-                                            }
-                                        ]}
+                    inviteCode && (
+                        <Alert className={styles.inviteBox} variant="light" color="blue" title="Here is the invite link">
+                            <Stack>
+                                <Text size="sm">Send this link to the person you want to invite.</Text>
+                                <Group>
+                                    <TextInput
+                                        onFocus={e => e.target.select()}
+                                        disabled={false}
+                                        value={inviteUrl}
                                     >
-                                    </Select>
-                                    <Group>
-                                        <Button type="submit">Submit</Button>
-                                        {
-                                            deleteWarningClicked
-                                                ? (
-                                                    <Button
-                                                        color="red"
-                                                        type="button"
-                                                        onClick={() => {
-                                                            if (deleteFormRef.current) {
-                                                                deleteFormRef.current.requestSubmit();
-                                                            }
-                                                        }}
-                                                    >
-                                                        Click again to confirm
-                                                    
-                                                    </Button>
-                                                )
-                                                : <Button
-                                                    type="button"
-                                                    color="grey"
-                                                    onClick={() => setDeleteWarningClicked(true)}
-                                                >
-                                                    Delete user
-                                                </Button>
-                                        }
-                                    </Group>
-                                </Stack>
-                            </Form>
-                        </>
+
+                                    </TextInput>
+                                    <CopyButton value={inviteUrl}>
+                                        {({ copied, copy }) => (
+                                            <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="right">
+                                                <ActionIcon color={copied ? 'teal' : 'gray'} variant="subtle" onClick={copy}>
+                                                    {copied ?  <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faCopy} />}
+                                                </ActionIcon>
+                                            </Tooltip>
+                                        )}
+                                    </CopyButton>
+                                </Group>
+                            </Stack>
+                        </Alert>
                     )
                 }
-            </Modal>
-            <Stack align="start">
                 <h2>Members of {club.name}</h2>
                 <Table>
                     <Table.Thead>
@@ -132,7 +112,10 @@ export function ClubSettingsMembersView({ club, memberships, user_role }: ClubSe
                     </Table.Thead>
                     <Table.Tbody>{rows}</Table.Tbody>
                 </Table>
-                <Button>
+                <Button
+                    onClick={() => setAddMemberFormOpen(true)}
+                    disabled={!can_add}
+                >
                     Add member
                 </Button>
             </Stack>
