@@ -1,12 +1,11 @@
 import { Shell } from "@cafe/components/Shell";
 import { Club } from "@cafe/types/club";
 import { ClubSettingsNavbar } from "../ClubSettingsNavbar/ClubSettingsNavbar";
-import { ClubMembership, ClubMembershipRole } from "@cafe/types/clubMembership";
+import { ClubMembership } from "@cafe/types/clubMembership";
 import { ActionIcon, Alert, Button, CopyButton, Group, Stack, Table, Text, TextInput, Tooltip } from "@mantine/core";
 
 import styles from "./ClubSettingsMembersView.module.css";
 import { useState } from "react";
-import { useLoggedInUser } from "@cafe/hooks/useUser";
 import { useSearchParams } from "@cafe/hooks/useNavigationContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faCopy } from "@fortawesome/free-solid-svg-icons";
