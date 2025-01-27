@@ -2,6 +2,10 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from .models import User
 
+from .models.clubs.club import Club
+from .models.clubs.club_membership import ClubMembership
+from .models.clubs.club_invite import ClubInvite
+
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):
     list_display = ('id', 'display_name', 'email', 'is_staff', 'is_superuser')
@@ -15,3 +19,7 @@ class UserAdmin(DjangoUserAdmin):
             },
         ),
     )
+
+admin.site.register(Club)
+admin.site.register(ClubMembership)
+admin.site.register(ClubInvite)

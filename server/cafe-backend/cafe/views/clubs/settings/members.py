@@ -16,15 +16,20 @@ def members(request: AuthenticatedHttpRequest, club_id: str):
 
     memberships = sorted(club.memberships.all(), key=sort)
 
-    user_role = None
+    memberships_render_data = []
     for membership in memberships:
-        if membership.user == request.user:
-            user_role = membership.role
-            break
+        permissions = {
+            "can_change": request.user.has_perm("cafe.change_clubmembership", membership),
+            "can_delete": request.user.has_perm("cafe.delete_clubmembership", membership)
+        }
+        memberships_render_data.append({
+            "membership": membership.to_dict(),
+            "permissions": permissions
+        })
 
     render_data = {
-        "memberships": [ m.to_dict() for m in memberships ],
+        "memberships": memberships_render_data,
         "club": club.to_dict(),
-        "user_role": user_role
+        "can_add": request.user.has_perm("cafe.create_invite_for_club", club)
     }
     return Response(request, request.resolver_match.view_name, render_data)

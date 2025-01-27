@@ -1,5 +1,5 @@
 import { Spacer } from "@cafe/components/Spacer/Spacer";
-import { useNavigationContext } from "@cafe/hooks/useNavigationContext";
+import { useNavigationContext, usePathName } from "@cafe/hooks/useNavigationContext";
 import { Stack, Group,  NavLink, Text } from "@mantine/core";
 import styles from "./ClubSettingsNavbar.module.css";
 import { Link } from "@django-bridge/react";
@@ -10,7 +10,7 @@ type ClubSettingsNavbarProps = {
 }
 
 export function ClubSettingsNavbar({club}: ClubSettingsNavbarProps){
-    const { path } = useNavigationContext();
+    const path = usePathName();
 
     const links = [
         {
