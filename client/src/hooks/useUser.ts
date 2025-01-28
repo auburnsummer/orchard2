@@ -10,6 +10,7 @@ export type AuthenticatedUser = {
     displayName: string;
     avatarURL: string | null;
     theme_preference: "light" | "dark";
+    is_superuser: boolean;
 }
 
 export type User = UnauthenticatedUser | AuthenticatedUser;

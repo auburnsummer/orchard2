@@ -64,7 +64,8 @@ class User(AbstractUser):
             "id": self.id,
             "displayName": self.get_short_name(),
             "avatarURL": try_get_avatar(self),
-            "theme_preference": self.theme_preference
+            "theme_preference": self.theme_preference,
+            "is_superuser": self.is_superuser,
         }
 
     

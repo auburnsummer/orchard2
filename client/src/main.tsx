@@ -8,12 +8,12 @@ import './style.css';
 
 import { UserContext } from "@cafe/hooks/useUser";
 import { Prelude } from "./components/Prelude/Prelude";
-import { routeMap } from "./routeMap";
+import { appName, routeMap } from "./routeMap";
 
 const config = new DjangoBridge.Config();
 
 Object.keys(routeMap).forEach(key => {
-    config.addView(key, routeMap[key])
+    config.addView(`${appName}:${key}`, routeMap[key])
 });
 
 // Add your context providers here

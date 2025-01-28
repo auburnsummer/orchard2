@@ -104,6 +104,9 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+DISCORD_PUBLIC_KEY = os.getenv('DISCORD_PUBLIC_KEY')
+DOMAIN_URL = os.getenv('DOMAIN_URL')
+
 DJANGO_BRIDGE = {
     "CONTEXT_PROVIDERS": {
         "csrf_token": "cafe.contexts.csrf_token.csrf_token",

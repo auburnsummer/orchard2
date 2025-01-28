@@ -122,6 +122,7 @@ name = "cafe-backend"
 version = "0.1.0"
 source = { virtual = "cafe-backend" }
 dependencies = [
+    { name = "cryptography" },
     { name = "debugpy" },
     { name = "django" },
     { name = "django-allauth", extra = ["socialaccount"] },
@@ -135,6 +136,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "cryptography", specifier = ">=44.0.0" },
     { name = "debugpy", specifier = ">=1.8.11" },
     { name = "django", specifier = ">=5.1.4" },
     { name = "django-allauth", extras = ["socialaccount"], specifier = ">=65.3.1" },
