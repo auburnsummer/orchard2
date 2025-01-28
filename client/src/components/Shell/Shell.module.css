@@ -36,6 +36,11 @@
     transform: translateY(1px);
 }
 
-.mainArea {
+.mainAreaWithNavbar {
     padding-left: 1rem;
+}
+
+.mainArea {
+    display: flex;
+    flex-direction: column;
 }

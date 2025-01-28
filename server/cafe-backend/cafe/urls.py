@@ -12,11 +12,18 @@ from .views.clubs.settings.members import members
 from .views.clubs.settings.membership import alter_membership, delete_membership
 from .views.clubs.settings.create_invite import create_invite
 from .views.clubs.redeem_invite import redeem_invite
+from .views.clubs.connect_discord import connect_discord
 
 from .views.login import login
 
+from .views.discord_bot.entry import entry
+
+app_name = "cafe"
 urlpatterns = [
     path("", index, name="index"),
+
+    path("discord_interactions/", entry, name="discord_interactions"),
+    path("discord_interactions2/", entry, name="discord_interactions2"),
 
     path("accounts/login/", login, name="login"),
     path("accounts/profile/", profile, name="profile"),
@@ -26,10 +33,11 @@ urlpatterns = [
     path("groups/create/", create_club, name="create_club"),
 
     path("groups/redeem_invite/<code>/", redeem_invite, name="redeem_invite"),
+    path("groups/connect_discord/<code>/", connect_discord, name="club_connect_discord"),
 
     path("groups/<club_id>/settings/", info, name="club_settings_info"),
     path("groups/<club_id>/settings/members/", members, name="club_settings_members"),
     path("groups/<club_id>/settings/members/invite/", create_invite, name="club_settings_membership_invite"),
     path("groups/<club_id>/settings/members/<user_id>/edit/", alter_membership, name="club_settings_alter_membership"),
-    path("groups/<club_id>/settings/members/<user_id>/delete/", delete_membership, name="club_settings_delete_membership")
+    path("groups/<club_id>/settings/members/<user_id>/delete/", delete_membership, name="club_settings_delete_membership"),
 ]

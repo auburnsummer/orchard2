@@ -8,6 +8,7 @@ import { faDiscord } from '@fortawesome/free-brands-svg-icons'
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { useRef } from "react";
 import { Link } from "@django-bridge/react";
+import cc from "clsx";
 
 type ShellProps = {
     children: React.ReactNode;
@@ -51,6 +52,16 @@ export function Shell({children, navbar}: ShellProps) {
                                             >
                                                 Profile
                                             </Menu.Item>
+                                            {
+                                                user.is_superuser && (
+                                                    <Menu.Item
+                                                        component={Link}
+                                                        href="/adminnn/"
+                                                    >
+                                                        Admin
+                                                    </Menu.Item>
+                                                )
+                                            }
                                             <Menu.Item
                                                 onClick={() => {
                                                     logOutForm.current?.submit();
@@ -83,10 +94,8 @@ export function Shell({children, navbar}: ShellProps) {
                     {navbar}
                 </AppShell.Navbar>
             ) }
-            <AppShell.Main>
-                <div className={styles.mainArea}>
-                    {children}
-                </div>
+            <AppShell.Main className={cc(navbar && styles.mainAreaWithNavbar, styles.mainArea)}>
+                {children}
             </AppShell.Main>
         </AppShell>
     )
