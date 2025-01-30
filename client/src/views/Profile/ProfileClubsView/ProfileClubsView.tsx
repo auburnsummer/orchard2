@@ -31,14 +31,11 @@ export function ProfileClubsView({clubs}: ProfileClubsViewProps) {
         <Shell
             navbar={<ProfileNavbar />}
         >
-            <Modal
+            <CreateClubForm
                 opened={createClubFormOpen}
                 onClose={closeCreateClub}
-                centered
-                title="Create group"
-            >
-                <CreateClubForm redirectTo={navigation.path} />
-            </Modal>
+                redirectTo={navigation.path}
+            />
             <Stack className={styles.base} align="start">
                 <Title order={2}>Groups</Title>
                 {

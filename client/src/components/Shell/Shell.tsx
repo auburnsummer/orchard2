@@ -94,8 +94,10 @@ export function Shell({children, navbar}: ShellProps) {
                     {navbar}
                 </AppShell.Navbar>
             ) }
-            <AppShell.Main className={cc(navbar && styles.mainAreaWithNavbar, styles.mainArea)}>
-                {children}
+            <AppShell.Main className={styles.mainArea}>
+                <div className={cc(navbar && styles.mainAreaWithNavbar)}>
+                    { children }
+                </div>
             </AppShell.Main>
         </AppShell>
     )

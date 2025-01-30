@@ -13,5 +13,6 @@ class DiscordGuild(models.Model):
     used within the guild to work with the Club.
     """
     id = models.TextField(primary_key=True)
+    name = models.TextField(blank=True)
 
     club = models.ForeignKey(Club, on_delete=models.CASCADE, null=True, related_name="discord_guilds")
