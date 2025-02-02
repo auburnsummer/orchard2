@@ -185,3 +185,5 @@ huey.db-wal
 puzzle.txt
 
 Procfile
+
+dump.rdb
