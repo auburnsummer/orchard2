@@ -25,6 +25,10 @@ const initialResponse = JSON.parse(
     document.getElementById("initial-response")!.textContent!
 );
 
+if (!import.meta.env.PROD) {
+    console.log("Initial response:", initialResponse);
+}
+
 
 ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>

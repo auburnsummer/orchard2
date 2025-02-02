@@ -2,15 +2,17 @@ import { Shell } from "@cafe/components/Shell"
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken"
 import { Club } from "@cafe/types/club"
 import { Form } from "@django-bridge/react"
-import { Button, Center, Paper, Select, Stack, Text } from "@mantine/core";
+import { Alert, Button, Center, Paper, Select, Stack, Text } from "@mantine/core";
 
 import styles from "./ClubConnectDiscord.module.css";
 import { CreateClubForm } from "@cafe/components/CreateClubForm/CreateClubForm";
 import { useState } from "react";
+import { DiscordGuild } from "@cafe/types/discordGuild";
 
 type ClubConnectDiscordProps = {
     clubs: Club[],
-    guild_id: string | null
+    guild_id: string | null,
+    existing_guild: DiscordGuild | null,
 }
 
 function ClubConnectDiscordNotOwned() {
@@ -24,15 +26,15 @@ function ClubConnectDiscordNotOwned() {
                 redirectTo={window.location.pathname}
             />
             <Stack>
-                <Text>You are not an owner of any clubs.</Text>
-                <Text>Create a club first to get started.</Text>
-                <Button onClick={() => setCreateClubFormOpen(true)}>Create a club</Button>
+                <Text>You are not an owner of any groups.</Text>
+                <Text>Create a group first to get started.</Text>
+                <Button onClick={() => setCreateClubFormOpen(true)}>Create a group</Button>
             </Stack>
         </>
     )
 }
 
-function ClubConnectDiscordForm({clubs}: {clubs: Club[]}) {
+function ClubConnectDiscordForm({clubs, existing_guild}: Pick<ClubConnectDiscordProps, "clubs" | "existing_guild">) {
     const csrfInput = useCSRFTokenInput();
     const [selectedClub, setSelectedClub] = useState<Club | null>(null);    
 
@@ -42,10 +44,19 @@ function ClubConnectDiscordForm({clubs}: {clubs: Club[]}) {
         >
             { csrfInput }
             <Stack>
-                <Text>Select a club to connect to the Discord server:</Text>
+                {
+                    existing_guild !== null && (
+                        <Alert>
+                            <Text>This Discord server is already connected to a group!</Text>
+                            <Text>A Discord server can only be connected to one group at a time.</Text>
+                            <Text>If you connect a new group, the existing group ({existing_guild.club.name}) will be disconnected.</Text>
+                        </Alert>
+                    )
+                }
+                <Text>Select a group to connect to the Discord server:</Text>
                 <Select
                     clearable
-                    label="Club"
+                    label="Group"
                     value={selectedClub?.id || ""}
                     data={clubs.map(club => ({
                         value: club.id,
@@ -70,7 +81,7 @@ function ClubConnectDiscordForm({clubs}: {clubs: Club[]}) {
 
 }
 
-export function ClubConnectDiscord({clubs, guild_id}: ClubConnectDiscordProps) {
+export function ClubConnectDiscord({clubs, guild_id, existing_guild}: ClubConnectDiscordProps) {
     let content;
 
     if (guild_id === null) {
@@ -83,7 +94,7 @@ export function ClubConnectDiscord({clubs, guild_id}: ClubConnectDiscordProps) {
     } else if (clubs.length === 0) {
         content = <ClubConnectDiscordNotOwned />;
     } else {
-        content = <ClubConnectDiscordForm clubs={clubs} />
+        content = <ClubConnectDiscordForm clubs={clubs} existing_guild={existing_guild}/>
     }
                         
 
