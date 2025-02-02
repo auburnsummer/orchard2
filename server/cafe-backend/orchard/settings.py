@@ -63,6 +63,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.discord',
 
+    'huey.contrib.djhuey',
+
     'rules',
 
     'hijack',
@@ -97,15 +99,16 @@ SOCIALACCOUNT_PROVIDERS = {
         'VERIFIED_EMAIL': True,
         'SCOPE': ['email', 'identify'],
         'APP': {
-            'client_id': os.getenv('DISCORD_CLIENT_ID'),
-            'secret': os.getenv('DISCORD_CLIENT_SECRET'),
+            'client_id': os.environ['DISCORD_CLIENT_ID'],
+            'secret': os.environ['DISCORD_CLIENT_SECRET'],
             'key': ''
         }
     }
 }
 
-DISCORD_PUBLIC_KEY = os.getenv('DISCORD_PUBLIC_KEY')
-DOMAIN_URL = os.getenv('DOMAIN_URL')
+DISCORD_PUBLIC_KEY = os.environ['DISCORD_PUBLIC_KEY']
+DISCORD_BOT_TOKEN = os.environ['DISCORD_BOT_TOKEN']
+DOMAIN_URL = os.environ['DOMAIN_URL']
 
 DJANGO_BRIDGE = {
     "CONTEXT_PROVIDERS": {
@@ -161,6 +164,43 @@ DATABASES = {
         },
     },
 }
+
+REDIS_HOST = os.environ['REDIS_HOST']
+REDIS_PORT = os.environ['REDIS_PORT']
+
+NUMBER_OF_WORKERS = int(os.environ['NUMBER_OF_WORKERS'])
+
+
+
+# settings.py
+HUEY = {
+    'huey_class': 'huey.PriorityRedisHuey',  # Huey implementation to use.
+    'name': 'orchard',
+    'results': True,  # Store return values of tasks.
+    'store_none': False,  # If a task returns None, do not save to results.
+    'immediate': False, 
+    'utc': True,  # Use UTC for all times internally.
+    'blocking': True,  # Perform blocking pop rather than poll Redis.
+    'connection': {
+        'host': REDIS_HOST,
+        'port': REDIS_PORT,
+        'db': 0,
+        'max_connections': 10,
+        'read_timeout': 2,  # If not polling (blocking pop), use timeout.
+    },
+    'consumer': {
+        'workers': NUMBER_OF_WORKERS,
+        'worker_type': 'process',
+        'initial_delay': 0.1,  # Smallest polling interval, same as -d.
+        'backoff': 1.15,  # Exponential backoff using this rate, -b.
+        'max_delay': 1,  # Max possible polling interval, -m.
+        'scheduler_interval': 1,  # Check schedule every second, -s.
+        'periodic': True,  # Enable crontab feature.
+        'check_worker_health': True,  # Enable worker health checks.
+        'health_check_interval': 1,  # Check worker health every second.
+    },
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

@@ -19,6 +19,8 @@ from cafe.models.discord_guild import DiscordGuild
 
 from cafe.views.types import AuthenticatedHttpRequest
 
+from cafe.tasks.find_discord_guild_name import update_discord_guild_name
+
 connectgroup_signer = TimestampSigner(salt="connectgroup")
 
 class ConnectDiscordForm(Form):
@@ -64,6 +66,9 @@ class ConnectDiscordView(View):
         discord_guild, _ = DiscordGuild.objects.get_or_create(id=guild_id)
         discord_guild.club = club
         discord_guild.save()
+
+        update_discord_guild_name(guild_id)
+
 
         messages.add_message(request, messages.SUCCESS, "Discord server linked")
 
