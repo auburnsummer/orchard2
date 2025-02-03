@@ -11,6 +11,7 @@ from .views.clubs.settings.info import info
 from .views.clubs.settings.members import members
 from .views.clubs.settings.membership import alter_membership, delete_membership
 from .views.clubs.settings.create_invite import create_invite
+from .views.clubs.settings.connected_discords import connected_discords
 from .views.clubs.redeem_invite import redeem_invite
 from .views.clubs.connect_discord import connect_discord
 
@@ -40,4 +41,5 @@ urlpatterns = [
     path("groups/<club_id>/settings/members/invite/", create_invite, name="club_settings_membership_invite"),
     path("groups/<club_id>/settings/members/<user_id>/edit/", alter_membership, name="club_settings_alter_membership"),
     path("groups/<club_id>/settings/members/<user_id>/delete/", delete_membership, name="club_settings_delete_membership"),
+    path("groups/<club_id>/settings/connections/discord/", connected_discords, name="club_settings_connected_discords"),
 ]

@@ -4,7 +4,7 @@ import { Club } from "@cafe/types/club"
 import { Form } from "@django-bridge/react"
 import { Alert, Button, Center, Paper, Select, Stack, Text } from "@mantine/core";
 
-import styles from "./ClubConnectDiscord.module.css";
+import styles from "./ClubConnectConnectDiscord.module.css";
 import { CreateClubForm } from "@cafe/components/CreateClubForm/CreateClubForm";
 import { useState } from "react";
 import { DiscordGuild } from "@cafe/types/discordGuild";
@@ -81,7 +81,7 @@ function ClubConnectDiscordForm({clubs, existing_guild}: Pick<ClubConnectDiscord
 
 }
 
-export function ClubConnectDiscord({clubs, guild_id, existing_guild}: ClubConnectDiscordProps) {
+export function ClubSettingsConnectDiscord({clubs, guild_id, existing_guild}: ClubConnectDiscordProps) {
     let content;
 
     if (guild_id === null) {

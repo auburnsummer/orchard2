@@ -2,7 +2,8 @@
  * Mapping of url path names (from server/cafe-backend/cafe/urls.py) to components to render.
  */
 
-import { ClubConnectDiscord } from "./views/ClubSettings/ClubConnectDiscord/ClubConnectDiscord";
+import { ClubSettingsCheckConnectDiscord } from "./views/ClubSettings/ClubSettingsCheckConnectDiscord/ClubSettingsCheckConnectDiscord";
+import { ClubSettingsConnectDiscord } from "./views/ClubSettings/ClubSettingsConnectDiscord/ClubSettingsConnectDiscord";
 import { ClubSettingsInfoView } from "./views/ClubSettings/ClubSettingsInfoView/ClubSettingsInfoView";
 import { ClubSettingsMembersView } from "./views/ClubSettings/ClubSettingsMembersView/ClubSettingsMembersView";
 import { CreateClubView } from "./views/CreateClubView/CreateClubView";
@@ -20,7 +21,8 @@ export const routeMap: { [key: string]: React.FunctionComponent<any> } = {
     "profile_clubs": ProfileClubsView,
 
     "create_club": CreateClubView,
-    "club_connect_discord": ClubConnectDiscord,
+    "club_connect_discord": ClubSettingsConnectDiscord,
     "club_settings_info": ClubSettingsInfoView,
-    "club_settings_members": ClubSettingsMembersView
+    "club_settings_members": ClubSettingsMembersView,
+    "club_settings_connected_discords": ClubSettingsCheckConnectDiscord,
 }
