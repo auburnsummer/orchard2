@@ -174,7 +174,7 @@ NUMBER_OF_WORKERS = int(os.environ['NUMBER_OF_WORKERS'])
 
 # settings.py
 HUEY = {
-    'huey_class': 'huey.PriorityRedisHuey',  # Huey implementation to use.
+    'huey_class': 'huey.PriorityRedisExpireHuey',  # Huey implementation to use.
     'name': 'orchard',
     'results': True,  # Store return values of tasks.
     'store_none': False,  # If a task returns None, do not save to results.

@@ -22,16 +22,18 @@ def _add(data, check_user_is_poster):
     
     is_webhook = 'webhook_id' in message
     invoker_id = data['member']['user']['id']
-    # nb: poster_id is the discord user id of the user who will be credited as the submitter. this is normally the user who posted the message,
+    # nb: poster_id is the discord user id of the user who will be credited as the submitter of the level.
+    # poster_id is normally the user who posted the message,
     # but if the message was posted by a webhook, then the poster_id is the user who ran the command.
-    # these are not always the same, such as in the delegated scenario where someone else is running the command on behalf of the poster.
+    # message['author']['id'] and invoker_id are not always the same,
+    # such as in the delegated scenario where someone else is running the command on behalf of the poster.
     poster_id = message['author']['id'] if not is_webhook else invoker_id
 
     if check_user_is_poster:
         if is_webhook:
             return ephemeral_response("You can't add levels from webhooks.")
         if invoker_id != poster_id:
-            return ephemeral_response("You can only add levels from posts you've made.")
+            return ephemeral_response("You can only add levels from your own messages.")
 
     lines = []
     for attachment in attachments:
@@ -43,7 +45,7 @@ def _add(data, check_user_is_poster):
             # hint for name in case we need to create an account
             # nb: we don't need to check for the webhook scenario here, because
             # if it is a webhook scenario, then the poster_id is the user who ran the command,
-            # who will always already have an account
+            # who will always have an account by the time they reach the level submission portal.
             "discord_user_name_hint": message['author']['username'],
             "club_id": club.id
         }

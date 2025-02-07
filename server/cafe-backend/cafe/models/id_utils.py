@@ -14,3 +14,9 @@ CLUB_ID_LENGTH = 7
 
 def generate_club_id():
     return CLUB_ID_PREFIX + generate(ALPHABET, CLUB_ID_LENGTH)
+
+RDLEVEL_PREFILL_ID_PREFIX = "rdpf"
+RDLEVEL_PREFILL_ID_LENGTH = 7
+
+def generate_rdlevel_prefill_id():
+    return RDLEVEL_PREFILL_ID_PREFIX + generate(ALPHABET, RDLEVEL_PREFILL_ID_LENGTH)

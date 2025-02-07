@@ -1,13 +1,12 @@
-import { Shell } from "@cafe/components/Shell"
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken"
 import { Club } from "@cafe/types/club"
 import { Form } from "@django-bridge/react"
-import { Alert, Button, Center, Paper, Select, Stack, Text } from "@mantine/core";
+import { Alert, Button, Paper, Select, Stack, Text } from "@mantine/core";
 
-import styles from "./ClubConnectConnectDiscord.module.css";
 import { CreateClubForm } from "@cafe/components/CreateClubForm/CreateClubForm";
 import { useState } from "react";
 import { DiscordGuild } from "@cafe/types/discordGuild";
+import { ShellDramaticCenter } from "@cafe/components/ShellDramaticCenter/ShellDramaticCenter";
 
 type ClubConnectDiscordProps = {
     clubs: Club[],
@@ -43,7 +42,7 @@ function ClubConnectDiscordForm({clubs, existing_guild}: Pick<ClubConnectDiscord
             method="POST"
         >
             { csrfInput }
-            <Stack>
+            <Stack justify="start" align="start">
                 {
                     existing_guild !== null && (
                         <Alert>
@@ -99,12 +98,10 @@ export function ClubSettingsConnectDiscord({clubs, guild_id, existing_guild}: Cl
                         
 
     return (
-        <Shell>
-            <Center className={styles.base}>
-                <Paper shadow="md" p="xl">
-                    {content}
-                </Paper>
-            </Center>
-        </Shell>
+        <ShellDramaticCenter>
+            <Paper shadow="md" p="xl">
+                {content}
+            </Paper>
+        </ShellDramaticCenter>
     )
 }
