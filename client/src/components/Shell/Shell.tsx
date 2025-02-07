@@ -10,7 +10,7 @@ import { useRef } from "react";
 import { Link } from "@django-bridge/react";
 import cc from "clsx";
 
-type ShellProps = {
+export type ShellProps = {
     children: React.ReactNode;
     navbar?: React.ReactNode;
 }

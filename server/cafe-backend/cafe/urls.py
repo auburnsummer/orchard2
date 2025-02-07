@@ -19,6 +19,8 @@ from .views.login import login
 
 from .views.discord_bot.entry import entry
 
+from .views.rdlevels.prefill.prefill_stage_one import prefill_stage_one
+
 app_name = "cafe"
 urlpatterns = [
     path("", index, name="index"),
@@ -42,4 +44,6 @@ urlpatterns = [
     path("groups/<club_id>/settings/members/<user_id>/edit/", alter_membership, name="club_settings_alter_membership"),
     path("groups/<club_id>/settings/members/<user_id>/delete/", delete_membership, name="club_settings_delete_membership"),
     path("groups/<club_id>/settings/connections/discord/", connected_discords, name="club_settings_connected_discords"),
+
+    path("rdlevels/add/<code>/", prefill_stage_one, name="level_portal"),
 ]

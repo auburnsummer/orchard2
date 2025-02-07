@@ -1,0 +1,14 @@
+.paperBg {
+    --first-color: var(--mantine-color-secondary-0);
+    --second-color: var(--second-color);
+    background-color: var(--first-color);
+    background-image: linear-gradient(var(--second-color) 2px, transparent 2px), linear-gradient(90deg, var(--second-color) 2px, transparent 2px), linear-gradient(var(--second-color) 1px, transparent 1px), linear-gradient(90deg, var(--second-color) 1px, var(--first-color) 1px);
+    background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
+    background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+
+    @mixin dark {
+        --first-color: var(--mantine-color-dark-8);
+        --second-color: var(--mantine-color-dark-7);
+    }
+}
+

@@ -43,5 +43,7 @@ class Club(RulesModel):
             # cafe.change_info_of_club
             "change_info_of": is_owner,
             # cafe.create_invite_for_club
-            "create_invite_for": is_owner
+            "create_invite_for": is_owner,
+            # cafe.create_delegated_levels_for_club
+            "create_delegated_levels_for": is_at_least_admin,
         }
