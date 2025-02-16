@@ -33,5 +33,5 @@ def check_if_ok_to_continue(user: User, code: str) -> bool:
     club = Club.objects.get(id=result['club_id'])
     return user.has_perm('cafe.create_delegated_levels_for_club', club)
 
-def register_imports():
+def register_permissions():
     rules.add_perm('prefill.ok', check_if_ok_to_continue)
