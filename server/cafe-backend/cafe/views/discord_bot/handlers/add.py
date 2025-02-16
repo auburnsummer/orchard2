@@ -46,7 +46,7 @@ def _add(data, check_user_is_poster):
             # nb: we don't need to check for the webhook scenario here, because
             # if it is a webhook scenario, then the poster_id is the user who ran the command,
             # who will always have an account by the time they reach the level submission portal.
-            "discord_user_name_hint": message['author']['username'],
+            "discord_user_name_hint": message['author']['display_name'] or message['author']['username'],
             "club_id": club.id
         }
         secret = addlevel_signer.sign_object(payload)
