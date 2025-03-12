@@ -6,6 +6,7 @@ from .models.clubs.club import Club
 from .models.clubs.club_membership import ClubMembership
 from .models.clubs.club_invite import ClubInvite
 from .models.discord_guild import DiscordGuild
+from .models.rdlevels.prefill import RDLevelPrefillResult
 
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):
@@ -25,3 +26,4 @@ admin.site.register(Club)
 admin.site.register(ClubMembership)
 admin.site.register(ClubInvite)
 admin.site.register(DiscordGuild)
+admin.site.register(RDLevelPrefillResult)

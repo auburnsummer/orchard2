@@ -35,7 +35,7 @@ def alter_membership(request: AuthenticatedHttpRequest, club_id: str, user_id: s
             membership.save()
             messages.add_message(request, messages.SUCCESS, "Member role changed successfully.")
 
-    return redirect("club_settings_members", club_id=club_id)
+    return redirect("cafe:club_settings_members", club_id=club_id)
 
 @permission_required("cafe.delete_clubmembership", fn=get_membership_by_club_and_user)
 def delete_membership(request: AuthenticatedHttpRequest, club_id: str, user_id: str):
@@ -56,6 +56,6 @@ def delete_membership(request: AuthenticatedHttpRequest, club_id: str, user_id: 
 
     # if the membership that was just deleted was the user, redirect to home instead.
     if user_id == request.user.id and deletion_successful:
-        return redirect("index")
+        return redirect("cafe:index")
 
-    return redirect("club_settings_members", club_id=club_id)
+    return redirect("cafe:club_settings_members", club_id=club_id)

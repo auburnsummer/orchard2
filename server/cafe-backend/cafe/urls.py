@@ -20,6 +20,7 @@ from .views.login import login
 from .views.discord_bot.entry import entry
 
 from .views.rdlevels.prefill.prefill_stage_one import prefill_stage_one
+from .views.rdlevels.prefill.prefill_stage_two import prefill_stage_two
 
 app_name = "cafe"
 urlpatterns = [
@@ -46,4 +47,5 @@ urlpatterns = [
     path("groups/<club_id>/settings/connections/discord/", connected_discords, name="club_settings_connected_discords"),
 
     path("rdlevels/add/<code>/", prefill_stage_one, name="level_portal"),
+    path("rdlevels/from_prefill/<prefill_id>/", prefill_stage_two, name="level_from_prefill")
 ]

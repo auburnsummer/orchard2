@@ -37,6 +37,6 @@ def create_invite(request, club_id):
         qs = "?" + urlencode({
             "invite_code": new_invite.code
         })
-        return HttpResponseRedirect(reverse('club_settings_members', args=[club_id]) + qs)
+        return HttpResponseRedirect(reverse('cafe:club_settings_members', args=[club_id]) + qs)
 
     return HttpResponseServerError()

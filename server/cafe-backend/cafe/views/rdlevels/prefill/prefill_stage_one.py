@@ -1,4 +1,6 @@
 from django.forms import CharField, Form
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from rules.contrib.views import permission_required
 from django_bridge.response import Response
 from .predicates import register_permissions
@@ -12,6 +14,8 @@ from cafe.models.clubs.club import Club
 from django.utils.timezone import timedelta
 from django.shortcuts import get_object_or_404
 
+from cafe.tasks.run_prefill import run_prefill
+
 register_permissions()
 
 class PrefillStageOneForm(Form):
@@ -23,7 +27,7 @@ def prefill_stage_one(request: AuthenticatedHttpRequest, code: str):
         form = PrefillStageOneForm(request.POST)
         if form.is_valid():
             prefill_type = form.cleaned_data["prefill_type"]
-            # we don't need to check again if this is valid because the permission check will fail if it's not.
+            # we don't need to check again if this is valid because the permission check would have failed if it's not.
             result = addlevel_signer.unsign_object(code, max_age=timedelta(days=1))
             discord_user_id = result['discord_user_id']
             discord_user_name_hint = result['discord_user_name_hint']
@@ -36,9 +40,11 @@ def prefill_stage_one(request: AuthenticatedHttpRequest, code: str):
                 version=1,
                 user=user,
                 prefill_type=prefill_type,
-                level_url=level_url,
                 club=club
             )
+            run_prefill(rdlevel_prefill_result.id)
+            return HttpResponseRedirect(reverse("cafe:level_from_prefill", args=[rdlevel_prefill_result.id]))
+            
 
     render_data = {
         "code": code

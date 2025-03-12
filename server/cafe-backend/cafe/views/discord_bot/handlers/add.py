@@ -6,6 +6,8 @@ from django.urls import reverse
 
 addlevel_signer = TimestampSigner(salt="addlevel")
 
+from loguru import logger
+
 def _add(data, check_user_is_poster):
     not_found_response = ephemeral_response("No group found for this server (the server owner needs to use the `/connectgroup` command)")
 
@@ -42,13 +44,15 @@ def _add(data, check_user_is_poster):
             # nb: this is the discord user id of the user who posted the message,
             # which may not be the same as the user who is running this command.
             "discord_user_id": poster_id,
-            # hint for name in case we need to create an account
+            # hint for name in case we need to create an account -- this only applies to the delegated scenario
             # nb: we don't need to check for the webhook scenario here, because
             # if it is a webhook scenario, then the poster_id is the user who ran the command,
-            # who will always have an account by the time they reach the level submission portal.
-            "discord_user_name_hint": message['author']['display_name'] or message['author']['username'],
+            # who will always have an account by the time they reach the level submission portal, since
+            # the level submission portal is only accessible to users who have an account.
+            "discord_user_name_hint": message['author'].get('global_name') or message['author']['username'],
             "club_id": club.id
         }
+        logger.info(payload)
         secret = addlevel_signer.sign_object(payload)
         url = DOMAIN_URL + reverse("cafe:level_portal", args=[secret])
         line = f"`{attachment['filename']}`: [click here]({url})"

@@ -242,3 +242,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+S3_API_URL = os.environ["S3_API_URL"]
+S3_ACCESS_KEY_ID = os.environ["S3_ACCESS_KEY_ID"]
+S3_SECRET_ACCESS_KEY = os.environ["S3_SECRET_ACCESS_KEY"]
+S3_REGION = os.environ["S3_REGION"]
+S3_PUBLIC_CDN_URL = os.environ["S3_PUBLIC_CDN_URL"]
