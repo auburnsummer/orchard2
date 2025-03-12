@@ -9,7 +9,7 @@ def login(request: HttpRequest):
         # therefore, the user does not have permissions to do the action.
         # set a message up and redirect back to home.
         messages.add_message(request, messages.ERROR, "You do not have permissions to perform that action")
-        return redirect("index")
+        return redirect("cafe:index")
     if not request.user.is_authenticated:
         # the user is not authenticated.
         # therefore, the user should be redirected to discord login.
@@ -17,4 +17,4 @@ def login(request: HttpRequest):
     if request.user.is_authenticated:
         # the user is authenticated but there's no next param.
         # how did they get here?
-        return redirect("index")
+        return redirect("cafe:index")
