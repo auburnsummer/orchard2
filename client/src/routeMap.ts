@@ -7,6 +7,7 @@ import { ClubSettingsConnectDiscord } from "./views/ClubSettings/ClubSettingsCon
 import { ClubSettingsInfoView } from "./views/ClubSettings/ClubSettingsInfoView/ClubSettingsInfoView";
 import { ClubSettingsMembersView } from "./views/ClubSettings/ClubSettingsMembersView/ClubSettingsMembersView";
 import { HomeView } from "./views/HomeView";
+import { LevelAddFromPrefill } from "./views/LevelAdd/LevelAddFromPrefill";
 import { LevelAddTypeSelect } from "./views/LevelAdd/LevelAddTypeSelect";
 import { ProfileClubsView } from "./views/Profile/ProfileClubsView/ProfileClubsView";
 import { ProfileIndexView } from "./views/Profile/ProfileIndexView/ProfileIndexView";
@@ -25,5 +26,6 @@ export const routeMap: { [key: string]: React.FunctionComponent<any> } = {
     "club_settings_members": ClubSettingsMembersView,
     "club_settings_connected_discords": ClubSettingsCheckConnectDiscord,
 
-    "level_portal": LevelAddTypeSelect
+    "level_portal": LevelAddTypeSelect,
+    "level_from_prefill": LevelAddFromPrefill
 }
