@@ -12,13 +12,24 @@ import { appName, routeMap } from "./routeMap";
 
 const config = new DjangoBridge.Config();
 
+
 Object.keys(routeMap).forEach(key => {
-    config.addView(`${appName}:${key}`, routeMap[key])
+    config.addView(`${appName}:${key}`, (...props) => {
+        const Component = routeMap[key];
+        return (
+            <Prelude>
+                <Component {...props} />
+            </Prelude>
+        )
+    });
 });
+
 
 // Add your context providers here
 config.addContextProvider("user", UserContext);
 config.addContextProvider("csrf_token", CSRFTokenContext);
+
+console.log(config.views);
 
 const rootElement = document.getElementById("root")!;
 const initialResponse = JSON.parse(
@@ -32,10 +43,6 @@ if (!import.meta.env.PROD) {
 
 ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
-        <DjangoBridge.App config={config} initialResponse={initialResponse}>
-            <Prelude>
-                <DjangoBridge.Outlet />
-            </Prelude>
-        </DjangoBridge.App>
+        <DjangoBridge.App config={config} initialResponse={initialResponse} />
     </React.StrictMode>
 );
