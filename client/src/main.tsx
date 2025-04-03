@@ -29,8 +29,6 @@ Object.keys(routeMap).forEach(key => {
 config.addContextProvider("user", UserContext);
 config.addContextProvider("csrf_token", CSRFTokenContext);
 
-console.log(config.views);
-
 const rootElement = document.getElementById("root")!;
 const initialResponse = JSON.parse(
     document.getElementById("initial-response")!.textContent!
