@@ -1,3 +1,0 @@
-[submodule "django-bridge"]
-	path = django-bridge
-	url = https://github.com/auburnsummer/django-bridge.git
