@@ -12,3 +12,5 @@ npm run build
 npm pack --pack-destination=../../../
 cd ../../../client
 npm install ../django-bridge-react-0.4.0.tgz
+cd ../
+overmind restart
