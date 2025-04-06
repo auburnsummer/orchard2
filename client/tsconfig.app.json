@@ -21,6 +21,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
+    "noUncheckedIndexedAccess": true,
 
     "paths": {
       "@cafe/*": ["./src/*"]
