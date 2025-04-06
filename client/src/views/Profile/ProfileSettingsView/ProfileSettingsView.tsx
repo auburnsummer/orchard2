@@ -5,6 +5,7 @@ import styles from "./ProfileSettingsView.module.css";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { Stack, TextInput, Select, Button } from "@mantine/core";
 import { useLoggedInUser } from "@cafe/hooks/useUser";
+import { Form } from "@cafe/minibridge/components/Form";
 
 export function ProfileSettingsView() {
     const user = useLoggedInUser();
@@ -15,7 +16,7 @@ export function ProfileSettingsView() {
             navbar={<ProfileNavbar />}
         >
             <h2>Settings</h2>
-            <form className={styles.base} method="post">
+            <Form className={styles.base} method="post">
                 { input }
                 <Stack align="flex-start" gap="1rem">
                     <TextInput
@@ -43,7 +44,7 @@ export function ProfileSettingsView() {
 
                     <Button type="submit">Save</Button>
                 </Stack>
-            </form>
+            </Form>
         </Shell>
     );
 }

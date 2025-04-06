@@ -6,6 +6,7 @@ import { configAtom, handleResponseAtom, initialResponseAtom } from "./atoms";
 import { ReactNode, useEffect } from "react";
 import { useSetAtom } from "jotai";
 import { ProviderStack } from "./components/ProviderStack";
+import { makeCanonicalURL } from "./utils";
 
 interface AppProps {
     config: Config;
@@ -31,7 +32,7 @@ export function App({config, initialResponse, children}: AppProps) {
     }, []);
 
     useEffect(() => {
-        void handleResponse(initialResponse);
+        void handleResponse(initialResponse, new URL(window.location.href));
     }, []);
 
     return (

@@ -1,8 +1,9 @@
 import { Config } from "./config";
 import { atom } from "jotai";
-import { DjangoBridgeResponse, djangoGet, RenderResponse } from "./fetch";
+import { DjangoBridgeResponse, djangoGet, djangoPost, Message, RenderResponse } from "./fetch";
 
 import { atomWithLocation } from "jotai-location";
+import { makeCanonicalURL } from "./utils";
 
 export const configAtom = atom<Config>();
 
@@ -10,22 +11,31 @@ export const initialResponseAtom = atom<DjangoBridgeResponse>();
 
 export const currentRenderAtom = atom<RenderResponse>();
 
-export const handleResponseAtom = atom(null, async (_get, set, response: DjangoBridgeResponse) => {
+export const locationAtom = atomWithLocation();
+
+export const handleResponseAtom = atom(null, async (_get, set, response: DjangoBridgeResponse, url: URL) => {
     if (response.action === "render") {
         set(currentRenderAtom, response);
+        if (url.toString() !== new URL(document.location.href).toString()) {
+            set(locationAtom, url);
+        }
+    }
+    else if (response.action === "reload") {
+        set(locationAtom, url);
+    }
+    else if (response.action === "redirect") {
+        set(navigateAtom, makeCanonicalURL(response.path))
     }
 })
 
-export const locationAtom = atomWithLocation();
+export const messagesAtom = atom<Message[]>([]);
 
-export const navigateAtom = atom(null, async (get, set, url: URL) => {
-    const location = get(locationAtom);
-    async function runner() {
-        const resp = await djangoGet(url.toString());
-        if (resp.action === "render") {
-            set(locationAtom, url);
-            set(currentRenderAtom, resp);
-        }
-    }
-    void runner();
+export const navigateAtom = atom(null, async (_get, set, url: URL) => {
+    const resp = await djangoGet(url.toString());
+    set(handleResponseAtom, resp, url);
 });
+
+export const formSubmitAtom = atom(null, async (_get, set, url: URL, formData: FormData) => {
+    const resp = await djangoPost(url.toString(), formData);
+    set(handleResponseAtom, resp, url);
+})
