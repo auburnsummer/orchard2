@@ -1,9 +1,6 @@
 import { useSetAtom } from "jotai";
 import { navigateAtom } from "../atoms";
-
-function makeCanonicalURL(path: string) {
-    return new URL(path, window.document.baseURI);
-}
+import { makeCanonicalURL } from "../utils";
 
 export function Link(props: React.HTMLProps<HTMLAnchorElement>) {
     const {href, onClick: _onClick, ...rest} = props;
@@ -16,6 +13,7 @@ export function Link(props: React.HTMLProps<HTMLAnchorElement>) {
             <a {...props}></a>
         )
     }
+    // otherwise it should go through internal routing
     const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
         if (_onClick) {
@@ -23,7 +21,6 @@ export function Link(props: React.HTMLProps<HTMLAnchorElement>) {
         }
         void navigate(makeCanonicalURL(href));
     }
-
     return (
         <a onClick={onClick} href={href} {...rest} />
     )

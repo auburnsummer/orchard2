@@ -2,17 +2,10 @@ import { Metadata } from "./metadata";
 
 export type MessageLevel = "info" | "success" | "warning" | "error";
 
-export interface TextMessage {
+export interface Message {
   level: MessageLevel;
   text: string;
 }
-
-export interface HTMLMessage {
-  level: MessageLevel;
-  html: string;
-}
-
-export type Message = TextMessage | HTMLMessage;
 
 interface ReloadResponse {
   action: "reload";
