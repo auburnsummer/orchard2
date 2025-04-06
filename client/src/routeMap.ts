@@ -16,16 +16,16 @@ import { ProfileSettingsView } from "./views/Profile/ProfileSettingsView/Profile
 export const appName = "cafe";
 
 export const routeMap: { [key: string]: React.FunctionComponent<any> } = {
-    "index": HomeView,
-    "profile": ProfileIndexView,
-    "profile_settings": ProfileSettingsView,
-    "profile_clubs": ProfileClubsView,
+    "cafe:index": HomeView,
+    "cafe:profile": ProfileIndexView,
+    "cafe:profile_settings": ProfileSettingsView,
+    "cafe:profile_clubs": ProfileClubsView,
 
-    "club_connect_discord": ClubSettingsConnectDiscord,
-    "club_settings_info": ClubSettingsInfoView,
-    "club_settings_members": ClubSettingsMembersView,
-    "club_settings_connected_discords": ClubSettingsCheckConnectDiscord,
+    "cafe:club_connect_discord": ClubSettingsConnectDiscord,
+    "cafe:club_settings_info": ClubSettingsInfoView,
+    "cafe:club_settings_members": ClubSettingsMembersView,
+    "cafe:club_settings_connected_discords": ClubSettingsCheckConnectDiscord,
 
-    "level_portal": LevelAddTypeSelect,
-    "level_from_prefill": LevelAddFromPrefill
+    "cafe:level_portal": LevelAddTypeSelect,
+    "cafe:level_from_prefill": LevelAddFromPrefill
 }
