@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@django-bridge/react": "^0.4.0",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
@@ -19,6 +20,7 @@
     "@mantine/notifications": "^7.16.0",
     "clsx": "^2.1.1",
     "jotai": "^2.12.2",
+    "jotai-location": "^0.5.5",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-top-loading-bar": "^3.0.2"
