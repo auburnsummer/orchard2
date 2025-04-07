@@ -13,8 +13,11 @@ export const currentRenderAtom = atom<RenderResponse>();
 
 export const locationAtom = atomWithLocation();
 
+export const isLoadingAtom = atom(false);
+
 export const handleResponseAtom = atom(null, async (_get, set, response: DjangoBridgeResponse, url: URL) => {
     if (response.action === "render") {
+        set(isLoadingAtom, false);
         set(currentRenderAtom, response);
         set(messagesAtom, (prev) => [...prev, ...response.messages]);
         // only set the URL if it's changed
@@ -34,11 +37,13 @@ export const handleResponseAtom = atom(null, async (_get, set, response: DjangoB
 export const messagesAtom = atom<Message[]>([]);
 
 export const navigateAtom = atom(null, async (_get, set, url: URL) => {
+    set(isLoadingAtom, true);
     const resp = await djangoGet(url.toString());
     set(handleResponseAtom, resp, url);
 });
 
 export const formSubmitAtom = atom(null, async (_get, set, url: URL, formData: FormData) => {
+    set(isLoadingAtom, true);
     const resp = await djangoPost(url.toString(), formData);
     set(handleResponseAtom, resp, url);
 })
