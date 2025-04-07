@@ -1,16 +1,17 @@
 import { Spacer } from "@cafe/components/Spacer/Spacer";
-import { useNavigationContext, usePathName } from "@cafe/hooks/useNavigationContext";
 import { Stack, Group,  NavLink, Text } from "@mantine/core";
 import styles from "./ClubSettingsNavbar.module.css";
-import { Link } from "@django-bridge/react";
 import { Club } from "@cafe/types/club";
+import { useAtomValue } from "jotai";
+import { locationAtom } from "@cafe/minibridge/atoms";
+import { Link } from "@cafe/minibridge/components/Link";
 
 type ClubSettingsNavbarProps = {
     club: Club
 }
 
 export function ClubSettingsNavbar({club}: ClubSettingsNavbarProps){
-    const path = usePathName();
+    const { pathname } = useAtomValue(locationAtom);
 
     const links = [
         {
@@ -41,7 +42,7 @@ export function ClubSettingsNavbar({club}: ClubSettingsNavbarProps){
                             skipDirtyFormCheck={true}
                             href={link.href}
                             label={link.label}
-                            active={path === link.href}
+                            active={pathname === link.href}
                         />
                     ))
                 }

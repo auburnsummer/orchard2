@@ -1,7 +1,7 @@
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
+import { Form } from "@cafe/minibridge/components/Form";
 import { Club } from "@cafe/types/club";
 import { ClubMembership } from "@cafe/types/clubMembership";
-import { Form } from "@django-bridge/react";
 import { Modal, Stack, Select, Group, Button } from "@mantine/core";
 import { useEffect, useRef, useState } from "react";
 

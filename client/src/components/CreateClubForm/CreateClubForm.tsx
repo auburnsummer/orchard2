@@ -1,7 +1,7 @@
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import styles from "./CreateClubForm.module.css";
-import { Form } from "@django-bridge/react";
 import { Stack, TextInput, Button, Modal } from "@mantine/core";
+import { Form } from "@cafe/minibridge/components/Form";
 
 type CreateClubFormProps = {
     redirectTo?: string;

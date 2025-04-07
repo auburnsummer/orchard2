@@ -1,4 +1,3 @@
-import { useNavigationContext } from "@cafe/hooks/useNavigationContext";
 import { isLoadingAtom } from "@cafe/minibridge/atoms";
 import { useMantineTheme } from "@mantine/core";
 import { useAtomValue } from "jotai";

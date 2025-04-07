@@ -3,11 +3,12 @@ import { ProfileNavbar } from "../ProfileNavbar/ProfileNavbar";
 
 import styles from "./ProfileClubsView.module.css";
 import { Club } from "@cafe/types/club";
-import { useNavigationContext } from "@cafe/hooks/useNavigationContext";
-import { Stack, Title, List, Button, Anchor, Modal } from "@mantine/core";
-import { Link } from "@django-bridge/react";
+import { Stack, Title, List, Button, Anchor } from "@mantine/core";
 import { useDisclosure } from '@mantine/hooks';
 import { CreateClubForm } from "@cafe/components/CreateClubForm/CreateClubForm";
+import { Link } from "@cafe/minibridge/components/Link";
+import { useAtomValue } from "jotai";
+import { locationAtom } from "@cafe/minibridge/atoms";
 
 type ProfileClubsViewProps = {
     clubs: {
@@ -20,7 +21,7 @@ function LinkToClub({ club }: { club: Club }) {
 }
 
 export function ProfileClubsView({clubs}: ProfileClubsViewProps) {
-    const navigation = useNavigationContext();
+    const { pathname } = useAtomValue(locationAtom);
 
     const [createClubFormOpen, { open: openCreateClub, close: closeCreateClub }] = useDisclosure(false); 
 
@@ -34,7 +35,7 @@ export function ProfileClubsView({clubs}: ProfileClubsViewProps) {
             <CreateClubForm
                 opened={createClubFormOpen}
                 onClose={closeCreateClub}
-                redirectTo={navigation.path}
+                redirectTo={pathname}
             />
             <Stack className={styles.base} align="start">
                 <Title order={2}>Groups</Title>

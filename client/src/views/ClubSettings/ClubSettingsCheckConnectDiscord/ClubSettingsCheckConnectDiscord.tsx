@@ -2,8 +2,8 @@ import { Shell } from "@cafe/components/Shell";
 import { Club } from "@cafe/types/club";
 import { ClubSettingsNavbar } from "../ClubSettingsNavbar/ClubSettingsNavbar";
 import { Alert, Anchor, Box, Button, Group, Text, TextInput } from "@mantine/core";
-import { Form } from "@django-bridge/react";
 import { DiscordGuild } from "@cafe/types/discordGuild";
+import { Form } from "@cafe/minibridge/components/Form";
 
 type ClubSettingsCheckConnectDiscordProps = {
     club: Club;

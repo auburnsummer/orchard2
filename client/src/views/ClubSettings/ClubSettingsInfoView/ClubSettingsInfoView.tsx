@@ -1,9 +1,9 @@
 import { Shell } from "@cafe/components/Shell";
 import { Club } from "@cafe/types/club";
 import { ClubSettingsNavbar } from "../ClubSettingsNavbar/ClubSettingsNavbar";
-import { Form } from "@django-bridge/react";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { Button, Stack, TextInput, Tooltip } from "@mantine/core";
+import { Form } from "@cafe/minibridge/components/Form";
 
 type ClubSettingsInfoViewProps = {
     club: Club
