@@ -2,11 +2,10 @@ import { Config } from "./config";
 import { DjangoBridgeResponse } from "./fetch";
 
 import { useHydrateAtoms } from "jotai/utils";
-import { configAtom, handleResponseAtom, initialResponseAtom } from "./atoms";
+import { configAtom, handleResponseAtom, initialResponseAtom, navigateAtom } from "./atoms";
 import { ReactNode, useEffect } from "react";
 import { useSetAtom } from "jotai";
 import { ProviderStack } from "./components/ProviderStack";
-import { makeCanonicalURL } from "./utils";
 
 interface AppProps {
     config: Config;
@@ -20,7 +19,9 @@ export function App({config, initialResponse, children}: AppProps) {
         [initialResponseAtom, initialResponse]
     ]);
     const handleResponse = useSetAtom(handleResponseAtom);
+    const navigate = useSetAtom(navigateAtom);
 
+    // Remove loader animation
     useEffect(() => {
         const loadingScreen = document.querySelector(".django-bridge-load");
         if (loadingScreen instanceof HTMLElement) {
@@ -31,8 +32,20 @@ export function App({config, initialResponse, children}: AppProps) {
         }    
     }, []);
 
+    // Process initial response
     useEffect(() => {
         void handleResponse(initialResponse, new URL(window.location.href));
+    }, []);
+
+    // Listen to popstate (user hitting back/forward in browser)
+    useEffect(() => {
+        const popStateHandler = () => {
+            navigate(new URL(window.location.href));
+        }
+        window.addEventListener("popstate", popStateHandler);
+        return () => {
+            window.removeEventListener("popstate", popStateHandler);
+        }
     }, []);
 
     return (

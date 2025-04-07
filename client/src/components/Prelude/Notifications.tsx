@@ -1,33 +1,30 @@
-import { Message, MessagesContext } from "@django-bridge/react";
-
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 
 import { Notifications as MantineNotifications, notifications } from '@mantine/notifications';
+import { useAtom } from "jotai";
+import { messagesAtom } from "@cafe/minibridge/atoms";
 
-function getMessageText(message: Message) {
-    if ('text' in message) {
-        return message.text;
-    }
-    return message.html;
-}
 
 export function Notifications() {
-    const { messages } = useContext(MessagesContext);
+    const [messages, setMessages] = useAtom(messagesAtom);
 
     useEffect(() => {
-        messages.forEach((message, i) => {
-            let color = {
-                "error": "red",
-                "success": "green",
-                "info": "blue",
-                "warning": "yellow"
-            }[message.level];
-            notifications.show({
-                id: `from-django-bridge-${i}`,
-                message: getMessageText(message),
-                color
-              })
-        })
+        if (messages.length > 0) {
+            const message = messages.at(0);
+            if (message) {
+                const color = {
+                    "error": "red",
+                    "success": "green",
+                    "info": "blue",
+                    "warning": "yellow"
+                }[message.level];
+                notifications.show({
+                    message: message.html,
+                    color
+                });
+            }
+            setMessages(prev => prev.slice(1));
+        }
     }, [messages]);
 
     return <MantineNotifications />;

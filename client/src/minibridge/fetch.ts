@@ -4,7 +4,7 @@ export type MessageLevel = "info" | "success" | "warning" | "error";
 
 export interface Message {
   level: MessageLevel;
-  text: string;
+  html: string;
 }
 
 interface ReloadResponse {

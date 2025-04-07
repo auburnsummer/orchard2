@@ -11,6 +11,7 @@ import { appName, routeMap } from "./routeMap";
 import { App as MinibridgeApp } from "./minibridge";
 import { Outlet } from "./minibridge/components/Outlet";
 import { Config } from "./minibridge/config";
+import { Message } from "./minibridge/fetch";
 
 
 const config: Config = {

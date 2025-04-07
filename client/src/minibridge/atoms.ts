@@ -16,6 +16,9 @@ export const locationAtom = atomWithLocation();
 export const handleResponseAtom = atom(null, async (_get, set, response: DjangoBridgeResponse, url: URL) => {
     if (response.action === "render") {
         set(currentRenderAtom, response);
+        set(messagesAtom, (prev) => [...prev, ...response.messages]);
+        // only set the URL if it's changed
+        // otherwise we will have multiple of the same URL in the stack
         if (url.toString() !== new URL(document.location.href).toString()) {
             set(locationAtom, url);
         }
@@ -26,7 +29,7 @@ export const handleResponseAtom = atom(null, async (_get, set, response: DjangoB
     else if (response.action === "redirect") {
         set(navigateAtom, makeCanonicalURL(response.path))
     }
-})
+});
 
 export const messagesAtom = atom<Message[]>([]);
 
