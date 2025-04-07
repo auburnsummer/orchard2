@@ -1,12 +1,12 @@
-import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken"
-import { Club } from "@cafe/types/club"
-import { Form } from "@django-bridge/react"
+import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
+import { Club } from "@cafe/types/club";
 import { Alert, Button, Paper, Select, Stack, Text } from "@mantine/core";
 
 import { CreateClubForm } from "@cafe/components/CreateClubForm/CreateClubForm";
 import { useState } from "react";
 import { DiscordGuild } from "@cafe/types/discordGuild";
 import { ShellDramaticCenter } from "@cafe/components/ShellDramaticCenter/ShellDramaticCenter";
+import { Form } from "@cafe/minibridge/components/Form";
 
 type ClubConnectDiscordProps = {
     clubs: Club[],

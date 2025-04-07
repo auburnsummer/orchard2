@@ -1,6 +1,6 @@
 import { ShellDramaticCenter } from "@cafe/components/ShellDramaticCenter/ShellDramaticCenter";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
-import { Form } from "@django-bridge/react";
+import { Form } from "@cafe/minibridge/components/Form";
 import { Button, Paper, Select, Stack } from "@mantine/core";
 import { useState } from "react";
 
