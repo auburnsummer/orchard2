@@ -16,7 +16,7 @@ export function Prelude({children}: {children: ReactNode}) {
         <>
             <MantineProvider theme={shadcnTheme} cssVariablesResolver={shadcnCssVariableResolver} forceColorScheme={theme}>
                 <LoadingBarContainer>
-                    {/* <LoadingBar /> */}
+                    <LoadingBar />
                     <Notifications />
                     { children }
                 </LoadingBarContainer>

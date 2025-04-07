@@ -1,13 +1,14 @@
 import { Spacer } from "@cafe/components/Spacer/Spacer";
-import { useNavigationContext } from "@cafe/hooks/useNavigationContext";
 import { useLoggedInUser } from "@cafe/hooks/useUser";
 import { Stack, Group, Avatar, NavLink, Text } from "@mantine/core";
 import styles from "./ProfileNavbar.module.css";
 import { Link } from "@cafe/minibridge/components/Link";
+import { useAtomValue } from "jotai";
+import { locationAtom } from "@cafe/minibridge/atoms";
 
 export function ProfileNavbar(){
     const user = useLoggedInUser();
-    const { path } = useNavigationContext();
+    const { pathname } = useAtomValue(locationAtom);
 
     const links = [
         {
@@ -38,7 +39,7 @@ export function ProfileNavbar(){
                             component={Link}
                             href={link.href}
                             label={link.label}
-                            active={path === link.href}
+                            active={pathname === link.href}
                         />
                     ))
                 }
