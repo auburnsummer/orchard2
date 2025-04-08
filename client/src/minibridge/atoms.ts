@@ -32,6 +32,18 @@ export const handleResponseAtom = atom(null, async (_get, set, response: DjangoB
     else if (response.action === "redirect") {
         set(navigateAtom, makeCanonicalURL(response.path))
     }
+    else if (response.action === "network-error") {
+        set(messagesAtom, (prev) => [...prev, {
+            html: "A network error occurred",
+            level: "error"
+        }]);
+    }
+    else if (response.action === "server-error") {
+        set(messagesAtom, (prev) => [...prev, {
+            html: "A server error occurred",
+            level: "error"
+        }]);
+    }
 });
 
 export const messagesAtom = atom<Message[]>([]);

@@ -1,6 +1,6 @@
 import { useSetAtom } from "jotai";
-import { makeCanonicalURL } from "../utils";
-import { formSubmitAtom } from "../atoms";
+import { formDataToSearchParams, makeCanonicalURL } from "../utils";
+import { formSubmitAtom, navigateAtom } from "../atoms";
 
 
 export function Form(props: React.HTMLProps<HTMLFormElement>) {
@@ -9,6 +9,7 @@ export function Form(props: React.HTMLProps<HTMLFormElement>) {
     const isOrchardURL = action === undefined || makeCanonicalURL(action).origin === document.location.origin;
 
     const submitForm = useSetAtom(formSubmitAtom);
+    const navigate = useSetAtom(navigateAtom);
 
     if (!isOrchardURL) {
         return (
@@ -32,6 +33,14 @@ export function Form(props: React.HTMLProps<HTMLFormElement>) {
                     ? makeCanonicalURL(action)
                     : makeCanonicalURL(window.location.href)
                 submitForm(target, data);
+            }
+            else if (e.target.method === "get") {
+                let target = action !== undefined
+                    ? makeCanonicalURL(action)
+                    : makeCanonicalURL(window.location.href);
+                const params = formDataToSearchParams(data);
+                target = new URL(`${target.origin}${target.pathname}?${params.toString()}`);
+                navigate(target);
             }
         }
 
