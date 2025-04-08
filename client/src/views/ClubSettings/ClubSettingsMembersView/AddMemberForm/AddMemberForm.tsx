@@ -6,13 +6,15 @@ import { Button, Modal, Select, Stack } from "@mantine/core";
 type AddMemberFormProps = {
     opened: boolean;
     onClose: () => void;
+    onSubmit?: () => void;
     club: Club;
 }
 
 export function AddMemberForm({
     opened,
     club,
-    onClose
+    onClose,
+    onSubmit = onClose
 }: AddMemberFormProps) {
     const csrfInput = useCSRFTokenInput();
 
@@ -25,7 +27,7 @@ export function AddMemberForm({
         >
             <p>Clicking the button will generate an invite link. Send the invite link to the person you wish to invite.</p>
             <p>The link will expire in 24 hours.</p>
-            <Form method="post" action={`/groups/${club.id}/settings/members/invite/`}>
+            <Form method="post" action={`/groups/${club.id}/settings/members/invite/`} onSubmit={onSubmit}>
                 {csrfInput}
                 <Stack align="start">
                     <Select

@@ -39,7 +39,6 @@ export function ClubSettingsNavbar({club}: ClubSettingsNavbarProps){
                         <NavLink
                             key={link.href}
                             component={Link}
-                            skipDirtyFormCheck={true}
                             href={link.href}
                             label={link.label}
                             active={pathname === link.href}

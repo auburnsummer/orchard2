@@ -83,6 +83,7 @@ export function ClubSettingsMembersView({ club, memberships, can_add }: ClubSett
                                         onFocus={e => e.target.select()}
                                         disabled={false}
                                         value={inviteUrl}
+                                        readOnly
                                     >
 
                                     </TextInput>

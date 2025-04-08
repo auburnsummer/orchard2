@@ -17,13 +17,13 @@ export function Form(props: React.HTMLProps<HTMLFormElement>) {
     }
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
         if (_onSubmit) {
             _onSubmit(e);
             if (e.defaultPrevented) {
                 return;
             }
         }
+        e.preventDefault();
 
         if (e.target instanceof HTMLFormElement) {
             const data = new FormData(e.target);
