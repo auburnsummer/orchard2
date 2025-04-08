@@ -7,9 +7,10 @@ type CreateClubFormProps = {
     redirectTo?: string;
     opened: boolean;
     onClose: () => void;
+    onSubmit?: () => void;
 }
 
-export function CreateClubForm({redirectTo, opened, onClose}: CreateClubFormProps) {
+export function CreateClubForm({redirectTo, opened, onClose, onSubmit = onClose}: CreateClubFormProps) {
     const csrfInput = useCSRFTokenInput();
 
     return (
@@ -19,7 +20,7 @@ export function CreateClubForm({redirectTo, opened, onClose}: CreateClubFormProp
             centered
             title="Create group"
         >
-            <Form action="/groups/create/" method="POST" className={styles.base}>
+            <Form action="/groups/create/" method="POST" className={styles.base} onSubmit={onSubmit}>
                 {csrfInput}
                 {
                     redirectTo && (

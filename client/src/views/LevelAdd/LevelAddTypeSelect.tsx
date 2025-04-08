@@ -8,7 +8,7 @@ type LevelAddTypeSelectProps = {
     code: string;
 }
 
-export function LevelAddTypeSelect({code}: LevelAddTypeSelectProps) {
+export function LevelAddTypeSelect({code: _code}: LevelAddTypeSelectProps) {
     const [addType, setAddType] = useState<string| null>(null);
     const csrfInput = useCSRFTokenInput();
 

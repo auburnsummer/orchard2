@@ -16,7 +16,7 @@ interface AppProps {
 export function App({config, initialResponse, children}: AppProps) {
     useHydrateAtoms([
         [configAtom, config],
-        [initialResponseAtom, initialResponse]
+        [initialResponseAtom, initialResponse],
     ]);
     const handleResponse = useSetAtom(handleResponseAtom);
     const navigate = useSetAtom(navigateAtom);

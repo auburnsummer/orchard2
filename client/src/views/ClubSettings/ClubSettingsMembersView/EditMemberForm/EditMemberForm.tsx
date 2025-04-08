@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 type EditMemberFormProps = {
     opened: boolean;
     onClose: () => void;
+    onSubmit?: () => void;
     membership: ClubMembership | null;
     canEdit: boolean;
     club: Club;
@@ -16,6 +17,7 @@ type EditMemberFormProps = {
 export function EditMemberForm({
     opened,
     onClose,
+    onSubmit = onClose,
     membership,
     canEdit,
     club
@@ -44,12 +46,14 @@ export function EditMemberForm({
                             action={`/groups/${club.id}/settings/members/${membership.user.id}/delete/`}
                             method="POST"
                             ref={deleteFormRef}
+                            onSubmit={onSubmit}
                         >
                             {csrfInput}
                         </Form>
                         <Form
                             action={`/groups/${club.id}/settings/members/${membership.user.id}/edit/`}
                             method="POST"
+                            onSubmit={onSubmit}
                         >
                             {csrfInput}
                             <Stack align="start">
