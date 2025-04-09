@@ -7,7 +7,7 @@ import { ClubSettingsConnectDiscord } from "./views/ClubSettings/ClubSettingsCon
 import { ClubSettingsInfoView } from "./views/ClubSettings/ClubSettingsInfoView/ClubSettingsInfoView";
 import { ClubSettingsMembersView } from "./views/ClubSettings/ClubSettingsMembersView/ClubSettingsMembersView";
 import { HomeView } from "./views/HomeView";
-import { LevelAddFromPrefill } from "./views/LevelAdd/LevelAddFromPrefill";
+import { LevelAddFromPrefill } from "./views/LevelAdd/LevelAddFromPrefill/LevelAddFromPrefill";
 import { LevelAddTypeSelect } from "./views/LevelAdd/LevelAddTypeSelect";
 import { ProfileClubsView } from "./views/Profile/ProfileClubsView/ProfileClubsView";
 import { ProfileIndexView } from "./views/Profile/ProfileIndexView/ProfileIndexView";
