@@ -2,7 +2,7 @@ import { AuthenticatedUser } from "@cafe/hooks/useUser"
 import { RDLevel } from "./rdLevelBase"
 import { Club } from "./club"
 
-export type RDLevelPrefill = {
+type RDLevelPrefillBase = {
     id: string;
     url: string;
     created_at: {
@@ -11,9 +11,20 @@ export type RDLevelPrefill = {
     };
     version: number;
     prefill_type: string;
-    ready: boolean;
-    data: RDLevel;
     user: AuthenticatedUser;
     club: Club;
-    errors: string;
 }
+
+type RDLevelPrefillNotReady = RDLevelPrefillBase & {
+    ready: false;
+    errors: string;
+    data: Record<string, never>;
+}
+
+export type RDLevelPrefillReady = RDLevelPrefillBase & {
+    ready: true;
+    errors: "";
+    data: RDLevel;
+}
+
+export type RDLevelPrefill = RDLevelPrefillNotReady | RDLevelPrefillReady;

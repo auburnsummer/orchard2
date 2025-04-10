@@ -1,0 +1,17 @@
+
+
+.titleArea {
+    flex-direction: column-reverse;
+    gap: 0;
+    padding: 0.5rem;
+}
+
+.artistName {
+    font-size: 0.875rem;
+    color: var(--mantine-color-dimmed);
+}
+
+.songName {
+    font-size: 1.375rem;
+    line-height: 1.125rem;
+}
