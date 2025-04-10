@@ -9,13 +9,15 @@ import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { useRef } from "react";
 import cc from "clsx";
 import { Link } from "@cafe/minibridge/components/Link";
+import { App } from "@cafe/minibridge";
 
 export type ShellProps = {
     children: React.ReactNode;
     navbar?: React.ReactNode;
+    aside?: React.ReactNode;
 }
 
-export function Shell({children, navbar}: ShellProps) {
+export function Shell({ children, navbar, aside }: ShellProps) {
     const user = useUser();
     const csrfInput = useCSRFTokenInput();
 
@@ -23,8 +25,9 @@ export function Shell({children, navbar}: ShellProps) {
 
     return (
         <AppShell
-            header={{height: '3rem'}}
+            header={{ height: '3rem' }}
             navbar={navbar !== undefined ? { width: '16rem', breakpoint: 0 } : undefined}
+            aside={aside !== undefined ? { width: '24rem', breakpoint: 0 } : undefined}
             className={styles.shell}
         >
             <AppShell.Header className={styles.header}>
@@ -36,7 +39,7 @@ export function Shell({children, navbar}: ShellProps) {
                             ? (
                                 <>
                                     <form method="post" action="/accounts/logout/" ref={logOutForm}>
-                                        { csrfInput }
+                                        {csrfInput}
                                     </form>
                                     <Menu shadow="md" width={200}>
                                         <Menu.Target>
@@ -75,7 +78,7 @@ export function Shell({children, navbar}: ShellProps) {
                             )
                             : (
                                 <form method="post" action="/accounts/discord/login/">
-                                    { csrfInput }
+                                    {csrfInput}
                                     <Button
                                         type="submit"
                                         leftSection={
@@ -89,14 +92,19 @@ export function Shell({children, navbar}: ShellProps) {
                     }
                 </div>
             </AppShell.Header>
-            { navbar && (
+            {navbar && (
                 <AppShell.Navbar>
                     {navbar}
                 </AppShell.Navbar>
-            ) }
+            )}
+            {aside && (
+                <AppShell.Aside>
+                    {aside}
+                </AppShell.Aside>
+            )}
             <AppShell.Main className={styles.mainArea}>
                 <div className={cc(navbar && styles.mainAreaWithNavbar, styles.mainAreaInner)}>
-                    { children }
+                    {children}
                 </div>
             </AppShell.Main>
         </AppShell>

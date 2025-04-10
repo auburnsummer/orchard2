@@ -1,6 +1,6 @@
 .paperBg {
     --first-color: var(--mantine-color-secondary-0);
-    --second-color: var(--second-color);
+    --second-color: var(--mantine-color-secondary-1);
     background-color: var(--first-color);
     background-image: linear-gradient(var(--second-color) 2px, transparent 2px), linear-gradient(90deg, var(--second-color) 2px, transparent 2px), linear-gradient(var(--second-color) 1px, transparent 1px), linear-gradient(90deg, var(--second-color) 1px, var(--first-color) 1px);
     background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
