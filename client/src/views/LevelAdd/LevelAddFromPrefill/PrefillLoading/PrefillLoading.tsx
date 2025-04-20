@@ -49,7 +49,7 @@ export function PrefillLoading({error}: PrefillLoadingProps) {
                                 <Alert variant="light" color="red" title="Error Trace" icon={<FontAwesomeIcon icon={faExclamationCircle} />}>
                                     <pre>{error}</pre>
                                 </Alert>
-                                <Text>Please try the command again. If it still doesn't work, let Auburn now, thanks</Text>
+                                <Text>Please try the command again. If it still doesn't work, let Auburn know, thanks</Text>
                             </Stack>
                         )
                 }

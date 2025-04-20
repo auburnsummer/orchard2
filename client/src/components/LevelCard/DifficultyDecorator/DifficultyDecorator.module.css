@@ -1,0 +1,44 @@
+.base {
+    display: flex;
+}
+
+.base > * {
+    background-color: red;
+}
+
+.easyDiff > * {
+    background-color: var(--mantine-color-teal-1);
+    color: var(--mantine-color-teal-6);
+}
+
+.mediumDiff > * {
+    background-color: var(--mantine-color--amber-1);
+    color: var(--mantine-color-amber-6);
+}
+
+.toughDiff > * {
+    background-color: var(--mantine-color-pink-1);
+    color: var(--mantine-color-pink-6);
+}
+
+.vtoughDiff > * {
+    background-color: var(--mantine-color-violet-1);
+    color: var(--mantine-color-violet-6);
+}
+
+.text {
+	font-size: 0.75rem;
+	line-height: 1rem;
+	padding-top: 0.125rem;
+	padding-bottom: 0.125rem;
+	padding-left: 0.25rem;
+	padding-right: 0.25rem;
+	text-transform: lowercase;
+    font-weight: 300;
+    border-radius: inherit;
+}
+
+.triangle {
+    width: 1.5rem;
+    clip-path: polygon(0% -4%, 104% -4%, 104% 100%, 100% 100%);
+}
