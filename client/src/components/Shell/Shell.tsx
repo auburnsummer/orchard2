@@ -9,7 +9,6 @@ import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { useRef } from "react";
 import cc from "clsx";
 import { Link } from "@cafe/minibridge/components/Link";
-import { App } from "@cafe/minibridge";
 
 export type ShellProps = {
     children: React.ReactNode;

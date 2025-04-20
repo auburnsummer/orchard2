@@ -21,7 +21,7 @@ def make_color_enabled_key_facet(path, fallback=None):
     def inner(obj, **kwargs):
         try:
             content = dig(path, obj)
-            stripped, _ = parse_color_tagged_string(content)
+            stripped = parse_color_tagged_string(content)
             return stripped
         except KeyError:
             logger.info(f"Key {path} not found, going to fallback.")

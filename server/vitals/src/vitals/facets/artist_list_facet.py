@@ -15,7 +15,7 @@ def artist_list_facet(obj, toml, **kwargs):
     if toml is not None and try_dig(["artists", "tokens"], toml):
         return try_dig(["artists", "tokens"], toml)
     artist_raw = obj["settings"]["artist"]
-    artist_stripped, _ = parse_color_tagged_string(artist_raw)
+    artist_stripped = parse_color_tagged_string(artist_raw)
     artists = [
         s.strip() for s in re.split(ARTIST_REGEX, artist_stripped) if s
     ]  # may have empty strings
