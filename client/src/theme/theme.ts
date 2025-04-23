@@ -181,7 +181,7 @@ export const shadcnTheme: MantineThemeOverride = createTheme({
     xxl: "0 25px 50px rgba(0, 0, 0, 0.25)",
   },
 
-  cursorType: "pointer",
+  cursorType: "default",
   other: {
     style: "shadcn",
   },

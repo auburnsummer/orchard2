@@ -1,7 +1,8 @@
-// corresponding to VitalsLevelBaseMutable
-// I'd love to do some fancy type generating someday to get single source of truth
-// but ehhhhhh
-export type RDLevelBaseMutable = {
+import { AuthenticatedUser } from "@cafe/hooks/useUser";
+import { Club } from "./club";
+
+// output of the prefill job
+export type RDLevelBase = {
     artist: string;
     artist_tokens: string[];
     song: string;
@@ -13,8 +14,8 @@ export type RDLevelBaseMutable = {
     max_bpm: number;
     min_bpm: number;
     difficulty: number;
-    single_player: number;
-    two_player: number;
+    single_player: boolean;
+    two_player: boolean;
     tags: string[];
     has_classics: boolean;
     has_oneshots: boolean;
@@ -24,18 +25,22 @@ export type RDLevelBaseMutable = {
     has_holds: boolean;
     has_skipshots: boolean;
     has_window_dance: boolean;
-};
 
-export type RDLevelBase = RDLevelBaseMutable & {
-    sha1: string
-    rdlevel_sha1: string
-    is_animated: boolean
-    last_updated: string
-};
+    sha1: string;
+    rdlevel_sha1: string;
+    is_animated: boolean;
+    last_updated: string;
 
-export type RDLevel = RDLevelBase & {
     rdzip_url: string;
     image_url: string;
     icon_url?: string;
     thumb_url: string;
+};
+
+// some additional fields
+export type RDLevel = RDLevelBase & {
+    song_alt: string;
+    submitter: AuthenticatedUser;
+    club: Club;
+    approval: number;
 }

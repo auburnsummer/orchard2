@@ -1,5 +1,5 @@
 import { AuthenticatedUser } from "@cafe/hooks/useUser"
-import { RDLevel } from "./rdLevelBase"
+import { RDLevel, RDLevelBase } from "./rdLevelBase"
 import { Club } from "./club"
 
 type RDLevelPrefillBase = {
@@ -24,7 +24,7 @@ type RDLevelPrefillNotReady = RDLevelPrefillBase & {
 export type RDLevelPrefillReady = RDLevelPrefillBase & {
     ready: true;
     errors: "";
-    data: RDLevel;
+    data: RDLevelBase;
 }
 
 export type RDLevelPrefill = RDLevelPrefillNotReady | RDLevelPrefillReady;
