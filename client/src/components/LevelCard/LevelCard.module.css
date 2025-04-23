@@ -69,6 +69,7 @@
 
 
 .button {
+    width: 2rem;
     border-style: solid;
     border-width: 1px;
     border-color: white;
@@ -137,15 +138,14 @@
     right: 0;
 }
 
+/* visually, the artist should be above the song. */
 .cast {
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     gap: 0.075rem;
 }
 
-/* visually, the artist should be above the song. */
 .song {
-    order: 2;
     font-weight: 600;
     font-size: 1.125rem;
     line-height: 1.25rem;
@@ -153,12 +153,29 @@
     margin: 0;
 }
 
+.songBox {
+    display: flex;
+    align-items: baseline;
+    gap: 0.25rem;
+}
+
+.songAlt {
+    font-size: 0.875rem;
+    color: var(--mantine-color-slate-5);
+}
+
+.artists {
+    list-style-type: none;
+    padding-left: 0;
+    display: flex;
+}
+
 .artist {
+    white-space: pre;
     font-size: 0.75rem;
     line-height: 1rem;
     color: var(--mantine-color-slate-5);
     font-weight: 300;
-    order: 1;
     margin: 0;
 }
 
@@ -194,7 +211,7 @@ Benface is still the Patron Saint of CSS though
     max-width: 100%;
 }
 
-.authorList, .bpmText, .sourceButton {
+.authorList, .bpmText, .sourceText {
     margin-left: 0.25rem;
     padding: 0;
     list-style-type: none;
@@ -211,37 +228,39 @@ Benface is still the Patron Saint of CSS though
     cursor: pointer;
 }
 
-.lb_approval > span {
+.approval > span {
     display: flex;
     align-items: center;
 }
 
-.yay\!lb_approval {
-    color: var(--green-400);
+.approvalYay {
+    color: var(--mantine-color-green-4);
 }
 
-.nope\!lb_approval {
-    color: var(--rose-600);
+.approvalNope {
+    color: var(--mantine-color-rose-6);
 }
 
-.lb_spacer {
+.spacer {
     flex-grow: 1;
 }
 
-.lb_tags {
+.tags {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     column-gap: 0.25rem;
     row-gap: 0.25rem;
     padding-top: 0.75rem;
+    list-style-type: none;
+    padding-left: 0;
 }
 
-.lb_tag {
+.tag {
     font-size: 0.75rem;
     line-height: 1rem;
-    background-color: var(--blueGray-200);
-    color: var(--blueGray-500);
+    background-color: var(--mantine-color-slate-2);
+    color: var(--mantine-color-slate-5);
     padding-left: 0.75rem;
     padding-right: 0.75rem;
     padding-top: 0.125rem;
@@ -251,44 +270,29 @@ Benface is still the Patron Saint of CSS though
     align-items: center;
 }
 
-.lb_tag:enabled:hover {
+.tag:enabled:hover {
     background-color: var(--blueGray-300);
     color: var(--blueGray-600);
     cursor: pointer;
 }
 
-.caution\!lb_tag {
-    background-color: var(--amber-100);
-    color: var(--amber-600);
+.tagCaution {
+    background-color: var(--mantine-color-amber-1);
+    color: var(--mantine-color-amber-6);
 }
 
-.caution\!lb_tag > .lb_metaicon {
-    color: var(--amber-500);
+.tagCaution > .metaicon {
+    color: var(--mantine-color-amber-5);
 }
 
-.caution\!lb_tag span {
+.tagCaution span {
     margin-left: 0.25rem;
 }
 
-.lb_id {
+.id {
     position: absolute;
     bottom: 0;
     right: 0.25rem;
     font-size: 0.65rem;
     color: var(--blueGray-300);
-}
-
-.row\!lb {
-    flex-direction: row;
-    width: 100%;
-    height: 12rem;
-}
-
-.row\!lb .lb_imagebox {
-    border-bottom-left-radius: 0.5rem;
-    border-top-right-radius: 0;
-}
-
-.row\!lb .lb_decorator {
-    border-top-right-radius: 0.5rem;
 }

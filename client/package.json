@@ -19,6 +19,7 @@
     "@mantine/notifications": "^7.16.0",
     "clsx": "^2.1.1",
     "jotai": "^2.12.2",
+    "jotai-immer": "^0.4.1",
     "jotai-location": "^0.5.5",
     "react": "19.0.0",
     "react-dom": "19.0.0",
