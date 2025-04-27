@@ -45,7 +45,7 @@ export function ProfileNavbar(){
                 }
             </Stack>
             <Spacer />
-            <Text c="dimmed" className={styles.navbarId}>Your ID: { user.id }</Text>
+            <Text c="dimmed" className={styles.navbarId}>User ID: { user.id }</Text>
         </Stack>
     );
 }
