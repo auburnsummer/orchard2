@@ -16,8 +16,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # superuser
         superuser = User.objects.create_superuser(
-            username="uadmin",
+            id="uadmin",
             email=None,
+            username="uadmin",
             display_name="Marina Distort",
             password="admin"
         )

@@ -14,6 +14,8 @@ import { atom, useAtom } from "jotai";
 import { withImmer } from "jotai-immer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { Form } from "@cafe/minibridge/components/Form";
+import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 
 const CHECKBOXES = [
     ["single_player", "Single Player"],
@@ -52,7 +54,6 @@ function PrefillPreview({ level }: { level: RDLevel }) {
 }
 
 export function PrefillReady({ prefill }: PrefillReadyProps) {
-    const user = useLoggedInUser();
     const prefillAtom = useRef(
         withImmer(
             atom(
@@ -60,6 +61,7 @@ export function PrefillReady({ prefill }: PrefillReadyProps) {
             )
         )
     );
+    const csrfInput = useCSRFTokenInput();
 
     const [level, setLevel] = useAtom(prefillAtom.current);
 
@@ -87,9 +89,21 @@ export function PrefillReady({ prefill }: PrefillReadyProps) {
                     >
                         Reset
                     </Button>
-                    <Button>
-                        Add Level
-                    </Button>
+                    {/* the addlevel button is a secret form.
+                     since we have some 'exotic' inputs from mantine that don't natively output formdata,
+                     instead we have a hidden input with the edited prefill as json.
+                    */}
+                    <Form
+                        method="POST"
+                    >
+                        {csrfInput}
+                        <input type="hidden" name="prefill" value={JSON.stringify(level)} />
+                        <Button
+                            type="submit"
+                        >
+                            Add Level
+                        </Button>
+                    </Form>
                 </Group>
                 <Group
                     align="end"
