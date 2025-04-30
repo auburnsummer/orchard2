@@ -39,7 +39,7 @@ def prefill_stage_two(request: AuthenticatedHttpRequest, prefill_id: str):
                     prefill.delete()
 
                 new_level_id = level.id
-                return redirect("cafe:view_rdlevel", new_level_id)
+                return redirect("cafe:level_view", new_level_id)
             except msgspec.ValidationError:
                 messages.error(request, "An error occurred validating the level")
         else:
