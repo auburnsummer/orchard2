@@ -1,10 +1,11 @@
 from django.contrib import messages
+from django.db import transaction
 from rules.contrib.views import objectgetter, permission_required
 from cafe.views.types import AuthenticatedHttpRequest
 from cafe.models.rdlevels.prefill import RDLevelPrefillResult
 from cafe.models.rdlevels.rdlevel import RDLevel
 from cafe.views.rdlevels.common import AddLevelPayload
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django import forms
 
 from django_bridge.response import Response
@@ -26,14 +27,19 @@ def prefill_stage_two(request: AuthenticatedHttpRequest, prefill_id: str):
                 args = {
                     **prefill.data,
                     **msgspec.structs.asdict(parsed),
+                    "approval": 0,
                     "submitter": prefill.user,
                     "club": prefill.club
                 }
                 if args['icon_url'] is None:
                     args['icon_url'] = ''
                 level = RDLevel(**args)
-                level.save()
-                messages.success(request, f"wow you clicked it! ${level.id}")
+                with transaction.atomic():
+                    level.save()
+                    prefill.delete()
+
+                new_level_id = level.id
+                return redirect("cafe:view_rdlevel", new_level_id)
             except msgspec.ValidationError:
                 messages.error(request, "An error occurred validating the level")
         else:

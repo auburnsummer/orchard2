@@ -21,7 +21,6 @@ from .msgspec_schema import VitalsLevel
 
 import msgspec
 
-
 class VitalsException(Exception):
     pass
 

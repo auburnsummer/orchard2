@@ -68,8 +68,46 @@ class RDLevel(RulesModel):
 
     club = models.ForeignKey(ClubType, on_delete=models.CASCADE)
 
+    approval = models.IntegerField(blank=False, default=0)
+
     def __str__(self):
         return f"{self.song} ({self.id})"
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "artist": self.artist,
+            "song": self.song,
+            "seizure_warning": self.seizure_warning,
+            "description": self.description,
+            "hue": self.hue,
+            "authors": self.authors,
+            "max_bpm": self.max_bpm,
+            "min_bpm": self.min_bpm,
+            "difficulty": self.difficulty,
+            "single_player": self.single_player,
+            "two_player": self.two_player,
+            "last_updated": self.last_updated,
+            "tags": self.tags,
+            "has_classics": self.has_classics,
+            "has_oneshots": self.has_oneshots,
+            "has_squareshots": self.has_squareshots,
+            "has_freezeshots": self.has_freezeshots,
+            "has_freetimes": self.has_freetimes,
+            "has_holds": self.has_holds,
+            "has_skipshots": self.has_skipshots,
+            "has_window_dance": self.has_window_dance,
+            "sha1": self.sha1,
+            "rdlevel_sha1": self.rdlevel_sha1,
+            "is_animated": self.is_animated,
+            "rdzip_url": self.rdzip_url,
+            "image_url": self.image_url,
+            "thumb_url": self.thumb_url,
+            "icon_url": self.icon_url,
+            "submitter": self.submitter.to_dict(),
+            "club": self.club.to_dict(),
+            "approval": self.approval
+        }
 
     class Meta:
         rules_permissions = {
