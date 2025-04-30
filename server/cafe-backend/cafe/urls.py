@@ -49,5 +49,5 @@ urlpatterns = [
 
     path("levels/add/<code>/", prefill_stage_one, name="level_portal"),
     path("levels/from_prefill/<prefill_id>/", prefill_stage_two, name="level_from_prefill"),
-    path("levels/<level_id>", view_rdlevel, name="view_rdlevel")
+    path("levels/<level_id>", view_rdlevel, name="level_view")
 ]
