@@ -87,7 +87,7 @@ class RDLevel(RulesModel):
             "difficulty": self.difficulty,
             "single_player": self.single_player,
             "two_player": self.two_player,
-            "last_updated": self.last_updated,
+            "last_updated": self.last_updated.isoformat(),
             "tags": self.tags,
             "has_classics": self.has_classics,
             "has_oneshots": self.has_oneshots,
