@@ -30,7 +30,6 @@ export type RDLevelBase = {
     rdlevel_sha1: string;
     is_animated: boolean;
     last_updated: string;
-
     rdzip_url: string;
     image_url: string;
     icon_url?: string;
