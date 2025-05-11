@@ -77,7 +77,9 @@ class RDLevel(RulesModel):
         return {
             "id": self.id,
             "artist": self.artist,
+            "artist_tokens": self.artist_tokens,
             "song": self.song,
+            "song_alt": self.song_alt,
             "seizure_warning": self.seizure_warning,
             "description": self.description,
             "hue": self.hue,
