@@ -3,17 +3,19 @@ import { Shell } from "@cafe/components/Shell";
 import { RDLevel } from "@cafe/types/rdLevelBase";
 import { faHeartPulse, faPaste, faPen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Container, Group, Image, Stack, Title, Text, UnstyledButton, Button } from "@mantine/core";
+import { Container, Group, Image, Stack, Title, Text, UnstyledButton, Button, Blockquote } from "@mantine/core";
 
 import styles from "./LevelView.module.css";
 
 import cc from "clsx";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { useClipboard } from "@mantine/hooks";
+import { Form } from "@cafe/minibridge/components/Form";
 
 type LevelViewProps = {
     rdlevel: RDLevel,
-    can_edit: boolean
+    can_edit: boolean,
+    can_delete: boolean
 }
 
 export function LevelView({rdlevel, can_edit}: LevelViewProps) {
@@ -98,7 +100,88 @@ export function LevelView({rdlevel, can_edit}: LevelViewProps) {
                             </Button>
                         )
                     }
+                    {
+                        can_edit && (
+                            <Form
+                                method="delete"
+                                action={`/level/${rdlevel.id}/delete`}
+                            >
+                                <Button
+                                    type="submit"
+                                    color="red"
+                                    variant="outline"
+                                >
+                                    Delete
+                                </Button>
+                            </Form>
+                        )
+                    }
                 </Group>
+                <Blockquote mt="md">
+                    {
+                        rdlevel.description.split('\n').map((p) => <Text>{p}</Text>)
+                    }
+                </Blockquote>
+                {/* we'll style this later */}
+                <dl>
+                    <div>
+                        <dt>Difficulty</dt>
+                        <dd>{rdlevel.difficulty}</dd>
+                    </div>
+                    <div>
+                        <dt>Seizure Warning</dt>
+                        <dd>{rdlevel.seizure_warning ? "Yes" : "No"}</dd>
+                    </div>
+                    <div>
+                        <dt>Tags</dt>
+                        <dd>{rdlevel.tags.join(", ")}</dd>
+                    </div>
+                    <div>
+                        <dt>Tags</dt>
+                        <dd>{rdlevel.tags.join(", ")}</dd>
+                    </div>
+                    <div>
+                        <dt>Has Classics</dt>
+                        <dd>{rdlevel.has_classics ? "Yes" : "No"}</dd>
+                    </div>
+                    <div>
+                        <dt>Has One Shots</dt>
+                        <dd>{rdlevel.has_oneshots ? "Yes" : "No"}</dd>
+                    </div>
+                    <div>
+                        <dt>Has Square Shots</dt>
+                        <dd>{rdlevel.has_squareshots ? "Yes" : "No"}</dd>
+                    </div>
+                    <div>
+                        <dt>Has Freeze Shots</dt>
+                        <dd>{rdlevel.has_freezeshots ? "Yes" : "No"}</dd>
+                    </div>
+                    <div>
+                        <dt>Has Free Times</dt>
+                        <dd>{rdlevel.has_freetimes ? "Yes" : "No"}</dd>
+                    </div>
+                    <div>
+                        <dt>Has Holds</dt>
+                        <dd>{rdlevel.has_holds ? "Yes" : "No"}</dd>
+                    </div>
+                    <div>
+                        <dt>Has Skip Shots</dt>
+
+                        <dd>{rdlevel.has_skipshots ? "Yes" : "No"}</dd>
+                    </div>
+                    <div>
+                        <dt>Has Window Dance</dt>
+                        <dd>{rdlevel.has_window_dance ? "Yes" : "No"}</dd>
+                    </div>
+                    <div>
+                        <dt>Single Player</dt>
+                        <dd>{rdlevel.single_player ? "Yes" : "No"}</dd>
+                    </div>
+                    <div>
+                        <dt>Two Player</dt>
+                        <dd>{rdlevel.two_player ? "Yes" : "No"}</dd>
+                    </div>
+                </dl>
             </Container>
         </Shell>
     );

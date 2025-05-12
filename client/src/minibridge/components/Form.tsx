@@ -2,8 +2,11 @@ import { useSetAtom } from "jotai";
 import { formDataToSearchParams, makeCanonicalURL } from "../utils";
 import { formSubmitAtom, navigateAtom } from "../atoms";
 
+type FormProps = React.FormHTMLAttributes<HTMLFormElement> & {
+    action?: string;
+}
 
-export function Form(props: React.HTMLProps<HTMLFormElement>) {
+export function Form(props: FormProps) {
     const { action, onSubmit: _onSubmit, method, ...rest } = props;
 
     const isOrchardURL = action === undefined || makeCanonicalURL(action).origin === document.location.origin;

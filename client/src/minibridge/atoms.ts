@@ -47,7 +47,8 @@ export const handleResponseAtom = atom(
             }
         }
         else if (response.action === "reload") {
-            set(locationAtom, url);
+            // reload the page
+            window.location.href = url.toString();
         }
         else if (response.action === "redirect") {
             set(navigateAtom, makeCanonicalURL(response.path))
