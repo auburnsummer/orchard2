@@ -3,10 +3,10 @@ import { RDLevel } from "@cafe/types/rdLevelBase"
 import cc from "clsx";
 import styles from "./LevelCard.module.css";
 
-import { Group, Text, UnstyledButton } from "@mantine/core";
+import { Text, UnstyledButton } from "@mantine/core";
 import { useClipboard } from '@mantine/hooks';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faDownload, faExclamationTriangle, faHeartPulse, faPaste, faPen, faPerson, faX, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faDownload, faExclamationTriangle, faHeartPulse, faPaste, faPen, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { DifficultyDecorator } from "./DifficultyDecorator/DifficultyDecorator";
 import { ConjunctionList } from "../ConjunctionList/ConjunctionList";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";

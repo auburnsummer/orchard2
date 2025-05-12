@@ -61,10 +61,11 @@ export async function djangoGet(
       action: "server-error",
     };
   }
+  // e.g. 404, where it returns normal HTML
   if (!response.headers.get("X-DjangoBridge-Action")) {
     return {
       action: "reload",
-    };
+    }; 
   }
   return response.json() as Promise<DjangoBridgeResponse>;
 }
@@ -94,6 +95,7 @@ export async function djangoPost(
       action: "server-error",
     };
   }
+  // e.g. 404, where it returns normal HTML
   if (!response.headers.get("X-DjangoBridge-Action")) {
     return {
       action: "reload",
