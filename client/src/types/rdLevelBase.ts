@@ -38,6 +38,7 @@ export type RDLevelBase = {
 
 // some additional fields
 export type RDLevel = RDLevelBase & {
+    id: string;
     song_alt: string;
     submitter: AuthenticatedUser;
     club: Club;
