@@ -82,4 +82,4 @@ export const formSubmitAtom = atom(null, async (_get, set, url: URL, formData: F
     set(isLoadingAtom, true);
     const resp = await djangoPost(url.toString(), formData);
     set(handleResponseAtom, resp, url);
-})
+});

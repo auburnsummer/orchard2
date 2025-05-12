@@ -1,15 +1,15 @@
 import { ConjunctionList } from "@cafe/components/ConjunctionList/ConjunctionList";
 import { Shell } from "@cafe/components/Shell";
 import { RDLevel } from "@cafe/types/rdLevelBase";
-import { faHeartPulse, faPaste, faPen } from "@fortawesome/free-solid-svg-icons";
+import { faHeartPulse, faPen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Container, Group, Image, Stack, Title, Text, UnstyledButton, Button, Blockquote } from "@mantine/core";
+import { Container, Group, Image, Stack, Title, Text, UnstyledButton, Button, Blockquote, Modal } from "@mantine/core";
 
 import styles from "./LevelView.module.css";
 
 import cc from "clsx";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
-import { useClipboard } from "@mantine/hooks";
+import { useClipboard, useDisclosure } from "@mantine/hooks";
 import { Form } from "@cafe/minibridge/components/Form";
 
 type LevelViewProps = {
@@ -18,14 +18,32 @@ type LevelViewProps = {
     can_delete: boolean
 }
 
-export function LevelView({rdlevel, can_edit}: LevelViewProps) {
+export function LevelView({rdlevel, can_edit, can_delete}: LevelViewProps) {
     const clipboard = useClipboard({ timeout: 500 });
     const bpmText = rdlevel.min_bpm === rdlevel.max_bpm
         ? `${rdlevel.min_bpm} BPM`
         : `${rdlevel.min_bpm}-${rdlevel.max_bpm} BPM`;
 
+    const [showDeleteForm, {open: openDeleteForm, close: closeDeleteForm}] = useDisclosure(false);
+
     return (
         <Shell>
+            <Modal
+                opened={showDeleteForm}
+                onClose={closeDeleteForm}
+                title={`Delete ${rdlevel.song}`}
+            >
+                <Form
+                    method="POST"
+                    action={`/levels/${rdlevel.id}/delete`}
+                >
+                    <Text>Please confirm you want to delete this level by clicking the button.</Text>
+                    <Text>Note: this action is irreversible.</Text>
+                    <Button type="submit" color="red" variant="outline" mt="md">
+                        Delete
+                    </Button>
+                </Form>
+            </Modal>
             <Container pt="md">
                 <Group
                     align="flex-start"
@@ -95,25 +113,21 @@ export function LevelView({rdlevel, can_edit}: LevelViewProps) {
                     </Button>
                     {
                         can_edit && (
-                            <Button component="a" href={`/level/${rdlevel.id}/edit`}>
+                            <Button component="a" href={`/levels/${rdlevel.id}/edit`}>
                                 Edit
                             </Button>
                         )
                     }
                     {
-                        can_edit && (
-                            <Form
-                                method="delete"
-                                action={`/level/${rdlevel.id}/delete`}
+                        can_delete && (
+                            <Button
+                                type="submit"
+                                color="red"
+                                variant="outline"
+                                onClick={openDeleteForm}
                             >
-                                <Button
-                                    type="submit"
-                                    color="red"
-                                    variant="outline"
-                                >
-                                    Delete
-                                </Button>
-                            </Form>
+                                Delete
+                            </Button>
                         )
                     }
                 </Group>

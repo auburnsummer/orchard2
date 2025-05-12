@@ -18,6 +18,7 @@ from .views.clubs.connect_discord import connect_discord
 from .views.login import login
 
 from .views.discord_bot.entry import entry
+from .views.rdlevels.edit_rdlevel import edit_rdlevel
 
 from .views.rdlevels.prefill.prefill_stage_one import prefill_stage_one
 from .views.rdlevels.prefill.prefill_stage_two import prefill_stage_two
@@ -49,5 +50,6 @@ urlpatterns = [
 
     path("levels/add/<code>/", prefill_stage_one, name="level_portal"),
     path("levels/from_prefill/<prefill_id>/", prefill_stage_two, name="level_from_prefill"),
-    path("levels/<level_id>", view_rdlevel, name="level_view")
+    path("levels/<level_id>", view_rdlevel, name="level_view"),
+    path("levels/<level_id>/edit/", edit_rdlevel, name="level_edit")
 ]
