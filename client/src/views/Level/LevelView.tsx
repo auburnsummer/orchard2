@@ -1,20 +1,23 @@
 import { ConjunctionList } from "@cafe/components/ConjunctionList/ConjunctionList";
 import { Shell } from "@cafe/components/Shell";
 import { RDLevel } from "@cafe/types/rdLevelBase";
-import { faHeartPulse, faPen } from "@fortawesome/free-solid-svg-icons";
+import { faHeartPulse, faPaste, faPen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Container, Group, Image, Stack, Title, Text, UnstyledButton } from "@mantine/core";
+import { Container, Group, Image, Stack, Title, Text, UnstyledButton, Button } from "@mantine/core";
 
 import styles from "./LevelView.module.css";
 
 import cc from "clsx";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
+import { useClipboard } from "@mantine/hooks";
 
 type LevelViewProps = {
-    rdlevel: RDLevel
+    rdlevel: RDLevel,
+    can_edit: boolean
 }
 
-export function LevelView({rdlevel}: LevelViewProps) {
+export function LevelView({rdlevel, can_edit}: LevelViewProps) {
+    const clipboard = useClipboard({ timeout: 500 });
     const bpmText = rdlevel.min_bpm === rdlevel.max_bpm
         ? `${rdlevel.min_bpm} BPM`
         : `${rdlevel.min_bpm}-${rdlevel.max_bpm} BPM`;
@@ -72,6 +75,29 @@ export function LevelView({rdlevel}: LevelViewProps) {
                             </Group>
                         </Stack>
                     </Stack>
+                </Group>
+                <Group pt="xs">
+                    <Button component="a" href={rdlevel.rdzip_url}>
+                        Download
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            clipboard.copy(rdlevel.rdzip_url);
+                        }}
+                    >
+                        {
+                            clipboard.copied
+                                ? "Copied!"
+                                : "Copy link"
+                        }
+                    </Button>
+                    {
+                        can_edit && (
+                            <Button component="a" href={`/level/${rdlevel.id}/edit`}>
+                                Edit
+                            </Button>
+                        )
+                    }
                 </Group>
             </Container>
         </Shell>
