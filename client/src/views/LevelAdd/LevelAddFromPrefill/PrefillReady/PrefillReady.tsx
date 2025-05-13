@@ -1,12 +1,11 @@
 import { LevelCard } from "@cafe/components/LevelCard/LevelCard"
 import { Shell } from "@cafe/components/Shell"
-import { RDLevelPrefill, RDLevelPrefillReady } from "@cafe/types/rdLevelPrefill"
+import { RDLevelPrefillReady } from "@cafe/types/rdLevelPrefill"
 import commonStyles from '@cafe/theme/commonPatterns.module.css';
 import styles from "./PrefillReady.module.css";
-import { Alert, TagsInput, Center, TextInput, Text, Stack, Group, Button, Textarea, NumberInput, Switch, Fieldset, Slider, Checkbox, SimpleGrid, Grid } from "@mantine/core";
+import { Alert, TagsInput, Center, TextInput, Text, Stack, Group, Button, Textarea, NumberInput, Switch, Fieldset, Slider, Checkbox, Grid } from "@mantine/core";
 
 import cc from "clsx";
-import { useLoggedInUser } from "@cafe/hooks/useUser";
 import { useRef, useState } from "react";
 import { RDLevel } from "@cafe/types/rdLevelBase";
 import { atom, useAtom } from "jotai";
@@ -34,6 +33,7 @@ const CHECKBOXES = [
 function buildInitialLevel(prefill: RDLevelPrefillReady): RDLevel {
     return {
         ...prefill.data,
+        id: "",
         song_alt: "",
         submitter: prefill.user,
         club: prefill.club,
