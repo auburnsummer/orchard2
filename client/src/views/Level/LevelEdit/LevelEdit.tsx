@@ -1,7 +1,14 @@
+import { Shell } from "@cafe/components/Shell"
+import { RDLevel } from "@cafe/types/rdLevelBase"
 
+type LevelEditProps = {
+    rdlevel: RDLevel
+}
 
-export function LevelEdit() {
+export function LevelEdit({rdlevel}: LevelEditProps) {
     return (
-        <p>level edit iajifow eiofaw ejiof aweijof oiawe foiawe foiaew </p>
+        <Shell>
+            <p>hello</p>
+        </Shell>
     )
 }
