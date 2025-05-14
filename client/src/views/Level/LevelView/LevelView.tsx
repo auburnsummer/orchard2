@@ -11,6 +11,7 @@ import cc from "clsx";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { useClipboard, useDisclosure } from "@mantine/hooks";
 import { Form } from "@cafe/minibridge/components/Form";
+import { Link } from "@cafe/minibridge/components/Link";
 
 type LevelViewProps = {
     rdlevel: RDLevel,
@@ -113,7 +114,7 @@ export function LevelView({rdlevel, can_edit, can_delete}: LevelViewProps) {
                     </Button>
                     {
                         can_edit && (
-                            <Button component="a" href={`/levels/${rdlevel.id}/edit`}>
+                            <Button component={Link} href={`/levels/${rdlevel.id}/edit`}>
                                 Edit
                             </Button>
                         )

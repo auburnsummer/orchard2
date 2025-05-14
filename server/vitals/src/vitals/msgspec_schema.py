@@ -12,7 +12,6 @@ class VitalsLevelBaseMutable(msgspec.Struct):
     description: str
     hue: float
     authors: Annotated[List[str], msgspec.Meta(min_length=1)]
-    authors_raw: str
     max_bpm: int
     min_bpm: int
     difficulty: int
