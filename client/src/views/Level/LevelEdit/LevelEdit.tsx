@@ -1,5 +1,8 @@
-import { Shell } from "@cafe/components/Shell"
+import { EditLevelForm } from "@cafe/components/EditLevelForm/EditLevelForm"
 import { RDLevel } from "@cafe/types/rdLevelBase"
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { Alert, Text } from "@mantine/core"
 
 type LevelEditProps = {
     rdlevel: RDLevel
@@ -7,8 +10,15 @@ type LevelEditProps = {
 
 export function LevelEdit({rdlevel}: LevelEditProps) {
     return (
-        <Shell>
-            <p>hello</p>
-        </Shell>
+        <EditLevelForm
+            level={rdlevel}
+            preamble={
+                <Alert icon={<FontAwesomeIcon icon={faInfoCircle} />}>
+                    <Text>This page is for changing the metadata of the level without changing the actual .rdzip file.</Text>
+                    <Text>If you want to upload a new .rdzip file, please upload it to Discord first, use the "Add to Rhythm Café" command, then select "Update to existing level."</Text> 
+                </Alert>
+            }
+            submitButtonText="Edit Level"
+        />
     )
 }

@@ -10,7 +10,6 @@ export type RDLevelBase = {
     description: string;
     hue: number;
     authors: string[];
-    authors_raw: string;
     max_bpm: number;
     min_bpm: number;
     difficulty: number;

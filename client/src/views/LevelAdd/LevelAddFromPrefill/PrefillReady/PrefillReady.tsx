@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { Form } from "@cafe/minibridge/components/Form";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
+import { EditLevelForm } from "@cafe/components/EditLevelForm/EditLevelForm";
 
 const CHECKBOXES = [
     ["single_player", "Single Player"],
@@ -54,6 +55,20 @@ function PrefillPreview({ level }: { level: RDLevel }) {
 }
 
 export function PrefillReady({ prefill }: PrefillReadyProps) {
+    return (
+        <EditLevelForm
+            level={buildInitialLevel(prefill)}
+            preamble={
+                <Alert icon={<FontAwesomeIcon icon={faInfoCircle} />}>
+                    <Text>We've filled out the fields below based on the rdzip file.</Text>
+                    <Text>If it all looks OK, you can simply click "Add Level" now to add the level.</Text>
+                    <Text>Otherwise, make changes, and then click "Add Level".</Text>
+                    <Text>You will be able to come back and edit later.</Text>
+                </Alert>
+            }
+            submitButtonText="Add Level"
+        />
+    )
     const prefillAtom = useRef(
         withImmer(
             atom(

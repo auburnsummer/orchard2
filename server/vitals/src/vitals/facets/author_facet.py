@@ -16,4 +16,4 @@ def author_facet(obj, **kwargs):
 
     author_tokens = [s.strip() for s in re.split(AUTHOR_REGEX, authors) if s]
 
-    return author_tokens, author_raw
+    return author_tokens

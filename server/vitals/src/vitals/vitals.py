@@ -35,7 +35,7 @@ def vitals(f: IO[bytes]) -> VitalsLevel:
             ["settings", "description"]
         ),
         "hue": make_key_facet(["settings", "songNameHue"], 0.0),
-        ("authors", "authors_raw"): author_facet,
+        "authors": author_facet,
         ("max_bpm", "min_bpm"): bpm_facet,
         "difficulty": difficulty_facet,
         ("single_player", "two_player"): player_facet,
