@@ -68,7 +68,8 @@ INSTALLED_APPS = [
     'rules',
 
     'hijack',
-    'hijack.contrib.admin'
+    'hijack.contrib.admin',
+    'simple_history'
 ]
 
 MIDDLEWARE = [
@@ -82,6 +83,7 @@ MIDDLEWARE = [
     'hijack.middleware.HijackUserMiddleware',
     'django_bridge.middleware.DjangoBridgeMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware'
 ]
 
 ACCOUNT_SESSION_REMEMBER = True

@@ -16,7 +16,6 @@ from cafe.views.types import AuthenticatedHttpRequest
 def delete_rdlevel(request: AuthenticatedHttpRequest, level_id: str):
     rdlevel = get_object_or_404(RDLevel, id=level_id)
     if request.method == 'POST':
-        print("DELETING DELETING DELETING")
         rdlevel.delete()
         messages.success(request, "Successfully deleted level")
 
