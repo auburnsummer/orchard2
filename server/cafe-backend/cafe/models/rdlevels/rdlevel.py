@@ -1,13 +1,14 @@
 from __future__ import annotations
-from operator import is_
 from django.db import models
 from cafe.models.id_utils import generate_rdlevel_id, RDLEVEL_ID_LENGTH
 from cafe.models.types import UserType, ClubType
 
-from django.db.models import Q
+from simple_history.models import HistoricalRecords
 
 from rules.contrib.models import RulesModel
 import rules
+
+
 @rules.predicate
 def is_at_least_admin_of_connected_club(user: UserType, level: "RDLevel"):
     memberships = user.memberships.filter(club__exact=level.club, role__in=["owner", "admin"])
@@ -68,6 +69,8 @@ class RDLevel(RulesModel):
     club = models.ForeignKey(ClubType, on_delete=models.CASCADE)
 
     approval = models.IntegerField(blank=False, default=0)
+
+    history = HistoricalRecords()
 
     def __str__(self):
         return f"{self.song} ({self.id})"

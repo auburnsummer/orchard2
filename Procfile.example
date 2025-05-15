@@ -1,3 +1,5 @@
-server: ./rhythm-cafe/.venv/bin/python ./rhythm-cafe/src/manage.py runserver
-huey: ./rhythm-cafe/.venv/bin/python ./rhythm-cafe/src/manage.py run_huey
-ngrok: ngrok http --domain=url 8000
+server: cd ./server/cafe-backend && uv run python manage.py runserver
+client: cd ./client && npm run dev -- --clearScreen false
+ngrok: ngrok http --domain=<domain> 8000
+redis: redis-server
+huey: cd ./server/cafe-backend && uv run python manage.py run_huey

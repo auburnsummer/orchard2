@@ -4,6 +4,7 @@ from django.db import models
 
 from rules.contrib.models import RulesModel 
 from cafe.models.id_utils import generate_club_id, CLUB_ID_LENGTH
+from simple_history.models import HistoricalRecords
 
 from .predicates import is_at_least_admin, is_owner
 
@@ -24,6 +25,8 @@ class Club(RulesModel):
     members = models.ManyToManyField("cafe.User", through="cafe.ClubMembership")
     # from cafe.ClubMembership
     memberships: RelatedManager[ClubMembership]
+
+    history = HistoricalRecords()
 
     def __str__(self):
         return f"{self.name} ({self.id})"

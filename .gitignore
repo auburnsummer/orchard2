@@ -189,3 +189,7 @@ Procfile
 dump.rdb
 
 .idea
+
+meilisearch
+
+data.ms
