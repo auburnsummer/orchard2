@@ -12,6 +12,7 @@ import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { useClipboard, useDisclosure } from "@mantine/hooks";
 import { Form } from "@cafe/minibridge/components/Form";
 import { Link } from "@cafe/minibridge/components/Link";
+import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 
 type LevelViewProps = {
     rdlevel: RDLevel,
@@ -27,6 +28,8 @@ export function LevelView({rdlevel, can_edit, can_delete}: LevelViewProps) {
 
     const [showDeleteForm, {open: openDeleteForm, close: closeDeleteForm}] = useDisclosure(false);
 
+    const csrfInput = useCSRFTokenInput();
+
     return (
         <Shell>
             <Modal
@@ -36,8 +39,9 @@ export function LevelView({rdlevel, can_edit, can_delete}: LevelViewProps) {
             >
                 <Form
                     method="POST"
-                    action={`/levels/${rdlevel.id}/delete`}
+                    action={`/levels/${rdlevel.id}/delete/`}
                 >
+                    {csrfInput}
                     <Text>Please confirm you want to delete this level by clicking the button.</Text>
                     <Text>Note: this action is irreversible.</Text>
                     <Button type="submit" color="red" variant="outline" mt="md">
@@ -114,7 +118,7 @@ export function LevelView({rdlevel, can_edit, can_delete}: LevelViewProps) {
                     </Button>
                     {
                         can_edit && (
-                            <Button component={Link} href={`/levels/${rdlevel.id}/edit`}>
+                            <Button component={Link} href={`/levels/${rdlevel.id}/edit/`}>
                                 Edit
                             </Button>
                         )
