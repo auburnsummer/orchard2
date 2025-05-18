@@ -10,6 +10,8 @@ from simple_history.models import HistoricalRecords
 from rules.contrib.models import RulesModel
 import rules
 
+from cafe.tasks.sync_level_to_meili import sync_level_to_meili
+
 
 @rules.predicate
 def is_at_least_admin_of_connected_club(user: UserType, level: "RDLevel"):
@@ -114,6 +116,10 @@ class RDLevel(RulesModel):
             "club": self.club.to_dict(),
             "approval": self.approval
         }
+
+    def save(self, *args, **kwargs):
+        super(RDLevel, self).save(*args, **kwargs)
+        sync_level_to_meili(self.id)
 
     class Meta:
         rules_permissions = {
