@@ -8,6 +8,7 @@ from .models.clubs.club_invite import ClubInvite
 from .models.discord_guild import DiscordGuild
 from .models.rdlevels.prefill import RDLevelPrefillResult
 from .models.rdlevels.rdlevel import RDLevel
+from simple_history.admin import SimpleHistoryAdmin
 
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):
@@ -23,9 +24,9 @@ class UserAdmin(DjangoUserAdmin):
         ),
     )
 
-admin.site.register(Club)
+admin.site.register(Club, SimpleHistoryAdmin)
 admin.site.register(ClubMembership)
 admin.site.register(ClubInvite)
 admin.site.register(DiscordGuild)
 admin.site.register(RDLevelPrefillResult)
-admin.site.register(RDLevel)
+admin.site.register(RDLevel, SimpleHistoryAdmin)

@@ -1,5 +1,7 @@
 from __future__ import annotations
 from django.db import models
+from django.db.models import Manager
+
 from cafe.models.id_utils import generate_rdlevel_id, RDLEVEL_ID_LENGTH
 from cafe.models.types import UserType, ClubType
 
