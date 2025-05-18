@@ -92,6 +92,15 @@ ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_USER_DISPLAY = lambda user: user.get_short_name()
 
+DISCORD_PUBLIC_KEY = os.environ['DISCORD_PUBLIC_KEY']
+DISCORD_BOT_TOKEN = os.environ['DISCORD_BOT_TOKEN']
+DISCORD_CLIENT_ID = os.environ['DISCORD_CLIENT_ID']
+DISCORD_CLIENT_SECRET = os.environ['DISCORD_CLIENT_SECRET']
+DOMAIN_URL = os.environ['DOMAIN_URL']
+
+MEILI_API_KEY = os.environ['MEILI_API_KEY']
+MEILI_API_URL = os.environ['MEILI_API_URL']
+
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
 SOCIALACCOUNT_ADAPTER = 'cafe.social_adapter.CafeSocialAccountAdapter'
@@ -102,16 +111,12 @@ SOCIALACCOUNT_PROVIDERS = {
         'VERIFIED_EMAIL': True,
         'SCOPE': ['email', 'identify'],
         'APP': {
-            'client_id': os.environ['DISCORD_CLIENT_ID'],
-            'secret': os.environ['DISCORD_CLIENT_SECRET'],
+            'client_id': DISCORD_CLIENT_ID,
+            'secret': DISCORD_CLIENT_SECRET,
             'key': ''
         }
     }
 }
-
-DISCORD_PUBLIC_KEY = os.environ['DISCORD_PUBLIC_KEY']
-DISCORD_BOT_TOKEN = os.environ['DISCORD_BOT_TOKEN']
-DOMAIN_URL = os.environ['DOMAIN_URL']
 
 DJANGO_BRIDGE = {
     "CONTEXT_PROVIDERS": {
