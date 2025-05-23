@@ -52,8 +52,7 @@ async def upload_files(level: VitalsLevel, f: BufferedRandom):
         )
 
 
-
-@on_commit_task()
+@db_task()
 def run_prefill(prefill_id: str):
     prefill_result = RDLevelPrefillResult.objects.get(id=prefill_id)
     try:

@@ -19,6 +19,7 @@ class UserAdmin(DjangoUserAdmin):
             {
                 'fields': (
                     'display_name',
+                    'id'
                 ),
             },
         ),
