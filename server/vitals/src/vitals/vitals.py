@@ -63,27 +63,11 @@ def vitals(f: IO[bytes]) -> VitalsLevel:
                 text = rdlevel.read().decode("utf-8-sig")
                 parsed = parse(text)
 
-                # get the TOML comment if there is one.
-                # there can be only one
-                comments = [evt for evt in parsed["events"] if evt["type"] == "Comment"]
-                toml_comment = None
-                for comment in comments:
-                    try:
-                        content = comment["text"]
-                        if "#orchard" not in content:
-                            continue
-                        # toml_comment = toml.loads(content)
-                        toml_comment = msgspec.toml.decode(content)
-                        break  # only consider the first valid comment we find.
-                    except:
-                        # it's fine if there isn't a comment.
-                        continue
-
                 final = {}
                 for key, func in facets.items():
                     try:
                         result = func(
-                            **{"obj": parsed, "zip": z, "file": f, "toml": toml_comment}
+                            **{"obj": parsed, "zip": z, "file": f}
                         )
                         if isinstance(key, tuple):
                             # multiple keys with (expected) multiple values that map to the keys.

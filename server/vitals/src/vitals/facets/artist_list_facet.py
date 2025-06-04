@@ -11,9 +11,7 @@ from vitals.color_tagged_string import parse_color_tagged_string
 
 ARTIST_REGEX = r"\s*?(?:ft\.|feat\.|×|,)\s*?"
 
-def artist_list_facet(obj, toml, **kwargs):
-    if toml is not None and try_dig(["artists", "tokens"], toml):
-        return try_dig(["artists", "tokens"], toml)
+def artist_list_facet(obj, **kwargs):
     artist_raw = obj["settings"]["artist"]
     artist_stripped = parse_color_tagged_string(artist_raw)
     artists = [
