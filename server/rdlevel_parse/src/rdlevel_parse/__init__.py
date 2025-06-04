@@ -19,6 +19,3 @@ def with_first_file_or_stdin(func):
 def main(file):
     parsed = parse(file.read())
     print(json.dumps(parsed))
-
-if __name__ == "__main__":
-    main()
