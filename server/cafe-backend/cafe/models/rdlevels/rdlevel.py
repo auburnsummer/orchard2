@@ -121,6 +121,10 @@ class RDLevel(RulesModel):
         super(RDLevel, self).save(*args, **kwargs)
         sync_level_to_meili(self.id)
 
+    def delete(self, *args, **kwargs):
+        super(RDLevel, self).delete(*args, **kwargs)
+        sync_level_to_meili(self.id)
+
     class Meta:
         rules_permissions = {
             # cafe.change_rdlevel
