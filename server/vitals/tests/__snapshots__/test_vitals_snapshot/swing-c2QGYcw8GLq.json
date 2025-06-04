@@ -1,0 +1,44 @@
+{
+  "artist": "JustMe",
+  "artist_tokens": [
+    "JustMe"
+  ],
+  "authors": [
+    "Xeno"
+  ],
+  "description": "Printin' twang.",
+  "difficulty": 1,
+  "has_classics": true,
+  "has_freetimes": true,
+  "has_freezeshots": false,
+  "has_holds": false,
+  "has_oneshots": true,
+  "has_skipshots": false,
+  "has_squareshots": false,
+  "has_window_dance": false,
+  "hue": 0.08,
+  "icon": "<binary>",
+  "image": "<binary>",
+  "is_animated": false,
+  "last_updated": "2020-12-01T18:30:20.000000",
+  "max_bpm": 130,
+  "min_bpm": 130,
+  "rdlevel_sha1": "cdbcaadea1a271696931e9badab00fc24c9acd51",
+  "seizure_warning": false,
+  "sha1": "933bbbbd9c1d79a8c3d2946e5748548a414488ea",
+  "single_player": true,
+  "song": "Swing",
+  "tags": [
+    "Printing",
+    "CMYK",
+    "Swing",
+    "Bounce",
+    "syncopation",
+    "gimmick",
+    "1p",
+    "2p",
+    "XenOnly"
+  ],
+  "thumb": "<binary>",
+  "two_player": true
+}
