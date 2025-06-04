@@ -1,7 +1,7 @@
 {
   "artist": "Samario (Making A Mistake)",
   "artist_tokens": [
-    "Samario"
+    "Samario (Making A Mistake)"
   ],
   "authors": [
     "Samario (Making A Mistake)"
@@ -21,8 +21,8 @@
   "image": "<binary>",
   "is_animated": false,
   "last_updated": "2022-06-27T21:27:12.000000",
-  "max_bpm": 70,
-  "min_bpm": 40,
+  "max_bpm": 160,
+  "min_bpm": 160,
   "rdlevel_sha1": "c467e396d29bd65f4a9c8e9abad64b05a4e39600",
   "seizure_warning": false,
   "sha1": "495bd9d1b759db53e600b3986df55bdf3a9c3653",

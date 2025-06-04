@@ -27,7 +27,7 @@
   "rdlevel_sha1": "077671a2053d503850d2df220c10f7b901ae0963",
   "seizure_warning": false,
   "sha1": "460807d4b87deb9d94ab31369985ba96b5c95291",
-  "single_player": true,
+  "single_player": false,
   "song": "Triplet Test",
   "tags": [
     "Piano",
@@ -35,5 +35,5 @@
     "Two-handed"
   ],
   "thumb": "<binary>",
-  "two_player": false
+  "two_player": true
 }
