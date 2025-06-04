@@ -1,6 +1,7 @@
 from tempfile import NamedTemporaryFile
 
 from django.core.management.base import BaseCommand
+from django.db import IntegrityError
 
 from cafe.models import Club, User, RDLevel
 from cafe.models.rdlevels.prefill import RDLevelPrefillResult
@@ -44,6 +45,10 @@ def process_legacy_level(level_url: str, user: User, club: Club, existing_approv
     )
     run_prefill.call_local(prefill.id)
     prefill.refresh_from_db()
+    if not prefill.ready:
+        logger.warning(f"Prefill failed for level {prefill.id} ")
+        logger.warning(prefill.errors)
+        return
     level_data = {
         **prefill.data,
         "approval": existing_approval,
@@ -53,6 +58,7 @@ def process_legacy_level(level_url: str, user: User, club: Club, existing_approv
     if level_data['icon_url'] is None:
         level_data['icon_url'] = ''
     RDLevel.objects.create(**level_data)
+    prefill.delete()
 
 
 class Command(BaseCommand):
@@ -78,18 +84,20 @@ class Command(BaseCommand):
             
             res = cur.execute("SELECT * FROM combined")
             for row in res:
-                logger.info(f"Processing level {row['song']} ({row['id']})")
-
                 discord_user = None
                 sha1 = row['sha1']
                 try:
                     existing_level = RDLevel.objects.get(sha1=sha1)
-                    logger.info(f"found existing level {existing_level}, therefore skipping")
+                    #logger.info(f"found existing level {existing_level}, therefore skipping")
                     continue
                 except RDLevel.DoesNotExist:
                     pass
+                logger.info(f"Processing level {row['song']} ({row['id']})")
                 if row['source'] == 'rdl':
                     rdl_data = json.loads(row['source_metadata'])
                     discord_user_id = rdl_data['user_id']
                     discord_user = get_discord_user_from_id(discord_user_id)
-                process_legacy_level(row['url2'], discord_user or user, club, row['approval'])
+                try:
+                    process_legacy_level(row['url2'], discord_user or user, club, row['approval'])
+                except IntegrityError:
+                    logger.info(f"Level not added due to duplicate")

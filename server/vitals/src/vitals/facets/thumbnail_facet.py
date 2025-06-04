@@ -1,5 +1,3 @@
-from math import ceil
-from zipfile import ZipFile
 from PIL import Image
 
 from io import BytesIO
@@ -27,7 +25,6 @@ def thumbnail_facet(obj, zip, **kwargs_):
             image.save(
                 orig_file_p,
                 format="png",
-                save_all=True,
                 optimize=True,
             )
         # whatever Samario is doing with his thumbnails, PIL's save_all doesn't work with it

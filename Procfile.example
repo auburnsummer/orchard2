@@ -3,3 +3,5 @@ client: cd ./client && npm run dev -- --clearScreen false
 ngrok: ngrok http --domain=<domain> 8000
 redis: redis-server
 huey: cd ./server/cafe-backend && uv run python manage.py run_huey
+meili: ./meilisearch --master-key=
+minio: minio server ./data.minio
