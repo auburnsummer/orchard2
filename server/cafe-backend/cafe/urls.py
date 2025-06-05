@@ -6,6 +6,7 @@ from .views.accounts.profile.index import profile
 from .views.accounts.profile.profile_settings import settings as profile_settings
 from .views.accounts.profile.profile_clubs import profile_clubs
 from .views.clubs.create_club import create_club
+from .views.rdlevels.search_levels import search_levels
 
 from .views.clubs.settings.info import info
 from .views.clubs.settings.members import members
@@ -54,4 +55,5 @@ urlpatterns = [
     path("levels/<level_id>", view_rdlevel, name="level_view"),
     path("levels/<level_id>/edit/", edit_rdlevel, name="level_edit"),
     path("levels/<level_id>/delete/", delete_rdlevel, name="level_delete"),
+    path("levels/", search_levels, name="level_search"),
 ]
