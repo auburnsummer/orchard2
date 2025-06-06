@@ -1,9 +1,9 @@
 from huey.contrib.djhuey import task
 
-from cafe.apps import RDLEVEL_INDEX_NAME
-from orchard.settings import MEILI_API_URL, MEILI_API_KEY
+from cafe.management.commands.setupmeili import RDLEVEL_INDEX_NAME
 import meilisearch
 from django.core.exceptions import ObjectDoesNotExist
+from orchard.settings import MEILI_API_URL, MEILI_API_KEY
 
 client = meilisearch.Client(MEILI_API_URL, MEILI_API_KEY)
 
