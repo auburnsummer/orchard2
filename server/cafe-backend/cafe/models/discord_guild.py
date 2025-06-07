@@ -21,3 +21,4 @@ class DiscordGuild(models.Model):
             "id": self.id,
             "club": self.club.to_dict() if self.club else None
         }
+    

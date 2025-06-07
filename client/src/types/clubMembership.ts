@@ -1,10 +1,10 @@
-import { AuthenticatedUser } from "@cafe/hooks/useUser";
 import { Club } from "./club";
+import { UserPublic } from "./user";
 
 export type ClubMembershipRole = 'admin' | 'owner';
 
 export type ClubMembership = {
-    user: AuthenticatedUser;
+    user: UserPublic;
     club: Club;
     role: ClubMembershipRole;
 }

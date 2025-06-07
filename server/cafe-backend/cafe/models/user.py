@@ -57,8 +57,7 @@ class User(AbstractUser):
     def __str__(self):
         return f"{self.display_name} ({self.id})"
 
-    
-    def to_dict(self):
+    def to_dict_private(self):
         return {
             "authenticated": True,
             "id": self.id,
@@ -67,8 +66,14 @@ class User(AbstractUser):
             "theme_preference": self.theme_preference,
             "is_superuser": self.is_superuser,
         }
-
     
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "displayName": self.get_short_name(),
+            "avatarURL": try_get_avatar(self),
+        }
+
     objects = CafeUserManager()
 
     USERNAME_FIELD = "id"

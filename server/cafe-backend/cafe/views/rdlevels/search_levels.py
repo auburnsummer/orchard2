@@ -10,7 +10,7 @@ client = meilisearch.Client(MEILI_API_URL, MEILI_API_KEY)
 
 def search_levels(request: HttpRequest):
     # for now i'll just hardcode a query
-    query = "rdsrt"
+    query = ""
     index = client.get_index(RDLEVEL_INDEX_NAME)
     results = index.search(query, {
         "attributesToSearchOn":  [
@@ -40,7 +40,6 @@ def search_levels(request: HttpRequest):
             "club.id"
         ]
     })
-    print(results)
     return Response(request, request.resolver_match.view_name, {
-        "message": "Search functionality coming soon!"
+        "results": results
     }) 
