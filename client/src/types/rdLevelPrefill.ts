@@ -1,6 +1,6 @@
-import { AuthenticatedUser } from "@cafe/hooks/useUser"
-import { RDLevel, RDLevelBase } from "./rdLevelBase"
+import { RDLevelBase } from "./rdLevelBase"
 import { Club } from "./club"
+import { UserPublic } from "./user";
 
 type RDLevelPrefillBase = {
     id: string;
@@ -11,7 +11,7 @@ type RDLevelPrefillBase = {
     };
     version: number;
     prefill_type: string;
-    user: AuthenticatedUser;
+    user: UserPublic;
     club: Club;
 }
 

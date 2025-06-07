@@ -1,5 +1,5 @@
-import { AuthenticatedUser } from "@cafe/hooks/useUser";
 import { Club } from "./club";
+import { UserPublic } from "./user";
 
 // output of the prefill job
 export type RDLevelBase = {
@@ -39,7 +39,7 @@ export type RDLevelBase = {
 export type RDLevel = RDLevelBase & {
     id: string;
     song_alt: string;
-    submitter: AuthenticatedUser;
+    submitter: UserPublic;
     club: Club;
     approval: number;
 }

@@ -2,13 +2,15 @@ import React from 'react';
 import styles from './LevelSearch.module.css';
 
 interface LevelSearchProps {
-    message: string;
+    results: any;
 }
 
-export const LevelSearch: React.FC<LevelSearchProps> = ({ message }) => {
+export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
     return (
-        <div className={styles.container}>
-            {message || "Search placeholder"}
-        </div>
-    );
+        <pre>
+            {
+                JSON.stringify(results, null, 2)
+            }
+        </pre>
+   );
 }; 

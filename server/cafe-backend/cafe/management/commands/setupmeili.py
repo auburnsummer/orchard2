@@ -58,6 +58,14 @@ class Command(BaseCommand):
                     "last_updated"
                 ]
             )
+            index.update_faceting_settings(
+                body={
+                    "sortFacetValuesBy": {
+                        "*": "count"
+                    },
+                    "maxValuesPerFacet": 25
+                }
+            )
 
             self.stdout.write(self.style.SUCCESS(f"Successfully created MeiliSearch index: {RDLEVEL_INDEX_NAME}"))
         except Exception as e:

@@ -35,7 +35,7 @@ class Club(RulesModel):
         return {
             "id": self.id,
             "name": self.name
-        }
+        } 
     
     class Meta:
         rules_permissions = {
