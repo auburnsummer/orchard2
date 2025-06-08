@@ -21,6 +21,7 @@
     "jotai": "^2.12.4",
     "jotai-immer": "^0.4.1",
     "jotai-location": "^0.6.0",
+    "json-edit-react": "^1.26.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-top-loading-bar": "^3.0.2"
