@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Optional, List
+from typing import Optional, List, Dict, Any, Union
 
 from django_bridge.response import Response
 
@@ -30,53 +30,123 @@ class SearchLevelParams:
     difficulties: Optional[List[int]]
     single_player: Optional[bool]
     two_player: Optional[bool]
+    has_classics: Optional[bool]
+    has_oneshots: Optional[bool]
+    has_squareshots: Optional[bool]
+    has_freezeshots: Optional[bool]
+    has_freetimes: Optional[bool]
+    has_holds: Optional[bool]
+    has_window_dance: Optional[bool]
+    tags_all: Optional[List[str]]
+    tags_any: Optional[List[str]]
+    authors_all: Optional[List[str]]
+    artists_all: Optional[List[str]]
+    seizure_warning: Optional[bool]
 
-def get_search_params(request: HttpRequest):
-    query = request.GET.get('q', "")
+def parse_bool_param(value: Optional[str]) -> Optional[bool]:
+    if value is None:
+        return None
+    return value.lower() == 'true'
+
+def parse_int_param(value: Optional[str], min_value: Optional[int] = None) -> Optional[int]:
+    if value is None:
+        return None
     try:
-        page = int(request.GET.get('page', 1))
-        if page < 1:
-            page = 1
+        result = int(value)
+        if min_value is not None and result < min_value:
+            return min_value
+        return result
     except ValueError:
-        page = 1
+        return None
 
-    approval_options = ApprovalSearchOptions.APPROVED_ONLY
-    if request.GET.get('peer_review') == "pending":
-        approval_options = ApprovalSearchOptions.PENDING
-    if request.GET.get('peer_review') == "rejected":
-        approval_options = ApprovalSearchOptions.REJECTED_ONLY
-    if request.GET.get("peer_review") == "all":
-        approval_options = ApprovalSearchOptions.ALL
+def parse_float_param(value: Optional[str]) -> Optional[float]:
+    if value is None:
+        return None
+    try:
+        return float(value)
+    except ValueError:
+        return None
 
-    min_bpm = request.GET.get('min_bpm', None)
-    max_bpm = request.GET.get('max_bpm', None)
-
-    difficulties_str = request.GET.getlist('difficulty', None)
+def get_search_params(request: HttpRequest) -> SearchLevelParams:
+    """
+    Parse and validate search parameters from the request.
+    
+    Args:
+        request: The HTTP request containing search parameters
+        
+    Returns:
+        SearchLevelParams: A dataclass containing the validated search parameters
+    """
+    # approval status
+    approval_map: Dict[str, ApprovalSearchOptions] = {
+        "pending": ApprovalSearchOptions.PENDING,
+        "rejected": ApprovalSearchOptions.REJECTED_ONLY,
+        "all": ApprovalSearchOptions.ALL
+    }
+    approval_str = request.GET.get('peer_review', '')
+    approval = approval_map.get(approval_str, ApprovalSearchOptions.APPROVED_ONLY)
+    
+    # page
+    page = parse_int_param(request.GET.get('page', '1'), min_value=1) or 1
+    
+    # bpm
+    min_bpm = parse_float_param(request.GET.get('min_bpm'))
+    max_bpm = parse_float_param(request.GET.get('max_bpm'))
+    
+    # difficulties
+    difficulties_str = request.GET.getlist('difficulty')
     difficulties = None
     if difficulties_str:
         try:
             difficulties = [int(s) for s in difficulties_str]
         except ValueError:
-            pass # it's none
+            pass # then difficulties will stay as None
+    
+    # 1p/2p
+    single_player = parse_bool_param(request.GET.get('single_player'))
+    two_player = parse_bool_param(request.GET.get('two_player'))
+    
+    # step type filters
+    has_classics = parse_bool_param(request.GET.get('has_classics'))
+    has_oneshots = parse_bool_param(request.GET.get('has_oneshots'))
+    has_squareshots = parse_bool_param(request.GET.get('has_squareshots'))
+    has_freezeshots = parse_bool_param(request.GET.get('has_freezeshots'))
+    has_freetimes = parse_bool_param(request.GET.get('has_freetimes'))
+    has_holds = parse_bool_param(request.GET.get('has_holds'))
+    has_window_dance = parse_bool_param(request.GET.get('has_window_dance'))
 
-    single_player_str = request.GET.get('single_player', None)
-    single_player = None
-    if single_player_str is not None:
-        single_player = single_player_str == 'true'
-    two_player_str = request.GET.get('two_player', None)
-    two_player = None
-    if two_player_str is not None:
-        two_player = two_player_str == 'true'
+    # tags
+    tags_all = request.GET.getlist('tags_all')
+    tags_any = request.GET.getlist('tags_any')
 
+    # authors
+    authors_all = request.GET.getlist('authors_all')
+    artists_all = request.GET.getlist('artists_all')
+
+    seizure_warning = parse_bool_param(request.GET.get('seizure_warning'))
+
+    
     return SearchLevelParams(
-        q=query,
+        q=request.GET.get('q', ""),
         page=page,
-        approval=approval_options,
+        approval=approval,
         min_bpm=min_bpm,
         max_bpm=max_bpm,
         difficulties=difficulties,
         single_player=single_player,
         two_player=two_player,
+        has_classics=has_classics,
+        has_oneshots=has_oneshots,
+        has_squareshots=has_squareshots,
+        has_freezeshots=has_freezeshots,
+        has_freetimes=has_freetimes,
+        has_holds=has_holds,
+        has_window_dance=has_window_dance,
+        tags_all=tags_all,
+        tags_any=tags_any,
+        authors_all=authors_all,
+        artists_all=artists_all,
+        seizure_warning=seizure_warning
     )
 
 
@@ -102,6 +172,36 @@ def search_levels(request: HttpRequest):
         filter += f" AND single_player = {params.single_player}"
     if params.two_player is not None:
         filter += f" AND two_player = {params.two_player}"
+    if params.has_classics is not None:
+        filter += f" AND has_classics = {params.has_classics}"
+    if params.has_oneshots is not None:
+        filter += f" AND has_oneshots = {params.has_oneshots}"
+    if params.has_squareshots is not None:
+        filter += f" AND has_squareshots = {params.has_squareshots}"
+    if params.has_freezeshots is not None:
+        filter += f" AND has_freezeshots = {params.has_freezeshots}"
+    if params.has_freetimes is not None:
+        filter += f" AND has_freetimes = {params.has_freetimes}"
+    if params.has_holds is not None:
+        filter += f" AND has_holds = {params.has_holds}"
+    if params.has_window_dance is not None:
+        filter += f" AND has_window_dance = {params.has_window_dance}"
+    if params.tags_all is not None:
+        for tag in params.tags_all:
+            filter += f" AND tags = {tag}"
+    if params.tags_any is not None and len(params.tags_any) > 0:
+        subquery = "".join(f" OR tags = {tag}" for tag in params.tags_any).lstrip(" OR")
+        filter += f" AND ({subquery})"
+    if params.authors_all is not None:
+        for author in params.authors_all:
+            filter += f" AND authors = {author}"
+    if params.artists_all is not None:
+        for artist in params.artists_all:
+            filter += f" AND artist_tokens = {artist}"
+    if params.seizure_warning is not None:
+        filter += f" AND seizure_warning = {params.seizure_warning}"
+
+
     results = index.search(params.q, {
         # we're only showing 20 results to the user
         # the 21st is to indicate if there is another page or not
@@ -120,6 +220,7 @@ def search_levels(request: HttpRequest):
         ],
         "facets": [
             "artist_tokens",
+            "authors",
             "difficulty",
             "single_player",
             "two_player",
