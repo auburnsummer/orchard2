@@ -1,9 +1,15 @@
 .base {
     width: 26rem;
-    background-color: var(--mantine-color-slate-1);
+    background-color: var(--mantine-color-slate-light);
     border-radius: 0.5rem;
     display: flex;
     flex-direction: column;
+
+    --sub-text-color: var(--mantine-color-slate-5);
+}
+
+html[data-mantine-color-scheme="dark"] .base {
+    --sub-text-color: var(--mantine-color-slate-4);
 }
 
 .imageBox {
@@ -161,7 +167,7 @@
 
 .songAlt {
     font-size: 0.875rem;
-    color: var(--mantine-color-slate-5);
+    color: var(--sub-text-color);
 }
 
 .artists {
@@ -174,7 +180,7 @@
     white-space: pre;
     font-size: 0.75rem;
     line-height: 1rem;
-    color: var(--mantine-color-slate-5);
+    color: var(--sub-text-color);
     font-weight: 300;
     margin: 0;
 }
@@ -203,7 +209,7 @@ Benface is still the Patron Saint of CSS though
 }
 
 .authors, .bpm, .source {
-    color: var(--mantine-color-slate-7);
+    color: var(--sub-text-color);
     display: flex;
     align-items: center;
     font-size: 0.75rem;
@@ -218,7 +224,7 @@ Benface is still the Patron Saint of CSS though
 }
 .metaitemButton, .metaitemText {
     white-space: pre;
-    color: var(--mantine-color-slate-5);
+    color: var(--sub-text-color);
     font-size: 0.75rem;
 }
 
@@ -260,7 +266,7 @@ Benface is still the Patron Saint of CSS though
     font-size: 0.75rem;
     line-height: 1rem;
     background-color: var(--mantine-color-slate-2);
-    color: var(--mantine-color-slate-5);
+    color: var(--sub-text-color);
     padding-left: 0.75rem;
     padding-right: 0.75rem;
     padding-top: 0.125rem;
