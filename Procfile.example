@@ -1,7 +1,9 @@
 server: cd ./server/cafe-backend && uv run python manage.py runserver
 client: cd ./client && npm run dev -- --clearScreen false
-ngrok: ngrok http --domain=<domain> 8000
-redis: redis-server
+# something to port forward 8000, e.g, with ngrok:
+# ngrok http --domain=domain 8000
+# or perhaps with cloudflare tunnel:
+# cloudflared tunnel run --token <token>
 huey: cd ./server/cafe-backend && uv run python manage.py run_huey
 meili: ./meilisearch --master-key=
 minio: minio server ./data.minio

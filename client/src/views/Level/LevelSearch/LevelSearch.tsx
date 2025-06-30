@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from './LevelSearch.module.css';
-import { JsonEditor } from 'json-edit-react'
 import { RDLevel } from '@cafe/types/rdLevelBase';
 import { Shell } from '@cafe/components/Shell';
 import { LevelCard } from '@cafe/components/LevelCard/LevelCard';
@@ -44,7 +43,7 @@ export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
                 <p>facets will go here</p>
             }
         >
-            <ul>
+            <ul className={styles.levels}>
                 {
                     results.hits.map((level) => (
                         <li key={level.id}>
