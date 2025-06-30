@@ -3,6 +3,8 @@ import styles from './LevelSearch.module.css';
 import { RDLevel } from '@cafe/types/rdLevelBase';
 import { Shell } from '@cafe/components/Shell';
 import { LevelCard } from '@cafe/components/LevelCard/LevelCard';
+import { Button } from '@mantine/core';
+import { useSearchParams } from '@cafe/minibridge/hooks';
 
 type BooleanFacet<T> = {
     true: T;
@@ -37,21 +39,44 @@ interface LevelSearchProps {
 }
 
 export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
+    const [, navigateViaSearchParams] = useSearchParams();
+
+    const movePage = (n: number) => {
+        navigateViaSearchParams(params => {
+            let page = parseInt(params.get("page") || "1");
+            if (Number.isNaN(page)) {
+                page = 1;
+            }
+            let next = page + n;
+            params.set("page", `${next}`);
+        });
+
+    }
+
+    const onNext = () => movePage(1);
+    const onPrev = () => movePage(-1);
+
     return (
         <Shell
             navbar={
                 <p>facets will go here</p>
             }
         >
-            <ul className={styles.levels}>
-                {
-                    results.hits.map((level) => (
-                        <li key={level.id}>
-                            <LevelCard level={level} />
-                        </li>
-                    ))
-                }
-            </ul>
+            <div className={styles.levelsContainer}>
+                <div className={styles.levelsNextPrev}>
+                    <Button onClick={onPrev}>Previous</Button>
+                    <Button onClick={onNext}>Next</Button>
+                </div>
+                <ul className={styles.levels}>
+                    {
+                        results.hits.map((level) => (
+                            <li key={level.id}>
+                                <LevelCard level={level} />
+                            </li>
+                        ))
+                    }
+                </ul>
+            </div>
         </Shell>
    );
 }; 

@@ -9,8 +9,7 @@ import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { useRef } from "react";
 import cc from "clsx";
 import { Link } from "@cafe/minibridge/components/Link";
-import { useAtomValue } from "jotai";
-import { locationAtom } from "@cafe/minibridge/atoms";
+import { useLocation } from "@cafe/minibridge/hooks";
 
 export type ShellProps = {
     children: React.ReactNode;
@@ -24,7 +23,7 @@ export function Shell({ children, navbar, aside }: ShellProps) {
 
     const logOutForm = useRef<HTMLFormElement>(null);
 
-    const location = useAtomValue(locationAtom);
+    const [location] = useLocation();
 
     return (
         <AppShell
