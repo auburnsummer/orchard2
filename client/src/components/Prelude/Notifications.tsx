@@ -1,12 +1,11 @@
 import { useEffect } from "react";
 
 import { Notifications as MantineNotifications, notifications } from '@mantine/notifications';
-import { useAtom } from "jotai";
-import { messagesAtom } from "@cafe/minibridge/atoms";
+import { useMessages } from "@cafe/minibridge/hooks";
 
 
 export function Notifications() {
-    const [messages, setMessages] = useAtom(messagesAtom);
+    const [messages, setMessages] = useMessages();
 
     useEffect(() => {
         if (messages.length > 0) {

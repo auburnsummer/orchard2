@@ -10,8 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faCopy } from "@fortawesome/free-solid-svg-icons";
 import { AddMemberForm } from "./AddMemberForm/AddMemberForm";
 import { EditMemberForm } from "./EditMemberForm/EditMemberForm";
-import { useAtomValue } from "jotai";
-import { locationAtom } from "@cafe/minibridge/atoms";
+import { useSearchParams } from "@cafe/minibridge/hooks";
 
 type MembershipPermission = {
     can_change: boolean;
@@ -31,9 +30,9 @@ export function ClubSettingsMembersView({ club, memberships, can_add }: ClubSett
     const [editMemberFormOpen, setEditMemberFormOpen] = useState(false);
     const [membershipBeingEdited, setMembershipBeingEdited] = useState<ClubMembership | null>(null);
     const [addMemberFormOpen, setAddMemberFormOpen] = useState(false);
-    const { searchParams } = useAtomValue(locationAtom);
+    const searchParams = useSearchParams();
 
-    const inviteCode = searchParams && searchParams.get("invite_code")
+    const inviteCode = searchParams.get("invite_code")
     const inviteUrl = new URL(`/groups/redeem_invite/${inviteCode}/`, window.location.origin).toString();
 
     const rows = memberships.map(({membership, permissions}) => (

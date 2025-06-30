@@ -1,12 +1,11 @@
-import { isLoadingAtom } from "@cafe/minibridge/atoms";
+import { useIsLoading } from "@cafe/minibridge/hooks";
 import { useMantineTheme } from "@mantine/core";
-import { useAtomValue } from "jotai";
 import { useState, useEffect } from "react";
 import { useLoadingBar } from "react-top-loading-bar";
 
 export function LoadingBar() {
     const theme = useMantineTheme();
-    const pageLoading = useAtomValue(isLoadingAtom);
+    const pageLoading = useIsLoading();
     const [barStarted, setBarStarted] = useState(false);
 
     const color = theme.colors.blue[4];
