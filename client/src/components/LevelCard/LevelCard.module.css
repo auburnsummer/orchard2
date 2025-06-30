@@ -6,10 +6,22 @@
     flex-direction: column;
 
     --sub-text-color: var(--mantine-color-slate-5);
+    --sub-text-color-hover: var(--mantine-color-slate-7);
+    --tag-bg-color: var(--mantine-color-slate-2);
+    --tag-bg-color-hover: var(--mantine-color-slate-3);
+    --tag-text-color: var(--mantine-color-slate-7);
+    --tag-caution-bg-color: var(--mantine-color-amber-2);
+    --tag-caution-text-color: var(--mantine-color-amber-6);
 }
 
 html[data-mantine-color-scheme="dark"] .base {
     --sub-text-color: var(--mantine-color-slate-4);
+    --sub-text-color-hover: var(--mantine-color-slate-2);
+    --tag-bg-color: var(--mantine-color-slate-8);
+    --tag-bg-color-hover: var(--mantine-color-slate-7);
+    --tag-text-color: var(--mantine-color-slate-2);
+    --tag-caution-bg-color: var(--mantine-color-amber-8);
+    --tag-caution-text-color: var(--mantine-color-amber-2);
 }
 
 .imageBox {
@@ -229,7 +241,7 @@ Benface is still the Patron Saint of CSS though
 }
 
 .metaitemButton:enabled:hover {
-    color: var(--mantine-color-slate-7);
+    color: var(--sub-text-color-hover);
     text-decoration: underline;
     cursor: pointer;
 }
@@ -265,8 +277,8 @@ Benface is still the Patron Saint of CSS though
 .tag {
     font-size: 0.75rem;
     line-height: 1rem;
-    background-color: var(--mantine-color-slate-2);
-    color: var(--sub-text-color);
+    background-color: var(--tag-bg-color);
+    color: var(--tag-text-color);
     padding-left: 0.75rem;
     padding-right: 0.75rem;
     padding-top: 0.125rem;
@@ -277,18 +289,18 @@ Benface is still the Patron Saint of CSS though
 }
 
 .tag:enabled:hover {
-    background-color: var(--blueGray-300);
-    color: var(--blueGray-600);
+    background-color: var(--tag-bg-color-hover);
+    color: var(--tag-caution-text-color);
     cursor: pointer;
 }
 
 .tagCaution {
-    background-color: var(--mantine-color-amber-1);
-    color: var(--mantine-color-amber-6);
+    background-color: var(--tag-caution-bg-color);
+    color: var(--tag-caution-text-color);
 }
 
 .tagCaution > .metaicon {
-    color: var(--mantine-color-amber-5);
+    color: var(--tag-caution-text-color);
 }
 
 .tagCaution span {

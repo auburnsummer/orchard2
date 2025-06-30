@@ -1,29 +1,48 @@
 .base {
     display: flex;
+    --easy-bg-color: var(--mantine-color-teal-1);
+    --easy-text-color: var(--mantine-color-teal-6);
+    --medium-bg-color: var(--mantine-color-amber-1);
+    --medium-text-color: var(--mantine-color-amber-6);
+    --tough-bg-color: var(--mantine-color-pink-1);
+    --tough-text-color: var(--mantine-color-pink-6);
+    --vtough-bg-color: var(--mantine-color-violet-1);
+    --vtough-text-color: var(--mantine-color-violet-6);
 }
+
+html[data-mantine-color-scheme="dark"] .base {
+    --easy-bg-color: var(--mantine-color-teal-9);
+    --easy-text-color: var(--mantine-color-teal-2);
+    --medium-bg-color: var(--mantine-color-amber-9);
+    --medium-text-color: var(--mantine-color-amber-2);
+    --tough-bg-color: var(--mantine-color-pink-9);
+    --tough-text-color: var(--mantine-color-pink-2);
+    --vtough-bg-color: var(--mantine-color-violet-9);
+    --vtough-text-color: var(--mantine-color-violet-2);
+} 
 
 .base > * {
     background-color: red;
 }
 
 .easyDiff > * {
-    background-color: var(--mantine-color-teal-1);
-    color: var(--mantine-color-teal-6);
+    background-color: var(--easy-bg-color);
+    color: var(--easy-text-color);
 }
 
 .mediumDiff > * {
-    background-color: var(--mantine-color--amber-1);
-    color: var(--mantine-color-amber-6);
+    background-color: var(--medium-bg-color);
+    color: var(--medium-text-color);
 }
 
 .toughDiff > * {
-    background-color: var(--mantine-color-pink-1);
-    color: var(--mantine-color-pink-6);
+    background-color: var(--tough-bg-color);
+    color: var(--tough-text-color);
 }
 
 .vtoughDiff > * {
-    background-color: var(--mantine-color-violet-1);
-    color: var(--mantine-color-violet-6);
+    background-color: var(--vtough-bg-color);
+    color: var(--vtough-text-color);
 }
 
 .text {

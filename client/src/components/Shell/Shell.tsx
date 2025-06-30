@@ -9,6 +9,8 @@ import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { useRef } from "react";
 import cc from "clsx";
 import { Link } from "@cafe/minibridge/components/Link";
+import { useAtomValue } from "jotai";
+import { locationAtom } from "@cafe/minibridge/atoms";
 
 export type ShellProps = {
     children: React.ReactNode;
@@ -21,6 +23,8 @@ export function Shell({ children, navbar, aside }: ShellProps) {
     const csrfInput = useCSRFTokenInput();
 
     const logOutForm = useRef<HTMLFormElement>(null);
+
+    const location = useAtomValue(locationAtom);
 
     return (
         <AppShell
@@ -77,6 +81,7 @@ export function Shell({ children, navbar, aside }: ShellProps) {
                             )
                             : (
                                 <form method="post" action="/accounts/discord/login/">
+                                    <input type="hidden" name="next" value={location.pathname} />
                                     {csrfInput}
                                     <Button
                                         type="submit"
