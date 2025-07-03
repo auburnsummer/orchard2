@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styles from './LevelSearch.module.css';
 import { RDLevel } from '@cafe/types/rdLevelBase';
 import { Shell } from '@cafe/components/Shell';
 import { LevelCard } from '@cafe/components/LevelCard/LevelCard';
-import { Button } from '@mantine/core';
+import { Button, Title } from '@mantine/core';
 import { useSearchParams } from '@cafe/minibridge/hooks';
+
+// nb: there are 21 levels per page in the API, but we only show 20 here
+// the last one is used to determine if there are more pages
+const LEVELS_PER_PAGE = 20;
 
 type BooleanFacet<T> = {
     true: T;
@@ -38,23 +42,41 @@ interface LevelSearchProps {
     }
 }
 
+function getPageFromSearchParams(searchParams: URLSearchParams): number {
+    const page = parseInt(searchParams.get("page") || "1");
+    return Number.isNaN(page) ? 1 : page;
+}
+
 export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
-    const [, navigateViaSearchParams] = useSearchParams();
+    const [searchParams, navigateViaSearchParams] = useSearchParams();
+
+    const query = searchParams.get("q") || "";
+    const page = getPageFromSearchParams(searchParams);
 
     const movePage = (n: number) => {
         navigateViaSearchParams(params => {
-            let page = parseInt(params.get("page") || "1");
-            if (Number.isNaN(page)) {
-                page = 1;
-            }
             let next = page + n;
             params.set("page", `${next}`);
         });
-
-    }
+    };
 
     const onNext = () => movePage(1);
     const onPrev = () => movePage(-1);
+
+    const levelTitleText = useMemo(() => {
+        if (query === "") {
+            return "All levels";
+        } else if (results.hits.length === 0) {
+            return <span className={styles.noResults}>No results found for "<span className={styles.query}>{query}</span>"</span>;
+        } else if (results.estimatedTotalHits === 1000) {
+            return <span className={styles.moreResults}>Results for "<span className={styles.query}>{query}</span>"</span>;
+        } else {
+            return `${results.estimatedTotalHits} results for "${query}"`;
+        }
+    }, [query, results]);
+
+    const showPrevious = page > 1;
+    const showNext = results.hits.length > LEVELS_PER_PAGE;
 
     return (
         <Shell
@@ -63,13 +85,18 @@ export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
             }
         >
             <div className={styles.levelsContainer}>
-                <div className={styles.levelsNextPrev}>
-                    <Button onClick={onPrev}>Previous</Button>
-                    <Button onClick={onNext}>Next</Button>
+                <div className={styles.levelsHeader}>
+                    <Title order={4} className={styles.levelsTitle}>
+                        {levelTitleText}
+                    </Title>
+                    <div className={styles.nextPrevButtons}>
+                        <Button onClick={onPrev} disabled={!showPrevious}>Previous</Button>
+                        <Button onClick={onNext} disabled={!showNext}>Next</Button>
+                    </div>
                 </div>
-                <ul className={styles.levels}>
+                <ul className={styles.levels}> 
                     {
-                        results.hits.map((level) => (
+                        results.hits.slice(0, LEVELS_PER_PAGE).map((level) => (
                             <li key={level.id}>
                                 <LevelCard level={level} />
                             </li>
