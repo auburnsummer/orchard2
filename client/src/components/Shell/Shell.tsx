@@ -9,7 +9,8 @@ import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { useRef } from "react";
 import cc from "clsx";
 import { Link } from "@cafe/minibridge/components/Link";
-import { useLocation } from "@cafe/minibridge/hooks";
+import { useLocation, useSearchParams } from "@cafe/minibridge/hooks";
+import { SearchBar } from "./SearchBar/SearchBar";
 
 export type ShellProps = {
     children: React.ReactNode;
@@ -20,10 +21,14 @@ export type ShellProps = {
 export function Shell({ children, navbar, aside }: ShellProps) {
     const user = useUser();
     const csrfInput = useCSRFTokenInput();
-
     const logOutForm = useRef<HTMLFormElement>(null);
+    const [location, navigate] = useLocation();
+    const [searchParams] = useSearchParams();
 
-    const [location] = useLocation();
+    const onSearch = (query: string) => {
+        const url = new URL(`/levels/?q=${encodeURIComponent(query)}`, window.location.origin);
+        navigate(url);
+    };
 
     return (
         <AppShell
@@ -34,6 +39,12 @@ export function Shell({ children, navbar, aside }: ShellProps) {
         >
             <AppShell.Header className={styles.header}>
                 <Logo />
+                <SearchBar
+                    initialValue={searchParams.get("q") || ""}
+                    className={styles.searchBar}
+                    placeholder="Search levels..."
+                    onSearch={onSearch}
+                />
                 <div className={styles.spacer} />
                 <div className={styles.userSection}>
                     {
