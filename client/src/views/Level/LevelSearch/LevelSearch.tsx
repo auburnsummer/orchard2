@@ -90,15 +90,15 @@ export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
                         {levelTitleText}
                     </Title>
                     <div className={styles.nextPrevButtons}>
-                        <Button onClick={onPrev} disabled={!showPrevious}>Previous</Button>
-                        <Button onClick={onNext} disabled={!showNext}>Next</Button>
+                        <Button onClick={onPrev} disabled={!showPrevious} variant='outline'>Previous</Button>
+                        <Button onClick={onNext} disabled={!showNext} variant='outline'>Next</Button>
                     </div>
                 </div>
-                <ul className={styles.levels}> 
+                <ul className={styles.gridContainer}> 
                     {
                         results.hits.slice(0, LEVELS_PER_PAGE).map((level) => (
                             <li key={level.id}>
-                                <LevelCard level={level} />
+                                <LevelCard level={level} className={styles.levelCard} />
                             </li>
                         ))
                     }
