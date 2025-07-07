@@ -63,7 +63,7 @@ class Command(BaseCommand):
                     "sortFacetValuesBy": {
                         "*": "count"
                     },
-                    "maxValuesPerFacet": 25
+                    "maxValuesPerFacet": 10
                 }
             )
 

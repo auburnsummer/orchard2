@@ -5,6 +5,7 @@ import { Shell } from '@cafe/components/Shell';
 import { LevelCard } from '@cafe/components/LevelCard/LevelCard';
 import { Button, Title, Text } from '@mantine/core';
 import { useSearchParams } from '@cafe/minibridge/hooks';
+import { LevelsSearchSidebar } from './LevelsSearchSidebar/LevelsSearchSidebar';
 
 // nb: there are 21 levels per page in the API, but we only show 20 here
 // the last one is used to determine if there are more pages
@@ -15,6 +16,24 @@ type BooleanFacet<T> = {
     false: T;
 }
 
+export type FacetDistribution = {
+    artist_tokens: Record<string, number>;
+    authors: Record<string, number>;
+    "club.id": Record<string, number>;
+    difficulty: Record<number, number>;
+    has_classics: BooleanFacet<number>;
+    has_freetimes: BooleanFacet<number>;
+    has_freezeshots: BooleanFacet<number>;
+    has_holds: BooleanFacet<number>;
+    has_oneshots: BooleanFacet<number>;
+    has_squareshots: BooleanFacet<number>;
+    has_window_dance: BooleanFacet<number>;
+    single_player: BooleanFacet<number>;
+    "submitter.id": Record<string, number>;
+    tags: Record<string, number>;
+    two_player: BooleanFacet<number>;
+}
+
 interface LevelSearchProps {
     results: {
         estimatedTotalHits: number;
@@ -23,23 +42,7 @@ interface LevelSearchProps {
         offset: number;
         query: string;
         hits: RDLevel[];
-        facetDistribution: {
-            artist_tokens: Record<string, number>;
-            authors: Record<string, number>;
-            "club.id": Record<string, number>;
-            difficulty: Record<number, number>;
-            has_classics: BooleanFacet<number>;
-            has_freetimes: BooleanFacet<number>;
-            has_freezeshots: BooleanFacet<number>;
-            has_holds: BooleanFacet<number>;
-            has_oneshots: BooleanFacet<number>;
-            has_squareshots: BooleanFacet<number>;
-            has_window_dance: BooleanFacet<number>;
-            single_player: BooleanFacet<number>;
-            "submitter.id": Record<string, number>;
-            tags: Record<string, number>;
-            two_player: BooleanFacet<number>;
-        }
+        facetDistribution: FacetDistribution;
     }
 }
 
@@ -89,7 +92,7 @@ export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
     return (
         <Shell
             navbar={
-                <p>facets will go here</p>
+                <LevelsSearchSidebar className={styles.sidebar} facets={results.facetDistribution} />
             }
         >
             <div className={styles.levelsContainer}>
