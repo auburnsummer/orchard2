@@ -16,6 +16,7 @@ from .facets.player_facet import player_facet
 from .facets.tags_facet import tags_facet
 from .facets.thumbnail_facet import thumbnail_facet
 from .facets.updated_facet import updated_facet
+from .facets.rdmd5_facet import rdmd5_facet
 
 from .msgspec_schema import VitalsLevel
 
@@ -28,13 +29,16 @@ class VitalsException(Exception):
 def vitals(f: IO[bytes]) -> VitalsLevel:
     facets = {
         "artist": make_color_enabled_key_facet(["settings", "artist"]),
+        "artist_raw": make_key_facet(["settings", "artist"]),
         "artist_tokens": artist_list_facet,
         "song": make_color_enabled_key_facet(["settings", "song"]),
+        "song_raw": make_key_facet(["settings", "song"]),
         "seizure_warning": make_key_facet(["settings", "seizureWarning"], True),
         "description": make_color_enabled_key_facet(
             ["settings", "description"]
         ),
         "hue": make_key_facet(["settings", "songNameHue"], 0.0),
+        "authors_raw": make_key_facet(["settings", "author"]),
         "authors": author_facet,
         ("max_bpm", "min_bpm"): bpm_facet,
         "difficulty": difficulty_facet,
@@ -55,6 +59,7 @@ def vitals(f: IO[bytes]) -> VitalsLevel:
         ): event_type_facet,
         "sha1": sha1_facet,
         "rdlevel_sha1": rdlevel_sha1_facet,
+        "rd_md5": rdmd5_facet
     }
 
     try:

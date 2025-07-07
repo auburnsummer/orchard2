@@ -1,5 +1,6 @@
 {
   "artist": "toonlink, Kenichi Nishikami, Takeru Kanazaki",
+  "artist_raw": "toonlink, Kenichi Nishikami, Takeru Kanazaki",
   "artist_tokens": [
     "toonlink",
     "Kenichi Nishikami",
@@ -8,6 +9,7 @@
   "authors": [
     "Szprycha"
   ],
+  "authors_raw": "Szprycha",
   "description": "A neat song from WarioWare DIY",
   "difficulty": 1,
   "has_classics": true,
@@ -25,11 +27,13 @@
   "last_updated": "2020-06-20T23:09:28.000000",
   "max_bpm": 125,
   "min_bpm": 125,
+  "rd_md5": "0e519c999fb30008c50f81a7fce8daf6",
   "rdlevel_sha1": "0d2a9edca604c3f965347ef4b840bb43d94d3a76",
   "seizure_warning": false,
   "sha1": "5bb2d7298237d15b44fbb0a9ca963c00ecb58866",
   "single_player": true,
   "song": "Jimmy's Aesthetics",
+  "song_raw": "Jimmy's Aesthetics",
   "tags": [
     "siivagunner",
     "nintendo",

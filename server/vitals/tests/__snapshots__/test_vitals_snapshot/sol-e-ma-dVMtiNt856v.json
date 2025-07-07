@@ -1,11 +1,13 @@
 {
   "artist": "Masssive New Krew",
+  "artist_raw": "Masssive New Krew",
   "artist_tokens": [
     "Masssive New Krew"
   ],
   "authors": [
     "Lyco"
   ],
+  "authors_raw": "Lyco",
   "description": "A new patient seems to have come in- Nevermind forget i said that he is an emergency case get here quick!",
   "difficulty": 3,
   "has_classics": true,
@@ -23,11 +25,13 @@
   "last_updated": "2021-08-21T12:15:10.000000",
   "max_bpm": 150,
   "min_bpm": 150,
+  "rd_md5": "c562a28c82cdc00121fad1f2b3b7ba9a",
   "rdlevel_sha1": "e028099e06643a6ec8ff2e3385f6e9189d134dcf",
   "seizure_warning": false,
   "sha1": "f909b918e876d72fe8c3d385ba03940f85b3b906",
   "single_player": true,
   "song": "Sol e Mar",
+  "song_raw": "Sol e Mar",
   "tags": [],
   "thumb": "<binary>",
   "two_player": false

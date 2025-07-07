@@ -33,6 +33,10 @@ class VitalsLevelBase(VitalsLevelBaseMutable):
     rdlevel_sha1: str
     is_animated: bool
     last_updated: datetime
+    artist_raw: str
+    song_raw: str
+    authors_raw: str
+    rd_md5: str
     
 class VitalsLevel(VitalsLevelBase):
     "VitalsLevelBaseMutable + VitalsLevelBase + image data"

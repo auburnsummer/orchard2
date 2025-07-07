@@ -1,11 +1,13 @@
 {
   "artist": "Hot Freaks",
+  "artist_raw": "Hot Freaks",
   "artist_tokens": [
     "Hot Freaks"
   ],
   "authors": [
     "Labyrinth"
   ],
+  "authors_raw": "Labyrinth",
   "description": "It's not something easy to admit.",
   "difficulty": 1,
   "has_classics": true,
@@ -23,11 +25,13 @@
   "last_updated": "2022-06-16T00:08:26.000000",
   "max_bpm": 89,
   "min_bpm": 88,
+  "rd_md5": "101d47dead569dee9f05aaeca2554be8",
   "rdlevel_sha1": "188fc218f13dec8c67e0de931bd5a073e5d239bf",
   "seizure_warning": false,
   "sha1": "bdbd0b30d6ea29f8a6d2e8602b8829508dcbfc02",
   "single_player": true,
   "song": "Pull",
+  "song_raw": "Pull",
   "tags": [
     "1p",
     "2p",
