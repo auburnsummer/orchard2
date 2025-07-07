@@ -1,11 +1,13 @@
 {
   "artist": "Andrew Huang",
+  "artist_raw": "Andrew Huang",
   "artist_tokens": [
     "Andrew Huang"
   ],
   "authors": [
     "lugi"
   ],
+  "authors_raw": "lugi",
   "description": "Two lonely stars, wandering in the dark...",
   "difficulty": 1,
   "has_classics": true,
@@ -23,11 +25,13 @@
   "last_updated": "2020-06-24T15:06:48.000000",
   "max_bpm": 79,
   "min_bpm": 78,
+  "rd_md5": "3393d10acf81b2949ada3d6df35ddc1f",
   "rdlevel_sha1": "f67aa02893fdb5ccfad0e445486bd6595801ecdc",
   "seizure_warning": false,
   "sha1": "f2ad0f76bbfedf96bec3451eb9ead014accb3047",
   "single_player": true,
   "song": "Know You",
+  "song_raw": "Know You",
   "tags": [
     "slow",
     "pop"
