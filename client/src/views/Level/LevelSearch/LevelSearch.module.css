@@ -29,11 +29,15 @@
     margin: 0;
 }
 
-.levelsHeader {
+.levelsHeader, .levelsFooter {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
+}
+
+.levelsFooter {
+    margin-top: 2rem;
 }
 
 .nextPrevButtons {

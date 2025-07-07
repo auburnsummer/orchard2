@@ -44,7 +44,7 @@ html[data-mantine-color-scheme="dark"] .base {
     height: 100%;
     background-color: var(--blueGray-600);
     object-fit: cover;
-    transition-property: filter;
+    transition-property: filter, background-color;
     transition-duration: 250ms;
 }
 
@@ -62,7 +62,11 @@ html[data-mantine-color-scheme="dark"] .base {
 }
 
 .base:hover .image {
+    background-color: var(--mantine-color-gray-2);
     filter: brightness(45%) saturate(35%) blur(3px);
+    @mixin dark {
+        background-color: var(--mantine-color-gray-8);
+    }
 }
 
 .base:hover .overlay {
@@ -161,6 +165,15 @@ html[data-mantine-color-scheme="dark"] .base {
     display: flex;
     flex-direction: column-reverse;
     gap: 0.075rem;
+}
+
+.songLink {
+    color: var(--mantine-color-text);
+    text-decoration: none;
+}
+
+.songLink:hover {
+    text-decoration: underline;
 }
 
 .song {
