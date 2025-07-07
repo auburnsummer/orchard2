@@ -10,6 +10,7 @@ import { faCheck, faDownload, faExclamationTriangle, faHeartPulse, faPaste, faPe
 import { DifficultyDecorator } from "./DifficultyDecorator/DifficultyDecorator";
 import { ConjunctionList } from "../ConjunctionList/ConjunctionList";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
+import { Link } from "@cafe/minibridge/components/Link";
 
 type LevelCardProps = React.HTMLAttributes<HTMLDivElement> & {
     level: RDLevel;
@@ -50,7 +51,9 @@ export function LevelCard({level, className, ...rest}: LevelCardProps) {
                 <DifficultyDecorator difficulty={level.difficulty} className={styles.decorator} />
                 <div className={styles.cast}>
                     <div className={styles.songBox}>
-                        <h2 className={styles.song}>{level.song}</h2>
+                        <Link href={`/levels/${level.id}`} className={styles.songLink}>
+                            <h2 className={styles.song}>{level.song}</h2>
+                        </Link>
                         {
                             level.song_alt && (
                                 <p className={styles.songAlt}>({level.song_alt})</p>

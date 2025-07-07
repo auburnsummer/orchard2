@@ -44,6 +44,7 @@ export const handleResponseAtom = atom(
             // otherwise we will have multiple of the same URL in the stack
             if (url.toString() !== new URL(document.location.href).toString()) {
                 set(locationAtom, url);
+                window.scrollTo(0, 0);
             }
         }
         else if (response.action === "reload") {

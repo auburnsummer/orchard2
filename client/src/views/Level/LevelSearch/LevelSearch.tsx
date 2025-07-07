@@ -3,7 +3,7 @@ import styles from './LevelSearch.module.css';
 import { RDLevel } from '@cafe/types/rdLevelBase';
 import { Shell } from '@cafe/components/Shell';
 import { LevelCard } from '@cafe/components/LevelCard/LevelCard';
-import { Button, Title } from '@mantine/core';
+import { Button, Title, Text } from '@mantine/core';
 import { useSearchParams } from '@cafe/minibridge/hooks';
 
 // nb: there are 21 levels per page in the API, but we only show 20 here
@@ -18,6 +18,7 @@ type BooleanFacet<T> = {
 interface LevelSearchProps {
     results: {
         estimatedTotalHits: number;
+        processingTimeMs: number;
         limit: number;
         offset: number;
         query: string;
@@ -78,6 +79,13 @@ export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
     const showPrevious = page > 1;
     const showNext = results.hits.length > LEVELS_PER_PAGE;
 
+    const nextPrevButtons = (
+        <div className={styles.nextPrevButtons}>
+            <Button onClick={onPrev} disabled={!showPrevious} variant='outline'>Previous</Button>
+            <Button onClick={onNext} disabled={!showNext} variant='outline'>Next</Button>
+        </div>
+    )
+
     return (
         <Shell
             navbar={
@@ -89,10 +97,7 @@ export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
                     <Title order={4} className={styles.levelsTitle}>
                         {levelTitleText}
                     </Title>
-                    <div className={styles.nextPrevButtons}>
-                        <Button onClick={onPrev} disabled={!showPrevious} variant='outline'>Previous</Button>
-                        <Button onClick={onNext} disabled={!showNext} variant='outline'>Next</Button>
-                    </div>
+                    {nextPrevButtons}
                 </div>
                 <ul className={styles.gridContainer}> 
                     {
@@ -103,6 +108,10 @@ export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
                         ))
                     }
                 </ul>
+                <div className={styles.levelsFooter}>
+                    <Text size="xs" c="dimmed" className={styles.processingTime}>Δ{results.processingTimeMs}ms</Text>
+                    {nextPrevButtons}
+                </div>
             </div>
         </Shell>
    );
