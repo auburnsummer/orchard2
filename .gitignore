@@ -196,6 +196,7 @@ data.ms
 
 minio
 data.minio
+data.typesense
 
 image.png
 image.webp
@@ -203,3 +204,5 @@ thumb.webp
 thumb.png
 
 *.rdzip
+
+typesense-server

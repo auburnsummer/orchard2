@@ -33,15 +33,19 @@ class RDLevel(RulesModel):
 
     artist = models.TextField(blank=False)
     artist_tokens = models.JSONField(blank=False)
+    artist_raw = models.TextField(blank=False, default="")
 
     song = models.TextField(blank=False)
     song_alt = models.TextField(blank=True)
+
+    song_raw = models.TextField(blank=False, default="")
 
     seizure_warning = models.BooleanField(blank=False)
     description = models.TextField(blank=True)
 
     hue = models.FloatField(blank=False)
     authors = models.JSONField(blank=False)
+    authors_raw = models.TextField(blank=False, default="")
     max_bpm = models.IntegerField(blank=False)
     min_bpm = models.IntegerField(blank=False)
 
@@ -61,6 +65,7 @@ class RDLevel(RulesModel):
 
     sha1 = models.TextField(blank=False, unique=True)
     rdlevel_sha1 = models.TextField(blank=False)
+    rd_md5 = models.TextField(blank=False, default="")
     is_animated = models.BooleanField(blank=False)
 
     rdzip_url = models.TextField(blank=False)
@@ -84,12 +89,15 @@ class RDLevel(RulesModel):
             "id": self.id,
             "artist": self.artist,
             "artist_tokens": self.artist_tokens,
+            "artist_raw": self.artist_raw,
             "song": self.song,
             "song_alt": self.song_alt,
+            "song_raw": self.song_raw,
             "seizure_warning": self.seizure_warning,
             "description": self.description,
             "hue": self.hue,
             "authors": self.authors,
+            "authors_raw": self.authors_raw,
             "max_bpm": self.max_bpm,
             "min_bpm": self.min_bpm,
             "difficulty": self.difficulty,
@@ -107,6 +115,7 @@ class RDLevel(RulesModel):
             "has_window_dance": self.has_window_dance,
             "sha1": self.sha1,
             "rdlevel_sha1": self.rdlevel_sha1,
+            "rd_md5": self.rd_md5,
             "is_animated": self.is_animated,
             "rdzip_url": self.rdzip_url,
             "image_url": self.image_url,
