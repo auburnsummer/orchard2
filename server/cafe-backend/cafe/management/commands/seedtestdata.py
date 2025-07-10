@@ -50,3 +50,19 @@ class Command(BaseCommand):
                     role="owner" if j < number_of_owners else "admin"
                 )
                 new_membership.save()
+        
+        # special club for unowned levels
+        unowned_club = Club(
+            id="csteward",
+            name="Steward"
+        )
+        unowned_club.save()
+
+        # special user for unowned levels
+        unowned_user = User(
+            id="usteward",
+            username="usteward",
+            display_name="Steward",
+            email=None
+        )
+        unowned_user.save()

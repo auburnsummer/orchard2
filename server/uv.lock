@@ -161,6 +161,7 @@ dependencies = [
     { name = "python-dotenv" },
     { name = "redis" },
     { name = "rules" },
+    { name = "tenacity" },
     { name = "typesense" },
 ]
 
@@ -182,6 +183,7 @@ requires-dist = [
     { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "redis", specifier = ">=5.2.1" },
     { name = "rules", specifier = ">=3.5" },
+    { name = "tenacity", specifier = ">=9.1.2" },
     { name = "typesense", specifier = ">=1.1.1" },
 ]
 

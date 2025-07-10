@@ -22,4 +22,5 @@ dependencies = [
     "django-simple-history>=3.8.0",
     "charabia-py>=0.1.0",
     "typesense>=1.1.1",
+    "tenacity>=9.1.2",
 ]
