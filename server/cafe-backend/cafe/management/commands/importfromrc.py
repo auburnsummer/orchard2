@@ -1,5 +1,6 @@
 from tempfile import NamedTemporaryFile
 
+import django
 from django.core.management.base import BaseCommand
 from django.db import IntegrityError
 
@@ -14,6 +15,8 @@ from loguru import logger
 from orchard.settings import DISCORD_BOT_TOKEN
 from functools import cache
 
+from multiprocessing import Pool
+
 import json
 
 DB_URL = "https://api2.rhythm.cafe/datasette/combined.db"
@@ -24,12 +27,20 @@ import sqlite3
 
 import httpx
 
+import tenacity
+
 
 @cache
+@tenacity.retry(
+    stop=tenacity.stop_after_attempt(3),
+    wait=tenacity.wait_exponential(multiplier=1, min=2, max=10),
+    reraise=True
+)
 def get_discord_user_from_id(discord_user_id: str) -> User:
     # e.g. https://discord.com/api/v10/users/832410474955014144
     url = f"{DISCORD_GET_USER_API}/{discord_user_id}"
     response = httpx.get(url, headers={"Authorization": f"Bot {DISCORD_BOT_TOKEN}"})
+    response.raise_for_status()
     body = response.json()
     global_name = body.get('global_name') or body.get('username')
     return get_or_create_discord_user(discord_user_id, global_name)
@@ -57,8 +68,13 @@ def process_legacy_level(level_url: str, user: User, club: Club, existing_approv
     }
     if level_data['icon_url'] is None:
         level_data['icon_url'] = ''
-    RDLevel.objects.create(**level_data)
-    prefill.delete()
+    try:
+        RDLevel.objects.create(**level_data)
+    except IntegrityError:
+        # dunno why but this only appears if we use print() and not logger.info
+        print(f"Level already exists")
+    finally:
+        prefill.delete()
 
 
 class Command(BaseCommand):
@@ -83,21 +99,27 @@ class Command(BaseCommand):
             cur = conn.cursor()
             
             res = cur.execute("SELECT * FROM combined")
-            for row in res:
-                discord_user = None
-                sha1 = row['sha1']
-                try:
-                    existing_level = RDLevel.objects.get(sha1=sha1)
-                    #logger.info(f"found existing level {existing_level}, therefore skipping")
-                    continue
-                except RDLevel.DoesNotExist:
-                    pass
-                logger.info(f"Processing level {row['song']} ({row['id']})")
-                if row['source'] == 'rdl':
-                    rdl_data = json.loads(row['source_metadata'])
-                    discord_user_id = rdl_data['user_id']
-                    discord_user = get_discord_user_from_id(discord_user_id)
-                try:
-                    process_legacy_level(row['url2'], discord_user or user, club, row['approval'])
-                except IntegrityError:
-                    logger.info(f"Level not added due to duplicate")
+            with Pool(6, initializer=django.setup) as pool:
+                for row in res:
+                    discord_user = None
+                    sha1 = row['sha1']
+                    try:
+                        existing_level = RDLevel.objects.get(sha1=sha1)
+                        #logger.info(f"found existing level {existing_level}, therefore skipping")
+                        continue
+                    except RDLevel.DoesNotExist:
+                        pass
+                    logger.info(f"Processing level {row['song']} ({row['id']})")
+                    if row['source'] == 'rdl':
+                        rdl_data = json.loads(row['source_metadata'])
+                        discord_user_id = rdl_data['user_id']
+                        discord_user = get_discord_user_from_id(discord_user_id)
+
+                    pool.apply_async(
+                        process_legacy_level,
+                        args=(row['url2'], discord_user or user, club, row['approval'])
+                    )
+
+                pool.close()
+                pool.join()
+            conn.close()
