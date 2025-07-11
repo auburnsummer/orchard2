@@ -10,6 +10,9 @@ from cafe.views.types import HttpRequest
 from orchard.settings import MEILI_API_URL, MEILI_API_KEY
 import meilisearch
 
+from cafe.management.commands.setuptypesense import typesense_client, RDLEVEL_ALIAS_NAME
+from cafe.models import RDLevel
+
 client = meilisearch.Client(MEILI_API_URL, MEILI_API_KEY)
 
 RESULTS_PER_PAGE = 20
@@ -153,89 +156,39 @@ def get_search_params(request: HttpRequest) -> SearchLevelParams:
 def search_levels(request: HttpRequest):
     params = get_search_params(request)
     offset = (params.page - 1) * RESULTS_PER_PAGE
-    index = client.get_index(RDLEVEL_INDEX_NAME)
-    filter = ""
-    if params.approval == ApprovalSearchOptions.APPROVED_ONLY:
-        filter += " AND approval >= 10"
-    if params.approval == ApprovalSearchOptions.PENDING:
-        filter += " AND approval = 0"
-    if params.approval == ApprovalSearchOptions.REJECTED_ONLY:
-        filter += " AND approval < 0"
-    if params.min_bpm:
-        filter += f" AND min_bpm >= {params.min_bpm}"
-    if params.max_bpm:
-        filter += f" AND max_bpm <= {params.max_bpm}"
-    if params.difficulties:
-        list_part = f"[{', '.join(str(i) for i in params.difficulties)}]"
-        filter += f" AND difficulty IN {list_part}"
-    if params.single_player is not None:
-        filter += f" AND single_player = {params.single_player}"
-    if params.two_player is not None:
-        filter += f" AND two_player = {params.two_player}"
-    if params.has_classics is not None:
-        filter += f" AND has_classics = {params.has_classics}"
-    if params.has_oneshots is not None:
-        filter += f" AND has_oneshots = {params.has_oneshots}"
-    if params.has_squareshots is not None:
-        filter += f" AND has_squareshots = {params.has_squareshots}"
-    if params.has_freezeshots is not None:
-        filter += f" AND has_freezeshots = {params.has_freezeshots}"
-    if params.has_freetimes is not None:
-        filter += f" AND has_freetimes = {params.has_freetimes}"
-    if params.has_holds is not None:
-        filter += f" AND has_holds = {params.has_holds}"
-    if params.has_window_dance is not None:
-        filter += f" AND has_window_dance = {params.has_window_dance}"
-    if params.tags_all is not None:
-        for tag in params.tags_all:
-            filter += f" AND tags = {tag}"
-    if params.tags_any is not None and len(params.tags_any) > 0:
-        subquery = "".join(f" OR tags = {tag}" for tag in params.tags_any).lstrip(" OR")
-        filter += f" AND ({subquery})"
-    if params.authors_all is not None:
-        for author in params.authors_all:
-            filter += f" AND authors = {author}"
-    if params.artists_all is not None:
-        for artist in params.artists_all:
-            filter += f" AND artist_tokens = {artist}"
-    if params.seizure_warning is not None:
-        filter += f" AND seizure_warning = {params.seizure_warning}"
 
-
-    results = index.search(params.q, {
-        # we're only showing 20 results to the user
-        # the 21st is to indicate if there is another page or not
-        "limit": RESULTS_PER_PAGE + 1,
+    search_results = typesense_client.collections[RDLEVEL_ALIAS_NAME].documents.search({
+        "q": params.q,
+        "pre_segmented_query": True,
+        "query_by": "song,song_alt,artist_tokens,authors,description,tags",
+        "query_by_weights": "10,10,8,8,6,6",
         "offset": offset,
-        "filter": filter.lstrip(" AND "),
-        "attributesToSearchOn":  [
-            "artist_tokens",
-            "song",
-            "song_alt",
-            "description",
-            "authors",
-            "tags",
-            "submitter.name",
-            "club.name"
-        ],
-        "facets": [
-            "artist_tokens",
-            "authors",
-            "difficulty",
-            "single_player",
-            "two_player",
-            "tags",
-            "has_classics",
-            "has_oneshots",
-            "has_squareshots",
-            "has_freezeshots",
-            "has_freetimes",
-            "has_holds",
-            "has_window_dance",
-            "submitter.id",
-            "club.id"
-        ]
+        "limit": RESULTS_PER_PAGE + 1,
+        "facet_by": "artist_tokens,tags,authors,difficulty,single_player,two_player,has_classics,has_oneshots,has_squareshots,has_freezeshots,has_freetimes,has_holds,has_window_dance,submitter.id,club.id",
+        "include_fields": "id",
+        "sort_by": "_text_match:desc"
     })
+
+    # this is fine! https://www.sqlite.org/np1queryprob.html
+    levels = [
+        RDLevel.objects.get(id=level_id).to_dict()
+        for level_id in (
+            hit['document']['id'] for hit in search_results['hits']
+        )
+    ]
+
+    facet_distribution = {}
+    for facet in search_results['facet_counts']:
+        facet_distribution[facet['field_name']] = facet['counts']
+
     return Response(request, request.resolver_match.view_name, {
-        "results": results
-    }) 
+        "results": {
+            "hits": levels,
+            "estimatedTotalHits": search_results['found'],
+            "processingTimeMs": search_results['search_time_ms'],
+            "limit": RESULTS_PER_PAGE,
+            "offset": offset,
+            "query": params.q,
+            "facetDistribution": facet_distribution
+        }
+    })

@@ -12,8 +12,6 @@ type LevelsSearchSidebarProps = React.HTMLAttributes<HTMLDivElement> & {
 
 export function LevelsSearchSidebar({className, facets, ...rest}: LevelsSearchSidebarProps) {
     return (
-        <div className={cc(styles.container, className)} {...rest}>
-            <FacetSelect facetName="Tags" facet={facets.tags} />
-        </div>
+        <p>facets</p>
     );
 }

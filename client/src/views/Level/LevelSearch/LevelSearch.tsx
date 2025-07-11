@@ -11,27 +11,27 @@ import { LevelsSearchSidebar } from './LevelsSearchSidebar/LevelsSearchSidebar';
 // the last one is used to determine if there are more pages
 const LEVELS_PER_PAGE = 20;
 
-type BooleanFacet<T> = {
-    true: T;
-    false: T;
+type Facet = {
+    count: number;
+    value: string;
 }
 
 export type FacetDistribution = {
-    artist_tokens: Record<string, number>;
-    authors: Record<string, number>;
-    "club.id": Record<string, number>;
-    difficulty: Record<number, number>;
-    has_classics: BooleanFacet<number>;
-    has_freetimes: BooleanFacet<number>;
-    has_freezeshots: BooleanFacet<number>;
-    has_holds: BooleanFacet<number>;
-    has_oneshots: BooleanFacet<number>;
-    has_squareshots: BooleanFacet<number>;
-    has_window_dance: BooleanFacet<number>;
-    single_player: BooleanFacet<number>;
-    "submitter.id": Record<string, number>;
-    tags: Record<string, number>;
-    two_player: BooleanFacet<number>;
+    artist_tokens: Facet[];
+    authors: Facet[];
+    "club.id": Facet[];
+    difficulty: Facet[];
+    has_classics: Facet[];
+    has_freetimes: Facet[];
+    has_freezeshots: Facet[];
+    has_holds: Facet[];
+    has_oneshots: Facet[];
+    has_squareshots: Facet[];
+    has_window_dance: Facet[];
+    single_player: Facet[];
+    "submitter.id": Facet[];
+    tags: Facet[];
+    two_player: Facet[];
 }
 
 interface LevelSearchProps {
@@ -84,8 +84,8 @@ export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
 
     const nextPrevButtons = (
         <div className={styles.nextPrevButtons}>
-            <Button onClick={onPrev} disabled={!showPrevious} variant='outline'>Previous</Button>
-            <Button onClick={onNext} disabled={!showNext} variant='outline'>Next</Button>
+            <Button onClick={onPrev} disabled={!showPrevious} variant='outline' size="compact-sm">Previous</Button>
+            <Button onClick={onNext} disabled={!showNext} variant='outline' size="compact-sm">Next</Button>
         </div>
     )
 
