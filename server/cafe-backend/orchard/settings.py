@@ -179,6 +179,7 @@ DATABASES = {
 
 REDIS_HOST = os.environ['REDIS_HOST']
 REDIS_PORT = os.environ['REDIS_PORT']
+REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD', None)
 
 NUMBER_OF_WORKERS = int(os.environ['NUMBER_OF_WORKERS'])
 
@@ -196,6 +197,7 @@ HUEY = {
     'connection': {
         'host': REDIS_HOST,
         'port': REDIS_PORT,
+        'password': REDIS_PASSWORD,
         'db': 0,
         'max_connections': 10,
         'read_timeout': 2,  # If not polling (blocking pop), use timeout.
