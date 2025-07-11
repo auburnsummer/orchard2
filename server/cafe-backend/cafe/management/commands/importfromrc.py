@@ -83,7 +83,7 @@ class Command(BaseCommand):
     """
 
     def handle(self, *args, **options):
-        logger.info("this needs to talk to meilisearch!")
+        logger.info("this needs to talk to typesense!")
         logger.info("so if you're running this locally, make sure to have the stack running first")
         club_id = input("enter the id for the club which will hold rc1 levels: ")
         club = Club.objects.get(id=club_id)

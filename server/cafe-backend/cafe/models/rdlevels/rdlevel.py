@@ -10,7 +10,6 @@ from simple_history.models import HistoricalRecords
 from rules.contrib.models import RulesModel
 import rules
 
-from cafe.tasks.sync_level_to_meili import sync_level_to_meili
 from cafe.tasks.sync_level_to_typesense import sync_level_to_typesense
 
 
@@ -129,12 +128,10 @@ class RDLevel(RulesModel):
 
     def save(self, *args, **kwargs):
         super(RDLevel, self).save(*args, **kwargs)
-        sync_level_to_meili(self.id)
         sync_level_to_typesense(self.id)
 
     def delete(self, *args, **kwargs):
         super(RDLevel, self).delete(*args, **kwargs)
-        sync_level_to_meili(self.id)
         sync_level_to_typesense(self.id)
 
     class Meta:

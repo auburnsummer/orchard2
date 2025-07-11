@@ -4,16 +4,10 @@ from typing import Optional, List, Dict, Any, Union
 
 from django_bridge.response import Response
 
-from cafe.management.commands.setupmeili import RDLEVEL_INDEX_NAME
 from cafe.views.types import HttpRequest
-
-from orchard.settings import MEILI_API_URL, MEILI_API_KEY
-import meilisearch
 
 from cafe.management.commands.setuptypesense import typesense_client, RDLEVEL_ALIAS_NAME
 from cafe.models import RDLevel
-
-client = meilisearch.Client(MEILI_API_URL, MEILI_API_KEY)
 
 RESULTS_PER_PAGE = 20
 

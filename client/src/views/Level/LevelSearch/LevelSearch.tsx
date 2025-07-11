@@ -11,7 +11,7 @@ import { LevelsSearchSidebar } from './LevelsSearchSidebar/LevelsSearchSidebar';
 // the last one is used to determine if there are more pages
 const LEVELS_PER_PAGE = 20;
 
-type Facet = {
+export type Facet = {
     count: number;
     value: string;
 }
