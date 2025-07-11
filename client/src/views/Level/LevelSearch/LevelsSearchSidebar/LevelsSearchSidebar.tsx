@@ -3,7 +3,6 @@ import styles from './LevelsSearchSidebar.module.css';
 
 import cc from "clsx";
 
-import { Text } from '@mantine/core';
 import { FacetSelect } from './FacetSelect/FacetSelect';
 
 type LevelsSearchSidebarProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -12,6 +11,8 @@ type LevelsSearchSidebarProps = React.HTMLAttributes<HTMLDivElement> & {
 
 export function LevelsSearchSidebar({className, facets, ...rest}: LevelsSearchSidebarProps) {
     return (
-        <p>facets</p>
+        <div className={cc(styles.container, className)} {...rest}>
+            <FacetSelect facetName="Tags" facets={facets.tags} />
+        </div>
     );
 }
