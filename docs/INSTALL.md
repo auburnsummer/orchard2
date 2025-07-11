@@ -1,6 +1,6 @@
 # How to install
 
->! THIS IS NOT COMPLETE YET SORRY !
+>! I HAVE NOT FULLY TESTED THIS SORRY !
 
 This page explains how to set up the dev environment for orchard2.
 
@@ -187,6 +187,15 @@ $ overmind start
     - Note the trailing slash at the end! It's important
     - Replace `<your-tunnel-domain>` with the domain you set up in the previous step (e.g., `wubba-dubba-dubba-is-that-true.ngrok.io` or your custom domain).
  5. Click "Save Changes". It should say "Interactions Endpoint URL updated successfully".
- 6. TODO and then they should add the bot to a test server
- 7. TODO and then they need to run the updatediscordslashcommands command from manage.py
+ 6. Add the bot to a test server:
+    - Go to "OAuth2" in the left menu panel
+    - Under "Scopes", select _only_ the "applications.commands" scope
+    - Set the installation type to Guild Install
+    - Copy link and paste it into your browser
+ 7. Update the slash commands the bot has:
 
+ ```bash
+$ uv run python manage.py updatediscordslashcommands
+```
+
+ 8. Try using the `/version` command to see if the bot is working. You should see a response with the version number of the bot.
