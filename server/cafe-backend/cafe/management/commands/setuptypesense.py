@@ -58,21 +58,18 @@ class Command(BaseCommand):
                         "name": "artist_tokens",
                         "type": "string[]",
                         "facet": True,
-                        "infix": True,
-                        "locale": "ja"
+                        "infix": True
                     },
                     {
                         "name": "song",
                         "type": "string",
-                        "infix": True,
-                        "locale": "ja"
+                        "infix": True
                     },
                     {
                         "name": "song_alt",
                         "type": "string",
                         "optional": True,
-                        "infix": True,
-                        "locale": "ja"
+                        "infix": True
                     },
                     {
                         "name": "seizure_warning",
@@ -87,8 +84,7 @@ class Command(BaseCommand):
                         "name": "authors",
                         "type": "string[]",
                         "facet": True,
-                        "infix": True,
-                        "locale": "ja"
+                        "infix": True
                     },
                     {
                         "name": "max_bpm",
@@ -121,8 +117,7 @@ class Command(BaseCommand):
                         "name": "tags",
                         "type": "string[]",
                         "infix": True,
-                        "facet": True,
-                        "locale": "ja"
+                        "facet": True
                     },
                     {
                         "name": "has_classics",

@@ -146,6 +146,55 @@ def get_search_params(request: HttpRequest) -> SearchLevelParams:
         seizure_warning=seizure_warning
     )
 
+def get_typesense_filter_query(params: SearchLevelParams) -> str:
+    parts = []
+    if params.approval == ApprovalSearchOptions.APPROVED_ONLY:
+        parts.append("approval:>=10")
+    elif params.approval == ApprovalSearchOptions.PENDING:
+        parts.append("approval:=0")
+    elif params.approval == ApprovalSearchOptions.REJECTED_ONLY:
+        parts.append("approval:<0")
+
+    if params.min_bpm is not None or params.max_bpm is not None:
+        if params.min_bpm is not None:
+            parts.append(f"bpm:>={params.min_bpm}")
+        if params.max_bpm is not None:
+            parts.append(f"bpm:<={params.max_bpm}")
+    
+    if params.difficulties:
+        parts.append(f"difficulty:=[{','.join(map(str, params.difficulties))}]")
+
+    bool_params = [
+        ("single_player", params.single_player),
+        ("two_player", params.two_player),
+        ("has_classics", params.has_classics),
+        ("has_oneshots", params.has_oneshots),
+        ("has_squareshots", params.has_squareshots),
+        ("has_freezeshots", params.has_freezeshots),
+        ("has_freetimes", params.has_freetimes),
+        ("has_holds", params.has_holds),
+        ("has_window_dance", params.has_window_dance),
+        ("seizure_warning", params.seizure_warning)
+    ]
+
+    for param_name, param_value in bool_params:
+        if param_value is not None:
+            parts.append(f"{param_name}:={str(param_value).lower()}")
+
+    if params.tags_all:
+        for tag in params.tags_all:
+            parts.append(f"tags:={tag}")
+    if params.tags_any:
+        parts.append(f"tags:=[{','.join(params.tags_any)}]")
+
+    if params.authors_all:
+        for author in params.authors_all:
+            parts.append(f"authors:={author}")
+    if params.artists_all:
+        for artist in params.artists_all:
+            parts.append(f"artist_tokens:={artist}")
+
+    return " && ".join(parts)
 
 def search_levels(request: HttpRequest):
     params = get_search_params(request)
@@ -156,6 +205,7 @@ def search_levels(request: HttpRequest):
         "pre_segmented_query": True,
         "query_by": "song,song_alt,artist_tokens,authors,description,tags",
         "query_by_weights": "10,10,8,8,6,6",
+        "filter_by": get_typesense_filter_query(params),
         "offset": offset,
         "limit": RESULTS_PER_PAGE + 1,
         "facet_by": "artist_tokens,tags,authors,difficulty,single_player,two_player,has_classics,has_oneshots,has_squareshots,has_freezeshots,has_freetimes,has_holds,has_window_dance,submitter.id,club.id",
