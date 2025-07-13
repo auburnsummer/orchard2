@@ -10,8 +10,10 @@
 		"ghcr.io/itsmechlark/features/redis-server:1": {},
 		"ghcr.io/va-h/devcontainers-features/uv:1": {},
 		"./installTypesense": {},
-		"./installMinio": {}
-	}
+		"./installMinio": {},
+		"ghcr.io/devcontainers-extra/features/tmux-apt-get:1": {},
+		"./installOvermind": {}
+	},
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
@@ -20,7 +22,7 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "uname -a",
+	"postCreateCommand": "bash ./.devcontainer/postcreate.sh"
 
 	// Configure tool-specific properties.
 	// "customizations": {},
