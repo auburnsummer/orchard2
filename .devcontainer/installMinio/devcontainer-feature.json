@@ -1,0 +1,5 @@
+{
+    "id": "installMinio",
+    "version": "0.0.1",
+    "name": "MinIO object server"
+}
