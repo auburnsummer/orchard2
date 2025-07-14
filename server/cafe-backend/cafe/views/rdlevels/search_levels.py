@@ -39,6 +39,9 @@ class SearchLevelParams:
     authors_all: Optional[List[str]]
     artists_all: Optional[List[str]]
     seizure_warning: Optional[bool]
+    facet_query_field: Optional[str]
+    facet_query: Optional[str]
+
 
 def parse_bool_param(value: Optional[str]) -> Optional[bool]:
     if value is None:
@@ -122,6 +125,8 @@ def get_search_params(request: HttpRequest) -> SearchLevelParams:
 
     seizure_warning = parse_bool_param(request.GET.get('seizure_warning'))
 
+    facet_query = request.GET.get('facet_query', None)
+    facet_query_field = request.GET.get('facet_query_field', None)
     
     return SearchLevelParams(
         q=request.GET.get('q', ""),
@@ -143,7 +148,9 @@ def get_search_params(request: HttpRequest) -> SearchLevelParams:
         tags_any=tags_any,
         authors_all=authors_all,
         artists_all=artists_all,
-        seizure_warning=seizure_warning
+        seizure_warning=seizure_warning,
+        facet_query=facet_query,
+        facet_query_field=facet_query_field
     )
 
 def get_typesense_filter_query(params: SearchLevelParams) -> str:
@@ -200,7 +207,7 @@ def search_levels(request: HttpRequest):
     params = get_search_params(request)
     offset = (params.page - 1) * RESULTS_PER_PAGE
 
-    search_results = typesense_client.collections[RDLEVEL_ALIAS_NAME].documents.search({
+    filter_opts = {
         "q": params.q,
         "pre_segmented_query": True,
         "query_by": "song,song_alt,artist_tokens,authors,description,tags",
@@ -211,7 +218,12 @@ def search_levels(request: HttpRequest):
         "facet_by": "artist_tokens,tags,authors,difficulty,single_player,two_player,has_classics,has_oneshots,has_squareshots,has_freezeshots,has_freetimes,has_holds,has_window_dance,submitter.id,club.id",
         "include_fields": "id",
         "sort_by": "_text_match:desc"
-    })
+    }
+
+    if params.facet_query and params.facet_query_field:
+        filter_opts['facet_query'] = f"{params.facet_query_field}:{params.facet_query}"
+
+    search_results = typesense_client.collections[RDLEVEL_ALIAS_NAME].documents.search(filter_opts)
 
     # this is fine! https://www.sqlite.org/np1queryprob.html
     levels = [
@@ -224,6 +236,9 @@ def search_levels(request: HttpRequest):
     facet_distribution = {}
     for facet in search_results['facet_counts']:
         facet_distribution[facet['field_name']] = facet['counts']
+
+    if params.facet_query and params.facet_query_field:
+        return Response(request, request.resolver_match.view_name, facet_distribution[params.facet_query_field])
 
     return Response(request, request.resolver_match.view_name, {
         "results": {
