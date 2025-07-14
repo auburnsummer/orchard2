@@ -238,7 +238,9 @@ def search_levels(request: HttpRequest):
         facet_distribution[facet['field_name']] = facet['counts']
 
     if params.facet_query and params.facet_query_field:
-        return Response(request, request.resolver_match.view_name, facet_distribution[params.facet_query_field])
+        return Response(request, request.resolver_match.view_name, {
+            "facets": facet_distribution[params.facet_query_field]
+        })
 
     return Response(request, request.resolver_match.view_name, {
         "results": {
