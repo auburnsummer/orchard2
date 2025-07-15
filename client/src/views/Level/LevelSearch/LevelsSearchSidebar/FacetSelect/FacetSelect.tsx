@@ -10,51 +10,37 @@ import { djangoGet } from "@cafe/minibridge/fetch";
 import { notifications } from "@mantine/notifications";
 import { useSearchParams } from "@cafe/minibridge/hooks";
 import { removeDuplicates } from "@cafe/utils/list";
+import { useDebouncedValue } from "@mantine/hooks";
 
 type FacetSelectProps = React.HTMLAttributes<HTMLDivElement> & {
     facetName: string;
     facets: Facet[];
-}
+    searchParamKey: string;
+    facetQueryField: string;
+};
 
-const searchFacets = async (facetName: string, filter: string) => {
-    const newUrl = new URL(window.location.href);
-    newUrl.searchParams.set("facet_query_field", facetName);
-    newUrl.searchParams.set("facet_query", filter);
-    const result = await djangoGet(newUrl.toString());
-    if (result.action === "render") {
-        console.log("Search facets result:", result.props);
-        return result.props.facets as Facet[];
-    }  else {
-        notifications.show({
-            title: "Unknown error",
-            message: `Failed to fetch facets for ${facetName}}`,
-            color: "red",
-        })
-    }
-}
-
-export function FacetSelect({ facetName, className, facets, ...rest }: FacetSelectProps) {
+export function FacetSelect({ facetName, className, facets, searchParamKey, facetQueryField, ...rest }: FacetSelectProps) {
     const [filter, setFilter] = useState("");
+    const [filterDebounced] = useDebouncedValue(filter, 150);
     const [searchResults, setSearchResults] = useState<Facet[]>(facets);
     const [isSearching, setIsSearching] = useState(false);
 
     const [searchParams, navigateViaSearchParams] = useSearchParams();
 
-    const selectedFacets = facets.filter(f => searchParams.getAll("tags_all").includes(f.value));
+    const selectedFacets = facets.filter(f => searchParams.getAll(searchParamKey).includes(f.value));
 
     useEffect(() => {
         setFilter("");
     }, [facets]);
 
     useEffect(() => {
-        console.log(`Filter changed: ${filter}`);
-        if (filter === "") {
+        if (filterDebounced === "") {
             setSearchResults([]);
             return;
         }
         const newUrl = new URL(window.location.href);
-        newUrl.searchParams.set("facet_query_field", `tags`);
-        newUrl.searchParams.set("facet_query", filter);
+        newUrl.searchParams.set("facet_query_field", facetQueryField);
+        newUrl.searchParams.set("facet_query", filterDebounced);
         setIsSearching(true);
         (async () => {
             const resp = await djangoGet(newUrl.toString());
@@ -69,7 +55,7 @@ export function FacetSelect({ facetName, className, facets, ...rest }: FacetSele
                 });
             }
         })();
-    }, [filter]);
+    }, [filterDebounced]);
 
     const displayFacets = useMemo(() => {
         if (searchResults.length > 0) {
@@ -102,7 +88,7 @@ export function FacetSelect({ facetName, className, facets, ...rest }: FacetSele
                     displayFacets.map(({ value, count }) => (
                         <Checkbox
                             key={value}
-                            defaultChecked={searchParams.getAll("tags_all").includes(value)}
+                            defaultChecked={selectedFacets.some(f => f.value === value)}
                             label={
                                 <Group gap="0.25rem" align="baseline">
                                     <Text>{value}</Text>
@@ -113,9 +99,9 @@ export function FacetSelect({ facetName, className, facets, ...rest }: FacetSele
                                 const checked = event.currentTarget.checked;
                                 navigateViaSearchParams(params => {
                                     if (checked) {
-                                        params.append("tags_all", value);
+                                        params.append(searchParamKey, value);
                                     } else {
-                                        params.delete("tags_all", value);
+                                        params.delete(searchParamKey, value);
                                     }
                                 })
                             }}
