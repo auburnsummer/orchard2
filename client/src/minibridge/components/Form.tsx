@@ -4,10 +4,11 @@ import { formSubmitAtom, navigateAtom } from "../atoms";
 
 type FormProps = React.FormHTMLAttributes<HTMLFormElement> & {
     action?: string;
+    ref?: React.Ref<HTMLFormElement>;
 }
 
 export function Form(props: FormProps) {
-    const { action, onSubmit: _onSubmit, method, ...rest } = props;
+    const { action, onSubmit: _onSubmit, method, ref, ...rest } = props;
 
     const isOrchardURL = action === undefined || makeCanonicalURL(action).origin === document.location.origin;
 
@@ -54,6 +55,7 @@ export function Form(props: FormProps) {
             onSubmit={onSubmit}
             action={action}
             method={method}
+            ref={ref}
             {...rest}
         />
     )

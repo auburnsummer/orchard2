@@ -30,7 +30,7 @@ export function ClubSettingsMembersView({ club, memberships, can_add }: ClubSett
     const [editMemberFormOpen, setEditMemberFormOpen] = useState(false);
     const [membershipBeingEdited, setMembershipBeingEdited] = useState<ClubMembership | null>(null);
     const [addMemberFormOpen, setAddMemberFormOpen] = useState(false);
-    const searchParams = useSearchParams();
+    const [searchParams] = useSearchParams();
 
     const inviteCode = searchParams.get("invite_code")
     const inviteUrl = new URL(`/groups/redeem_invite/${inviteCode}/`, window.location.origin).toString();
