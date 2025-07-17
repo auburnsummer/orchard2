@@ -132,6 +132,9 @@ if os.environ.get('VITE_BUNDLE_DIR'):
     # Use the directory specified in the environment variable for the Vite bundle
     DJANGO_BRIDGE['VITE_BUNDLE_DIR'] = os.environ['VITE_BUNDLE_DIR']
     del DJANGO_BRIDGE['VITE_DEVSERVER_URL']
+    STATICFILES_DIRS = [ DJANGO_BRIDGE['VITE_BUNDLE_DIR'] ]
+    
+STATIC_ROOT = os.environ.get('STATIC_ROOT', os.path.join(BASE_DIR, 'staticfiles'))
 
 ROOT_URLCONF = 'orchard.urls'
 
