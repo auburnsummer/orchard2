@@ -206,3 +206,5 @@ thumb.png
 *.rdzip
 
 typesense-server
+
+server/cafe-backend/staticfiles
