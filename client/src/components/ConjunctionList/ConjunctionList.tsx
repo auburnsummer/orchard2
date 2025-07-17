@@ -1,14 +1,14 @@
 import cc from 'clsx';
 
 import styles from "./ConjunctionList.module.css";
-import { useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 
 const formatter = new Intl.ListFormat('en', { style: 'short', type: 'conjunction' });
 
 type ConjunctionListProps = React.HTMLAttributes<HTMLUListElement> & {
     items: string[];
-    elementRender: (v: string) => JSX.Element;
-    literalRender: (v: string) => JSX.Element;
+    elementRender: (v: string) => ReactNode;
+    literalRender: (v: string) => ReactNode;
 };
 
 export function ConjunctionList({

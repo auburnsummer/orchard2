@@ -25,11 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 AUTH_USER_MODEL = "cafe.User"
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-0%u5im)hfu55qv54d4f+$3@ijy+%gxq%49cm#b@-vq)z7g6y93'
+SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'false').lower() == 'true'
 
 DOMAIN_URL = os.environ['DOMAIN_URL']
 
@@ -130,6 +128,11 @@ DJANGO_BRIDGE = {
     "VITE_DEVSERVER_URL": "http://localhost:5173/static",
 }
 
+if os.environ.get('VITE_BUNDLE_DIR'):
+    # Use the directory specified in the environment variable for the Vite bundle
+    DJANGO_BRIDGE['VITE_BUNDLE_DIR'] = os.environ['VITE_BUNDLE_DIR']
+    del DJANGO_BRIDGE['VITE_DEVSERVER_URL']
+
 ROOT_URLCONF = 'orchard.urls'
 
 TEMPLATES = [
@@ -156,11 +159,18 @@ WSGI_APPLICATION = 'orchard.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+if os.environ.get('DJANGO_DB_DIR'):
+    # Use the directory specified in the environment variable for the SQLite database
+    db_path = Path(os.environ['DJANGO_DB_DIR']).resolve() / 'db.sqlite3'
+else:
+    # Default to the BASE_DIR if the environment variable is not set
+    db_path = BASE_DIR / 'db.sqlite3'
+
 # https://gcollazo.com/optimal-sqlite-settings-for-django/
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": db_path,
         "OPTIONS": {
             "init_command": (
                 "PRAGMA foreign_keys=ON;"

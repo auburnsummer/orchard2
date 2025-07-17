@@ -1,4 +1,3 @@
-import { Shell } from "@cafe/components/Shell"
 import { RDLevelPrefill } from "@cafe/types/rdLevelPrefill"
 import { PrefillLoading } from "./PrefillLoading/PrefillLoading"
 import { PrefillReady } from "./PrefillReady/PrefillReady"
