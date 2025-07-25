@@ -23,9 +23,16 @@ RUN mv hivemind-v1.1.0-linux-amd64 /tmp/hivemind
 # this is the final image
 FROM ghcr.io/astral-sh/uv:0.7.21-python3.13-bookworm-slim
 
+# install caddy
+RUN apt-get update && apt-get install -y \
+    caddy \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 COPY . .
+
+ENV DJANGO_SETTINGS_MODULE=orchard.settings
 
 # static files
 ENV VITE_BUNDLE_DIR=/tmp/client-dist
@@ -40,8 +47,8 @@ COPY --from=hivemind /tmp/hivemind /usr/local/bin/hivemind
 WORKDIR server
 RUN uv sync
 
-# collect static files for nginx to serve later
-ENV STATIC_ROOT=/var/www/static
+# collect static files for caddy to serve later
+ENV STATIC_ROOT=/var/www/rhythm.cafe/static
 WORKDIR cafe-backend
 
 RUN uv run ./manage.py collectstatic --noinput

@@ -1,2 +1,3 @@
-server: uv run gunicorn orchard.wsgi
+server: cd /app/server/cafe-backend && uv run gunicorn orchard.wsgi
 huey: cd /app/server/cafe-backend && uv run python manage.py run_huey
+caddy: caddy run
