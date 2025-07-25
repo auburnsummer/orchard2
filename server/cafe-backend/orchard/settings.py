@@ -25,11 +25,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 AUTH_USER_MODEL = "cafe.User"
 
-SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '')
 
 DEBUG = os.environ.get('DEBUG', 'false').lower() == 'true'
 
-DOMAIN_URL = os.environ['DOMAIN_URL']
+DOMAIN_URL = os.environ.get('DOMAIN_URL', '')
 
 ALLOWED_HOSTS = [DOMAIN_URL.split('://')[1]]
 CSRF_TRUSTED_ORIGINS = [DOMAIN_URL]
@@ -92,16 +92,16 @@ ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_USER_DISPLAY = lambda user: user.get_short_name()
 
-DISCORD_PUBLIC_KEY = os.environ['DISCORD_PUBLIC_KEY']
-DISCORD_BOT_TOKEN = os.environ['DISCORD_BOT_TOKEN']
-DISCORD_CLIENT_ID = os.environ['DISCORD_CLIENT_ID']
-DISCORD_CLIENT_SECRET = os.environ['DISCORD_CLIENT_SECRET']
-DOMAIN_URL = os.environ['DOMAIN_URL']
+DISCORD_PUBLIC_KEY = os.environ.get('DISCORD_PUBLIC_KEY', '')
+DISCORD_BOT_TOKEN = os.environ.get('DISCORD_BOT_TOKEN', '')
+DISCORD_CLIENT_ID = os.environ.get('DISCORD_CLIENT_ID', '')
+DISCORD_CLIENT_SECRET = os.environ.get('DISCORD_CLIENT_SECRET', '')
+DOMAIN_URL = os.environ.get('DOMAIN_URL', '')
 
-TYPESENSE_API_KEY = os.environ['TYPESENSE_API_KEY']
-TYPESENSE_API_HOST = os.environ['TYPESENSE_API_HOST']
-TYPESENSE_API_PORT = os.environ['TYPESENSE_API_PORT']
-TYPESENSE_API_PROTOCOL = os.environ['TYPESENSE_API_PROTOCOL']
+TYPESENSE_API_KEY = os.environ.get('TYPESENSE_API_KEY', '')
+TYPESENSE_API_HOST = os.environ.get('TYPESENSE_API_HOST', '')
+TYPESENSE_API_PORT = os.environ.get('TYPESENSE_API_PORT', '')
+TYPESENSE_API_PROTOCOL = os.environ.get('TYPESENSE_API_PROTOCOL', '')
 
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
@@ -190,11 +190,11 @@ DATABASES = {
     },
 }
 
-REDIS_HOST = os.environ['REDIS_HOST']
-REDIS_PORT = os.environ['REDIS_PORT']
+REDIS_HOST = os.environ.get('REDIS_HOST', '')
+REDIS_PORT = os.environ.get('REDIS_PORT', '')
 REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD', None)
 
-NUMBER_OF_WORKERS = int(os.environ['NUMBER_OF_WORKERS'])
+NUMBER_OF_WORKERS = int(os.environ.get('NUMBER_OF_WORKERS', 1))
 
 
 
@@ -270,8 +270,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-S3_API_URL = os.environ["S3_API_URL"]
-S3_ACCESS_KEY_ID = os.environ["S3_ACCESS_KEY_ID"]
-S3_SECRET_ACCESS_KEY = os.environ["S3_SECRET_ACCESS_KEY"]
-S3_REGION = os.environ["S3_REGION"]
-S3_PUBLIC_CDN_URL = os.environ["S3_PUBLIC_CDN_URL"]
+S3_API_URL = os.environ.get("S3_API_URL", "")
+S3_ACCESS_KEY_ID = os.environ.get("S3_ACCESS_KEY_ID", "")
+S3_SECRET_ACCESS_KEY = os.environ.get("S3_SECRET_ACCESS_KEY", "")
+S3_REGION = os.environ.get("S3_REGION", "")
+S3_PUBLIC_CDN_URL = os.environ.get("S3_PUBLIC_CDN_URL", "")
