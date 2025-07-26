@@ -31,8 +31,9 @@ DEBUG = os.environ.get('DEBUG', 'false').lower() == 'true'
 
 DOMAIN_URL = os.environ.get('DOMAIN_URL', '')
 
-ALLOWED_HOSTS = [DOMAIN_URL.split('://')[1]]
-CSRF_TRUSTED_ORIGINS = [DOMAIN_URL]
+# host SHOULD be restricted in the reverse proxy layer
+ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = ["*"]
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
