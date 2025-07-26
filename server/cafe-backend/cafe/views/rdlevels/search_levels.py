@@ -6,7 +6,7 @@ from django_bridge.response import Response
 
 from cafe.views.types import HttpRequest
 
-from cafe.management.commands.setuptypesense import typesense_client, RDLEVEL_ALIAS_NAME
+from cafe.management.commands.setuptypesense import get_typesense_client, RDLEVEL_ALIAS_NAME
 from cafe.models import RDLevel
 
 RESULTS_PER_PAGE = 20
@@ -223,6 +223,7 @@ def search_levels(request: HttpRequest):
     if params.facet_query and params.facet_query_field:
         filter_opts['facet_query'] = f"{params.facet_query_field}:{params.facet_query}"
 
+    typesense_client = get_typesense_client()
     search_results = typesense_client.collections[RDLEVEL_ALIAS_NAME].documents.search(filter_opts)
 
     # this is fine! https://www.sqlite.org/np1queryprob.html
