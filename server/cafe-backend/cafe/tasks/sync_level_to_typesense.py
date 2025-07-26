@@ -1,6 +1,6 @@
 from huey.contrib.djhuey import task
 
-from cafe.management.commands.setuptypesense import RDLEVEL_ALIAS_NAME, typesense_client, client_healthy
+from cafe.management.commands.setuptypesense import RDLEVEL_ALIAS_NAME, get_typesense_client, client_healthy
 from django.core.exceptions import ObjectDoesNotExist
 
 from datetime import datetime
@@ -17,6 +17,7 @@ def apply_typesense_specific_adjustments(level_data: dict) -> dict:
 
 @task()
 def sync_level_to_typesense(level_id: str):
+    typesense_client = get_typesense_client()
     from cafe.models import RDLevel
     if not client_healthy(typesense_client):
         print("Typesense is not healthy. Exiting sync.")

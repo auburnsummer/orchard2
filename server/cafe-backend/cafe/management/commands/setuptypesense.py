@@ -4,20 +4,27 @@ from django.core.management.base import BaseCommand
 
 from orchard.settings import TYPESENSE_API_KEY, TYPESENSE_API_HOST, TYPESENSE_API_PORT, TYPESENSE_API_PROTOCOL
 
+from functools import cache
+
 import time
 
 RDLEVEL_ALIAS_NAME = "rdlevels"
 RDLEVEL_COLLECTION_NAME = "rdlevels1"
 
-typesense_client = typesense.Client({
-    'api_key': TYPESENSE_API_KEY,
-    'nodes': [{
-        'host': TYPESENSE_API_HOST,
-        'port': TYPESENSE_API_PORT,
-        'protocol': TYPESENSE_API_PROTOCOL
-    }],
-    'connection_timeout_seconds': 5.0
-})
+@cache
+def get_typesense_client():
+    """
+    Create and return a Typesense client instance.
+    """
+    return typesense.Client({
+        'api_key': TYPESENSE_API_KEY,
+        'nodes': [{
+            'host': TYPESENSE_API_HOST,
+            'port': TYPESENSE_API_PORT,
+            'protocol': TYPESENSE_API_PROTOCOL
+        }],
+        'connection_timeout_seconds': 5.0
+    })
 
 def client_healthy(client: typesense.Client, max_retries=5, retry_delay=2):
     """
@@ -39,6 +46,7 @@ class Command(BaseCommand):
     help = "Initialize Typesense collection"
     
     def handle(self, *args, **options):
+        typesense_client = get_typesense_client()
         if not client_healthy(typesense_client):
             self.stderr.write("Typesense is not healthy. Exiting setup.")
             return
