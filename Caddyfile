@@ -1,4 +1,4 @@
 encode zstd gzip
 root * /var/www/rhythm.cafe/static
 file_server /static/*
-reverse_proxy localhost:8000
+reverse_proxy localhost:5000
