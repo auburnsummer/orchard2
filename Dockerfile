@@ -51,7 +51,7 @@ RUN uv sync
 ENV STATIC_ROOT=/var/www/rhythm.cafe/static
 WORKDIR cafe-backend
 
-RUN uv run ./manage.py collectstatic --noinput
+RUN uv run ./manage.py collectstatic --noinput --no-default-ignore
 
 WORKDIR /app
 
