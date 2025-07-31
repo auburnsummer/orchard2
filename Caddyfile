@@ -2,7 +2,7 @@ http:// {
     encode zstd gzip
     root * /var/www/rhythm.cafe/static
     route {
-        file_server /static/* browse
+        file_server browse
         reverse_proxy localhost:5000
     }
 }
