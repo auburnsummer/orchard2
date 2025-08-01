@@ -11,7 +11,14 @@ export const configAtom = atom<Config>();
 // " " " initialResponse. this doesn't change.
 export const initialResponseAtom = atom<DjangoBridgeResponse>();
 
-const responseCacheAtom = atom<Record<string, RenderResponse>>({});
+const CACHE_MAX_AGE = 1000 * 60 * 5; // 5 minutes
+
+type CachedResponse = {
+    timestamp: number; // epoch timestamp
+    response: RenderResponse;
+}
+
+const responseCacheAtom = atom<Record<string, CachedResponse>>({});
 
 // the response of the last "render" request from django -- this is what view we're showing
 export const currentRenderAtom = atom<RenderResponse>();
@@ -42,7 +49,10 @@ export const handleResponseAtom = atom(
             if (isGetRequest) {
                 set(responseCacheAtom, prev => ({
                     ...prev,
-                    [url.toString()]: response
+                    [url.toString()]: {
+                        timestamp: Date.now(),
+                        response: response
+                    }
                 }));
             }
             set(isLoadingAtom, false);
@@ -83,9 +93,9 @@ export const messagesAtom = atom<Message[]>([]);
 export const navigateAtom = atom(null, async (get, set, url: URL) => {
     const requestCache = get(responseCacheAtom);
     const cachedResponse = requestCache[url.toString()];
-    if (cachedResponse) {
+    if (cachedResponse && (Date.now() - cachedResponse.timestamp < CACHE_MAX_AGE)) {
         // if we have a cached response, use that instead of making a new request
-        set(handleResponseAtom, cachedResponse, url);
+        set(handleResponseAtom, cachedResponse.response, url);
         return;
     }
     const requestId = get(currentRequestIdAtom) + 1;
