@@ -1,5 +1,5 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { isLoadingAtom, locationAtom, messagesAtom, navigateAtom } from "./atoms";
+import { currentRequestIdAtom, isLoadingAtom, locationAtom, messagesAtom, navigateAtom } from "./atoms";
 import { useCallback } from "react";
 import { makeCanonicalURL } from "./utils";
 
@@ -8,6 +8,8 @@ type SetAtom<Args extends unknown[], Result> = (...args: Args) => Result;
 type ExtractSetAtom<A> = A extends SetAtom<infer Args, infer Result> ? (...args: Args) => Result : never;
 
 export const useIsLoading = () => useAtomValue(isLoadingAtom);
+
+export const useCurrentRequestId = () => useAtomValue(currentRequestIdAtom);
 
 export const useMessages = () => useAtom(messagesAtom);
 
