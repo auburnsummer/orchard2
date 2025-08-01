@@ -24,7 +24,7 @@ export const isLoadingAtom = atom(false);
 // another request was made in the meantime, and we should ignore this one.
 // nb: this only applies to GET. we don't want the user to be able to cancel a 
 // POST accidentally. 
-const currentRequestIdAtom = atom(0);
+export const currentRequestIdAtom = atom(0);
 
 
 export const handleResponseAtom = atom(
@@ -32,7 +32,7 @@ export const handleResponseAtom = atom(
     async (get, set, response: DjangoBridgeResponse, url: URL, requestId?: number) => {
         if (requestId !== undefined) {
             if (requestId !== get(currentRequestIdAtom)) {
-                console.warn(`Ignoring request with id ${requestId} as a more recent GET has been made`);
+                console.warn(`Ignoring request with id ${requestId} (to ${url}) as a more recent GET has been made`);
                 return;
             }
         }
