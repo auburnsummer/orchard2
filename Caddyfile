@@ -1,4 +1,13 @@
 http:// {
+    @maintenanceModeActive {
+        file /app/maintenance.on {
+            root /
+        }
+        not header X-Maintenance-Bypass true
+    }
+    handle @maintenanceModeActive {
+        respond "Rhythm Cafe is currently under maintenance."
+    }
     encode zstd gzip
     root * /var/www/rhythm.cafe
     route {
