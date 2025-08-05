@@ -12,7 +12,8 @@ def get_or_create_discord_user(discord_user_id: str, discord_username: str) -> U
     new_user = User.objects.create_user(
         username=user_id,
         display_name=discord_username,
-        email=f"{user_id}@cafe.invalid"
+        email=f"{user_id}@cafe.invalid",
+        id=user_id
     )
     new_user.save()
     social_account = SocialAccount.objects.create(
