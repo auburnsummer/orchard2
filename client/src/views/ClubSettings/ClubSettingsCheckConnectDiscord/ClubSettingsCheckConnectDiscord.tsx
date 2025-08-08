@@ -18,8 +18,8 @@ export function ClubSettingsCheckConnectDiscord({club, discord_guild, did_check}
         >
             <Box pt="md">
                 <Text>Connecting a Discord server is done from the Discord server itself!</Text>
-                <Text>Please refer to <Anchor href="https://example.com">Instructions for Server Owners</Anchor>for how to connect.</Text>
-                <Text>You can use this page to check if your server is connected.</Text>
+                <Text>Please refer to <Anchor href="https://github.com/auburnsummer/orchard2/wiki/Instructions-for-Server-Owners">Instructions for Server Owners</Anchor> for how to connect.</Text>
+                <Text>You can use this page to check if your server is connected, by entering the Server ID below:</Text>
                 <Form method="GET">
                     <Group align="end">
                         <TextInput
