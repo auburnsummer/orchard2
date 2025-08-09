@@ -43,6 +43,7 @@
 .mainArea {
     display: flex;
     flex-direction: column;
+    background-color: var(--mantine-color-body);
 }
 
 .mainAreaInner {

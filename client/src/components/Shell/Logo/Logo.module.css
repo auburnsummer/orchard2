@@ -11,3 +11,7 @@
 		fill: var(--mantine-color-indigo-5);
 	}
 }
+
+.logo:hover {
+	opacity: 85%;
+}
