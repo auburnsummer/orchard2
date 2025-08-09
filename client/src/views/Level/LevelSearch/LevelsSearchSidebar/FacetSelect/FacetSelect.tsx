@@ -38,13 +38,15 @@ export function FacetSelect({ facetName, className, facets, searchParamKey, face
             setSearchResults([]);
             return;
         }
-        const newUrl = new URL(window.location.href);
-        newUrl.searchParams.set("facet_query_field", facetQueryField);
-        newUrl.searchParams.set("facet_query", filterDebounced);
+        const facetQueryUrl = new URL(window.location.href);
+        facetQueryUrl.searchParams.set("facet_query_field", facetQueryField);
+        facetQueryUrl.searchParams.set("facet_query", filterDebounced);
         setIsSearching(true);
+        let isCancelled = false;
         (async () => {
-            const resp = await djangoGet(newUrl.toString());
+            const resp = await djangoGet(facetQueryUrl.toString());
             if (resp.action === "render") {
+                if (isCancelled) return;
                 setIsSearching(false);
                 setSearchResults(resp.props.facets as Facet[]);
             } else {
@@ -55,6 +57,9 @@ export function FacetSelect({ facetName, className, facets, searchParamKey, face
                 });
             }
         })();
+        return () => {
+            isCancelled = true;
+        };
     }, [filterDebounced]);
 
     const displayFacets = useMemo(() => {
