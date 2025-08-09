@@ -4,6 +4,7 @@ import styles from './LevelsSearchSidebar.module.css';
 import cc from "clsx";
 
 import { FacetSelect } from './FacetSelect/FacetSelect';
+import { DifficultySelect } from './DifficultySelect/DifficultySelect';
 
 type LevelsSearchSidebarProps = React.HTMLAttributes<HTMLDivElement> & {
     facets: FacetDistribution;
@@ -30,6 +31,7 @@ export function LevelsSearchSidebar({className, facets, ...rest}: LevelsSearchSi
                 searchParamKey='artists_all'
                 facetQueryField='artist_tokens'
             />
+            <DifficultySelect />
         </div>
     );
 }
