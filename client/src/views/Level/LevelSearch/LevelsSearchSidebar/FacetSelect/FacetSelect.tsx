@@ -96,7 +96,7 @@ export function FacetSelect({ facetName, className, facets, searchParamKey, face
                             defaultChecked={selectedFacets.some(f => f.value === value)}
                             label={
                                 <Group gap="0.25rem" align="baseline">
-                                    <Text>{value}</Text>
+                                    <Text size="sm">{value}</Text>
                                     <Text size="xs" c="dimmed">({count})</Text>
                                 </Group>
                             }
