@@ -164,10 +164,10 @@ def get_typesense_filter_query(params: SearchLevelParams) -> str:
 
     if params.min_bpm is not None or params.max_bpm is not None:
         if params.min_bpm is not None:
-            parts.append(f"bpm:>={params.min_bpm}")
+            parts.append(f"min_bpm:>={params.min_bpm}")
         if params.max_bpm is not None:
-            parts.append(f"bpm:<={params.max_bpm}")
-    
+            parts.append(f"max_bpm:<={params.max_bpm}")
+
     if params.difficulties:
         parts.append(f"difficulty:=[{','.join(map(str, params.difficulties))}]")
 

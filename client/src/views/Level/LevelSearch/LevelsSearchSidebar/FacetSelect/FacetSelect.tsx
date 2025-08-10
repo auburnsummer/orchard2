@@ -29,6 +29,7 @@ export function FacetSelect({ facetName, className, facets, searchParamKey, face
 
     const selectedFacets = facets.filter(f => searchParams.getAll(searchParamKey).includes(f.value));
 
+    // we should reset the filter when facets change
     useEffect(() => {
         setFilter("");
     }, [facets]);
