@@ -41,7 +41,6 @@ export function DifficultySelect() {
                     ))
                 }
             </Stack>
-            
         </div>
     );
 }

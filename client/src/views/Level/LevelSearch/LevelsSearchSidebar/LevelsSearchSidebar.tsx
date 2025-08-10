@@ -5,6 +5,7 @@ import cc from "clsx";
 
 import { FacetSelect } from './FacetSelect/FacetSelect';
 import { DifficultySelect } from './DifficultySelect/DifficultySelect';
+import { BPMSelect } from './BPMSelect/BPMSelect';
 
 type LevelsSearchSidebarProps = React.HTMLAttributes<HTMLDivElement> & {
     facets: FacetDistribution;
@@ -32,6 +33,7 @@ export function LevelsSearchSidebar({className, facets, ...rest}: LevelsSearchSi
                 facetQueryField='artist_tokens'
             />
             <DifficultySelect />
+            <BPMSelect />
         </div>
     );
 }
