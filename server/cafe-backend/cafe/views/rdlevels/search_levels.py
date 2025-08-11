@@ -79,6 +79,7 @@ def get_search_params(request: HttpRequest) -> SearchLevelParams:
     """
     # approval status
     approval_map: Dict[str, ApprovalSearchOptions] = {
+        "approved": ApprovalSearchOptions.APPROVED_ONLY,
         "pending": ApprovalSearchOptions.PENDING,
         "rejected": ApprovalSearchOptions.REJECTED_ONLY,
         "all": ApprovalSearchOptions.ALL

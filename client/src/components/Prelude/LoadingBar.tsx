@@ -9,8 +9,8 @@ export function LoadingBar() {
     const currentRequestId = useCurrentRequestId();
     const [barStarted, setBarStarted] = useState(false);
 
-    const color = theme.colors.blue[4];
-    const { start, complete } = useLoadingBar({ color, height: 1 });
+    const color = theme.colors.blue[5];
+    const { start, complete } = useLoadingBar({ color, height: 2 });
 
 
     useEffect(() => {
