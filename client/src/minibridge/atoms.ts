@@ -90,10 +90,10 @@ export const handleResponseAtom = atom(
 
 export const messagesAtom = atom<Message[]>([]);
 
-export const navigateAtom = atom(null, async (get, set, url: URL) => {
+export const navigateAtom = atom(null, async (get, set, url: URL, skipCache: boolean = false) => {
     const requestCache = get(responseCacheAtom);
     const cachedResponse = requestCache[url.toString()];
-    if (cachedResponse && (Date.now() - cachedResponse.timestamp < CACHE_MAX_AGE)) {
+    if (cachedResponse && (Date.now() - cachedResponse.timestamp < CACHE_MAX_AGE) && !skipCache) {
         // if we have a cached response, use that instead of making a new request
         set(handleResponseAtom, cachedResponse.response, url);
         return;

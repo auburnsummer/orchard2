@@ -23,7 +23,7 @@ export function PrefillLoading({error}: PrefillLoadingProps) {
                 const props = resp.props.prefill as RDLevelPrefill;
                 if (props.ready || props.errors) {
                     clearInterval(interval);
-                    navigate(new URL(window.location.href));
+                    navigate(new URL(window.location.href), true);
                 }
             }
         }, 500);
