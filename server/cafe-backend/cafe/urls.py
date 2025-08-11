@@ -26,6 +26,9 @@ from .views.rdlevels.prefill.prefill_stage_one import prefill_stage_one
 from .views.rdlevels.prefill.prefill_stage_two import prefill_stage_two
 from .views.rdlevels.view_rdlevel import view_rdlevel
 
+def trigger_error(request):
+    division_by_zero = 1 / 0
+
 app_name = "cafe"
 urlpatterns = [
     path("", index, name="index"),
@@ -55,5 +58,5 @@ urlpatterns = [
     path("levels/<level_id>", view_rdlevel, name="level_view"),
     path("levels/<level_id>/edit/", edit_rdlevel, name="level_edit"),
     path("levels/<level_id>/delete/", delete_rdlevel, name="level_delete"),
-    path("levels/", search_levels, name="level_search"),
+    path("levels/", search_levels, name="level_search")
 ]
