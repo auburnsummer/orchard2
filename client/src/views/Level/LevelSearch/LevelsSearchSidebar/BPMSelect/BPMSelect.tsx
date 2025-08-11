@@ -1,4 +1,4 @@
-import { Group, Text, Stack, Checkbox, RangeSlider } from '@mantine/core';
+import { Group, Text, Checkbox, RangeSlider } from '@mantine/core';
 import styles from './BPMSelect.module.css';
 
 import { useState } from 'react';
