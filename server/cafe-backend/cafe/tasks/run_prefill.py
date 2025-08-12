@@ -13,6 +13,7 @@ from cafe.models.rdlevels.prefill import RDLevelPrefillResult
 from asgiref.sync import async_to_sync
 from vitals.msgspec_schema import VitalsLevel
 import traceback
+import sentry_sdk
 
 from orchard.settings import S3_API_URL, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY, S3_REGION, S3_PUBLIC_CDN_URL
 
@@ -81,5 +82,13 @@ def run_prefill(prefill_id: str):
             prefill_result.save()
 
     except Exception as e:
+        # Capture exception with isolated context for better debugging
+        with sentry_sdk.push_scope() as scope:
+            scope.set_context("prefill_task", {
+                "prefill_id": prefill_id,
+                "url": prefill_result.url,
+                "task": "run_prefill"
+            })
+            sentry_sdk.capture_exception(e)
         prefill_result.errors = traceback.format_exc()
         prefill_result.save()
