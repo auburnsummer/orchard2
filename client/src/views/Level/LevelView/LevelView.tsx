@@ -1,18 +1,19 @@
 import { ConjunctionList } from "@cafe/components/ConjunctionList/ConjunctionList";
 import { Shell } from "@cafe/components/Shell";
 import { RDLevel } from "@cafe/types/rdLevelBase";
-import { faHeartPulse, faPen } from "@fortawesome/free-solid-svg-icons";
+import { faHeartPulse, faPen, faDownload, faLink, faTrash, faEdit, faTags, faUsers, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Container, Group, Image, Stack, Title, Text, UnstyledButton, Button, Blockquote, Modal } from "@mantine/core";
+import { Container, Group, Image, Stack, Title, Text, UnstyledButton, Button, Modal, Card, Badge, Grid, Divider, Box, Paper } from "@mantine/core";
 
 import styles from "./LevelView.module.css";
+import commonPatterns from "@cafe/theme/commonPatterns.module.css";
 
-import cc from "clsx";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { useClipboard, useDisclosure } from "@mantine/hooks";
 import { Form } from "@cafe/minibridge/components/Form";
 import { Link } from "@cafe/minibridge/components/Link";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
+import { DIFFICULTY_STRINGS } from "@cafe/utils/constants";
 
 type LevelViewProps = {
     rdlevel: RDLevel,
@@ -30,177 +31,265 @@ export function LevelView({rdlevel, can_edit, can_delete}: LevelViewProps) {
 
     const csrfInput = useCSRFTokenInput();
 
+    // TODO: align with DifficultyDecorator.tsx
+    const getDifficultyColor = (difficulty: number) => {
+        if (difficulty === 0) return 'green';   // Easy
+        if (difficulty === 1) return 'yellow';  // Medium
+        if (difficulty === 2) return 'orange';  // Tough
+        return 'red';                           // Very Tough
+    };
+
+    const getDifficultyString = (difficulty: number) => {
+        return DIFFICULTY_STRINGS[difficulty] || 'Unknown';
+    };
+
     return (
         <Shell>
             <Modal
                 opened={showDeleteForm}
                 onClose={closeDeleteForm}
                 title={`Delete ${rdlevel.song}`}
+                centered
             >
                 <Form
                     method="POST"
                     action={`/levels/${rdlevel.id}/delete/`}
                 >
                     {csrfInput}
-                    <Text>Please confirm you want to delete this level by clicking the button.</Text>
-                    <Text>Note: this action is irreversible.</Text>
-                    <Button type="submit" color="red" variant="outline" mt="md">
-                        Delete
-                    </Button>
+                    <Stack>
+                        <Text>Are you sure you want to delete this level?</Text>
+                        <Text c="dimmed" size="sm">This action cannot be undone.</Text>
+                        <Group justify="flex-end">
+                            <Button variant="default" onClick={closeDeleteForm}>
+                                Cancel
+                            </Button>
+                            <Button type="submit" color="red" leftSection={<FontAwesomeIcon icon={faTrash} />}>
+                                Delete Level
+                            </Button>
+                        </Group>
+                    </Stack>
                 </Form>
             </Modal>
-            <Container pt="md">
-                <Group
-                    align="flex-start"
-                >
-                    <Image
-                        h={240}
-                        w="auto"
-                        src={rdlevel.image_url}
-                    >
-                    </Image>
-                    <Stack gap={0}>
-                        <ConjunctionList
-                            className={styles.artistList}
-                            items={rdlevel.artist_tokens}
-                            elementRender={v => <p className={styles.artist}>{v}</p>}
-                            literalRender={v => <p className={styles.artist}>{v}</p>}
-                        />
-                        <Group>
-                            <Title>{rdlevel.song}</Title>
-                            {
-                                rdlevel.song_alt && (
-                                    <Text>({rdlevel.song_alt})</Text>
-                                )
-                            }
-                        </Group>
-                        <Stack pt="xs">
-                            <Group>
-                                <FontAwesomeIcon icon={faPen} className={styles.topSectionIcon} />
-                                <ConjunctionList
-                                    className={styles.metadataList}
-                                    elementRender={(v) => 
-                                        typeof v === 'string' 
-                                            ? <UnstyledButton
-                                            >
-                                                {v}
-                                            </UnstyledButton> : <></>
-                                    }
-                                    literalRender={(v) => <span>{v}</span>}
-                                    items={rdlevel.authors}
-                                />
-                            </Group>
-                            <Group>
-                                <FontAwesomeIcon icon={faHeartPulse} className={styles.topSectionIcon}  />
-                                <Text className={cc(styles.metaitemText, styles.bpmText)}>{bpmText}</Text>
-                            </Group>
-                            <Group>
-                                <FontAwesomeIcon icon={faDiscord} className={styles.topSectionIcon}  />
-                                <Text className={cc(styles.metaitemText, styles.bpmText)}>{rdlevel.club.name}</Text>
-                            </Group>
-                        </Stack>
-                    </Stack>
-                </Group>
-                <Group pt="xs">
-                    <Button component="a" href={rdlevel.rdzip_url}>
-                        Download
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            clipboard.copy(rdlevel.rdzip_url);
-                        }}
-                    >
-                        {
-                            clipboard.copied
-                                ? "Copied!"
-                                : "Copy link"
-                        }
-                    </Button>
-                    {
-                        can_edit && (
-                            <Button component={Link} href={`/levels/${rdlevel.id}/edit/`}>
-                                Edit
-                            </Button>
-                        )
-                    }
-                    {
-                        can_delete && (
-                            <Button
-                                type="submit"
-                                color="red"
-                                variant="outline"
-                                onClick={openDeleteForm}
-                            >
-                                Delete
-                            </Button>
-                        )
-                    }
-                </Group>
-                <Blockquote mt="md">
-                    {
-                        rdlevel.description.split('\n').map((p) => <Text>{p}</Text>)
-                    }
-                </Blockquote>
-                {/* we'll style this later */}
-                <dl>
-                    <div>
-                        <dt>Difficulty</dt>
-                        <dd>{rdlevel.difficulty}</dd>
-                    </div>
-                    <div>
-                        <dt>Seizure Warning</dt>
-                        <dd>{rdlevel.seizure_warning ? "Yes" : "No"}</dd>
-                    </div>
-                    <div>
-                        <dt>Tags</dt>
-                        <dd>{rdlevel.tags.join(", ")}</dd>
-                    </div>
-                    <div>
-                        <dt>Tags</dt>
-                        <dd>{rdlevel.tags.join(", ")}</dd>
-                    </div>
-                    <div>
-                        <dt>Has Classics</dt>
-                        <dd>{rdlevel.has_classics ? "Yes" : "No"}</dd>
-                    </div>
-                    <div>
-                        <dt>Has One Shots</dt>
-                        <dd>{rdlevel.has_oneshots ? "Yes" : "No"}</dd>
-                    </div>
-                    <div>
-                        <dt>Has Square Shots</dt>
-                        <dd>{rdlevel.has_squareshots ? "Yes" : "No"}</dd>
-                    </div>
-                    <div>
-                        <dt>Has Freeze Shots</dt>
-                        <dd>{rdlevel.has_freezeshots ? "Yes" : "No"}</dd>
-                    </div>
-                    <div>
-                        <dt>Has Free Times</dt>
-                        <dd>{rdlevel.has_freetimes ? "Yes" : "No"}</dd>
-                    </div>
-                    <div>
-                        <dt>Has Holds</dt>
-                        <dd>{rdlevel.has_holds ? "Yes" : "No"}</dd>
-                    </div>
-                    <div>
-                        <dt>Has Skip Shots</dt>
 
-                        <dd>{rdlevel.has_skipshots ? "Yes" : "No"}</dd>
-                    </div>
-                    <div>
-                        <dt>Has Window Dance</dt>
-                        <dd>{rdlevel.has_window_dance ? "Yes" : "No"}</dd>
-                    </div>
-                    <div>
-                        <dt>Single Player</dt>
-                        <dd>{rdlevel.single_player ? "Yes" : "No"}</dd>
-                    </div>
-                    <div>
-                        <dt>Two Player</dt>
-                        <dd>{rdlevel.two_player ? "Yes" : "No"}</dd>
-                    </div>
-                </dl>
+            <Container size="xl" py="xl">
+                <Grid>
+                    {/* Main Content */}
+                    <Grid.Col span={{ base: 12, md: 8 }}>
+                        <Card shadow="sm" padding="lg" radius="md" withBorder>
+                            <Group align="flex-start" mb="md">
+                                <Image
+                                    src={rdlevel.image_url}
+                                    alt={`${rdlevel.song} cover`}
+                                    radius="md"
+                                    h={200}
+                                    w={355}
+                                    fit="cover"
+                                />
+                                
+                                <Stack flex={1} gap="xs">
+                                    <div>
+                                        <ConjunctionList
+                                            className={styles.artistList}
+                                            items={rdlevel.artist_tokens}
+                                            elementRender={v => <Text c="dimmed" size="sm">{v}</Text>}
+                                            literalRender={v => <Text c="dimmed" size="sm">{v}</Text>}
+                                        />
+                                        <Title order={1} size="h2" mb="xs">
+                                            {rdlevel.song}
+                                            {rdlevel.song_alt && (
+                                                <Text span c="dimmed" ml="xs">({rdlevel.song_alt})</Text>
+                                            )}
+                                        </Title>
+                                    </div>
+
+                                    <Group gap="md" wrap="wrap">
+                                        <Group gap="xs">
+                                            <FontAwesomeIcon icon={faPen} className={styles.metaIcon} />
+                                            <ConjunctionList
+                                                className={styles.metadataList}
+                                                elementRender={(v) => 
+                                                    typeof v === 'string' 
+                                                        ? <UnstyledButton className={styles.authorButton}>{v}</UnstyledButton> 
+                                                        : <></>
+                                                }
+                                                literalRender={(v) => <Text span size="sm">{v}</Text>}
+                                                items={rdlevel.authors}
+                                            />
+                                        </Group>
+
+                                        <Group gap="xs">
+                                            <FontAwesomeIcon icon={faHeartPulse} className={styles.metaIcon} />
+                                            <Text size="sm">{bpmText}</Text>
+                                        </Group>
+
+                                        <Group gap="xs">
+                                            <FontAwesomeIcon icon={faDiscord} className={styles.metaIcon} />
+                                            <Text size="sm">{rdlevel.club.name}</Text>
+                                        </Group>
+                                    </Group>
+
+                                    <Group gap="xs" mt="xs">
+                                        <Badge 
+                                            color={getDifficultyColor(rdlevel.difficulty)} 
+                                            variant="light"
+                                            size="lg"
+                                        >
+                                            {getDifficultyString(rdlevel.difficulty)}
+                                        </Badge>
+                                        
+                                        {rdlevel.seizure_warning && (
+                                            <Badge color="red" variant="light" leftSection={<FontAwesomeIcon icon={faExclamationTriangle} />}>
+                                                Seizure Warning
+                                            </Badge>
+                                        )}
+                                        
+                                        {rdlevel.single_player && rdlevel.two_player ? (
+                                            <Badge variant="light" leftSection={<FontAwesomeIcon icon={faUsers} />}>
+                                                1-2 Players
+                                            </Badge>
+                                        ) : rdlevel.two_player ? (
+                                            <Badge variant="light" leftSection={<FontAwesomeIcon icon={faUsers} />}>
+                                                2 Players
+                                            </Badge>
+                                        ) : (
+                                            <Badge variant="light" leftSection={<FontAwesomeIcon icon={faUsers} />}>
+                                                1 Player
+                                            </Badge>
+                                        )}
+                                    </Group>
+                                </Stack>
+                            </Group>
+
+                            <Divider my="md" />
+
+                            {/* Action Buttons */}
+                            <Group mb="md">
+                                <Button 
+                                    component="a" 
+                                    href={rdlevel.rdzip_url}
+                                    leftSection={<FontAwesomeIcon icon={faDownload} />}
+                                    size="md"
+                                >
+                                    Download
+                                </Button>
+                                <Button
+                                    variant="light"
+                                    leftSection={<FontAwesomeIcon icon={faLink} />}
+                                    onClick={() => clipboard.copy(rdlevel.rdzip_url)}
+                                >
+                                    {clipboard.copied ? "Copied!" : "Copy Link"}
+                                </Button>
+                                {can_edit && (
+                                    <Button 
+                                        component={Link} 
+                                        href={`/levels/${rdlevel.id}/edit/`}
+                                        variant="light"
+                                        leftSection={<FontAwesomeIcon icon={faEdit} />}
+                                    >
+                                        Edit
+                                    </Button>
+                                )}
+                                {can_delete && (
+                                    <Button
+                                        color="red"
+                                        variant="light"
+                                        leftSection={<FontAwesomeIcon icon={faTrash} />}
+                                        onClick={openDeleteForm}
+                                    >
+                                        Delete
+                                    </Button>
+                                )}
+                            </Group>
+
+                            {/* Description */}
+                            {rdlevel.description && (
+                                <Box>
+                                    <Text fw={500} mb="xs">Description</Text>
+                                    <Paper p="md" className={commonPatterns.paperBg}>
+                                        {rdlevel.description.split('\n').map((paragraph, index) => (
+                                            <Text key={index} mb="xs">{paragraph}</Text>
+                                        ))}
+                                    </Paper>
+                                </Box>
+                            )}
+                        </Card>
+                    </Grid.Col>
+
+                    {/* Sidebar */}
+                    <Grid.Col span={{ base: 12, md: 4 }}>
+                        <Stack gap="md">
+                            {/* Tags */}
+                            {rdlevel.tags.length > 0 && (
+                                <Card shadow="sm" padding="md" radius="md" withBorder>
+                                    <Group gap="xs" mb="xs">
+                                        <FontAwesomeIcon icon={faTags} className={styles.sectionIcon} />
+                                        <Text fw={500}>Tags</Text>
+                                    </Group>
+                                    <Group gap="xs">
+                                        {rdlevel.tags.map(tag => (
+                                            <Badge key={tag} variant="light" size="sm">{tag}</Badge>
+                                        ))}
+                                    </Group>
+                                </Card>
+                            )}
+
+                            {/* Game Mechanics */}
+                            <Card shadow="sm" padding="md" radius="md" withBorder>
+                                <Text fw={500} mb="md">Game Mechanics</Text>
+                                <Stack gap="xs">
+                                    {rdlevel.has_classics && (
+                                        <Group gap="xs">
+                                            <Badge color="blue" variant="dot" size="xs" />
+                                            <Text size="sm">Classic Beats</Text>
+                                        </Group>
+                                    )}
+                                    {rdlevel.has_oneshots && (
+                                        <Group gap="xs">
+                                            <Badge color="green" variant="dot" size="xs" />
+                                            <Text size="sm">Oneshots</Text>
+                                        </Group>
+                                    )}
+                                    {rdlevel.has_squareshots && (
+                                        <Group gap="xs">
+                                            <Badge color="orange" variant="dot" size="xs" />
+                                            <Text size="sm">Squareshots</Text>
+                                        </Group>
+                                    )}
+                                    {rdlevel.has_freezeshots && (
+                                        <Group gap="xs">
+                                            <Badge color="cyan" variant="dot" size="xs" />
+                                            <Text size="sm">Freezeshots</Text>
+                                        </Group>
+                                    )}
+                                    {rdlevel.has_freetimes && (
+                                        <Group gap="xs">
+                                            <Badge color="purple" variant="dot" size="xs" />
+                                            <Text size="sm">Freetimes</Text>
+                                        </Group>
+                                    )}
+                                    {rdlevel.has_holds && (
+                                        <Group gap="xs">
+                                            <Badge color="pink" variant="dot" size="xs" />
+                                            <Text size="sm">Holds</Text>
+                                        </Group>
+                                    )}
+                                    {rdlevel.has_skipshots && (
+                                        <Group gap="xs">
+                                            <Badge color="red" variant="dot" size="xs" />
+                                            <Text size="sm">Skipshots</Text>
+                                        </Group>
+                                    )}
+                                    {rdlevel.has_window_dance && (
+                                        <Group gap="xs">
+                                            <Badge color="teal" variant="dot" size="xs" />
+                                            <Text size="sm">Window Dance</Text>
+                                        </Group>
+                                    )}
+                                </Stack>
+                            </Card>
+                        </Stack>
+                    </Grid.Col>
+                </Grid>
             </Container>
         </Shell>
     );
