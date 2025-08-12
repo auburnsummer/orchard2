@@ -82,12 +82,26 @@ class Command(BaseCommand):
     Import legacy levels from rhythm cafe
     """
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--club-id',
+            type=str,
+            required=True,
+            help='ID for the club which will hold rc1 levels'
+        )
+        parser.add_argument(
+            '--user-id',
+            type=str,
+            required=True,
+            help='ID for the user which will hold spreadsheet levels'
+        )
+
     def handle(self, *args, **options):
         logger.info("this needs to talk to typesense!")
         logger.info("so if you're running this locally, make sure to have the stack running first")
-        club_id = input("enter the id for the club which will hold rc1 levels: ")
+        club_id = options['club_id']
         club = Club.objects.get(id=club_id)
-        user_id = input("enter the id for the user which will hold spreadsheet levels: ")
+        user_id = options['user_id']
         user = User.objects.get(id=user_id)
         with NamedTemporaryFile(mode="w+b") as f:
             contents = httpx.get(DB_URL).content
