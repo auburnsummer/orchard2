@@ -1,4 +1,5 @@
 from huey.contrib.djhuey import task
+import sentry_sdk
 
 from cafe.management.commands.setuptypesense import RDLEVEL_ALIAS_NAME, get_typesense_client, client_healthy
 from django.core.exceptions import ObjectDoesNotExist
@@ -31,6 +32,20 @@ def sync_level_to_typesense(level_id: str):
         try:
             typesense_client.collections[RDLEVEL_ALIAS_NAME].documents[level_id].delete()
         except Exception as e:
+            with sentry_sdk.push_scope() as scope:
+                scope.set_context("typesense_delete", {
+                    "level_id": level_id,
+                    "task": "sync_level_to_typesense",
+                    "operation": "delete_document"
+                })
+                sentry_sdk.capture_exception(e)
             print(f"Error deleting document {level_id} from Typesense: {e}")
     except Exception as e:
+        with sentry_sdk.push_scope() as scope:
+            scope.set_context("typesense_sync", {
+                "level_id": level_id,
+                "task": "sync_level_to_typesense",
+                "operation": "sync_level"
+            })
+            sentry_sdk.capture_exception(e)
         print(f"Error syncing level {level_id} to Typesense: {e}")

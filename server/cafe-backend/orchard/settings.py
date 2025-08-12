@@ -14,6 +14,8 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 import sentry_sdk
+from sentry_sdk.integrations import logging
+from sentry_sdk.integrations.loguru import LoggingLevels, LoguruIntegration
 
 load_dotenv()
 
@@ -291,5 +293,14 @@ if SENTRY_DSN:
         # Add data like request headers and IP for users,
         # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
         send_default_pii=True,
-        traces_sample_rate=0.1
+        traces_sample_rate=0.1,
+        _experiments={
+            "enable_logs": True
+        },
+        integrations=[
+        # Only send WARNING (and higher) logs to Sentry logs,
+        # even if the logger is set to a lower level.
+            logging.LoggingIntegration(sentry_logs_level=LoggingLevels.WARNING.value),
+            LoguruIntegration(sentry_logs_level=LoggingLevels.WARNING.value),
+        ]
     )
