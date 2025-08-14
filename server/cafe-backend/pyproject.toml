@@ -24,4 +24,5 @@ dependencies = [
     "tenacity>=9.1.2",
     "gunicorn>=23.0.0",
     "sentry-sdk[django]>=2.34.1",
+    "pytest-django>=4.11.1",
 ]
