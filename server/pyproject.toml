@@ -4,3 +4,23 @@ members = ["rdlevel_parse", "utils", "vitals", "essfree", "cafe-backend"]
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "orchard.settings"
 pythonpath = ['./cafe-backend']
+env = [
+    "DJANGO_SECRET_KEY = asfawefawef",
+    "DEBUG = true",
+    "DOMAIN_URL = http://localhost:8000",
+    "DISCORD_PUBLIC_KEY = 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    "DISCORD_BOT_TOKEN = test_bot_token",
+    "DISCORD_CLIENT_ID = test_client_id",
+    "DISCORD_CLIENT_SECRET = test_client_secret",
+    "TYPESENSE_API_KEY = test_api_key",
+    "TYPESENSE_API_HOST = localhost",
+    "TYPESENSE_API_PORT = 8108",
+    "TYPESENSE_API_PROTOCOL = http",
+    "REDIS_HOST = ",
+    "REDIS_PORT = ",
+    "S3_API_URL = ",
+    "S3_ACCESS_KEY_ID = ",
+    "S3_SECRET_ACCESS_KEY = ",
+    "S3_REGION = ",
+    "S3_PUBLIC_CDN_URL = "
+]
