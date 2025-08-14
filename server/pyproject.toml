@@ -1,2 +1,6 @@
 [tool.uv.workspace]
 members = ["rdlevel_parse", "utils", "vitals", "essfree", "cafe-backend"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "orchard.settings"
+pythonpath = ['./cafe-backend']
