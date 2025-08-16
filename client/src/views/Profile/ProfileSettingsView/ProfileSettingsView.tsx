@@ -22,6 +22,7 @@ export function ProfileSettingsView() {
                     <TextInput
                         name="display_name"
                         label="Display name"
+                        maxLength={150}
                         defaultValue={user.displayName}
                     />
 

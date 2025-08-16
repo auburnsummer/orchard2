@@ -113,6 +113,44 @@ Key `.env` variables (in `server/cafe-backend/`):
 - User hijacking: Available at `/hijack/` for admin users
 - Debug toolbar: Enabled when `DEBUG=true`
 
+### Django-Bridge Test Response Structure
+When testing Django-Bridge views with the `bridge_client` fixture, responses return a structured JSON format:
+
+```python
+# Example POST response structure
+{
+    "action": "render",
+    "view": "cafe:profile_settings",  # Django URL name
+    "overlay": false,
+    "metadata": {"title": ""},
+    "props": {},
+    "context": {
+        "csrf_token": "...",
+        "user": {
+            "authenticated": true,
+            "id": "uABC123",
+            "displayName": "User Name",
+            "avatarURL": null,
+            "theme_preference": "dark",
+            "is_superuser": false
+        }
+    },
+    "messages": [
+        {
+            "level": "success",  # or "error", "warning", "info"
+            "html": "User updated!"
+        }
+    ]
+}
+```
+
+Key testing patterns:
+- **Context verification**: `response.json()['context']['user']['field_name']`
+- **Message verification**: `response.json()['messages'][0]['level']` and `response.json()['messages'][0]['html']`
+- **Structure validation**: Check `action`, `view`, and other top-level fields
+- **Success/error flows**: Messages array indicates form validation results
+- **ModelForm behavior**: Missing POST fields reset to model defaults, not preserved values
+
 ## Deployment Notes
 
 - Uses multi-stage Docker build
