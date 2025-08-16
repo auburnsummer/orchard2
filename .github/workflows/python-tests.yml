@@ -44,10 +44,9 @@ jobs:
         run: |
           uv sync --all-extras --dev
 
-      # If you need to run Django migrations before tests, uncomment below
-      # - name: Run migrations
-      #   run: |
-      #     uv run python cafe-backend/manage.py migrate --noinput
+      - name: Download fixtures for vitals
+        run: |
+          cd vitals/tests/fixtures && ./download_fixtures.sh
 
       - name: Run tests
         run: |
