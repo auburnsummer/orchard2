@@ -1,0 +1,68 @@
+name: Python Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: server
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.13"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Install uv (dependency manager)
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+
+      - name: Sync workspace dependencies
+        run: |
+          uv sync --all-extras --dev
+
+      # If you need to run Django migrations before tests, uncomment below
+      # - name: Run migrations
+      #   run: |
+      #     uv run python cafe-backend/manage.py migrate --noinput
+
+      - name: Run tests
+        run: |
+          uv run pytest -q --maxfail=1
+
+      - name: Upload pytest cache (optional)
+        if: always()
+        uses: actions/cache@v4
+        with:
+          path: server/.pytest_cache
+          key: pytest-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            pytest-${{ runner.os }}-
+
+      - name: Show uv environment (debug)
+        if: always()
+        run: |
+          uv pip list || true
