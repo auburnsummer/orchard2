@@ -26,4 +26,5 @@ dependencies = [
     "sentry-sdk[django]>=2.34.1",
     "pytest-django>=4.11.1",
     "pytest-env>=1.1.5",
+    "freezegun>=1.5.5",
 ]
