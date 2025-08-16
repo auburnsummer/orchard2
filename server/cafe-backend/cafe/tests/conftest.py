@@ -1,6 +1,13 @@
 import pytest
 
 @pytest.fixture
+def debug():
+    import debugpy
+    debugpy.listen(("localhost", 5678))
+    debugpy.wait_for_client()
+    return debugpy.breakpoint
+
+@pytest.fixture
 def environment(autouse=True):
     import os
     os.environ.clear()

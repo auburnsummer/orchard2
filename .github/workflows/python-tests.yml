@@ -33,7 +33,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip'
 
       - name: Install uv (dependency manager)
         uses: astral-sh/setup-uv@v3
@@ -50,18 +49,4 @@ jobs:
 
       - name: Run tests
         run: |
-          uv run pytest -q --maxfail=1
-
-      - name: Upload pytest cache (optional)
-        if: always()
-        uses: actions/cache@v4
-        with:
-          path: server/.pytest_cache
-          key: pytest-${{ runner.os }}-${{ github.sha }}
-          restore-keys: |
-            pytest-${{ runner.os }}-
-
-      - name: Show uv environment (debug)
-        if: always()
-        run: |
-          uv pip list || true
+          uv run pytest -v -q --maxfail=1
