@@ -10,6 +10,8 @@ from django.contrib import messages
 
 from cafe.models import ClubMembership
 from cafe.models.clubs.club_invite import ClubInvite
+from django_bridge.response import Response
+
 
 class RedeemInviteView(View):
     @method_decorator(login_required)
@@ -20,11 +22,11 @@ class RedeemInviteView(View):
             invite = None
 
         context = {
-            "invite": invite,
+            "invite": invite.to_dict() if invite else None,
             "code": code
         }
-        
-        return render(request, "cafe/clubs/redeem_invite.jinja", context)
+
+        return Response(request, request.resolver_match.view_name, context)
     
     @method_decorator(login_required)
     @transaction.atomic

@@ -24,6 +24,14 @@ class ClubInvite(models.Model):
 
     def has_expired(self):
         return timezone.now() > self.expiry
+    
+    def to_dict(self):
+        return {
+            "club": self.club.to_dict(),
+            "role": self.role,
+            "expiry": self.expiry.isoformat(),
+            "code": self.code
+        }
 
     def __str__(self):
         return f"Invite to {self.club} as {self.role}, expires {self.expiry}"
