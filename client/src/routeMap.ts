@@ -15,6 +15,7 @@ import { LevelAddTypeSelect } from "./views/LevelAdd/LevelAddTypeSelect";
 import { ProfileClubsView } from "./views/Profile/ProfileClubsView/ProfileClubsView";
 import { ProfileIndexView } from "./views/Profile/ProfileIndexView/ProfileIndexView";
 import { ProfileSettingsView } from "./views/Profile/ProfileSettingsView/ProfileSettingsView";
+import { ClubSettingsRedeemInvite } from "./views/ClubSettings/ClubSettingsRedeemInvite/ClubSettingsRedeemInvite";
 
 export const appName = "cafe";
 
@@ -28,6 +29,8 @@ export const routeMap: { [key: string]: React.FunctionComponent<any> } = {
     "cafe:club_settings_info": ClubSettingsInfoView,
     "cafe:club_settings_members": ClubSettingsMembersView,
     "cafe:club_settings_connected_discords": ClubSettingsCheckConnectDiscord,
+
+    "cafe:redeem_invite": ClubSettingsRedeemInvite,
 
     "cafe:level_portal": LevelAddTypeSelect,
     "cafe:level_from_prefill": LevelAddFromPrefill,

@@ -32,19 +32,21 @@ export function Form(props: FormProps) {
 
         if (e.target instanceof HTMLFormElement) {
             const data = new FormData(e.target);
-            if (e.target.method === "post") {
+            if (e.target.method.toLowerCase() === "post") {
                 const target = action !== undefined
                     ? makeCanonicalURL(action)
                     : makeCanonicalURL(window.location.href)
                 submitForm(target, data);
             }
-            else if (e.target.method === "get") {
+            else if (e.target.method.toLowerCase() === "get") {
                 let target = action !== undefined
                     ? makeCanonicalURL(action)
                     : makeCanonicalURL(window.location.href);
                 const params = formDataToSearchParams(data);
                 target = new URL(`${target.origin}${target.pathname}?${params.toString()}`);
                 navigate(target);
+            } else {
+                console.error(`Unsupported form method: ${e.target.method}`);
             }
         }
 
