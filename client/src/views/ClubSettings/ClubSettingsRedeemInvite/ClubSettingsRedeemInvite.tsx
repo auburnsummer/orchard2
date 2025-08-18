@@ -2,6 +2,7 @@ import { ShellDramaticCenter } from "@cafe/components/ShellDramaticCenter/ShellD
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { Form } from "@cafe/minibridge/components/Form";
 import { Club } from "@cafe/types/club";
+import { ClubMembership } from "@cafe/types/clubMembership";
 import { Button, Paper, Text, Title, Stack } from "@mantine/core";
 import { ReactNode } from "react";
 
@@ -11,9 +12,20 @@ type ClubSettingsRedeemInviteProps = {
     } | null,
     code: string,
     expiry: string,
-    role: 'owner' | 'admin'
+    role: 'owner' | 'admin',
+    membership: ClubMembership | null
 }
 
+function isPointless(membership: ClubMembership | null, role: 'owner' | 'admin') {
+    if (membership === null) return false;
+    if (membership.role === "owner") {
+        return true;
+    }
+    if (role === "admin" && membership.role === "admin") {
+        return true;
+    }
+    return false;
+}
 
 export function ClubSettingsRedeemInvite(props: ClubSettingsRedeemInviteProps) {
     const input = useCSRFTokenInput();
@@ -27,7 +39,16 @@ export function ClubSettingsRedeemInvite(props: ClubSettingsRedeemInviteProps) {
                 <Text>If it keeps happening, please ping Auburn for help.</Text>
             </>
         )
-    } else {
+    } else if (isPointless(props.membership, props.role)) {
+        content = (
+            <Stack gap="xs">
+                <Title order={2}>Cannot Redeem Invite</Title>
+                <Text>You already have {props.membership?.role === 'owner' ? 'owner' : 'admin'} access to <b>{props.invite.club.name}</b>.</Text>
+                <Text>This invite is valid, but redeeming it would not change your current permissions in the group.</Text>
+            </Stack>
+        )
+    }
+    else {
         content = (
             <Form method="post">
                 {input}

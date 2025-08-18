@@ -60,3 +60,67 @@ def user_with_buncha_clubs():
     )
     cm2.save()
     return user
+
+@pytest.fixture
+def test_club():
+    """Create a test club for general testing"""
+    from cafe.models.clubs.club import Club
+    return Club.objects.create(id="testclub", name="Test Club")
+
+@pytest.fixture
+def valid_invite(test_club):
+    """Create a valid admin invite for a test club"""
+    from cafe.models.clubs.club_invite import ClubInvite
+    from django.utils import timezone
+    from datetime import timedelta
+    
+    return ClubInvite.objects.create(
+        club=test_club,
+        role="admin",
+        expiry=timezone.now() + timedelta(hours=24),
+        code="valid_code"
+    )
+
+@pytest.fixture
+def owner_invite(test_club):
+    """Create a valid owner invite for a test club"""
+    from cafe.models.clubs.club_invite import ClubInvite
+    from django.utils import timezone
+    from datetime import timedelta
+    
+    return ClubInvite.objects.create(
+        club=test_club,
+        role="owner",
+        expiry=timezone.now() + timedelta(hours=24),
+        code="owner_code"
+    )
+
+@pytest.fixture
+def expired_invite(test_club):
+    """Create an expired invite for a test club"""
+    from cafe.models.clubs.club_invite import ClubInvite
+    from django.utils import timezone
+    from datetime import timedelta
+    from freezegun import freeze_time
+    
+    with freeze_time("2023-01-01"):
+        return ClubInvite.objects.create(
+            club=test_club,
+            role="admin",
+            expiry=timezone.now() + timedelta(hours=1),
+            code="expired_code"
+        )
+
+@pytest.fixture
+def user_with_admin_membership(test_club):
+    """Create a user who is an admin of the test club"""
+    from cafe.models.user import User
+    from cafe.models.clubs.club_membership import ClubMembership
+    
+    user = User.objects.create_user(username="admin_user")
+    ClubMembership.objects.create(
+        user=user,
+        club=test_club,
+        role="admin"
+    )
+    return user
