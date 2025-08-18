@@ -151,6 +151,23 @@ Key testing patterns:
 - **Success/error flows**: Messages array indicates form validation results
 - **ModelForm behavior**: Missing POST fields reset to model defaults, not preserved values
 
+### Django-Bridge Redirect Handling
+The `bridge_client` fixture (with `X-Requested-With: DjangoBridge` header) intercepts redirects and returns them as JSON responses instead of following them:
+
+```python
+# Regular Django redirect would return 302, but bridge_client returns:
+{
+    "action": "redirect",
+    "path": "/groups/testclub/settings/members/"
+}
+```
+
+**Important**: When testing views that use `HttpResponseRedirect`:
+- Use `assert response.status_code == 200` (not 302)
+- Check `body['action'] == 'redirect'` 
+- Verify redirect path with `body['path']`
+- Note: `messages` are NOT included in redirect responses
+
 ## Deployment Notes
 
 - Uses multi-stage Docker build

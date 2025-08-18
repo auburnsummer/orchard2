@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.http import HttpResponseBadRequest, HttpResponseRedirect, HttpResponseForbidden
 from django.urls import reverse
 from django.views import View
 from django.utils.decorators import method_decorator
@@ -21,9 +21,18 @@ class RedeemInviteView(View):
         if invite is not None and invite.has_expired():
             invite = None
 
+        if invite:
+            membership = ClubMembership.objects.filter(
+                user=request.user,
+                club=invite.club
+            ).first()
+        else:
+            membership = None
+
         context = {
             "invite": invite.to_dict() if invite else None,
-            "code": code
+            "code": code,
+            "membership": membership.to_dict() if membership else None
         }
 
         return Response(request, request.resolver_match.view_name, context)
@@ -36,25 +45,38 @@ class RedeemInviteView(View):
         if invite.has_expired():
             return HttpResponseForbidden("Invite has expired")
 
-        # if they're already in the club, it just sets their role in that club.
+        # Check if user is already in the club
         existing_membership = ClubMembership.objects.filter(
             user=request.user,
             club=invite.club
         ).first()
-        if existing_membership is not None and existing_membership.role != "owner":
-            existing_membership.role = invite.role
-            existing_membership.save()
+        
+        created = False
+        upgraded_to_owner = False
+        if existing_membership is not None:
+            # User is already in the club
+            if existing_membership.role != "owner":
+                # Only update role if they're not already an owner
+                existing_membership.role = invite.role
+                existing_membership.save()
+                # Check if they were upgraded to owner
+                if invite.role == "owner":
+                    upgraded_to_owner = True
         else:
-            new_membership = ClubMembership(
+            # User is not in the club, create new membership
+            new_membership = ClubMembership.objects.create(
                 user=request.user,
                 club=invite.club,
                 role=invite.role
             )
-            new_membership.save()
-
-        invite.delete()
-
-        messages.success(request, f"You have successfully joined the group {invite.club.name}!")
+            created = True
+            
+        if created or upgraded_to_owner:
+            invite.delete()
+            if created:
+                messages.success(request, f"You have successfully joined the group {invite.club.name}!")
+            elif upgraded_to_owner:
+                messages.success(request, f"You have been promoted to owner of {invite.club.name}!")
 
         return HttpResponseRedirect(reverse('cafe:club_settings_members', args=[invite.club.id]))
     
