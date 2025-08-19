@@ -45,6 +45,7 @@ def entry(request):
     if data['type'] == 2:
         command_name = data['data']['name']
         if command_name in HANDLERS:
+            print(data)
             return HANDLERS[command_name](data)
         
         resp = ephemeral_response(f"Unknown command: {command_name} (if you see this, it's a bug!)")
