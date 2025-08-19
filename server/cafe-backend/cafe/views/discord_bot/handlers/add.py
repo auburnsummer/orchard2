@@ -6,8 +6,6 @@ from django.urls import reverse
 
 addlevel_signer = TimestampSigner(salt="addlevel")
 
-from loguru import logger
-
 def _add(data, check_user_is_poster):
     not_found_response = ephemeral_response("No group found for this server (the server owner needs to use the `/connectgroup` command)")
 
@@ -52,7 +50,6 @@ def _add(data, check_user_is_poster):
             "discord_user_name_hint": message['author'].get('global_name') or message['author']['username'],
             "club_id": club.id
         }
-        logger.info(payload)
         secret = addlevel_signer.sign_object(payload)
         url = DOMAIN_URL + reverse("cafe:level_portal", args=[secret])
         line = f"`{attachment['filename']}`: [click here]({url})"

@@ -166,7 +166,7 @@ The `bridge_client` fixture (with `X-Requested-With: DjangoBridge` header) inter
 - Use `assert response.status_code == 200` (not 302)
 - Check `body['action'] == 'redirect'` 
 - Verify redirect path with `body['path']`
-- Note: `messages` are NOT included in redirect responses
+- Note: `messages` are NOT included in redirect responses, to test messages after a redirect, use the `follow_bridge_redirect` utility function from `conftest.py`
 
 ## Deployment Notes
 

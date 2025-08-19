@@ -14,9 +14,12 @@ class ClubMembership(RulesModel):
 
     - Owner: the user can add, remove and change users in the Club. Owners can demote other Owners.
     - Admin: the user can add/edit/delete levels under the Club, even levels they didn't post.
-
-    nb: a club can also be linked to a discord server. Anyone who has access to the
-    discord server can also add levels, even if they're not an Admin.
+    - There's no "Member" role??? read on...
+    - A club can also be linked to a discord server. Anyone who has access to the
+    /add command in the discord server can also add levels, even if they're not an Admin.
+    Since currently you can only add levels via a Discord server anyway, we're delegating the "Member"
+    responsibility to Discord. If we ever allow adding levels through the web interface, we can revisit this decision.
+    - btw, why are we only allowing level uploads through discord? it's mostly to avoid spam and abuse.
     """
     user = models.ForeignKey(UserType, on_delete=models.CASCADE, related_name="memberships")
     club = models.ForeignKey(ClubType, on_delete=models.CASCADE, related_name="memberships")
