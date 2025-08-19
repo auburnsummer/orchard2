@@ -1,4 +1,8 @@
+import json
+from unittest.mock import patch
 import pytest
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey, Ed25519PublicKey
+from django.test import Client
 
 @pytest.fixture
 def debug():
@@ -146,3 +150,27 @@ def follow_bridge_redirect(bridge_client, redirect_response):
     
     redirect_path = redirect_response.json()['path']
     return bridge_client.get(redirect_path)
+
+
+@pytest.fixture
+def client_with_discord_key():
+    """Client with DISCORD_PUBLIC_KEY patched in the entry module."""
+    private_key = Ed25519PrivateKey.generate()
+    public_key = private_key.public_key()
+    
+    # Patch the verify_key directly in the entry module
+    with patch('cafe.views.discord_bot.entry.verify_key', public_key):
+        yield Client(), private_key
+
+def create_discord_request(payload, private_key, timestamp="1234567890"):
+    """Helper function to create a signed Discord request."""
+    payload_bytes = json.dumps(payload).encode('utf-8')
+    to_sign = timestamp.encode('ascii') + payload_bytes
+    signature = private_key.sign(to_sign)
+    
+    return {
+        'data': payload_bytes,
+        'content_type': 'application/json',
+        'HTTP_X_SIGNATURE_ED25519': signature.hex(),
+        'HTTP_X_SIGNATURE_TIMESTAMP': timestamp,
+    }
