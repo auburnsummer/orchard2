@@ -124,3 +124,25 @@ def user_with_admin_membership(test_club):
         role="admin"
     )
     return user
+
+
+def follow_bridge_redirect(bridge_client, redirect_response):
+    """Utility function to follow a Django-Bridge redirect and return the final response
+    
+    This allows testing of messages and other state after a redirect occurs.
+    
+    Args:
+        bridge_client: The Django test client with bridge headers
+        redirect_response: A response with action='redirect' from a bridge view
+        
+    Returns:
+        The response from following the redirect
+        
+    Raises:
+        ValueError: If the response is not a bridge redirect
+    """
+    if redirect_response.json().get('action') != 'redirect':
+        raise ValueError("Response is not a bridge redirect")
+    
+    redirect_path = redirect_response.json()['path']
+    return bridge_client.get(redirect_path)
