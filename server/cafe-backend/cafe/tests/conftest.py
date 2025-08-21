@@ -174,3 +174,11 @@ def create_discord_request(payload, private_key, timestamp="1234567890"):
         'HTTP_X_SIGNATURE_ED25519': signature.hex(),
         'HTTP_X_SIGNATURE_TIMESTAMP': timestamp,
     }
+
+@pytest.fixture
+def discord_guild_with_attached_club(test_club):
+    from cafe.models.discord_guild import DiscordGuild
+    return DiscordGuild.objects.create(
+        id="123456789012345678",
+        club=test_club
+    )
