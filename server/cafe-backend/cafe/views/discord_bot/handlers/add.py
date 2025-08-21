@@ -4,16 +4,16 @@ from .utils import ephemeral_response, get_club_from_guild_id
 from orchard.settings import DOMAIN_URL
 from django.urls import reverse
 
+NO_GROUP_RESPONSE = ephemeral_response("No group found for this server (the server owner needs to use the `/connectgroup` command)")
+
 addlevel_signer = TimestampSigner(salt="addlevel")
 
 def _add(data, check_user_is_poster):
-    not_found_response = ephemeral_response("No group found for this server (the server owner needs to use the `/connectgroup` command)")
-
     club = get_club_from_guild_id(data['guild']['id'])
     
     if not club:
-        return not_found_response
-        
+        return NO_GROUP_RESPONSE
+
     target_id = data['data']['target_id']
     message = data['data']['resolved']['messages'][target_id]
     attachments = [a for a in message['attachments'] if a['filename'].endswith('.rdzip')]
@@ -42,7 +42,8 @@ def _add(data, check_user_is_poster):
             # nb: this is the discord user id of the user who posted the message,
             # which may not be the same as the user who is running this command.
             "discord_user_id": poster_id,
-            # hint for name in case we need to create an account -- this only applies to the delegated scenario
+            # hint for name in case we need to create an account for the submitter
+            # this only can occur in the delegated scenario
             # nb: we don't need to check for the webhook scenario here, because
             # if it is a webhook scenario, then the poster_id is the user who ran the command,
             # who will always have an account by the time they reach the level submission portal, since
