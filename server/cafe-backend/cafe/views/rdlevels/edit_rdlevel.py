@@ -31,7 +31,6 @@ def edit_rdlevel(request: AuthenticatedHttpRequest, level_id: str):
 
                 return redirect("cafe:level_view", rdlevel.id)
             except msgspec.ValidationError as e:
-                print(e)
                 messages.error(request, "An error occurred validating the level")
         else:
             messages.error(request, "An error occurred validating the form")
