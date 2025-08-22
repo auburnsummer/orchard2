@@ -182,3 +182,56 @@ def discord_guild_with_attached_club(test_club):
         id="123456789012345678",
         club=test_club
     )
+
+@pytest.fixture
+def rdlevel(test_club):
+    """Create a test RDLevel for general testing"""
+    from cafe.models.rdlevels.rdlevel import RDLevel
+    from cafe.models.user import User
+    from django.utils import timezone
+    from unittest.mock import patch
+    
+    # Create a user to be the submitter
+    submitter = User.objects.create_user(username="test_submitter", display_name="Test Submitter")
+    
+    # Mock the sync_level_to_typesense task to avoid Redis/Typesense issues in tests
+    with patch('cafe.models.rdlevels.rdlevel.sync_level_to_typesense'):
+        return RDLevel.objects.create(
+            artist="Test Artist",
+            artist_tokens=["test", "artist"],
+            artist_raw="Test Artist",
+            song="Test Song", 
+            song_alt="Test Song Alt",
+            song_raw="Test Song",
+            seizure_warning=False,
+            description="A test level for testing purposes",
+            hue=180.0,
+            authors=["Test Author"],
+            authors_raw="Test Author",
+            max_bpm=120,
+            min_bpm=60,
+            difficulty=1,
+            single_player=True,
+            two_player=False,
+            last_updated=timezone.now(),
+            tags=["test", "example"],
+            has_classics=True,
+            has_oneshots=False,
+            has_squareshots=False,
+            has_freezeshots=False,
+            has_freetimes=False,
+            has_holds=False,
+            has_skipshots=False,
+            has_window_dance=False,
+            sha1="test_sha1_hash_12345",
+            rdlevel_sha1="test_rdlevel_sha1_hash_12345",
+            rd_md5="test_md5_hash_12345",
+            is_animated=False,
+            rdzip_url="https://example.com/test.rdzip",
+            image_url="https://example.com/test_image.jpg",
+            thumb_url="https://example.com/test_thumb.jpg",
+            icon_url="https://example.com/test_icon.jpg",
+            submitter=submitter,
+            club=test_club,
+            approval=0
+        )

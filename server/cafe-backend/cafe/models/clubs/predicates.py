@@ -26,11 +26,15 @@ is_at_least_admin = not_anonymous & (is_owner | is_role_of_club("admin"))
 
 @rules.predicate
 def is_owner_of_permission_club(user: User, clubmembership: ClubMembership):
+    if not not_anonymous(user):
+        return False
     club = clubmembership.club
     return is_role_of_club("owner")(user, club)
 
 @rules.predicate
 def is_permission_subject(user: User, clubmembership: ClubMembership):
+    if not not_anonymous(user):
+        return False
     return clubmembership.user == user
 
 
