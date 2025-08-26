@@ -1,45 +1,13 @@
 {
-  "artist": "Green wisteria",
   "artist_raw": "Green wisteria",
-  "artist_tokens": [
-    "Green wisteria"
-  ],
-  "authors": [
-    "Delta",
-    "Xeno"
-  ],
   "authors_raw": "Delta, Xeno",
-  "description": "(CW: Body Horror)\nA white lily bloomed, a black maw devoured.",
-  "difficulty": 2,
-  "has_classics": true,
-  "has_freetimes": true,
-  "has_freezeshots": false,
-  "has_holds": false,
-  "has_oneshots": true,
-  "has_skipshots": false,
-  "has_squareshots": false,
-  "has_window_dance": false,
-  "hue": 0.66,
   "icon": "<binary>",
   "image": "<binary>",
   "is_animated": false,
   "last_updated": "2022-09-23T09:27:28.000000",
-  "max_bpm": 204,
-  "min_bpm": 100,
   "rd_md5": "bfef9fdc122a94d840538941cb5ae33e",
   "rdlevel_sha1": "17a41d4c9b575d3202b8832a9d21c3b873d959e5",
-  "seizure_warning": true,
   "sha1": "88f48cdbd6a63773fcf44a38f5ed1ece00f399be",
-  "single_player": true,
-  "song": "RGB",
   "song_raw": "RGB",
-  "tags": [
-    "compo19",
-    "competition 19",
-    "weird",
-    "red green blue",
-    "namine ritsu"
-  ],
-  "thumb": "<binary>",
-  "two_player": false
+  "thumb": "<binary>"
 }

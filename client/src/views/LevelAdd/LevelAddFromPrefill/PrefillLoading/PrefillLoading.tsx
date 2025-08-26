@@ -10,9 +10,10 @@ import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 
 type PrefillLoadingProps = {
     error: string;
+    prefillType: string;
 }
 
-export function PrefillLoading({error}: PrefillLoadingProps) {
+export function PrefillLoading({error, prefillType}: PrefillLoadingProps) {
     const navigate = useSetAtom(navigateAtom);
     
     useEffect(() => {
@@ -40,12 +41,16 @@ export function PrefillLoading({error}: PrefillLoadingProps) {
                         ? (
                         <Stack align="center">
                             <Loader size="2rem" />
-                            <Text>Analysing level...</Text>
+                            {
+                                prefillType === 'update'
+                                    ? <Text>Uploading level...</Text>
+                                    : <Text>Analysing level...</Text>
+                            }
                         </Stack>
                         )
                         : (
                             <Stack>
-                                <Text>An error occurred while attempting to analyse this level:</Text>
+                                <Text>An error occurred while attempting to load this level:</Text>
                                 <Alert variant="light" color="red" title="Error Trace" icon={<FontAwesomeIcon icon={faExclamationCircle} />}>
                                     <pre>{error}</pre>
                                 </Alert>

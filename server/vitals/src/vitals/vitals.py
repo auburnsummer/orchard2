@@ -18,13 +18,44 @@ from .facets.thumbnail_facet import thumbnail_facet
 from .facets.updated_facet import updated_facet
 from .facets.rdmd5_facet import rdmd5_facet
 
-from .msgspec_schema import VitalsLevel
+from .msgspec_schema import VitalsLevel, VitalsLevelImmutable
 
 import msgspec
 
 class VitalsException(Exception):
     pass
 
+def _vitals(facets: dict, f: IO[bytes]) -> dict:
+    try:
+        with zipfile.ZipFile(f) as z:
+            with z.open("main.rdlevel", "r") as rdlevel:
+                text = rdlevel.read().decode("utf-8-sig")
+                parsed = parse(text)
+
+                final = {}
+                for key, func in facets.items():
+                    try:
+                        result = func(
+                            **{"obj": parsed, "zip": z, "file": f}
+                        )
+                        if isinstance(key, tuple):
+                            # multiple keys with (expected) multiple values that map to the keys.
+                            for k, v in zip(key, result):
+                                final[k] = v
+                        else:
+                            final[key] = result
+                    except Exception as e:
+                        raise VitalsException(
+                            f"vitals: An unhandled error occured in a facet: {e}"
+                        )
+                return final
+
+    except zipfile.BadZipFile:
+        raise VitalsException(
+            "vitals: this is not a zip file, or we couldn't decode it for some reason."
+        )
+    except KeyError:
+        raise VitalsException("vitals: there is no main.rdlevel in the zip.")
 
 def vitals(f: IO[bytes]) -> VitalsLevel:
     facets = {
@@ -62,36 +93,27 @@ def vitals(f: IO[bytes]) -> VitalsLevel:
         "rd_md5": rdmd5_facet
     }
 
-    try:
-        with zipfile.ZipFile(f) as z:
-            with z.open("main.rdlevel", "r") as rdlevel:
-                text = rdlevel.read().decode("utf-8-sig")
-                parsed = parse(text)
+    result = _vitals(facets, f)
+    return msgspec.convert(result, type=VitalsLevel)
 
-                final = {}
-                for key, func in facets.items():
-                    try:
-                        result = func(
-                            **{"obj": parsed, "zip": z, "file": f}
-                        )
-                        if isinstance(key, tuple):
-                            # multiple keys with (expected) multiple values that map to the keys.
-                            for k, v in zip(key, result):
-                                final[k] = v
-                        else:
-                            final[key] = result
-                    except Exception as e:
-                        raise VitalsException(
-                            f"vitals: An unhandled error occured in a facet: {e}"
-                        )
+def vitals_quick(f: IO[bytes]) -> VitalsLevelImmutable:
+    """
+    In an update operation on an rdzip, we trust the existing metadata is correct, and therefore
+    we only need to update file-related metadata.
 
-                # msgspec.convert will do a runtime typecheck.
-                # if we type all the inputs, we can replace with a direct VitalsLevel(**final)
-                return msgspec.convert(final, VitalsLevel)
+    to be honest, atm this isn't really much faster than vitals, since we still parse the entire file
+    """
+    facets = {
+        ("image", "thumb", "is_animated"): thumbnail_facet,
+        "icon": icon_facet,
+        "sha1": sha1_facet,
+        "rdlevel_sha1": rdlevel_sha1_facet,
+        "rd_md5": rdmd5_facet,
+        "last_updated": updated_facet,
+        "artist_raw": make_key_facet(["settings", "artist"]),
+        "song_raw": make_key_facet(["settings", "song"]),
+        "authors_raw": make_key_facet(["settings", "author"])
+    }
 
-    except zipfile.BadZipFile:
-        raise VitalsException(
-            "vitals: this is not a zip file, or we couldn't decode it for some reason."
-        )
-    except KeyError:
-        raise VitalsException("vitals: there is no main.rdlevel in the zip.")
+    result = _vitals(facets, f)
+    return msgspec.convert(result, type=VitalsLevelImmutable)

@@ -2,7 +2,7 @@ import os
 import pytest
 import msgspec
 from pathlib import Path
-from vitals import vitals
+from vitals import vitals, vitals_quick
 from syrupy.extensions.json import JSONSnapshotExtension
 
 class VitalsSnapshotExtension(JSONSnapshotExtension):
@@ -42,3 +42,17 @@ def test_vitals_snapshot(snapshot, fixture_path):
         if result_dict.get('icon'):
             result_dict['icon'] = '<binary>'
         assert result_dict == snapshot(extension_class=VitalsSnapshotExtension) 
+
+@pytest.mark.parametrize("fixture_path", get_fixture_files(), ids=get_test_id)
+def test_vitals_quick_snapshot(snapshot, fixture_path):
+    """Test that vitals_quick output matches the stored snapshot for each fixture."""
+    with open(fixture_path, 'rb') as f:
+        result = vitals_quick(f)
+        # Convert to dict using msgspec's asdict
+        result_dict = msgspec.structs.asdict(result)
+        # Remove binary data from snapshot for readability
+        result_dict['image'] = '<binary>'
+        result_dict['thumb'] = '<binary>'
+        if result_dict.get('icon'):
+            result_dict['icon'] = '<binary>'
+        assert result_dict == snapshot(extension_class=VitalsSnapshotExtension)

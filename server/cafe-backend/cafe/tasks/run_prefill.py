@@ -6,12 +6,12 @@ from aiohttp import ClientSession
 from aiohttp_s3_client import S3Client
 from essfree.essfree import Essfree
 import msgspec
-from vitals import vitals
+from vitals import vitals, vitals_quick
 from huey.contrib.djhuey import db_periodic_task, db_task, on_commit_task
 import httpx
 from cafe.models.rdlevels.prefill import RDLevelPrefillResult
 from asgiref.sync import async_to_sync
-from vitals.msgspec_schema import VitalsLevel
+from vitals.msgspec_schema import VitalsLevel, VitalsLevelImmutable
 import traceback
 import sentry_sdk
 
@@ -24,7 +24,7 @@ class UploadFilesURLs(NamedTuple):
     thumb_url: str
 
 @async_to_sync
-async def upload_files(level: VitalsLevel, f: BufferedRandom):
+async def upload_files(level: VitalsLevel | VitalsLevelImmutable, f: BufferedRandom):
     async with ClientSession(raise_for_status=True) as session:
         client = S3Client(
             url=S3_API_URL,
@@ -64,7 +64,7 @@ def run_prefill(prefill_id: str):
                 for chunk in resp.iter_bytes():
                     f.write(chunk)
             f.seek(0)
-            level = vitals(f)
+            level = vitals_quick(f) if prefill_result.prefill_type == "update" else vitals(f)
 
             urls = upload_files(level, f)
 
