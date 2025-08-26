@@ -27,8 +27,21 @@ class VitalsLevelBaseMutable(msgspec.Struct):
     has_skipshots: bool
     has_window_dance: bool
 
+class VitalsLevelBaseImmutable(msgspec.Struct):
+    "The properties on VitalsLevel that the client cannot change, because they are derived from rdzip"
+    sha1: str
+    rdlevel_sha1: str
+    is_animated: bool
+    last_updated: datetime
+    artist_raw: str
+    song_raw: str
+    authors_raw: str
+    rd_md5: str
+
 class VitalsLevelBase(VitalsLevelBaseMutable):
-    "VitalsLevelBaseMutable + immutable properties / properties that are managed by us"
+    """
+    msgspec doesn't support multiple inheritance, so we have to repeat the fields
+    """
     sha1: str
     rdlevel_sha1: str
     is_animated: bool
@@ -40,6 +53,11 @@ class VitalsLevelBase(VitalsLevelBaseMutable):
     
 class VitalsLevel(VitalsLevelBase):
     "VitalsLevelBaseMutable + VitalsLevelBase + image data"
+    image: bytearray
+    thumb: bytearray
+    icon: Optional[bytearray]
+
+class VitalsLevelImmutable(VitalsLevelBaseImmutable):
     image: bytearray
     thumb: bytearray
     icon: Optional[bytearray]

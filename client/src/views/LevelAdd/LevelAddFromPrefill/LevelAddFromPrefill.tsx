@@ -14,6 +14,6 @@ export function LevelAddFromPrefill({prefill}: LevelAddFromPrefillProps) {
     }
     
     return (
-        <PrefillLoading error={prefill.errors} />
+        <PrefillLoading prefillType={prefill.prefill_type} error={prefill.errors} />
     )
 }

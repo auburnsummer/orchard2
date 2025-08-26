@@ -1,41 +1,13 @@
 {
-  "artist": "Samario (Making A Mistake)",
   "artist_raw": "Samario (Making A Mistake)",
-  "artist_tokens": [
-    "Samario (Making A Mistake)"
-  ],
-  "authors": [
-    "Samario (Making A Mistake)"
-  ],
   "authors_raw": "Samario (Making A Mistake)",
-  "description": "One Uncued Tresillo\n(song edited from [...]Machinegun Psystyle[...], by Camellia)",
-  "difficulty": 0,
-  "has_classics": false,
-  "has_freetimes": true,
-  "has_freezeshots": false,
-  "has_holds": false,
-  "has_oneshots": false,
-  "has_skipshots": false,
-  "has_squareshots": false,
-  "has_window_dance": false,
-  "hue": 0.0,
   "icon": "<binary>",
   "image": "<binary>",
   "is_animated": false,
   "last_updated": "2021-01-02T03:52:10.000000",
-  "max_bpm": 160,
-  "min_bpm": 160,
   "rd_md5": "3d95ee68253ed7acb8eae17cb3cbb5db",
   "rdlevel_sha1": "1d74eea124e8c1b0735a9dd79c655589a0b72ed5",
-  "seizure_warning": false,
   "sha1": "1bf690214be382e78daa98a5c7e73b79a59cf610",
-  "single_player": true,
-  "song": "One Uncued Tresillo",
   "song_raw": "One Uncued Tresillo",
-  "tags": [
-    "uncued tresillo",
-    "samario please stop doing this"
-  ],
-  "thumb": "<binary>",
-  "two_player": true
+  "thumb": "<binary>"
 }

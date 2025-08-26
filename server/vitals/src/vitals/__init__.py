@@ -3,7 +3,7 @@ import pprint
 import argparse
 import msgspec
 
-from .vitals import vitals
+from .vitals import vitals, vitals_quick
 
 def main():
     parser = argparse.ArgumentParser(description='Process metadata from a Rhythm Doctor .rdzip file.')

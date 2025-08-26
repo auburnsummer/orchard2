@@ -1,43 +1,13 @@
 {
-  "artist": "遊助",
   "artist_raw": "遊助",
-  "artist_tokens": [
-    "遊助"
-  ],
-  "authors": [
-    "来因洛特"
-  ],
   "authors_raw": "来因洛特",
-  "description": "这次的这个谱我真的花了很长时间，大概有......差不多50个小时吧。歌词因为是CC，只能全用平假名了，看起来麻烦也抱歉了...希望这次能取得比上次更好的结果吧。来来回回也看了很多次，感觉想不到有什么能加的了，就这样交了吧。也希望你也能像歌词一样开开心心的，活着本身没有意义，但就是为了知道是为了什么我们才会活着呀。(I don't know how to translate)",
-  "difficulty": 0,
-  "has_classics": true,
-  "has_freetimes": true,
-  "has_freezeshots": false,
-  "has_holds": false,
-  "has_oneshots": false,
-  "has_skipshots": false,
-  "has_squareshots": false,
-  "has_window_dance": false,
-  "hue": 0.17,
   "icon": "<binary>",
   "image": "<binary>",
   "is_animated": false,
   "last_updated": "2022-08-27T11:35:12.000000",
-  "max_bpm": 138,
-  "min_bpm": 138,
   "rd_md5": "62d95f5dfc3b5af1a5a1eb16c11fb7fb",
   "rdlevel_sha1": "1ea9de1156f77d09fb4746c5224d5cc7f82dc0dc",
-  "seizure_warning": true,
   "sha1": "82dfb357c88904400fbf7eebc2ff2d1820ad9f8f",
-  "single_player": true,
-  "song": "一笑懸命",
   "song_raw": "一笑懸命",
-  "tags": [
-    "easy",
-    "CNcompo 1",
-    "relaxing",
-    "lyrics"
-  ],
-  "thumb": "<binary>",
-  "two_player": false
+  "thumb": "<binary>"
 }

@@ -1,45 +1,13 @@
 {
-  "artist": "Pseuu",
   "artist_raw": "Pseuu",
-  "artist_tokens": [
-    "Pseuu"
-  ],
-  "authors": [
-    "Pseuu"
-  ],
   "authors_raw": "Pseuu",
-  "description": "uh... no comment. level made in about 3-4 working hours\n\n- tricky oneshot patterns\n- skipshots\n- holds",
-  "difficulty": 2,
-  "has_classics": false,
-  "has_freetimes": true,
-  "has_freezeshots": false,
-  "has_holds": true,
-  "has_oneshots": true,
-  "has_skipshots": true,
-  "has_squareshots": false,
-  "has_window_dance": true,
-  "hue": 0.42,
   "icon": "<binary>",
   "image": "<binary>",
   "is_animated": false,
   "last_updated": "2022-01-03T23:19:26.000000",
-  "max_bpm": 126,
-  "min_bpm": 126,
   "rd_md5": "fe0f657a2a11da7036ca8a88aa0e8c43",
   "rdlevel_sha1": "34e9ce56866b66dec453d148f8c5d4c2bb7c7199",
-  "seizure_warning": false,
   "sha1": "250da27a5bff4285dcbf22f13c9c287f7eaf30d7",
-  "single_player": true,
-  "song": "ennui.ogg",
   "song_raw": "ennui.ogg",
-  "tags": [
-    "chiptune",
-    "short",
-    "2p",
-    "oneshots",
-    "skipshots",
-    "holds"
-  ],
-  "thumb": "<binary>",
-  "two_player": true
+  "thumb": "<binary>"
 }

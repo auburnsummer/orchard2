@@ -1,45 +1,13 @@
 {
-  "artist": "placeboing",
   "artist_raw": "placeboing",
-  "artist_tokens": [
-    "placeboing"
-  ],
-  "authors": [
-    "April's Only Fool"
-  ],
   "authors_raw": "April's Only Fool",
-  "description": "This level works under the assumption that you know how 8beat, 6beat, and Temporal Shift works.\n\nHope you all have a wonderful April Fools Day!\n\nHollaback Girl by Gwen Stefani x Donkey Kong Country 2 OST\n\nBanana CC by Pyre\nBanana Tile by Het",
-  "difficulty": 1,
-  "has_classics": true,
-  "has_freetimes": true,
-  "has_freezeshots": false,
-  "has_holds": false,
-  "has_oneshots": true,
-  "has_skipshots": true,
-  "has_squareshots": false,
-  "has_window_dance": false,
-  "hue": 0.17,
   "icon": "<binary>",
   "image": "<binary>",
   "is_animated": false,
   "last_updated": "2022-04-09T16:40:34.000000",
-  "max_bpm": 147,
-  "min_bpm": 143,
   "rd_md5": "709f935e98ce2fbe77235ec0c0b98999",
   "rdlevel_sha1": "cb674be3db4efc34f5cd77ba5138a7bf2fa7ee12",
-  "seizure_warning": false,
   "sha1": "862f1ad3d2f6ae0580055700d79b8ae30c8771b2",
-  "single_player": true,
-  "song": "BANAS",
   "song_raw": "BANAS",
-  "tags": [
-    "April Fools",
-    "banana",
-    "banas",
-    "temporal shift",
-    "8beat",
-    "6beat"
-  ],
-  "thumb": "<binary>",
-  "two_player": false
+  "thumb": "<binary>"
 }
