@@ -1,6 +1,7 @@
 import { RDLevelPrefill } from "@cafe/types/rdLevelPrefill"
 import { PrefillLoading } from "./PrefillLoading/PrefillLoading"
 import { PrefillReady } from "./PrefillReady/PrefillReady"
+import { PrefillUpdate } from "./PrefillUpdate/PrefillUpdate"
 
 type LevelAddFromPrefillProps = {
     prefill: RDLevelPrefill
@@ -8,9 +9,12 @@ type LevelAddFromPrefillProps = {
 
 export function LevelAddFromPrefill({prefill}: LevelAddFromPrefillProps) {
     if (prefill.ready) {
-        return (
-            <PrefillReady prefill={prefill} />
-        )
+        if (prefill.prefill_type === 'new') {
+            return <PrefillReady prefill={prefill} />
+        }
+        else {
+            return <PrefillUpdate prefill={prefill} />
+        }
     }
     
     return (

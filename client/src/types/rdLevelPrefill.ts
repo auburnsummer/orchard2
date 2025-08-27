@@ -10,7 +10,7 @@ type RDLevelPrefillBase = {
         _args: string[];
     };
     version: number;
-    prefill_type: string;
+    prefill_type: "update" | "new";
     user: UserPublic;
     club: Club;
 }
@@ -25,6 +25,16 @@ export type RDLevelPrefillReady = RDLevelPrefillBase & {
     ready: true;
     errors: "";
     data: RDLevelBase;
+} & {
+    prefill_type: "new";
 }
 
-export type RDLevelPrefill = RDLevelPrefillNotReady | RDLevelPrefillReady;
+export type RDLevelPrefillUpdateReady = RDLevelPrefillBase & {
+    ready: true;
+    errors: "";
+    data: RDLevelBase;
+} & {
+    prefill_type: "update";
+}
+
+export type RDLevelPrefill = RDLevelPrefillNotReady | RDLevelPrefillReady | RDLevelPrefillUpdateReady;
