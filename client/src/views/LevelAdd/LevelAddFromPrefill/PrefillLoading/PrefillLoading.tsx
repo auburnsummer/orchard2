@@ -10,7 +10,7 @@ import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 
 type PrefillLoadingProps = {
     error: string;
-    prefillType: string;
+    prefillType: "update" | "new";
 }
 
 export function PrefillLoading({error, prefillType}: PrefillLoadingProps) {

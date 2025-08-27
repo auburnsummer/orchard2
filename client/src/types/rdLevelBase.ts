@@ -1,8 +1,24 @@
 import { Club } from "./club";
 import { UserPublic } from "./user";
 
+// output of the prefill job if update
+export type RDLevelUpdatePrefillData = {
+    sha1: string;
+    rdlevel_sha1: string;
+    is_animated: boolean;
+    last_updated: string;
+    artist_raw: string;
+    song_raw: string;
+    authors_raw: string;
+    rd_md5: string;
+    rdzip_url: string;
+    image_url: string;
+    icon_url: string | null;
+    thumb_url: string;
+};
+
 // output of the prefill job
-export type RDLevelBase = {
+export type RDLevelBase = RDLevelUpdatePrefillData & {
     artist: string;
     artist_tokens: string[];
     song: string;
@@ -24,15 +40,6 @@ export type RDLevelBase = {
     has_holds: boolean;
     has_skipshots: boolean;
     has_window_dance: boolean;
-
-    sha1: string;
-    rdlevel_sha1: string;
-    is_animated: boolean;
-    last_updated: string;
-    rdzip_url: string;
-    image_url: string;
-    icon_url?: string;
-    thumb_url: string;
 };
 
 // some additional fields
