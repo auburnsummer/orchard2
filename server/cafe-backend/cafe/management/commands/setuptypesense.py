@@ -58,6 +58,11 @@ class Command(BaseCommand):
             coll = None
         if not coll:
             self.stdout.write(f"Creating Typesense collection: {RDLEVEL_COLLECTION_NAME}")
+            # we can only set one locale
+            # so we will set it to Japanese (ja) based on the following assumptions:
+            # it doesn't harm English search quality
+            # segmentation for Chinese is "decent"
+            # Japanese is probably going to be the most common CJK language
             typesense_client.collections.create({
                 "name": RDLEVEL_COLLECTION_NAME,
                 "enable_nested_fields": True,
@@ -66,18 +71,21 @@ class Command(BaseCommand):
                         "name": "artist_tokens",
                         "type": "string[]",
                         "facet": True,
-                        "infix": True
+                        "infix": True,
+                        "locale": "ja"
                     },
                     {
                         "name": "song",
                         "type": "string",
-                        "infix": True
+                        "infix": True,
+                        "locale": "ja"
                     },
                     {
                         "name": "song_alt",
                         "type": "string",
                         "optional": True,
-                        "infix": True
+                        "infix": True,
+                        "locale": "ja"
                     },
                     {
                         "name": "seizure_warning",
@@ -92,7 +100,8 @@ class Command(BaseCommand):
                         "name": "authors",
                         "type": "string[]",
                         "facet": True,
-                        "infix": True
+                        "infix": True,
+                        "locale": "ja"
                     },
                     {
                         "name": "max_bpm",
@@ -125,7 +134,8 @@ class Command(BaseCommand):
                         "name": "tags",
                         "type": "string[]",
                         "infix": True,
-                        "facet": True
+                        "facet": True,
+                        "locale": "ja"
                     },
                     {
                         "name": "has_classics",

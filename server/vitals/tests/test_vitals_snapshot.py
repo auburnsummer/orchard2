@@ -11,12 +11,16 @@ class VitalsSnapshotExtension(JSONSnapshotExtension):
 
     @classmethod
     def get_snapshot_name(cls, *, test_location, index: int) -> str:
-        """Generate a snapshot name based on the fixture filename"""
+        """Generate a snapshot name based on the fixture filename and test function"""
         test_name = str(test_location)
-        # The test name will be like "test_vitals_snapshot[filename]"
-        # Extract just the filename part
+        # The test name will be like "test_vitals_snapshot[filename]" or "test_vitals_quick_snapshot[filename]"
+        # Extract the test function name and fixture filename
         if '[' in test_name and ']' in test_name:
-            return test_name.split('[')[1].split(']')[0]
+            fixture_name = test_name.split('[')[1].split(']')[0]
+            if 'test_vitals_quick_snapshot' in test_name:
+                return f"{fixture_name}_quick"
+            elif 'test_vitals_snapshot' in test_name:
+                return fixture_name
         return super().get_snapshot_name(test_location=test_location, index=index)
 
 FIXTURES_DIR = Path(__file__).parent / "fixtures"
