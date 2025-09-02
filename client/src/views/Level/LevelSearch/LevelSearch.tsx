@@ -106,7 +106,11 @@ export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
                     {
                         results.hits.slice(0, LEVELS_PER_PAGE).map((level) => (
                             <li key={level.id}>
-                                <LevelCard level={level} className={styles.levelCard} />
+                                <LevelCard
+                                    level={level}
+                                    className={styles.levelCard}
+                                    href={`/levels/${level.id}/`}
+                                />
                             </li>
                         ))
                     }

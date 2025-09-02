@@ -210,7 +210,6 @@ def search_levels(request: HttpRequest):
 
     filter_opts = {
         "q": params.q,
-        "pre_segmented_query": True,
         "query_by": "song,song_alt,artist_tokens,authors,description,tags",
         "query_by_weights": "10,10,8,8,6,6",
         "filter_by": get_typesense_filter_query(params),
