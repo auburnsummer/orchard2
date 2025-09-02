@@ -1,13 +1,43 @@
 {
+  "artist": "auburnsummer",
   "artist_raw": "auburnsummer",
+  "artist_tokens": [
+    "auburnsummer"
+  ],
+  "authors": [
+    "auburnsummer",
+    "Xeno"
+  ],
   "authors_raw": "auburnsummer, Xeno",
+  "description": "A two-handed level. The eloquent blend between thirds and halves.",
+  "difficulty": 2,
+  "has_classics": true,
+  "has_freetimes": false,
+  "has_freezeshots": false,
+  "has_holds": false,
+  "has_oneshots": true,
+  "has_skipshots": false,
+  "has_squareshots": true,
+  "has_window_dance": false,
+  "hue": 0.66,
   "icon": "<binary>",
   "image": "<binary>",
   "is_animated": false,
   "last_updated": "2022-06-27T23:25:28.000000",
+  "max_bpm": 110,
+  "min_bpm": 110,
   "rd_md5": "b369f467ed89cac134f3909556f17378",
   "rdlevel_sha1": "077671a2053d503850d2df220c10f7b901ae0963",
+  "seizure_warning": false,
   "sha1": "460807d4b87deb9d94ab31369985ba96b5c95291",
+  "single_player": false,
+  "song": "Triplet Test",
   "song_raw": "Triplet Test",
-  "thumb": "<binary>"
+  "tags": [
+    "Piano",
+    "2p",
+    "Two-handed"
+  ],
+  "thumb": "<binary>",
+  "two_player": true
 }
