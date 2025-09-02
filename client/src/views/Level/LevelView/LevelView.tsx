@@ -3,7 +3,7 @@ import { Shell } from "@cafe/components/Shell";
 import { RDLevel } from "@cafe/types/rdLevelBase";
 import { faHeartPulse, faPen, faDownload, faLink, faTrash, faEdit, faTags, faUsers, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Container, Group, Image, Stack, Title, Text, UnstyledButton, Button, Modal, Card, Badge, Grid, Divider, Box, Paper, TextInput, CopyButton } from "@mantine/core";
+import { Container, Group, Image, Stack, Title, Text, UnstyledButton, Button, Modal, Card, Badge, Grid, Divider, Box, Paper, TextInput } from "@mantine/core";
 
 import styles from "./LevelView.module.css";
 import commonPatterns from "@cafe/theme/commonPatterns.module.css";
