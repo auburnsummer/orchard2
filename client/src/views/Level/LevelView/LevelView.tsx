@@ -3,7 +3,7 @@ import { Shell } from "@cafe/components/Shell";
 import { RDLevel } from "@cafe/types/rdLevelBase";
 import { faHeartPulse, faPen, faDownload, faLink, faTrash, faEdit, faTags, faUsers, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Container, Group, Image, Stack, Title, Text, UnstyledButton, Button, Modal, Card, Badge, Grid, Divider, Box, Paper } from "@mantine/core";
+import { Container, Group, Image, Stack, Title, Text, UnstyledButton, Button, Modal, Card, Badge, Grid, Divider, Box, Paper, TextInput, CopyButton } from "@mantine/core";
 
 import styles from "./LevelView.module.css";
 import commonPatterns from "@cafe/theme/commonPatterns.module.css";
@@ -14,6 +14,7 @@ import { Form } from "@cafe/minibridge/components/Form";
 import { Link } from "@cafe/minibridge/components/Link";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { DIFFICULTY_STRINGS } from "@cafe/utils/constants";
+import { CopyIconButton } from "@cafe/components/CopyIconButton/CopyIconButton";
 
 type LevelViewProps = {
     rdlevel: RDLevel,
@@ -287,6 +288,20 @@ export function LevelView({rdlevel, can_edit, can_delete}: LevelViewProps) {
                                     )}
                                 </Stack>
                             </Card>
+
+                            {/* level ID, shown only if user is able to edit
+                             this is since they might need the level id to enter in manually on the update page
+                            */}
+                            {
+                                can_edit && (
+                                    <TextInput
+                                        label="Level ID"
+                                        value={rdlevel.id}
+                                        readOnly
+                                        rightSection={<CopyIconButton value={rdlevel.id} />}
+                                    />
+                                )
+                            }
                         </Stack>
                     </Grid.Col>
                 </Grid>

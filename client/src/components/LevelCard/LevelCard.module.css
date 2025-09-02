@@ -154,6 +154,10 @@ html[data-mantine-color-scheme="dark"] .base {
     flex-grow: 1;
 }
 
+.info:hover {
+    cursor: pointer;
+}
+
 .decorator {
     position: absolute;
     top: 0;
@@ -325,5 +329,5 @@ Benface is still the Patron Saint of CSS though
     bottom: 0;
     right: 0.25rem;
     font-size: 0.65rem;
-    color: var(--blueGray-300);
+    color: var(--mantine-color-slate-4);
 }

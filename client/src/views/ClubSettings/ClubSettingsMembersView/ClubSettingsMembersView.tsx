@@ -11,6 +11,7 @@ import { faCheck, faCopy } from "@fortawesome/free-solid-svg-icons";
 import { AddMemberForm } from "./AddMemberForm/AddMemberForm";
 import { EditMemberForm } from "./EditMemberForm/EditMemberForm";
 import { useSearchParams } from "@cafe/minibridge/hooks";
+import { CopyIconButton } from "@cafe/components/CopyIconButton/CopyIconButton";
 
 type MembershipPermission = {
     can_change: boolean;
@@ -86,15 +87,7 @@ export function ClubSettingsMembersView({ club, memberships, can_add }: ClubSett
                                     >
 
                                     </TextInput>
-                                    <CopyButton value={inviteUrl}>
-                                        {({ copied, copy }) => (
-                                            <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="right">
-                                                <ActionIcon color={copied ? 'teal' : 'gray'} variant="subtle" onClick={copy}>
-                                                    {copied ?  <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faCopy} />}
-                                                </ActionIcon>
-                                            </Tooltip>
-                                        )}
-                                    </CopyButton>
+                                    <CopyIconButton value={inviteUrl} />
                                 </Group>
                             </Stack>
                         </Alert>

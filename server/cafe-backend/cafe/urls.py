@@ -55,7 +55,7 @@ urlpatterns = [
 
     path("levels/add/<code>/", prefill_stage_one, name="level_portal"),
     path("levels/from_prefill/<prefill_id>/", prefill_stage_two, name="level_from_prefill"),
-    path("levels/<level_id>", view_rdlevel, name="level_view"),
+    path("levels/<level_id>/", view_rdlevel, name="level_view"),
     path("levels/<level_id>/edit/", edit_rdlevel, name="level_edit"),
     path("levels/<level_id>/delete/", delete_rdlevel, name="level_delete"),
     path("levels/", search_levels, name="level_search")

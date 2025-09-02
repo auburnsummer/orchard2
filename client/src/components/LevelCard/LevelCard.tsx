@@ -14,9 +14,12 @@ import { Link } from "@cafe/minibridge/components/Link";
 
 type LevelCardProps = React.HTMLAttributes<HTMLDivElement> & {
     level: RDLevel;
+    showId?: boolean;
+    href?: string;
+    onClick?: () => void;
 }
 
-export function LevelCard({level, className, ...rest}: LevelCardProps) {
+export function LevelCard({level, className, showId = false, href, onClick, ...rest}: LevelCardProps) {
     const clipboard = useClipboard({ timeout: 500 });
     const bpmText = level.min_bpm === level.max_bpm
         ? `${level.min_bpm} BPM`
@@ -47,13 +50,19 @@ export function LevelCard({level, className, ...rest}: LevelCardProps) {
                     </div>
                 </div>
             </div>
-            <div className={styles.info}>
+            <div className={styles.info} onClick={onClick}>
                 <DifficultyDecorator difficulty={level.difficulty} className={styles.decorator} />
                 <div className={styles.cast}>
                     <div className={styles.songBox}>
-                        <Link href={`/levels/${level.id}`} className={styles.songLink}>
-                            <h2 className={styles.song}>{level.song}</h2>
-                        </Link>
+                        {
+                            href ? (
+                                <Link href={href} className={styles.songLink}>
+                                    <h2 className={styles.song}>{level.song}</h2>
+                                </Link>
+                            ) : (
+                                <h2 className={styles.song}>{level.song}</h2>
+                            )
+                        }
                         {
                             level.song_alt && (
                                 <p className={styles.songAlt}>({level.song_alt})</p>
@@ -137,6 +146,11 @@ export function LevelCard({level, className, ...rest}: LevelCardProps) {
                         ))
                     }
                 </ul>
+                {
+                    showId && (
+                        <Text className={styles.id}>{level.id}</Text>
+                    )
+                }
             </div>
         </article>
     )
