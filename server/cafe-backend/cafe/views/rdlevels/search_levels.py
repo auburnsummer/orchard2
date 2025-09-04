@@ -191,16 +191,16 @@ def get_typesense_filter_query(params: SearchLevelParams) -> str:
 
     if params.tags_all:
         for tag in params.tags_all:
-            parts.append(f"tags:={tag}")
+            parts.append(f"tags:=`{tag}`")
     if params.tags_any:
         parts.append(f"tags:=[{','.join(params.tags_any)}]")
 
     if params.authors_all:
         for author in params.authors_all:
-            parts.append(f"authors:={author}")
+            parts.append(f"authors:=`{author}`")
     if params.artists_all:
         for artist in params.artists_all:
-            parts.append(f"artist_tokens:={artist}")
+            parts.append(f"artist_tokens:=`{artist}`")
 
     return " && ".join(parts)
 
