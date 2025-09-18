@@ -70,7 +70,7 @@ def prefill_stage_two(request: AuthenticatedHttpRequest, prefill_id: str):
                 messages.error(request, "An error occurred validating the form")
 
     potential_matches = []
-    if prefill.prefill_type == 'update':
+    if prefill.prefill_type == 'update' and prefill.ready:
         matches = RDLevel.objects.filter(song_raw=prefill.data['song_raw'], artist_raw=prefill.data['artist_raw'])
         potential_matches.extend(match for match in matches if request.user.has_perm('cafe.change_rdlevel', match))
 
