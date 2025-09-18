@@ -12,7 +12,6 @@ type PrefillUpdateProps = {
 }
 
 export function PrefillUpdate({ potentialMatches }: PrefillUpdateProps) {
-    // TODO: if we're going to just ask them to put the ID in sometimes we need to expose the ID better in level view
     return (
         <Shell>
             <Box p="md">

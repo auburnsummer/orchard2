@@ -6,9 +6,10 @@ import { useState } from "react";
 
 type LevelAddTypeSelectProps = {
     code: string;
+    code_valid: boolean;
 }
 
-export function LevelAddTypeSelect({code: _code}: LevelAddTypeSelectProps) {
+export function LevelAddTypeSelect({code: _code, code_valid}: LevelAddTypeSelectProps) {
     const [addType, setAddType] = useState<string| null>(null);
     const csrfInput = useCSRFTokenInput();
 
@@ -17,10 +18,9 @@ export function LevelAddTypeSelect({code: _code}: LevelAddTypeSelectProps) {
         {value: 'update', label: 'Update Existing Level'},
     ];
 
-    return (
-        <ShellDramaticCenter>
-            <Paper shadow="md" p="xl">
-                <Form
+    const content = code_valid
+        ? (
+            <Form
                     method="POST"
                 >
                     {csrfInput}
@@ -37,6 +37,18 @@ export function LevelAddTypeSelect({code: _code}: LevelAddTypeSelectProps) {
                         <Button type="submit" disabled={addType == null}>Continue</Button>
                     </Stack>
                 </Form>
+        ) : (
+            <>
+                <p>This link to add a level is invalid or has expired.</p>
+                <p>Please run the command again to get a fresh link.</p>
+            </>
+        )
+
+
+    return (
+        <ShellDramaticCenter>
+            <Paper shadow="md" p="xl">
+                { content }
             </Paper>
         </ShellDramaticCenter>
     )
