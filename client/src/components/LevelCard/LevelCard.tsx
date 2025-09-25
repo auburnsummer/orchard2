@@ -50,7 +50,7 @@ export function LevelCard({level, className, showId = false, href, onClick, ...r
                     </div>
                 </div>
             </div>
-            <div className={styles.info} onClick={onClick}>
+            <div className={cc(styles.info, onClick !== undefined && styles.infoClickable)} onClick={onClick}>
                 <DifficultyDecorator difficulty={level.difficulty} className={styles.decorator} />
                 <div className={styles.cast}>
                     <div className={styles.songBox}>
