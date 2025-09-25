@@ -1,5 +1,4 @@
- - continue rdlevel update flow
- - in level portal, when redeeming a code, proactively check if it's expired and show message
+ - tests for rdlevel update flow
  - handle duplicate rdzip uploads gracefully
  - user can access a list of all their levels
  - club admins/owners can access a list of all the club's levels

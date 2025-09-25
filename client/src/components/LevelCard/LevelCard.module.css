@@ -154,7 +154,15 @@ html[data-mantine-color-scheme="dark"] .base {
     flex-grow: 1;
 }
 
-.info:hover {
+.base:has(.infoClickable:hover) {
+    background-color: var(--mantine-color-slate-2);
+    box-shadow: var(--mantine-shadow-md);
+    @mixin dark {
+        background-color: var(--mantine-color-slate-8);
+    }
+}
+
+.infoClickable:hover {
     cursor: pointer;
 }
 

@@ -50,10 +50,8 @@ def prefill_stage_two(request: AuthenticatedHttpRequest, prefill_id: str):
             # we're updating a level. The level ID is provided by the client in the "prefill" form property.
             form = PrefillStageTwoPayload(request.POST)
             if form.is_valid():
-                prefill_data: str = form.cleaned_data.get("prefill")
+                level_id: str = form.cleaned_data.get("prefill")
                 try:
-                    parsed = msgspec.json.decode(prefill_data, type=dict)
-                    level_id = parsed.get("level_id")
                     level = get_object_or_404(RDLevel, pk=level_id)
                     if not request.user.has_perm('cafe.change_rdlevel', level):
                         messages.error(request, "You do not have permission to edit this level")
@@ -63,6 +61,9 @@ def prefill_stage_two(request: AuthenticatedHttpRequest, prefill_id: str):
                         with transaction.atomic():
                             level.save()
                             prefill.delete()
+
+                        messages.success(request, "Level link updated successfully")
+
                         return redirect("cafe:level_view", level.id)
                 except msgspec.ValidationError:
                     messages.error(request, "An error occurred validating the level")
