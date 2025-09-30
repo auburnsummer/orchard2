@@ -22,7 +22,7 @@ register_permissions()
 class PrefillStageOneForm(Form):
     prefill_type = CharField(max_length=100)
 
-@permission_required('prefill.ok', fn=lambda _, code: code)
+@permission_required('prefill_code.ok', fn=lambda _, code: code)
 def _prefill_stage_one_post(request: AuthenticatedHttpRequest, code: str):
     """Handle POST request with permission check"""
     form = PrefillStageOneForm(request.POST)
@@ -53,7 +53,7 @@ def prefill_stage_one(request: AuthenticatedHttpRequest, code: str):
 
     render_data = {
         "code": code,
-        "code_valid": request.user.has_perm("prefill.ok", code)
+        "code_valid": request.user.has_perm("prefill_code.ok", code)
     }
     
     return Response(request, request.resolver_match.view_name, render_data)
