@@ -17,11 +17,15 @@ def check_if_ok_to_continue(user: User, code: str) -> bool:
     except BadSignature:
         return False
     
-    # 2. The club must exist.
+    # 2. The result must contain required keys.
+    if not all(key in result for key in ["club_id", "discord_user_id"]):
+        return False
+    
+    # 3. The club must exist.
     if not Club.objects.filter(id=result["club_id"]).exists():
         return False
     
-    # 3. one of these two conditions must be true:
+    # 4. one of these two conditions must be true:
     #    a. the user is linked to the discord account that posted the message.
     #    b. the user is an admin or owner of the club.
     discord_user_id = result['discord_user_id']
@@ -34,4 +38,4 @@ def check_if_ok_to_continue(user: User, code: str) -> bool:
     return user.has_perm('cafe.create_delegated_levels_for_club', club)
 
 def register_permissions():
-    rules.add_perm('prefill.ok', check_if_ok_to_continue)
+    rules.add_perm('prefill_code.ok', check_if_ok_to_continue)
