@@ -75,8 +75,16 @@ def prefill_stage_two(request: AuthenticatedHttpRequest, prefill_id: str):
         matches = RDLevel.objects.filter(song_raw=prefill.data['song_raw'], artist_raw=prefill.data['artist_raw'])
         potential_matches.extend(match for match in matches if request.user.has_perm('cafe.change_rdlevel', match))
 
+    existing_level = None
+    if prefill.ready:
+        try:
+            existing_level = RDLevel.objects.get(sha1=prefill.data['sha1'])
+        except RDLevel.DoesNotExist:
+            existing_level = None
+
     render_data = {
         "prefill": prefill.to_dict(),
-        "potential_matches": [m.to_dict() for m in potential_matches]
+        "potential_matches": [m.to_dict() for m in potential_matches],
+        "existing_level": existing_level.to_dict() if existing_level else None,
     }
     return Response(request, request.resolver_match.view_name, render_data)

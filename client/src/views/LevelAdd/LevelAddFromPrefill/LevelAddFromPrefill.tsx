@@ -3,14 +3,21 @@ import { PrefillLoading } from "./PrefillLoading/PrefillLoading"
 import { PrefillReady } from "./PrefillReady/PrefillReady"
 import { PrefillUpdate } from "./PrefillUpdate/PrefillUpdate"
 import { RDLevel } from "@cafe/types/rdLevelBase"
+import { LevelAlreadyExists } from "./LevelAlreadyExists/LevelAlreadyExists"
 
 type LevelAddFromPrefillProps = {
     prefill: RDLevelPrefill
     potential_matches: RDLevel[]
+    existing_level: RDLevel | null
 }
 
-export function LevelAddFromPrefill({prefill, potential_matches}: LevelAddFromPrefillProps) {
+export function LevelAddFromPrefill({prefill, potential_matches, existing_level}: LevelAddFromPrefillProps) {
     if (prefill.ready) {
+        if (existing_level) {
+            return (
+                <LevelAlreadyExists existingLevel={existing_level} />
+            )
+        }
         if (prefill.prefill_type === 'new') {
             return <PrefillReady prefill={prefill} />
         }
