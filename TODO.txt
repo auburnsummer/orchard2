@@ -1,7 +1,6 @@
- - handle duplicate rdzip uploads gracefully
-    - there is a page now for it, make it pretty
- - fix rdzip new upload screen, right preview bg color of level
+ - flow for running admin commands in a way that doesn't suck
+ - home page??
+ - think about what we should actually put on the user's profile page for now
  - user can access a list of all their levels
  - club admins/owners can access a list of all the club's levels
- - home page??
  - PR flow

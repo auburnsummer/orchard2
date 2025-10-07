@@ -1,9 +1,12 @@
 .base {
     width: 26rem;
-    background-color: var(--mantine-color-slate-light);
     border-radius: 0.5rem;
     display: flex;
     flex-direction: column;
+    background-color: var(--bg-color);
+
+
+    --bg-color: var(--mantine-color-slate-1);
 
     --sub-text-color: var(--mantine-color-slate-5);
     --sub-text-color-hover: var(--mantine-color-slate-7);
@@ -15,6 +18,7 @@
 }
 
 html[data-mantine-color-scheme="dark"] .base {
+    --bg-color: var(--mantine-color-slate-7);
     --sub-text-color: var(--mantine-color-slate-4);
     --sub-text-color-hover: var(--mantine-color-slate-2);
     --tag-bg-color: var(--mantine-color-slate-8);
