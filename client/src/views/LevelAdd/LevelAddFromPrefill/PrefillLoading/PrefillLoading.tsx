@@ -18,6 +18,9 @@ export function PrefillLoading({error, prefillType}: PrefillLoadingProps) {
     
     useEffect(() => {
         const interval = setInterval(async () => {
+            if (error !== "") {
+                return;
+            }
             const url = `${window.location.origin}${window.location.pathname}?_cache=${Math.random()}`;
             const resp = await djangoGet(url);
             if (resp.action === "render") {
