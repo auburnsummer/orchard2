@@ -1,0 +1,19 @@
+name: Run Management Command
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute remote SSH commands using SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.LULU_IP }}
+          username: ubuntu
+          key: ${{ secrets.LULU_SSH_PRIVATE_KEY }}
+          script: whoami
