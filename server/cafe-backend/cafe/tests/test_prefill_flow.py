@@ -183,6 +183,7 @@ def prefill_result_update_ready(test_user, test_club_with_user):
             "image_url": "https://cdn.example.com/test_updated.png",
             "thumb_url": "https://cdn.example.com/test_updated.webp",
             "icon_url": "https://cdn.example.com/test_updated_icon.png",
+            "sha1": "test_sha1_hash_12345"
         }
     )
 
