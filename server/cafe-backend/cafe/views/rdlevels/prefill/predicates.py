@@ -38,4 +38,5 @@ def check_if_ok_to_continue(user: User, code: str) -> bool:
     return user.has_perm('cafe.create_delegated_levels_for_club', club)
 
 def register_permissions():
-    rules.add_perm('prefill_code.ok', check_if_ok_to_continue)
+    if not rules.perm_exists('prefill_code.ok'):
+        rules.add_perm('prefill_code.ok', check_if_ok_to_continue)
