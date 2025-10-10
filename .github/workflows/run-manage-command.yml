@@ -16,4 +16,4 @@ jobs:
           host: ${{ secrets.LULU_IP }}
           username: ubuntu
           key: ${{ secrets.LULU_SSH_PRIVATE_KEY }}
-          script: whoami
+          script: sudo docker ps --format=json | jq -r 'select(.Image == "ghcr.io/auburnsummer/orchard2:main") | .ID' | head -1 | sudo docker exec --workdir=/app/server/cafe-backend $(cat) uv run manage.py helloworld --name="GitHub Actions"
