@@ -13,6 +13,7 @@ permissions:
 
 jobs:
   runit:
+    name: "[ ${{ github.event.inputs.command }} ]"
     runs-on: ubuntu-latest
     steps:
       - name: Execute remote SSH commands using SSH
