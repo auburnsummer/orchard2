@@ -1,5 +1,5 @@
- - flow for running admin commands in a way that doesn't suck
  - home page??
+ - add public test server in plpasscode
  - think about what we should actually put on the user's profile page for now
  - user can access a list of all their levels
  - club admins/owners can access a list of all the club's levels
