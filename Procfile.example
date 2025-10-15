@@ -1,9 +1,10 @@
 server: cd ./server/cafe-backend && uv run python manage.py runserver
 client: cd ./client && npm run dev -- --clearScreen false
-# something to port forward 8000, e.g, with ngrok:
+# you need something to forward port 8000. e.g. ngrok:
 # ngrok http --domain=domain 8000
-# or perhaps with cloudflare tunnel:
+# or cloudflare tunnel:
 # cloudflared tunnel run --token <token>
 huey: cd ./server/cafe-backend && uv run python manage.py run_huey
 typesense: ./typesense-server --api-key=key --data-dir=./data.typesense
 minio: minio server ./data.minio
+redis: redis-server

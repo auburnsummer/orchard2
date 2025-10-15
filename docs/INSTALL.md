@@ -4,8 +4,7 @@
 
 This page explains how to set up the dev environment for orchard2.
 
-These will likely work as-is for MacOS and Linux users. Windows users are recommended to
-use WSL (Windows Subsystem for Linux) to run the commands below.
+These will likely work as-is for MacOS and Linux users. Windows users should use WSL (Windows Subsystem for Linux) to run the commands below.
 
 ## Clone the repo
 
@@ -81,6 +80,12 @@ Ngrok does not require a domain name but you won't have a custom domain for your
 
 ## Install third party services
 
+### Procfile runner
+
+A Procfile runner is used to run the application and its dependencies. I use [Overmind](https://github.com/DarthSim/overmind) for this purpose.
+
+1. Install Overmind by following the instructions here: https://github.com/DarthSim/overmind#installation
+
 ### Redis
 
 Redis is used as a dependency for the Huey task queue, which is used to run background tasks in the application. The relevant variables in the `.env` are: `REDIS_HOST`, `REDIS_PORT`, and `REDIS_PASSWORD`. Typically, if you are running Redis locally, you can set `REDIS_HOST` to `localhost`, `REDIS_PORT` to `6379`, and leave `REDIS_PASSWORD` empty. If you are using a hosted Redis service, you will need to set these variables accordingly. These instructions assume you are running Redis locally.
@@ -94,18 +99,28 @@ Redis is used as a dependency for the Huey task queue, which is used to run back
 Typesense is used for full-text search in the application. The relevant variables in the `.env` are: `TYPESENSE_API_HOST`, `TYPESENSE_API_PORT`, and `TYPESENSE_API_KEY`. If you are running Typesense locally, you can set `TYPESENSE_API_HOST` to `localhost`, `TYPESENSE_API_PORT` to `8108`, and set a random string as `TYPESENSE_API_KEY`. If you are using a hosted Typesense service, you will need to set these variables accordingly.
 
 1. Install Typesense by following the instructions here: https://typesense.org/docs/guide/install-typesense.html#option-2-local-machine-self-hosting
-   - I recommend just downloading the binary into the root directory of the project and running it from there.
-2. Create an empty folder called `data.typesense` in the root directory of the project. This is where Typesense will store its data: 
+2. Create an empty folder called `data.typesense` in the root directory of the project. This is where Typesense will store its data.
 
 ```bash
 $ mkdir data.typesense
 ```
 
-3. The Procfile assumes that Typesense is a binary file called `typesense-server` in the root directory of the project. If you have installed it elsewhere, you will need to change the command in the Procfile accordingly.
+3. Adjust the `Procfile` to include the Typesense server command. The default command in the example assumes the binary is stored in the project directory.
 4. Alter the Procfile command to replace the `--api-key` value with whatever you set `TYPESENSE_API_KEY` to in the `.env` file, e.g. it might look like this:
 
 ```bash
-$ typesense: ./typesense-server --api-key=xyz --data-dir=./data.typesense
+$ typesense: typesense-server --api-key=xyz --data-dir=./data.typesense
+```
+
+6. Start the Typesense server
+
+```bash
+$ overmind start -l typesense
+```
+7. setup typesense schema
+
+```bash
+$ uv run python manage.py setuptypesense
 ```
 
 ### S3
@@ -115,6 +130,12 @@ S3 is used for file storage in the application. The relevant variables in the `.
 Otherwise the default values in the `.env` file should work ok for local development.
 
 1. Install MinIO by following the instructions here: https://min.io/docs/minio/linux/index.html
+2. Start MinIO by running the following command in the root directory of the project:
+
+```bash
+overmind start -l minio
+```
+
 2. Create a bucket called `orchard-dev` in MinIO. You can do this with the `mc` command line tool:
 
 ```bash
@@ -126,6 +147,8 @@ $ mc mb myminio/orchard-dev
 ```bash
 $ mc anonymous set public myminio/orchard-dev
 ```
+
+4. You can now shutdown MinIO by pressing `Ctrl+C` in the terminal where you started it. It will be started again when we run the whole stack with Overmind.
 
 ## Install dependencies
 
@@ -151,6 +174,16 @@ To run the unit tests, you can use the following command:
 $ uv run pytest
 ```
 
+## Remaining environment variables
+
+1. Set the `DJANGO_SECRET_KEY` variable. You can generate a random secret key using the following command:
+
+```bash
+$ uv run python -c 'import secrets; print(secrets.token_hex(100))'
+```
+
+2. Set the `DOMAIN_URL` variable to the URL of your application (e.g., `https://wubba-dubba-dubba-is-that-true.ngrok.io`).
+
 ## Setup database
 
 In the `server/cafe-backend` directory, set up the database tables:
@@ -165,18 +198,29 @@ Then create the test data:
 $ uv run python manage.py seedtestdata
 ``` 
 
+## Install frontend dependencies
+
+1. Navigate to the `client` directory:
+
+```bash
+$ cd client
+```
+
+2. Install the dependencies:
+
+```bash
+$ npm install
+```
+
 ## Run the application
 
- 1. Install a procfile runner. I use [Overmind](https://github.com/DarthSim/overmind) but you can use any procfile runner you like.
- 2. In the root directory of the project, run the following command to start the application:
+ 1. In the root directory of the project, run the following command to start the application:
 
 ```bash
 $ overmind start
 ```
 
-(or whatever command your procfile runner uses to start the application)
-
- 3. Open your web browser and navigate to the URL of your HTTP tunnel (e.g., `https://wubba-dubba-dubba-is-that-true.ngrok.io` or your custom domain). Confirm that the application is running and you can see the homepage. Confirm login works by clicking the "Login with Discord" button and logging in with your Discord account.
+ 2. Open your web browser and navigate to the URL of your HTTP tunnel (e.g., `https://wubba-dubba-dubba-is-that-true.ngrok.io` or your custom domain). Confirm that the application is running and you can see the homepage. Confirm login works by clicking the "Login with Discord" button and logging in with your Discord account.
 
 ## Run the bot
 
