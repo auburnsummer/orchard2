@@ -1,63 +1,63 @@
 .base {
-    display: flex;
-    --easy-bg-color: var(--mantine-color-teal-1);
-    --easy-text-color: var(--mantine-color-teal-6);
-    --medium-bg-color: var(--mantine-color-amber-1);
-    --medium-text-color: var(--mantine-color-amber-6);
-    --tough-bg-color: var(--mantine-color-pink-1);
-    --tough-text-color: var(--mantine-color-pink-6);
-    --vtough-bg-color: var(--mantine-color-violet-1);
-    --vtough-text-color: var(--mantine-color-violet-6);
+  display: flex;
+  --easy-bg-color: var(--mantine-color-teal-1);
+  --easy-text-color: var(--mantine-color-teal-6);
+  --medium-bg-color: var(--mantine-color-amber-1);
+  --medium-text-color: var(--mantine-color-amber-6);
+  --tough-bg-color: var(--mantine-color-pink-1);
+  --tough-text-color: var(--mantine-color-pink-6);
+  --vtough-bg-color: var(--mantine-color-violet-1);
+  --vtough-text-color: var(--mantine-color-violet-6);
 }
 
 html[data-mantine-color-scheme="dark"] .base {
-    --easy-bg-color: var(--mantine-color-teal-9);
-    --easy-text-color: var(--mantine-color-teal-2);
-    --medium-bg-color: var(--mantine-color-amber-9);
-    --medium-text-color: var(--mantine-color-amber-2);
-    --tough-bg-color: var(--mantine-color-pink-9);
-    --tough-text-color: var(--mantine-color-pink-2);
-    --vtough-bg-color: var(--mantine-color-violet-9);
-    --vtough-text-color: var(--mantine-color-violet-2);
-} 
+  --easy-bg-color: var(--mantine-color-teal-9);
+  --easy-text-color: var(--mantine-color-teal-2);
+  --medium-bg-color: var(--mantine-color-amber-9);
+  --medium-text-color: var(--mantine-color-amber-2);
+  --tough-bg-color: var(--mantine-color-pink-9);
+  --tough-text-color: var(--mantine-color-pink-2);
+  --vtough-bg-color: var(--mantine-color-violet-9);
+  --vtough-text-color: var(--mantine-color-violet-2);
+}
 
 .base > * {
-    background-color: red;
+  background-color: red;
 }
 
 .easyDiff > * {
-    background-color: var(--easy-bg-color);
-    color: var(--easy-text-color);
+  background-color: var(--easy-bg-color);
+  color: var(--easy-text-color);
 }
 
 .mediumDiff > * {
-    background-color: var(--medium-bg-color);
-    color: var(--medium-text-color);
+  background-color: var(--medium-bg-color);
+  color: var(--medium-text-color);
 }
 
 .toughDiff > * {
-    background-color: var(--tough-bg-color);
-    color: var(--tough-text-color);
+  background-color: var(--tough-bg-color);
+  color: var(--tough-text-color);
 }
 
 .vtoughDiff > * {
-    background-color: var(--vtough-bg-color);
-    color: var(--vtough-text-color);
+  background-color: var(--vtough-bg-color);
+  color: var(--vtough-text-color);
 }
 
 .text {
-	font-size: 0.75rem;
-	line-height: 1rem;
-	padding-top: 0.125rem;
-	padding-bottom: 0.125rem;
-	padding-left: 0.25rem;
-	padding-right: 0.25rem;
-	text-transform: lowercase;
-    font-weight: 300;
-    border-radius: inherit;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  text-transform: lowercase;
+  font-weight: 300;
+  border-radius: inherit;
 }
 
 .triangle {
-    width: 1.5rem;
-    clip-path: polygon(0% -4%, 104% -4%, 104% 100%, 100% 100%);
+  width: 1.5rem;
+  clip-path: polygon(0% -4%, 104% -4%, 104% 100%, 100% 100%);
 }

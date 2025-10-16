@@ -6,108 +6,103 @@ import { Modal, Stack, Select, Group, Button } from "@mantine/core";
 import { useEffect, useRef, useState } from "react";
 
 type EditMemberFormProps = {
-    opened: boolean;
-    onClose: () => void;
-    onSubmit?: () => void;
-    membership: ClubMembership | null;
-    canEdit: boolean;
-    club: Club;
+  opened: boolean;
+  onClose: () => void;
+  onSubmit?: () => void;
+  membership: ClubMembership | null;
+  canEdit: boolean;
+  club: Club;
 };
 
 export function EditMemberForm({
-    opened,
-    onClose,
-    onSubmit = onClose,
-    membership,
-    canEdit,
-    club
+  opened,
+  onClose,
+  onSubmit = onClose,
+  membership,
+  canEdit,
+  club,
 }: EditMemberFormProps) {
-    const deleteFormRef = useRef<HTMLFormElement>(null);
-    const csrfInput = useCSRFTokenInput();
-    const [deleteWarningClicked, setDeleteWarningClicked] = useState(false);
+  const deleteFormRef = useRef<HTMLFormElement>(null);
+  const csrfInput = useCSRFTokenInput();
+  const [deleteWarningClicked, setDeleteWarningClicked] = useState(false);
 
-    useEffect(() => {
-        if (opened) {
-            setDeleteWarningClicked(false);
-        }
-    }, [opened]);
+  useEffect(() => {
+    if (opened) {
+      setDeleteWarningClicked(false);
+    }
+  }, [opened]);
 
-    return (
-        <Modal
-            opened={opened}
-            onClose={onClose}
-            centered
-            title={`Editing user ${membership && membership.user.displayName}`}
-        >
-            {
-                membership && (
-                    <>
-                        <Form
-                            action={`/groups/${club.id}/settings/members/${membership.user.id}/delete/`}
-                            method="POST"
-                            ref={deleteFormRef}
-                            onSubmit={onSubmit}
-                        >
-                            {csrfInput}
-                        </Form>
-                        <Form
-                            action={`/groups/${club.id}/settings/members/${membership.user.id}/edit/`}
-                            method="POST"
-                            onSubmit={onSubmit}
-                        >
-                            {csrfInput}
-                            <Stack align="start">
-                                <Select
-                                    label="User role"
-                                    disabled={!canEdit}
-                                    allowDeselect={false}
-                                    defaultValue={membership.role}
-                                    name="role"
-                                    data={[
-                                        {
-                                            label: 'Owner',
-                                            value: 'owner'
-                                        },
-                                        {
-                                            label: 'Admin',
-                                            value: 'admin'
-                                        }
-                                    ]}
-                                >
-                                </Select>
-                                <Group>
-                                    <Button type="submit" disabled={!canEdit}>Submit</Button>
-                                    {
-                                        deleteWarningClicked
-                                            ? (
-                                                <Button
-                                                    color="red"
-                                                    type="button"
-                                                    onClick={() => {
-                                                        if (deleteFormRef.current) {
-                                                            deleteFormRef.current.requestSubmit();
-                                                        }
-                                                    }}
-                                                >
-                                                    Click again to confirm
-
-                                                </Button>
-                                            )
-                                            : <Button
-                                                type="button"
-                                                color="grey"
-                                                onClick={() => setDeleteWarningClicked(true)}
-                                            >
-                                                Delete user
-                                            </Button>
-                                    }
-                                </Group>
-                            </Stack>
-                        </Form>
-                    </>
-                )
-            }
-
-        </Modal>
-    )
+  return (
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      centered
+      title={`Editing user ${membership && membership.user.displayName}`}
+    >
+      {membership && (
+        <>
+          <Form
+            action={`/groups/${club.id}/settings/members/${membership.user.id}/delete/`}
+            method="POST"
+            ref={deleteFormRef}
+            onSubmit={onSubmit}
+          >
+            {csrfInput}
+          </Form>
+          <Form
+            action={`/groups/${club.id}/settings/members/${membership.user.id}/edit/`}
+            method="POST"
+            onSubmit={onSubmit}
+          >
+            {csrfInput}
+            <Stack align="start">
+              <Select
+                label="User role"
+                disabled={!canEdit}
+                allowDeselect={false}
+                defaultValue={membership.role}
+                name="role"
+                data={[
+                  {
+                    label: "Owner",
+                    value: "owner",
+                  },
+                  {
+                    label: "Admin",
+                    value: "admin",
+                  },
+                ]}
+              ></Select>
+              <Group>
+                <Button type="submit" disabled={!canEdit}>
+                  Submit
+                </Button>
+                {deleteWarningClicked ? (
+                  <Button
+                    color="red"
+                    type="button"
+                    onClick={() => {
+                      if (deleteFormRef.current) {
+                        deleteFormRef.current.requestSubmit();
+                      }
+                    }}
+                  >
+                    Click again to confirm
+                  </Button>
+                ) : (
+                  <Button
+                    type="button"
+                    color="grey"
+                    onClick={() => setDeleteWarningClicked(true)}
+                  >
+                    Delete user
+                  </Button>
+                )}
+              </Group>
+            </Stack>
+          </Form>
+        </>
+      )}
+    </Modal>
+  );
 }

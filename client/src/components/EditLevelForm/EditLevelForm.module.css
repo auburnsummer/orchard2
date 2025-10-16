@@ -1,8 +1,8 @@
 .preview {
-    box-shadow: var(--mantine-shadow-md);
+  box-shadow: var(--mantine-shadow-md);
 }
 
 .aside {
-    flex-grow: 1;
-    padding: 0.75rem;
+  flex-grow: 1;
+  padding: 0.75rem;
 }

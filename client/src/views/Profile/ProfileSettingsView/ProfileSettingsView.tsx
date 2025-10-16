@@ -8,44 +8,42 @@ import { useLoggedInUser } from "@cafe/hooks/useUser";
 import { Form } from "@cafe/minibridge/components/Form";
 
 export function ProfileSettingsView() {
-    const user = useLoggedInUser();
-    const input = useCSRFTokenInput();
+  const user = useLoggedInUser();
+  const input = useCSRFTokenInput();
 
-    return (
-        <Shell
-            navbar={<ProfileNavbar />}
-        >
-            <h2>Settings</h2>
-            <Form className={styles.base} method="post">
-                { input }
-                <Stack align="flex-start" gap="1rem">
-                    <TextInput
-                        name="display_name"
-                        label="Display name"
-                        maxLength={150}
-                        defaultValue={user.displayName}
-                    />
+  return (
+    <Shell navbar={<ProfileNavbar />}>
+      <h2>Settings</h2>
+      <Form className={styles.base} method="post">
+        {input}
+        <Stack align="flex-start" gap="1rem">
+          <TextInput
+            name="display_name"
+            label="Display name"
+            maxLength={150}
+            defaultValue={user.displayName}
+          />
 
-                <Select
-                    label="Theme"
-                    allowDeselect={false}
-                    defaultValue={user.theme_preference}
-                    name="theme_preference"
-                    data={[
-                        {
-                            'label': 'Light',
-                            'value': 'light'
-                        },
-                        {
-                            'label': 'Dark',
-                            'value': 'dark'
-                        }
-                    ]}
-                />
+          <Select
+            label="Theme"
+            allowDeselect={false}
+            defaultValue={user.theme_preference}
+            name="theme_preference"
+            data={[
+              {
+                label: "Light",
+                value: "light",
+              },
+              {
+                label: "Dark",
+                value: "dark",
+              },
+            ]}
+          />
 
-                    <Button type="submit">Save</Button>
-                </Stack>
-            </Form>
-        </Shell>
-    );
+          <Button type="submit">Save</Button>
+        </Stack>
+      </Form>
+    </Shell>
+  );
 }

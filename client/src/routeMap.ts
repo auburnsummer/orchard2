@@ -20,21 +20,21 @@ import { ClubSettingsRedeemInvite } from "./views/ClubSettings/ClubSettingsRedee
 export const appName = "cafe";
 
 export const routeMap: { [key: string]: React.FunctionComponent<any> } = {
-    "cafe:index": HomeView,
-    "cafe:profile": ProfileIndexView,
-    "cafe:profile_settings": ProfileSettingsView,
-    "cafe:profile_clubs": ProfileClubsView,
+  "cafe:index": HomeView,
+  "cafe:profile": ProfileIndexView,
+  "cafe:profile_settings": ProfileSettingsView,
+  "cafe:profile_clubs": ProfileClubsView,
 
-    "cafe:club_connect_discord": ClubSettingsConnectDiscord,
-    "cafe:club_settings_info": ClubSettingsInfoView,
-    "cafe:club_settings_members": ClubSettingsMembersView,
-    "cafe:club_settings_connected_discords": ClubSettingsCheckConnectDiscord,
+  "cafe:club_connect_discord": ClubSettingsConnectDiscord,
+  "cafe:club_settings_info": ClubSettingsInfoView,
+  "cafe:club_settings_members": ClubSettingsMembersView,
+  "cafe:club_settings_connected_discords": ClubSettingsCheckConnectDiscord,
 
-    "cafe:redeem_invite": ClubSettingsRedeemInvite,
+  "cafe:redeem_invite": ClubSettingsRedeemInvite,
 
-    "cafe:level_portal": LevelAddTypeSelect,
-    "cafe:level_from_prefill": LevelAddFromPrefill,
-    "cafe:level_search": LevelSearch,
-    "cafe:level_view": LevelView,
-    "cafe:level_edit": LevelEdit
-}
+  "cafe:level_portal": LevelAddTypeSelect,
+  "cafe:level_from_prefill": LevelAddFromPrefill,
+  "cafe:level_search": LevelSearch,
+  "cafe:level_view": LevelView,
+  "cafe:level_edit": LevelEdit,
+};

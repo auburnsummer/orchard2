@@ -1,13 +1,13 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 // import { analyzer } from 'vite-bundle-analyzer'
 
 // https://vite.dev/config/
 export default defineConfig({
   base: "/static/",
   server: {
-    cors: true
+    cors: true,
   },
   build: {
     manifest: true,
@@ -23,6 +23,6 @@ export default defineConfig({
   resolve: {
     alias: {
       "@cafe": "/src",
-    }
-  }
-})
+    },
+  },
+});

@@ -1,5 +1,5 @@
 export type UserPublic = {
-    id: string;
-    displayName: string;
-    avatarURL: string | null;
-}
+  id: string;
+  displayName: string;
+  avatarURL: string | null;
+};

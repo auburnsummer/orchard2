@@ -7,20 +7,23 @@ import { useUser } from "@cafe/hooks/useUser";
 import { LoadingBarContainer } from "react-top-loading-bar";
 import { LoadingBar } from "./LoadingBar";
 
+export function Prelude({ children }: { children: ReactNode }) {
+  const user = useUser();
+  const theme = user.authenticated ? user.theme_preference : "light";
 
-export function Prelude({children}: {children: ReactNode}) {
-    const user = useUser();
-    const theme = user.authenticated ? user.theme_preference : 'light';
-    
-    return (
-        <>
-            <MantineProvider theme={shadcnTheme} cssVariablesResolver={shadcnCssVariableResolver} forceColorScheme={theme}>
-                <LoadingBarContainer>
-                    <LoadingBar />
-                    <Notifications />
-                    { children }
-                </LoadingBarContainer>
-            </MantineProvider>
-        </>
-    )
+  return (
+    <>
+      <MantineProvider
+        theme={shadcnTheme}
+        cssVariablesResolver={shadcnCssVariableResolver}
+        forceColorScheme={theme}
+      >
+        <LoadingBarContainer>
+          <LoadingBar />
+          <Notifications />
+          {children}
+        </LoadingBarContainer>
+      </MantineProvider>
+    </>
+  );
 }
