@@ -1,16 +1,14 @@
-import { AppShell, Avatar, Button, Menu, UnstyledButton } from "@mantine/core";
 import { Logo } from "./Logo";
-import styles from './Shell.module.css';
 import { useUser } from "@cafe/hooks/useUser";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDiscord } from '@fortawesome/free-brands-svg-icons'
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { useRef } from "react";
-import cc from "clsx";
 import { Link } from "@cafe/minibridge/components/Link";
 import { useLocation, useSearchParams } from "@cafe/minibridge/hooks";
 import { SearchBar } from "./SearchBar/SearchBar";
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 
 export type ShellProps = {
     children: React.ReactNode;
@@ -30,23 +28,25 @@ export function Shell({ children, navbar, aside }: ShellProps) {
         navigate(url);
     };
 
+    const menuItems = [
+        { name: 'Profile', href: '/accounts/profile/' },
+        user.authenticated && user.is_superuser ? { name: 'Admin', href: '/adminnn/' } : null,
+        { name: 'Log out', onClick: () => logOutForm.current?.submit() }
+    ].filter(a => a !== null);
+
     return (
-        <AppShell
-            header={{ height: '3rem' }}
-            navbar={navbar !== undefined ? { width: '16rem', breakpoint: 0 } : undefined}
-            aside={aside !== undefined ? { width: '24rem', breakpoint: 0 } : undefined}
-            className={styles.shell}
+        <div
         >
-            <AppShell.Header className={styles.header}>
+            <header className="flex bg-violet-300 items-stretch h-12">
                 <Logo />
                 <SearchBar
+                    className="ml-4"
                     initialValue={searchParams.get("q") || ""}
-                    className={styles.searchBar}
                     placeholder="Search levels..."
                     onSearch={onSearch}
                 />
-                <div className={styles.spacer} />
-                <div className={styles.userSection}>
+                <div className="flex-grow" />
+                <div className="flex items-stretch">
                     {
                         user.authenticated
                             ? (
@@ -54,73 +54,72 @@ export function Shell({ children, navbar, aside }: ShellProps) {
                                     <form method="post" action="/accounts/logout/" ref={logOutForm}>
                                         {csrfInput}
                                     </form>
-                                    <Menu shadow="md" width={200}>
-                                        <Menu.Target>
-                                            <UnstyledButton className={styles.userSectionButton}>
-                                                <Avatar src={user.avatarURL} name={user.displayName} alt={user.displayName} radius="xl" />
-                                            </UnstyledButton>
-                                        </Menu.Target>
-                                        <Menu.Dropdown>
-                                            <Menu.Label>{user.displayName}</Menu.Label>
-                                            <Menu.Item
-                                                component={Link}
-                                                href="/accounts/profile/"
-                                            >
-                                                Profile
-                                            </Menu.Item>
-                                            {
-                                                user.is_superuser && (
-                                                    <Menu.Item
-                                                        component={Link}
-                                                        href="/adminnn/"
-                                                    >
-                                                        Admin
-                                                    </Menu.Item>
-                                                )
-                                            }
-                                            <Menu.Item
-                                                onClick={() => {
-                                                    logOutForm.current?.submit();
-                                                }}
-                                            >
-                                                Log out
-                                            </Menu.Item>
-                                        </Menu.Dropdown>
+                                    <Menu as="div" className="relative">
+                                        <MenuButton>account</MenuButton>
+                                        <MenuItems transition className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-stone-100 rounded-md bg-white shadow-lg outline-1 outline-black/5 transition data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in dark:divide-white/10 dark:bg-stone-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
+                                        <div className="px-4 py-3">
+                                            <p className="text-sm text-stone-700 dark:text-stone-400">{user.displayName}</p>
+                                        </div>
+                                        <div className="py-1">
+                                        {
+                                            menuItems.map(item => (
+                                                <MenuItem key={item.name}>
+                                                    {
+                                                        item.href ? (
+                                                            <Link
+                                                                href={item.href}
+                                                                className="block px-4 py-2 text-sm text-stone-700 data-focus:bg-violet-50 data-focus:text-violet-900 data-focus:outline-hidden dark:text-stone-300 dark:data-focus:bg-white/5 dark:data-focus:text-white"
+                                                            >
+                                                                {item.name}
+                                                            </Link>
+                                                        ) : (
+                                                            <button
+                                                                onClick={item.onClick}
+                                                                className="block w-full px-4 py-2 text-left text-sm text-stone-700 data-focus:bg-violet-50 data-focus:text-stone-900 data-focus:outline-hidden dark:text-stone-300 dark:data-focus:bg-white/5 dark:data-focus:text-white data-focus:cursor-pointer"
+                                                            >
+                                                                {item.name}
+                                                            </button>
+                                                        )
+                                                    }
+                                                </MenuItem>
+                                            ))
+                                        }
+                                        </div>
+                                        </MenuItems>
                                     </Menu>
                                 </>
                             )
                             : (
-                                <form method="post" action="/accounts/discord/login/">
+                                <form method="post" action="/accounts/discord/login/" className="flex">
                                     <input type="hidden" name="next" value={location.pathname} />
                                     {csrfInput}
-                                    <Button
+                                    <button
+                                        className="bg-violet-500 text-violet-50 my-1 mr-3 px-3 rounded-lg hover:bg-violet-600 hover:cursor-pointer flex items-center"
                                         type="submit"
-                                        leftSection={
-                                            <FontAwesomeIcon icon={faDiscord} />
-                                        }
                                     >
-                                        Sign in with Discord
-                                    </Button>
+                                        <FontAwesomeIcon icon={faDiscord} className="mr-2" />
+                                        <span>Log in</span>
+                                    </button>
                                 </form>
                             )
                     }
                 </div>
-            </AppShell.Header>
+            </header>
             {navbar && (
-                <AppShell.Navbar>
+                <div>
                     {navbar}
-                </AppShell.Navbar>
+                </div>
             )}
             {aside && (
-                <AppShell.Aside>
+                <aside>
                     {aside}
-                </AppShell.Aside>
+                </aside>
             )}
-            <AppShell.Main className={styles.mainArea}>
-                <div className={cc(navbar && styles.mainAreaWithNavbar, styles.mainAreaInner)}>
+            <main>
+                <div>
                     {children}
                 </div>
-            </AppShell.Main>
-        </AppShell>
+            </main>
+        </div>
     )
 }
