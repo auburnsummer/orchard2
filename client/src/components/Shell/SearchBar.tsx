@@ -35,7 +35,7 @@ export function SearchBar({
       onSubmit={onSubmit}
     >
       <input
-        className="rounded-tl-lg rounded-bl-lg bg-stone-50 px-3 outline-none focus:inset-ring-2 focus:inset-ring-violet-400 active:bg-white"
+        className="rounded-tl-lg rounded-bl-lg bg-violet-50 px-3 outline-none focus:inset-ring-2 focus:inset-ring-violet-200 active:bg-white focus:bg-white placeholder:text-violet-400 text-sm"
         type="text"
         placeholder={placeholder}
         defaultValue={initialValue}
