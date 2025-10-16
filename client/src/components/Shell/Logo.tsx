@@ -1,11 +1,10 @@
-import styles from './Logo.module.css';
 import { Link } from '@cafe/minibridge/components/Link';
 
 export function Logo() {
     return (
         <Link href="/">
             <svg
-                className={styles.logo}
+                className="h-11 fill-violet-400 mt-3 opacity-75 hover:opacity-100 dark:fill-violet-900"
                 fillRule='evenodd'
                 strokeLinejoin='round'
                 strokeMiterlimit='2'

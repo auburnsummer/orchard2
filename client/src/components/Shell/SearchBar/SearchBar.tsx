@@ -1,5 +1,3 @@
-import { Button, TextInput } from '@mantine/core';
-import styles from './SearchBar.module.css';
 import React from 'react';
 
 import cc from "clsx";
@@ -27,17 +25,26 @@ export function SearchBar({ placeholder, className, onSearch, initialValue }: Se
     };
 
     return (
-        <form className={cc(styles.container, className)} onSubmit={onSubmit}>
-            <TextInput
+        <form className={cc("flex my-1 rounded-tl-lg rounded-bl-lg", className)} onSubmit={onSubmit}>
+            <input
+                className="
+                    bg-stone-50
+                    rounded-tl-lg
+                    rounded-bl-lg
+                    px-3
+                    active:bg-white
+                    outline-none
+                    focus:inset-ring-2
+                    focus:inset-ring-violet-400
+                "
                 type="text"
                 placeholder={placeholder}
-                className={styles.searchInput}
                 defaultValue={initialValue}
                 onChange={(e) => setValue(e.target.value)}
             />
-            <Button className={styles.searchButton} type="submit" variant="default">
+            <button type="submit" className="bg-violet-500 text-violet-50 w-10 rounded-tr-lg rounded-br-lg hover:bg-violet-600 hover:cursor-pointer">
                 <FontAwesomeIcon icon={faMagnifyingGlass} />
-            </Button>
+            </button>
         </form>
     );
 }

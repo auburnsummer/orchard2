@@ -1,8 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { CSRFTokenContext } from "@cafe/hooks/useCSRFToken";
-import '@mantine/core/styles.css';
-import '@mantine/notifications/styles.css';
 import './style.css';
 
 import { UserContext } from "@cafe/hooks/useUser";

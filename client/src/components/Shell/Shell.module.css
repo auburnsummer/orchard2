@@ -5,15 +5,10 @@
 }
 
 .header.header {
-    background-color: var(--mantine-color-indigo-0);
     display: flex;
     flex-direction: row;
     align-items: center;
     z-index: 1000;
-
-    @mixin dark {
-        background-color: var(--mantine-color-indigo-9);
-    }
 }
 
 .spacer {
@@ -50,11 +45,4 @@
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-}
-
-.searchBar {
-    padding-left: 1rem;
-    min-width: 300px;
-    max-width: 600px;
-    width: 100%;
 }
