@@ -1,37 +1,37 @@
 .artistList {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
 
 .metadataList {
-    padding: 0;
-    list-style-type: none;
-    margin: 0;
+  padding: 0;
+  list-style-type: none;
+  margin: 0;
 }
 
 .metaIcon {
-    width: 1rem;
-    height: 1rem;
-    color: var(--mantine-color-dimmed);
-    flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  color: var(--mantine-color-dimmed);
+  flex-shrink: 0;
 }
 
 .sectionIcon {
-    width: 1rem;
-    height: 1rem;
-    color: var(--mantine-color-primary-6);
-    flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  color: var(--mantine-color-primary-6);
+  flex-shrink: 0;
 }
 
 .authorButton {
-    font-size: var(--mantine-font-size-sm);
-    color: var(--mantine-color-text);
-    text-decoration: none;
-    transition: color 0.2s ease;
-    
-    &:hover {
-        color: var(--mantine-color-primary-6);
-        text-decoration: underline;
-    }
+  font-size: var(--mantine-font-size-sm);
+  color: var(--mantine-color-text);
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--mantine-color-primary-6);
+    text-decoration: underline;
+  }
 }

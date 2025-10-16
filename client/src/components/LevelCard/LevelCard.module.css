@@ -1,229 +1,228 @@
 .base {
-    width: 26rem;
-    border-radius: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    background-color: var(--bg-color);
+  width: 26rem;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-color);
 
+  --bg-color: var(--mantine-color-slate-1);
 
-    --bg-color: var(--mantine-color-slate-1);
-
-    --sub-text-color: var(--mantine-color-slate-5);
-    --sub-text-color-hover: var(--mantine-color-slate-7);
-    --tag-bg-color: var(--mantine-color-slate-2);
-    --tag-bg-color-hover: var(--mantine-color-slate-3);
-    --tag-text-color: var(--mantine-color-slate-7);
-    --tag-caution-bg-color: var(--mantine-color-amber-2);
-    --tag-caution-text-color: var(--mantine-color-amber-6);
+  --sub-text-color: var(--mantine-color-slate-5);
+  --sub-text-color-hover: var(--mantine-color-slate-7);
+  --tag-bg-color: var(--mantine-color-slate-2);
+  --tag-bg-color-hover: var(--mantine-color-slate-3);
+  --tag-text-color: var(--mantine-color-slate-7);
+  --tag-caution-bg-color: var(--mantine-color-amber-2);
+  --tag-caution-text-color: var(--mantine-color-amber-6);
 }
 
 html[data-mantine-color-scheme="dark"] .base {
-    --bg-color: var(--mantine-color-slate-7);
-    --sub-text-color: var(--mantine-color-slate-4);
-    --sub-text-color-hover: var(--mantine-color-slate-2);
-    --tag-bg-color: var(--mantine-color-slate-8);
-    --tag-bg-color-hover: var(--mantine-color-slate-7);
-    --tag-text-color: var(--mantine-color-slate-2);
-    --tag-caution-bg-color: var(--mantine-color-amber-8);
-    --tag-caution-text-color: var(--mantine-color-amber-2);
+  --bg-color: var(--mantine-color-slate-7);
+  --sub-text-color: var(--mantine-color-slate-4);
+  --sub-text-color-hover: var(--mantine-color-slate-2);
+  --tag-bg-color: var(--mantine-color-slate-8);
+  --tag-bg-color-hover: var(--mantine-color-slate-7);
+  --tag-text-color: var(--mantine-color-slate-2);
+  --tag-caution-bg-color: var(--mantine-color-amber-8);
+  --tag-caution-text-color: var(--mantine-color-amber-2);
 }
 
 .imageBox {
-    aspect-ratio: 16 / 9;
-    display: grid;
-    grid-template-columns: 100%;
-    grid-template-rows: 100%;
-    border-top-left-radius: 0.5rem;
-    border-top-right-radius: 0.5rem;
-    overflow: hidden;
+  aspect-ratio: 16 / 9;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 100%;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  overflow: hidden;
 }
 
-.image, .overlay {
-    grid-column: 1;
-    grid-row: 1;
+.image,
+.overlay {
+  grid-column: 1;
+  grid-row: 1;
 }
 
 .image {
-    width: 100%;
-    height: 100%;
-    background-color: var(--blueGray-600);
-    object-fit: cover;
-    transition-property: filter, background-color;
-    transition-duration: 250ms;
+  width: 100%;
+  height: 100%;
+  background-color: var(--blueGray-600);
+  object-fit: cover;
+  transition-property: filter, background-color;
+  transition-duration: 250ms;
 }
 
 .overlay {
-    z-index: 10;
+  z-index: 10;
 
-    padding: 1.25rem;
-    opacity: 0;
-    color: white;
-    transition-property: opacity;
-    transition-duration: 250ms;
-    box-shadow: inset 0 3px 5px 0 rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: row;
+  padding: 1.25rem;
+  opacity: 0;
+  color: white;
+  transition-property: opacity;
+  transition-duration: 250ms;
+  box-shadow: inset 0 3px 5px 0 rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: row;
 }
 
 .base:hover .image {
-    background-color: var(--mantine-color-gray-2);
-    filter: brightness(45%) saturate(35%) blur(3px);
-    @mixin dark {
-        background-color: var(--mantine-color-gray-8);
-    }
+  background-color: var(--mantine-color-gray-2);
+  filter: brightness(45%) saturate(35%) blur(3px);
+  @mixin dark {
+    background-color: var(--mantine-color-gray-8);
+  }
 }
 
 .base:hover .overlay {
-    opacity: 1;
+  opacity: 1;
 }
 
 .description {
-    font-size: 0.875rem;
-    line-height: 1rem;
-    flex-grow: 1;
-    overflow-y: auto;
+  font-size: 0.875rem;
+  line-height: 1rem;
+  flex-grow: 1;
+  overflow-y: auto;
 }
 
 .overlayButtons {
-    width: 2rem;
-    margin-left: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
+  width: 2rem;
+  margin-left: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
-
 .button {
-    width: 2rem;
-    border-style: solid;
-    border-width: 1px;
-    border-color: white;
-    padding: 0.5rem;
-    border-radius: 0.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: transparent;
-    color: white;
+  width: 2rem;
+  border-style: solid;
+  border-width: 1px;
+  border-color: white;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  color: white;
 }
 
 .button:hover {
-    background-color: var(--mantine-color-primary-4);
-    cursor: pointer;
+  background-color: var(--mantine-color-primary-4);
+  cursor: pointer;
 }
 
 .copy {
-    position: relative;
+  position: relative;
 }
 
 .copy::after {
-    content: "copied!";
-    position: absolute;
-    display: flex;
-    visibility: hidden;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    color: var(--mantine-color-green-5);
-    font-weight: 600;
-    z-index: 10;
-    transform: translateY(-0.5rem);
-    opacity: 1;
-    transition-property: transform, opacity;
-    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  content: "copied!";
+  position: absolute;
+  display: flex;
+  visibility: hidden;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: var(--mantine-color-green-5);
+  font-weight: 600;
+  z-index: 10;
+  transform: translateY(-0.5rem);
+  opacity: 1;
+  transition-property: transform, opacity;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
 
 .copyIsClicked::after {
-    visibility: visible;
-    opacity: 0;
-    transform: translateY(-2.5rem);
-    transition-duration: 1s;
+  visibility: visible;
+  opacity: 0;
+  transform: translateY(-2.5rem);
+  transition-duration: 1s;
 }
 
 .overlayIcon {
-    width: 1rem;
-    height: 1rem;
+  width: 1rem;
+  height: 1rem;
 }
 
 .info {
-    padding: 1rem;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+  padding: 1rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .base:has(.infoClickable:hover) {
-    background-color: var(--mantine-color-slate-2);
-    box-shadow: var(--mantine-shadow-md);
-    @mixin dark {
-        background-color: var(--mantine-color-slate-8);
-    }
+  background-color: var(--mantine-color-slate-2);
+  box-shadow: var(--mantine-shadow-md);
+  @mixin dark {
+    background-color: var(--mantine-color-slate-8);
+  }
 }
 
 .infoClickable:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .decorator {
-    position: absolute;
-    top: 0;
-    right: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 /* visually, the artist should be above the song. */
 .cast {
-    display: flex;
-    flex-direction: column-reverse;
-    gap: 0.075rem;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.075rem;
 }
 
 .songLink {
-    color: var(--mantine-color-text);
-    text-decoration: none;
+  color: var(--mantine-color-text);
+  text-decoration: none;
 }
 
 .songLink:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .song {
-    font-weight: 600;
-    font-size: 1.125rem;
-    line-height: 1.25rem;
-    overflow-wrap: break-word;
-    margin: 0;
+  font-weight: 600;
+  font-size: 1.125rem;
+  line-height: 1.25rem;
+  overflow-wrap: break-word;
+  margin: 0;
 }
 
 .songBox {
-    display: flex;
-    align-items: baseline;
-    gap: 0.25rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
 }
 
 .songAlt {
-    font-size: 0.875rem;
-    color: var(--sub-text-color);
+  font-size: 0.875rem;
+  color: var(--sub-text-color);
 }
 
 .artists {
-    list-style-type: none;
-    padding-left: 0;
-    display: flex;
+  list-style-type: none;
+  padding-left: 0;
+  display: flex;
 }
 
 .artist {
-    white-space: pre;
-    font-size: 0.75rem;
-    line-height: 1rem;
-    color: var(--sub-text-color);
-    font-weight: 300;
-    margin: 0;
+  white-space: pre;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: var(--sub-text-color);
+  font-weight: 300;
+  margin: 0;
 }
 
 /*
@@ -233,113 +232,118 @@ properties for Flexbox
 Benface is still the Patron Saint of CSS though
 */
 .metadata {
-    margin-top: 0.25rem;
-    display: flex;
-    flex-wrap: wrap;
-    column-gap: 1.25rem;
-    row-gap: 0rem;
+  margin-top: 0.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 1.25rem;
+  row-gap: 0rem;
 }
 
 .metaitem {
-    display: flex;
+  display: flex;
 }
 
 .metaicon {
-    width: 1rem;
-    height: 1rem;
+  width: 1rem;
+  height: 1rem;
 }
 
-.authors, .bpm, .source {
-    color: var(--sub-text-color);
-    display: flex;
-    align-items: center;
-    font-size: 0.75rem;
-    line-height: 1.125rem;
-    max-width: 100%;
+.authors,
+.bpm,
+.source {
+  color: var(--sub-text-color);
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  line-height: 1.125rem;
+  max-width: 100%;
 }
 
-.authorList, .bpmText, .sourceText {
-    margin-left: 0.25rem;
-    padding: 0;
-    list-style-type: none;
+.authorList,
+.bpmText,
+.sourceText {
+  margin-left: 0.25rem;
+  padding: 0;
+  list-style-type: none;
 }
-.metaitemButton, .metaitemText {
-    white-space: pre;
-    color: var(--sub-text-color);
-    font-size: 0.75rem;
+.metaitemButton,
+.metaitemText {
+  white-space: pre;
+  color: var(--sub-text-color);
+  font-size: 0.75rem;
 }
 
 .metaitemButton:enabled:hover {
-    color: var(--sub-text-color-hover);
-    text-decoration: underline;
-    cursor: pointer;
+  color: var(--sub-text-color-hover);
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .approval > span {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .approvalYay {
-    color: var(--mantine-color-green-4);
+  color: var(--mantine-color-green-4);
 }
 
 .approvalNope {
-    color: var(--mantine-color-rose-6);
+  color: var(--mantine-color-rose-6);
 }
 
 .spacer {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 .tags {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    column-gap: 0.25rem;
-    row-gap: 0.25rem;
-    padding-top: 0.75rem;
-    list-style-type: none;
-    padding-left: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  column-gap: 0.25rem;
+  row-gap: 0.25rem;
+  padding-top: 0.75rem;
+  list-style-type: none;
+  padding-left: 0;
 }
 
 .tag {
-    font-size: 0.75rem;
-    line-height: 1rem;
-    background-color: var(--tag-bg-color);
-    color: var(--tag-text-color);
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-    padding-top: 0.125rem;
-    padding-bottom: 0.125rem;
-    border-radius: 9999px;
-    display: flex;
-    align-items: center;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  background-color: var(--tag-bg-color);
+  color: var(--tag-text-color);
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
 }
 
 .tag:enabled:hover {
-    background-color: var(--tag-bg-color-hover);
-    color: var(--tag-caution-text-color);
-    cursor: pointer;
+  background-color: var(--tag-bg-color-hover);
+  color: var(--tag-caution-text-color);
+  cursor: pointer;
 }
 
 .tagCaution {
-    background-color: var(--tag-caution-bg-color);
-    color: var(--tag-caution-text-color);
+  background-color: var(--tag-caution-bg-color);
+  color: var(--tag-caution-text-color);
 }
 
 .tagCaution > .metaicon {
-    color: var(--tag-caution-text-color);
+  color: var(--tag-caution-text-color);
 }
 
 .tagCaution span {
-    margin-left: 0.25rem;
+  margin-left: 0.25rem;
 }
 
 .id {
-    position: absolute;
-    bottom: 0;
-    right: 0.25rem;
-    font-size: 0.65rem;
-    color: var(--mantine-color-slate-4);
+  position: absolute;
+  bottom: 0;
+  right: 0.25rem;
+  font-size: 0.65rem;
+  color: var(--mantine-color-slate-4);
 }

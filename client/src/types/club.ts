@@ -1,5 +1,4 @@
-
 export type Club = {
-    id: string;
-    name: string;
-}
+  id: string;
+  name: string;
+};

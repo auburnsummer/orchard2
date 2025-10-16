@@ -41,9 +41,7 @@ export type DjangoBridgeResponse =
   | ServerErrorResponse
   | NetworkErrorResponse;
 
-export async function djangoGet(
-  url: string
-): Promise<DjangoBridgeResponse> {
+export async function djangoGet(url: string): Promise<DjangoBridgeResponse> {
   let response: Response;
 
   const headers: HeadersInit = { "X-Requested-With": "DjangoBridge" };
@@ -65,14 +63,14 @@ export async function djangoGet(
   if (!response.headers.get("X-DjangoBridge-Action")) {
     return {
       action: "reload",
-    }; 
+    };
   }
   return response.json() as Promise<DjangoBridgeResponse>;
 }
 
 export async function djangoPost(
   url: string,
-  data: FormData
+  data: FormData,
 ): Promise<DjangoBridgeResponse> {
   let response: Response;
 

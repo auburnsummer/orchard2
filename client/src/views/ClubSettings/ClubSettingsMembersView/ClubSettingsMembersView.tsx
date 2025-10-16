@@ -2,7 +2,15 @@ import { Shell } from "@cafe/components/Shell";
 import { Club } from "@cafe/types/club";
 import { ClubSettingsNavbar } from "../ClubSettingsNavbar/ClubSettingsNavbar";
 import { ClubMembership } from "@cafe/types/clubMembership";
-import { Alert, Button,  Group, Stack, Table, Text, TextInput } from "@mantine/core";
+import {
+  Alert,
+  Button,
+  Group,
+  Stack,
+  Table,
+  Text,
+  TextInput,
+} from "@mantine/core";
 
 import styles from "./ClubSettingsMembersView.module.css";
 import { useState } from "react";
@@ -12,104 +20,114 @@ import { useSearchParams } from "@cafe/minibridge/hooks";
 import { CopyIconButton } from "@cafe/components/CopyIconButton/CopyIconButton";
 
 type MembershipPermission = {
-    can_change: boolean;
-    can_delete: boolean;
-}
-
-type ClubSettingsMembersViewProps = {
-    club: Club,
-    memberships: {
-        membership: ClubMembership,
-        permissions: MembershipPermission
-    }[];
-    can_add: boolean;
+  can_change: boolean;
+  can_delete: boolean;
 };
 
-export function ClubSettingsMembersView({ club, memberships, can_add }: ClubSettingsMembersViewProps) {
-    const [editMemberFormOpen, setEditMemberFormOpen] = useState(false);
-    const [membershipBeingEdited, setMembershipBeingEdited] = useState<ClubMembership | null>(null);
-    const [addMemberFormOpen, setAddMemberFormOpen] = useState(false);
-    const [searchParams] = useSearchParams();
+type ClubSettingsMembersViewProps = {
+  club: Club;
+  memberships: {
+    membership: ClubMembership;
+    permissions: MembershipPermission;
+  }[];
+  can_add: boolean;
+};
 
-    const inviteCode = searchParams.get("invite_code")
-    const inviteUrl = new URL(`/groups/redeem_invite/${inviteCode}/`, window.location.origin).toString();
+export function ClubSettingsMembersView({
+  club,
+  memberships,
+  can_add,
+}: ClubSettingsMembersViewProps) {
+  const [editMemberFormOpen, setEditMemberFormOpen] = useState(false);
+  const [membershipBeingEdited, setMembershipBeingEdited] =
+    useState<ClubMembership | null>(null);
+  const [addMemberFormOpen, setAddMemberFormOpen] = useState(false);
+  const [searchParams] = useSearchParams();
 
-    const rows = memberships.map(({membership, permissions}) => (
-        <Table.Tr key={membership.user.id}>
-            <Table.Td>{membership.user.displayName}</Table.Td>
-            <Table.Td className={styles.tableId}>{membership.user.id}</Table.Td>
-            <Table.Td className={styles.tableRole}>{membership.role}</Table.Td>
-            <Table.Td>
-                <Button
-                    variant="light"
-                    onClick={() => {
-                        setMembershipBeingEdited(membership);
-                        setEditMemberFormOpen(true);
-                    }}
-                    disabled={!permissions.can_change && !permissions.can_delete}
-                >
-                    Edit
-                </Button>
-            </Table.Td>
-        </Table.Tr>
-    ))
+  const inviteCode = searchParams.get("invite_code");
+  const inviteUrl = new URL(
+    `/groups/redeem_invite/${inviteCode}/`,
+    window.location.origin,
+  ).toString();
 
-    return (
-        <Shell
-            navbar={<ClubSettingsNavbar club={club} />}
+  const rows = memberships.map(({ membership, permissions }) => (
+    <Table.Tr key={membership.user.id}>
+      <Table.Td>{membership.user.displayName}</Table.Td>
+      <Table.Td className={styles.tableId}>{membership.user.id}</Table.Td>
+      <Table.Td className={styles.tableRole}>{membership.role}</Table.Td>
+      <Table.Td>
+        <Button
+          variant="light"
+          onClick={() => {
+            setMembershipBeingEdited(membership);
+            setEditMemberFormOpen(true);
+          }}
+          disabled={!permissions.can_change && !permissions.can_delete}
         >
-            <EditMemberForm
-                opened={editMemberFormOpen}
-                onClose={() => setEditMemberFormOpen(false)}
-                membership={membershipBeingEdited}
-                canEdit={memberships.find(m => m.membership.user === membershipBeingEdited?.user)?.permissions.can_change || false}
-                club={club}
-            />
-            <AddMemberForm
-                club={club}
-                opened={addMemberFormOpen}
-                onClose={() => setAddMemberFormOpen(false)}
-            />
-            <Stack align="start">
-                {
-                    inviteCode && (
-                        <Alert className={styles.inviteBox} variant="light" color="blue" title="Here is the invite link">
-                            <Stack>
-                                <Text size="sm">Send this link to the person you want to invite.</Text>
-                                <Group>
-                                    <TextInput
-                                        onFocus={e => e.target.select()}
-                                        disabled={false}
-                                        value={inviteUrl}
-                                        readOnly
-                                    >
+          Edit
+        </Button>
+      </Table.Td>
+    </Table.Tr>
+  ));
 
-                                    </TextInput>
-                                    <CopyIconButton value={inviteUrl} />
-                                </Group>
-                            </Stack>
-                        </Alert>
-                    )
-                }
-                <h2>Members of {club.name}</h2>
-                <Table>
-                    <Table.Thead>
-                        <Table.Tr>
-                            <Table.Th>User</Table.Th>
-                            <Table.Th>ID</Table.Th>
-                            <Table.Th>Role</Table.Th>
-                            <Table.Th>Edit</Table.Th>
-                        </Table.Tr>
-                    </Table.Thead>
-                    <Table.Tbody>{rows}</Table.Tbody>
-                </Table>
-                <Button
-                    onClick={() => setAddMemberFormOpen(true)}
-                    disabled={!can_add}
-                >
-                    Add member
-                </Button>
+  return (
+    <Shell navbar={<ClubSettingsNavbar club={club} />}>
+      <EditMemberForm
+        opened={editMemberFormOpen}
+        onClose={() => setEditMemberFormOpen(false)}
+        membership={membershipBeingEdited}
+        canEdit={
+          memberships.find(
+            (m) => m.membership.user === membershipBeingEdited?.user,
+          )?.permissions.can_change || false
+        }
+        club={club}
+      />
+      <AddMemberForm
+        club={club}
+        opened={addMemberFormOpen}
+        onClose={() => setAddMemberFormOpen(false)}
+      />
+      <Stack align="start">
+        {inviteCode && (
+          <Alert
+            className={styles.inviteBox}
+            variant="light"
+            color="blue"
+            title="Here is the invite link"
+          >
+            <Stack>
+              <Text size="sm">
+                Send this link to the person you want to invite.
+              </Text>
+              <Group>
+                <TextInput
+                  onFocus={(e) => e.target.select()}
+                  disabled={false}
+                  value={inviteUrl}
+                  readOnly
+                ></TextInput>
+                <CopyIconButton value={inviteUrl} />
+              </Group>
             </Stack>
-        </Shell>
-    )
+          </Alert>
+        )}
+        <h2>Members of {club.name}</h2>
+        <Table>
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th>User</Table.Th>
+              <Table.Th>ID</Table.Th>
+              <Table.Th>Role</Table.Th>
+              <Table.Th>Edit</Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>{rows}</Table.Tbody>
+        </Table>
+        <Button onClick={() => setAddMemberFormOpen(true)} disabled={!can_add}>
+          Add member
+        </Button>
+      </Stack>
+    </Shell>
+  );
 }

@@ -1,12 +1,12 @@
 .tableRole {
-    text-transform: capitalize;
+  text-transform: capitalize;
 }
 
 .tableId {
-    font-family: monospace;
-    font-size: 0.75rem;
+  font-family: monospace;
+  font-size: 0.75rem;
 }
 
 .inviteBox {
-    margin-top: 1rem;
+  margin-top: 1rem;
 }

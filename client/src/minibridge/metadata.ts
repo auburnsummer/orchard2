@@ -1,4 +1,3 @@
 export interface Metadata {
-    title: string;
-  }
-  
+  title: string;
+}
