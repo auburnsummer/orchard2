@@ -7,7 +7,7 @@ import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { useRef } from "react";
 import { Link } from "@cafe/minibridge/components/Link";
 import { useLocation, useSearchParams } from "@cafe/minibridge/hooks";
-import { SearchBar } from "./SearchBar/SearchBar";
+import { SearchBar } from "./SearchBar";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 
 export type ShellProps = {
@@ -57,7 +57,18 @@ export function Shell({ children, navbar, aside }: ShellProps) {
                 {csrfInput}
               </form>
               <Menu as="div" className="relative">
-                <MenuButton>account</MenuButton>
+                <MenuButton>
+                  <div>
+                    <img
+                      src={
+                        user.avatarURL ||
+                        `https://www.gravatar.com/avatar/?d=initials&name=${encodeURIComponent(user.displayName)}`
+                      }
+                      alt="User avatar"
+                      className="m-1 h-10 w-10 rounded-full border-2 border-stone-50 hover:cursor-pointer hover:border-violet-200"
+                    />
+                  </div>
+                </MenuButton>
                 <MenuItems
                   transition
                   className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-stone-100 rounded-md bg-white shadow-lg outline-1 outline-black/5 transition data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in dark:divide-white/10 dark:bg-stone-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10"
@@ -80,7 +91,7 @@ export function Shell({ children, navbar, aside }: ShellProps) {
                         ) : (
                           <button
                             onClick={item.onClick}
-                            className="block w-full px-4 py-2 text-left text-sm text-stone-700 data-focus:cursor-pointer data-focus:bg-violet-50 data-focus:text-stone-900 data-focus:outline-hidden dark:text-stone-300 dark:data-focus:bg-white/5 dark:data-focus:text-white"
+                            className="block w-full px-4 py-2 text-left text-sm text-stone-700 data-focus:cursor-pointer data-focus:bg-violet-50 data-focus:text-violet-900 data-focus:outline-hidden dark:text-stone-300 dark:data-focus:bg-white/5 dark:data-focus:text-white"
                           >
                             {item.name}
                           </button>
