@@ -4,7 +4,7 @@ export function Logo() {
   return (
     <Link href="/">
       <svg
-        className="mt-3 h-11 fill-violet-400 opacity-75 hover:opacity-100 dark:fill-violet-900"
+        className="mt-3 h-11 fill-violet-400 opacity-75 hover:opacity-100 dark:fill-violet-600"
         fillRule="evenodd"
         strokeLinejoin="round"
         strokeMiterlimit="2"

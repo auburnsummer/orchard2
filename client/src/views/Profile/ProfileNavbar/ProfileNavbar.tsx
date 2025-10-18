@@ -1,10 +1,13 @@
 import { Spacer } from "@cafe/components/Spacer/Spacer";
 import { useLoggedInUser } from "@cafe/hooks/useUser";
-import { Stack, Group, Avatar, NavLink, Text } from "@mantine/core";
-import styles from "./ProfileNavbar.module.css";
+import { Stack, Group, NavLink, Text } from "@mantine/core";
 import { Link } from "@cafe/minibridge/components/Link";
 import { useAtomValue } from "jotai";
 import { locationAtom } from "@cafe/minibridge/atoms";
+import { Avatar } from "@cafe/components/ui/Avatar";
+import { NavEntry } from "@cafe/components/ui/NavEntry";
+
+import cc from "clsx";
 
 export function ProfileNavbar() {
   const user = useLoggedInUser();
@@ -26,26 +29,22 @@ export function ProfileNavbar() {
   ];
 
   return (
-    <Stack className={styles.navbarBase}>
-      <Group className={styles.navbarTitle}>
-        <Avatar size="lg" src={user.avatarURL} />
-        <h2>{user.displayName}</h2>
-      </Group>
-      <Stack className={styles.navbarLinks} gap={0}>
+    <div className="flex-grow bg-slate-50 m-3 rounded-lg flex flex-col gap-1">
+      <div className="flex flex-row items-center pt-3 px-3">
+        <Avatar src={user.avatarURL || undefined} className="w-14 h-14 border-violet-400 border-2" />
+        <h2 className="ml-3">{user.displayName}</h2>
+      </div>
+      <div className="flex flex-col">
         {links.map((link) => (
-          <NavLink
-            key={link.href}
-            component={Link}
-            href={link.href}
-            label={link.label}
-            active={pathname === link.href}
-          />
+          <NavEntry as={Link} href={link.href} className={cc({"bg-violet-100 dark:bg-white/10" : pathname === link.href})}>
+            {link.label}
+          </NavEntry>
         ))}
-      </Stack>
-      <Spacer />
-      <Text c="dimmed" className={styles.navbarId}>
+      </div>
+      <div className="flex-grow"/>
+      <span className="px-3 pb-3 text-sm text-slate-500 dark:text-slate-400">
         User ID: {user.id}
-      </Text>
-    </Stack>
+      </span>
+    </div>
   );
 }

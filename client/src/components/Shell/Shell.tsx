@@ -8,7 +8,10 @@ import { useRef } from "react";
 import { Link } from "@cafe/minibridge/components/Link";
 import { useLocation, useSearchParams } from "@cafe/minibridge/hooks";
 import { SearchBar } from "./SearchBar";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { Menu, MenuButton, MenuItem, MenuItems, Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { Avatar } from "../ui/Avatar";
+import { NavEntry } from "../ui/NavEntry";
 
 export type ShellProps = {
   children: React.ReactNode;
@@ -40,8 +43,8 @@ export function Shell({ children, navbar, aside }: ShellProps) {
   ].filter((a) => a !== null);
 
   return (
-    <div>
-      <header className="flex h-12 items-stretch bg-violet-300">
+    <div className="flex flex-col min-h-screen bg-slate-300">
+      <header className="flex h-12 items-stretch bg-violet-300 dark:bg-violet-950 shadow-sm">
         <Logo />
         <SearchBar
           className="ml-4"
@@ -59,22 +62,19 @@ export function Shell({ children, navbar, aside }: ShellProps) {
               <Menu as="div" className="relative">
                 <MenuButton>
                   <div>
-                    <img
-                      src={
-                        user.avatarURL ||
-                        `https://www.gravatar.com/avatar/?d=initials&name=${encodeURIComponent(user.displayName)}`
-                      }
-                      alt="User avatar"
-                      className="m-1 h-10 w-10 rounded-full border-2 border-stone-50 hover:cursor-pointer hover:border-violet-200"
+                    <Avatar
+                      username={user.displayName}
+                      className="hover:cursor-pointer hover:border-violet-200"
+                      src={user.avatarURL || undefined}
                     />
                   </div>
                 </MenuButton>
                 <MenuItems
                   transition
-                  className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-stone-100 rounded-md bg-white shadow-lg outline-1 outline-black/5 transition data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in dark:divide-white/10 dark:bg-stone-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10"
+                  className="absolute right-0 z-10 mt-1 mr-2 w-56 origin-top-right divide-y divide-slate-100 rounded-md bg-white shadow-lg outline-1 outline-black/5 transition data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in dark:divide-white/10 dark:bg-slate-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10"
                 >
                   <div className="px-4 py-3">
-                    <p className="text-sm text-stone-700 dark:text-stone-400">
+                    <p className="text-sm text-slate-700 dark:text-slate-400">
                       {user.displayName}
                     </p>
                   </div>
@@ -82,19 +82,9 @@ export function Shell({ children, navbar, aside }: ShellProps) {
                     {menuItems.map((item) => (
                       <MenuItem key={item.name}>
                         {item.href ? (
-                          <Link
-                            href={item.href}
-                            className="block px-4 py-2 text-sm text-stone-700 data-focus:bg-violet-50 data-focus:text-violet-900 data-focus:outline-hidden dark:text-stone-300 dark:data-focus:bg-white/5 dark:data-focus:text-white"
-                          >
-                            {item.name}
-                          </Link>
+                          <NavEntry as={Link} href={item.href}>{item.name}</NavEntry>
                         ) : (
-                          <button
-                            onClick={item.onClick}
-                            className="block w-full px-4 py-2 text-left text-sm text-stone-700 data-focus:cursor-pointer data-focus:bg-violet-50 data-focus:text-violet-900 data-focus:outline-hidden dark:text-stone-300 dark:data-focus:bg-white/5 dark:data-focus:text-white"
-                          >
-                            {item.name}
-                          </button>
+                          <NavEntry as="button" onClick={item.onClick}>{item.name}</NavEntry>
                         )}
                       </MenuItem>
                     ))}
@@ -121,11 +111,27 @@ export function Shell({ children, navbar, aside }: ShellProps) {
           )}
         </div>
       </header>
-      {navbar && <div>{navbar}</div>}
-      {aside && <aside>{aside}</aside>}
-      <main>
-        <div>{children}</div>
-      </main>
+      <div className="flex-grow flex items-stretch">
+        { /* sidebar visible alway past sm */}
+        {navbar && <div className="hidden sm:flex w-72 flex-col">{navbar}</div>}
+        { /* sidebar as overlay on small screens */}
+        {
+          navbar && (
+            <Popover className="sm:hidden relative">
+              <PopoverButton className="absolute top-12 left-0 bg-violet-300 rounded-tr-lg rounded-br-lg opacity-60 hover:opacity-100 hover:cursor-pointer">
+                <FontAwesomeIcon icon={faBars} className="text-xs text-violet-600" />
+              </PopoverButton>
+              <PopoverPanel className="fixed top-12 left-0 z-20 h-full w-72 flex flex-col">
+                {navbar}
+              </PopoverPanel>
+            </Popover>
+          )
+        }
+        <main className="flex-grow">
+          <div>{children}</div>
+        </main>
+        {aside && <aside>{aside}</aside>}
+      </div>
     </div>
   );
 }
