@@ -1,6 +1,4 @@
-import { Spacer } from "@cafe/components/Spacer/Spacer";
 import { useLoggedInUser } from "@cafe/hooks/useUser";
-import { Stack, Group, NavLink, Text } from "@mantine/core";
 import { Link } from "@cafe/minibridge/components/Link";
 import { useAtomValue } from "jotai";
 import { locationAtom } from "@cafe/minibridge/atoms";
@@ -8,6 +6,8 @@ import { Avatar } from "@cafe/components/ui/Avatar";
 import { NavEntry } from "@cafe/components/ui/NavEntry";
 
 import cc from "clsx";
+import { Surface } from "@cafe/components/ui/Surface";
+import { Words } from "@cafe/components/ui/Words";
 
 export function ProfileNavbar() {
   const user = useLoggedInUser();
@@ -29,10 +29,10 @@ export function ProfileNavbar() {
   ];
 
   return (
-    <div className="flex-grow bg-slate-50 m-3 rounded-lg flex flex-col gap-1">
+    <Surface className="flex-grow m-3 flex flex-col gap-1">
       <div className="flex flex-row items-center pt-3 px-3">
         <Avatar src={user.avatarURL || undefined} className="w-14 h-14 border-violet-400 border-2" />
-        <h2 className="ml-3">{user.displayName}</h2>
+        <Words className="ml-3" as="h2">{user.displayName}</Words>
       </div>
       <div className="flex flex-col">
         {links.map((link) => (
@@ -42,9 +42,9 @@ export function ProfileNavbar() {
         ))}
       </div>
       <div className="flex-grow"/>
-      <span className="px-3 pb-3 text-sm text-slate-500 dark:text-slate-400">
+      <Words className="px-3 pb-3 text-xs" as="span" variant="muted">
         User ID: {user.id}
-      </span>
-    </div>
+      </Words>
+    </Surface>
   );
 }

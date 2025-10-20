@@ -1,6 +1,6 @@
+@import url(https://fonts.bunny.net/css?family=atkinson-hyperlegible:400,400i,700,700i);
 @import "tailwindcss";
 
-@import url(https://fonts.bunny.net/css?family=atkinson-hyperlegible:400,400i,700,700i);
 
 body {
   font-family: "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont,
