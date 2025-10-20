@@ -43,7 +43,7 @@ export function Shell({ children, navbar, aside }: ShellProps) {
   ].filter((a) => a !== null);
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-300">
+    <div className="flex flex-col min-h-screen bg-slate-300 dark:bg-slate-600">
       <header className="flex h-12 items-stretch bg-violet-300 dark:bg-violet-950 shadow-sm">
         <Logo />
         <SearchBar
@@ -128,7 +128,7 @@ export function Shell({ children, navbar, aside }: ShellProps) {
           )
         }
         <main className="flex-grow">
-          <div>{children}</div>
+          {children}
         </main>
         {aside && <aside>{aside}</aside>}
       </div>
