@@ -1,57 +1,73 @@
-'use client'
+import {
+  faCheckCircle,
+  faChevronDown,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  Label,
+  Listbox,
+  ListboxButton,
+  ListboxOption,
+  ListboxOptions,
+  ListboxProps,
+} from "@headlessui/react";
 
-import { useState } from 'react'
-import { Label, Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
-import { ChevronUpDownIcon } from '@heroicons/react/16/solid'
-import { CheckIcon } from '@heroicons/react/20/solid'
+type SelectProps = ListboxProps & {
+  data: { value: string; label: string }[];
+  allowDeselect?: boolean;
+  label?: string;
+  className?: string;
+};
 
-const people = [
-  { id: 1, name: 'Wade Cooper' },
-  { id: 2, name: 'Arlene Mccoy' },
-  { id: 3, name: 'Devon Webb' },
-  { id: 4, name: 'Tom Cook' },
-  { id: 5, name: 'Tanya Fox' },
-  { id: 6, name: 'Hellen Schmidt' },
-  { id: 7, name: 'Caroline Schultz' },
-  { id: 8, name: 'Mason Heaney' },
-  { id: 9, name: 'Claudie Smitham' },
-  { id: 10, name: 'Emil Schaefer' },
-]
-
-export default function Example() {
-  const [selected, setSelected] = useState(people[3])
-
+export default function Select({
+  data,
+  label,
+  allowDeselect,
+  ...props
+}: SelectProps) {
   return (
-    <Listbox value={selected} onChange={setSelected}>
-      <Label className="block text-sm/6 font-medium text-gray-900 dark:text-white">Assigned to</Label>
+    <Listbox as="div" {...props}>
+      {label && (
+        <Label className="block text-sm/6 font-medium text-slate-900 dark:text-white">
+          {label}
+        </Label>
+      )}
       <div className="relative mt-2">
-        <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-md bg-white py-1.5 pr-2 pl-3 text-left text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:focus-visible:outline-indigo-500">
-          <span className="col-start-1 row-start-1 truncate pr-6">{selected.name}</span>
-          <ChevronUpDownIcon
-            aria-hidden="true"
-            className="col-start-1 row-start-1 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400"
-          />
+        <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-md bg-white py-1.5 pr-2 pl-3 text-left text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-violet-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:focus-visible:outline-violet-500">
+          {({ value }) => (
+            <div className="flex flex-row">
+              <span>
+                {data.find((item) => item.value === value)?.label ||
+                  "Select..."}
+              </span>
+              <FontAwesomeIcon
+                icon={faChevronDown}
+                className="ml-auto self-center text-slate-400"
+              />
+            </div>
+          )}
         </ListboxButton>
-
         <ListboxOptions
           transition
           className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline-1 outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm dark:bg-gray-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10"
         >
-          {people.map((person) => (
+          {data.map((item) => (
             <ListboxOption
-              key={person.id}
-              value={person}
-              className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-focus:bg-indigo-600 data-focus:text-white data-focus:outline-hidden dark:text-white dark:data-focus:bg-indigo-500"
+              key={item.value}
+              value={item.value}
+              className="group relative cursor-default py-2 pr-4 pl-8 text-gray-900 select-none data-focus:bg-violet-100 data-focus:text-violet-950 data-focus:outline-hidden dark:text-white dark:data-focus:bg-violet-500"
             >
-              <span className="block truncate font-normal group-data-selected:font-semibold">{person.name}</span>
+              <span className="block truncate font-normal group-data-selected:font-semibold">
+                {item.label}
+              </span>
 
-              <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-not-data-selected:hidden group-data-focus:text-white dark:text-indigo-400">
-                <CheckIcon aria-hidden="true" className="size-5" />
+              <span className="absolute inset-y-0 left-1 flex items-center pl-1.5 text-violet-600 group-not-data-selected:hidden group-data-focus:text-violet-900 dark:text-violet-400">
+                <FontAwesomeIcon icon={faCheckCircle} />
               </span>
             </ListboxOption>
           ))}
         </ListboxOptions>
       </div>
     </Listbox>
-  )
+  );
 }
