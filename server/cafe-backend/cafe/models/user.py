@@ -42,7 +42,8 @@ class User(AbstractUser):
     email = EmailField(default=None, null=True, unique=True, blank=True)
     theme_preference = CharField(choices={
         'light': 'Light',
-        'dark': 'Dark'
+        'dark': 'Dark',
+        'system': 'System'
     }, max_length=100, default='light')
 
     # from cafe.ClubMembership

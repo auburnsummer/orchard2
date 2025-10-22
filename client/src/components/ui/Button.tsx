@@ -1,11 +1,13 @@
 
 type Variant = "default" | "primary" | "secondary" | "danger";
 
+const commonStyles = "rounded-lg hover:cursor-pointer text-sm font-semibold px-3 py-2 shadow-xs";
+
 const variantStyles: Record<Variant, string> = {
-    default: "p-1 bg-slate-200 text-slate-900 hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 rounded-lg hover:cursor-pointer",
-    primary: "p-1 bg-violet-500 text-white hover:bg-violet-600 rounded-lg hover:cursor-pointer",
-    secondary: "p-1 bg-slate-500 text-white hover:bg-slate-600 rounded-lg hover:cursor-pointer",
-    danger: "p-1 bg-red-500 text-white hover:bg-red-600 rounded-lg hover:cursor-pointer",
+    default: `${commonStyles} bg-slate-200 text-slate-900 hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600`,
+    primary: `${commonStyles} bg-violet-500 text-white hover:bg-violet-600 dark:bg-violet-600 dark:hover:bg-violet-700`,
+    secondary: `${commonStyles} bg-slate-500 text-white hover:bg-slate-600`,
+    danger: `${commonStyles} bg-red-500 text-white hover:bg-red-600`,
 }
 
 type ButtonBaseProps = {

@@ -6,6 +6,7 @@ type TextInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   className?: string;
   labelClassName?: string;
   inputClassName?: string;
+  description?: string;
 };
 
 export function TextInput({
@@ -13,6 +14,7 @@ export function TextInput({
   className,
   labelClassName,
   inputClassName,
+  description,
   ...props
 }: TextInputProps) {
   return (
@@ -35,6 +37,11 @@ export function TextInput({
           )}
         />
       </div>
+      {description && (
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400 font-light">
+          {description}
+        </p>
+      )}
     </div>
   );
 }

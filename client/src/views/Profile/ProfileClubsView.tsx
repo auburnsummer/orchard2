@@ -1,14 +1,16 @@
 import { Shell } from "@cafe/components/Shell/Shell";
-import { ProfileNavbar } from "../ProfileNavbar/ProfileNavbar";
+import { ProfileNavbar } from "./ProfileNavbar";
 
-import styles from "./ProfileClubsView.module.css";
 import { Club } from "@cafe/types/club";
-import { Stack, Title, List, Button, Anchor } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { CreateClubForm } from "@cafe/components/CreateClubForm/CreateClubForm";
 import { Link } from "@cafe/minibridge/components/Link";
 import { useAtomValue } from "jotai";
 import { locationAtom } from "@cafe/minibridge/atoms";
+import { Surface } from "@cafe/components/ui/Surface";
+import { Words } from "@cafe/components/ui/Words";
+import { Button } from "@cafe/components/ui/Button";
+import { Dialog } from "@cafe/components/ui/Dialog";
 
 type ProfileClubsViewProps = {
   clubs: {
@@ -18,9 +20,9 @@ type ProfileClubsViewProps = {
 };
 function LinkToClub({ club }: { club: Club }) {
   return (
-    <Anchor component={Link} href={`/groups/${club.id}/settings/`}>
+    <Words as={Link} variant="link" href={`/groups/${club.id}/settings/`}>
       {club.name}
-    </Anchor>
+    </Words>
   );
 }
 
@@ -35,39 +37,42 @@ export function ProfileClubsView({ clubs }: ProfileClubsViewProps) {
 
   return (
     <Shell navbar={<ProfileNavbar />}>
-      <CreateClubForm
-        opened={createClubFormOpen}
-        onClose={closeCreateClub}
-        redirectTo={pathname}
-      />
-      <Stack className={styles.base} align="start">
-        <Title order={2}>Groups</Title>
+      <Dialog open={createClubFormOpen} onClose={closeCreateClub}>
+        <CreateClubForm
+          redirectTo={pathname}
+          onSubmit={closeCreateClub}
+        />
+      </Dialog>
+      <Surface className="m-3 p-6 flex-grow">
+        <Words as="h2" variant="header">Groups</Words>
         {ownerClubs.length > 0 && (
           <>
-            <Title order={3}>Owner</Title>
-            <List>
+            <Words as="h3" variant="subheader">Owner</Words>
+            <ul className="list-disc pl-5">
               {ownerClubs.map((c) => (
-                <List.Item key={c.club.id}>
+                <li key={c.club.id}>
                   <LinkToClub club={c.club} />
-                </List.Item>
+                </li>
               ))}
-            </List>
+            </ul>
           </>
         )}
         {adminClubs.length > 0 && (
           <>
-            <Title order={3}>Admin</Title>
-            <List>
+            <Words as="h3" variant="subheader">Admin</Words>
+            <ul className="list-disc pl-5">
               {adminClubs.map((c) => (
-                <List.Item>
+                <li key={c.club.id}>
                   <LinkToClub club={c.club} />
-                </List.Item>
+                </li>
               ))}
-            </List>
+            </ul>
           </>
         )}
-        <Button onClick={openCreateClub}>Create group</Button>
-      </Stack>
+        <Button onClick={openCreateClub} variant="primary" className="mt-4">
+          Create group
+        </Button>
+      </Surface>
     </Shell>
   );
 }
