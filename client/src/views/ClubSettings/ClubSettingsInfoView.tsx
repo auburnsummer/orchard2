@@ -1,6 +1,6 @@
 import { Shell } from "@cafe/components/Shell";
 import { Club } from "@cafe/types/club";
-import { ClubSettingsNavbar } from "../ClubSettingsNavbar";
+import { ClubSettingsNavbar } from "./ClubSettingsNavbar";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { Form } from "@cafe/minibridge/components/Form";
 import { Surface } from "@cafe/components/ui/Surface";
