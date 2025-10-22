@@ -1,5 +1,5 @@
 import { Shell } from "@cafe/components/Shell/Shell";
-import { ProfileNavbar } from "../ProfileNavbar/ProfileNavbar";
+import { ProfileNavbar } from "./ProfileNavbar";
 import { Surface } from "@cafe/components/ui/Surface";
 
 export function ProfileIndexView() {

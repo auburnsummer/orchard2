@@ -9,7 +9,7 @@ export type AuthenticatedUser = {
   id: string;
   displayName: string;
   avatarURL: string | null;
-  theme_preference: "light" | "dark";
+  theme_preference: "light" | "dark" | "system";
   is_superuser: boolean;
 };
 

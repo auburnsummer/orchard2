@@ -1,7 +1,6 @@
 import { Shell } from "@cafe/components/Shell/Shell";
-import { ProfileNavbar } from "../ProfileNavbar/ProfileNavbar";
+import { ProfileNavbar } from "./ProfileNavbar";
 
-import styles from "./ProfileSettingsView.module.css";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { useLoggedInUser } from "@cafe/hooks/useUser";
 import { Form } from "@cafe/minibridge/components/Form";
@@ -19,7 +18,7 @@ export function ProfileSettingsView() {
     <Shell navbar={<ProfileNavbar />}>
       <Surface className="m-3 p-6 flex-grow">
         <Words as="h2" variant="header">Settings</Words>
-        <Form className={styles.base} method="post">
+        <Form className="pt-2" method="post">
           {input}
           <div className="flex flex-col gap-2">
             <TextInput
@@ -45,6 +44,10 @@ export function ProfileSettingsView() {
                   label: "Dark",
                   value: "dark",
                 },
+                {
+                  label: "Use system default",
+                  value: "system",
+                }
               ]}
             />
 

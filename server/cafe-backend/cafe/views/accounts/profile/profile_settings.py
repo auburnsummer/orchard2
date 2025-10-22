@@ -23,5 +23,8 @@ def settings(request: AuthenticatedHttpRequest) -> HttpResponse:
                 setattr(request.user, field, value)
             request.user.save()
             messages.add_message(request, messages.SUCCESS, f"User updated!")
+        else:
+            messages.add_message(request, messages.ERROR, f"Error updating user -- invalid form")
+
 
     return Response(request, request.resolver_match.view_name, {})
