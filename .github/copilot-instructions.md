@@ -5,7 +5,7 @@ Orchard2 is a Django + React application for rhythm.cafe v2, using a custom Djan
 ## Architecture Overview
 
 - **Backend**: Django 5.1 with Django-Bridge for React integration
-- **Frontend**: React 19 + Vite + Mantine UI + Jotai state management
+- **Frontend**: React 19 + Vite + Tailwind + Jotai state management
   - the URL for the frontend is defined by the `DOMAIN_URL` environment variable 
 - **Bridge**: Custom "minibridge" system handles routing/state between Django views and React components
 - **Services**: Redis (Huey tasks), Typesense (search), MinIO (S3-compatible storage)

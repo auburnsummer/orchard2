@@ -2,22 +2,17 @@ import { Shell } from "@cafe/components/Shell";
 import { Club } from "@cafe/types/club";
 import { ClubSettingsNavbar } from "../ClubSettingsNavbar";
 import { ClubMembership } from "@cafe/types/clubMembership";
-import {
-  Alert,
-  Button,
-  Group,
-  Stack,
-  Table,
-  Text,
-  TextInput,
-} from "@mantine/core";
-
-import styles from "./ClubSettingsMembersView.module.css";
 import { useState } from "react";
-import { AddMemberForm } from "./AddMemberForm/AddMemberForm";
+import { AddMemberForm } from "./AddMemberForm";
 import { EditMemberForm } from "./EditMemberForm/EditMemberForm";
 import { useSearchParams } from "@cafe/minibridge/hooks";
 import { CopyIconButton } from "@cafe/components/CopyIconButton/CopyIconButton";
+import { Surface } from "@cafe/components/ui/Surface";
+import { Words } from "@cafe/components/ui/Words";
+import { TextInput } from "@cafe/components/ui/TextInput";
+import { Button } from "@cafe/components/ui/Button";
+import { Alert } from "@cafe/components/ui/Alert";
+import { Dialog } from "@cafe/components/ui/Dialog";
 
 type MembershipPermission = {
   can_change: boolean;
@@ -51,28 +46,35 @@ export function ClubSettingsMembersView({
   ).toString();
 
   const rows = memberships.map(({ membership, permissions }) => (
-    <Table.Tr key={membership.user.id}>
-      <Table.Td>{membership.user.displayName}</Table.Td>
-      <Table.Td className={styles.tableId}>{membership.user.id}</Table.Td>
-      <Table.Td className={styles.tableRole}>{membership.role}</Table.Td>
-      <Table.Td>
+    <tr key={membership.user.id}>
+      <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6 dark:text-white">
+        {membership.user.displayName}
+      </td>
+      <td className="px-3 py-4 text-xs whitespace-nowrap text-gray-500 dark:text-gray-400 font-mono">
+        {membership.user.id}
+      </td>
+      <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400 capitalize">
+        {membership.role}
+      </td>
+      <td className="py-4 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-6">
         <Button
-          variant="light"
+          variant="secondary"
           onClick={() => {
             setMembershipBeingEdited(membership);
             setEditMemberFormOpen(true);
           }}
           disabled={!permissions.can_change && !permissions.can_delete}
+          className="text-xs px-2 py-1"
         >
           Edit
         </Button>
-      </Table.Td>
-    </Table.Tr>
+      </td>
+    </tr>
   ));
 
   return (
     <Shell navbar={<ClubSettingsNavbar club={club} />}>
-      <EditMemberForm
+      {/* <EditMemberForm
         opened={editMemberFormOpen}
         onClose={() => setEditMemberFormOpen(false)}
         membership={membershipBeingEdited}
@@ -82,52 +84,101 @@ export function ClubSettingsMembersView({
           )?.permissions.can_change || false
         }
         club={club}
-      />
-      <AddMemberForm
-        club={club}
-        opened={addMemberFormOpen}
+      /> */}
+      <Dialog
+        open={editMemberFormOpen}
+        onClose={() => setEditMemberFormOpen(false)}
+      >
+        <p>edit member form</p>
+      </Dialog>
+      <Dialog
+        open={addMemberFormOpen}
         onClose={() => setAddMemberFormOpen(false)}
-      />
-      <Stack align="start">
-        {inviteCode && (
-          <Alert
-            className={styles.inviteBox}
-            variant="light"
-            color="blue"
-            title="Here is the invite link"
-          >
-            <Stack>
-              <Text size="sm">
-                Send this link to the person you want to invite.
-              </Text>
-              <Group>
-                <TextInput
-                  onFocus={(e) => e.target.select()}
-                  disabled={false}
-                  value={inviteUrl}
-                  readOnly
-                ></TextInput>
-                <CopyIconButton value={inviteUrl} />
-              </Group>
-            </Stack>
-          </Alert>
-        )}
-        <h2>Members of {club.name}</h2>
-        <Table>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>User</Table.Th>
-              <Table.Th>ID</Table.Th>
-              <Table.Th>Role</Table.Th>
-              <Table.Th>Edit</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>{rows}</Table.Tbody>
-        </Table>
-        <Button onClick={() => setAddMemberFormOpen(true)} disabled={!can_add}>
-          Add member
-        </Button>
-      </Stack>
+      >
+        <AddMemberForm
+          club={club}
+          onSubmit={() => setAddMemberFormOpen(false)}
+        />
+      </Dialog>
+      <Surface className="m-3 p-6 flex-grow">
+        <div className="space-y-6">
+          {inviteCode && (
+            <Alert variant="info">
+              <div className="flex flex-col gap-1">
+                <Words className="font-semibold">Here is the invite link</Words>
+                <Words className="text-sm">
+                  Send this link to the person you want to invite.
+                </Words>
+                <div className="flex flex-row items-baseline gap-3">
+                  <TextInput
+                    onFocus={(e) => e.target.select()}
+                    disabled={false}
+                    value={inviteUrl}
+                    readOnly
+                    className="flex-grow"
+                  />
+                  <CopyIconButton value={inviteUrl} />
+                </div>
+              </div>
+            </Alert>
+          )}
+
+          <div className="sm:flex sm:items-center">
+            <div className="sm:flex-auto">
+              <Words as="h2" variant="header">Members of {club.name}</Words>
+            </div>
+            <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+              <Button 
+                onClick={() => setAddMemberFormOpen(true)} 
+                disabled={!can_add}
+                variant="primary"
+                className="px-3 py-2"
+              >
+                Add member
+              </Button>
+            </div>
+          </div>
+
+          <div className="mt-8 flow-root">
+            <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+              <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                <div className="overflow-hidden shadow-sm outline-1 outline-black/5 sm:rounded-lg dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
+                  <table className="relative min-w-full divide-y divide-gray-300 dark:divide-white/15">
+                    <thead className="bg-gray-50 dark:bg-gray-800/75">
+                      <tr>
+                        <th
+                          scope="col"
+                          className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6 dark:text-gray-200"
+                        >
+                          User
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200"
+                        >
+                          ID
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200"
+                        >
+                          Role
+                        </th>
+                        <th scope="col" className="py-3.5 pr-4 pl-3 sm:pr-6">
+                          <span className="sr-only">Edit</span>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200 bg-white dark:divide-white/10 dark:bg-gray-800/50">
+                      {rows}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Surface>
     </Shell>
   );
 }
