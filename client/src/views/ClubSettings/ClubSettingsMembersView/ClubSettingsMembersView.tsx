@@ -1,6 +1,6 @@
 import { Shell } from "@cafe/components/Shell";
 import { Club } from "@cafe/types/club";
-import { ClubSettingsNavbar } from "../ClubSettingsNavbar/ClubSettingsNavbar";
+import { ClubSettingsNavbar } from "../ClubSettingsNavbar";
 import { ClubMembership } from "@cafe/types/clubMembership";
 import {
   Alert,
