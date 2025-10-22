@@ -1,45 +1,40 @@
+import { Button } from "@cafe/components/ui/Button";
+import Select from "@cafe/components/ui/Select";
+import { Words } from "@cafe/components/ui/Words";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { Form } from "@cafe/minibridge/components/Form";
 import { Club } from "@cafe/types/club";
-import { Button, Modal, Select, Stack } from "@mantine/core";
 
 type AddMemberFormProps = {
-  opened: boolean;
-  onClose: () => void;
   onSubmit?: () => void;
   club: Club;
 };
 
 export function AddMemberForm({
-  opened,
   club,
-  onClose,
-  onSubmit = onClose,
+  onSubmit,
 }: AddMemberFormProps) {
   const csrfInput = useCSRFTokenInput();
 
   return (
-    <Modal
-      opened={opened}
-      onClose={onClose}
-      centered
-      title="Create invite to group"
-    >
-      <p>
+    <div className="flex flex-col gap-1">
+      <Words as="p">
         Clicking the button will generate an invite link. Send the invite link
         to the person you wish to invite.
-      </p>
-      <p>The link will expire in 24 hours.</p>
+      </Words>
+      <Words as="p" className="font-semibold">The link will expire in 24 hours.</Words>
       <Form
         method="post"
         action={`/groups/${club.id}/settings/members/invite/`}
         onSubmit={onSubmit}
       >
         {csrfInput}
-        <Stack align="start">
+        <div className="lex flex-col gap-1">
           <Select
+            className="mt-4"
             defaultValue="admin"
             allowDeselect={false}
+            label="Role for invited member"
             data={[
               {
                 label: "Owner",
@@ -52,9 +47,9 @@ export function AddMemberForm({
             ]}
             name="role"
           ></Select>
-          <Button type="submit">Create link</Button>
-        </Stack>
+          <Button type="submit" variant="primary" className="mt-8 w-32">Create link</Button>
+        </div>
       </Form>
-    </Modal>
+    </div>
   );
 }

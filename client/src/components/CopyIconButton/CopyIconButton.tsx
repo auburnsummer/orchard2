@@ -1,29 +1,11 @@
-import { faCheck, faCopy } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ActionIcon, CopyButton, Tooltip } from "@mantine/core";
-
 type CopyIconButtonProps = {
   value: string;
 };
 
+// a button that copies the value to clipboard
+// the button looks like a clipboard icon, but then when clicked, it copies the value to clipboard
+// and shows a tooltip that says "Copied!" for 2 seconds
+// it should also rotate a bit side to side when clicked
 export function CopyIconButton({ value }: CopyIconButtonProps) {
-  return (
-    <CopyButton value={value}>
-      {({ copied, copy }) => (
-        <Tooltip label={copied ? "Copied" : "Copy"} withArrow position="right">
-          <ActionIcon
-            color={copied ? "teal" : "gray"}
-            variant="subtle"
-            onClick={copy}
-          >
-            {copied ? (
-              <FontAwesomeIcon icon={faCheck} />
-            ) : (
-              <FontAwesomeIcon icon={faCopy} />
-            )}
-          </ActionIcon>
-        </Tooltip>
-      )}
-    </CopyButton>
-  );
+  
 }
