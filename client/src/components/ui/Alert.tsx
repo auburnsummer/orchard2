@@ -8,17 +8,17 @@ type Variant = "info" | "warning" | "error" | "success";
 const commonStyles = "rounded-lg p-4";
 
 const variantStyles: Record<Variant, string> = {
-    info: "bg-blue-100 text-blue-800",
-    warning: "bg-yellow-100 text-yellow-800",
-    error: "bg-red-100 text-red-800",
-    success: "bg-green-100  text-green-800",
+    info: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200",
+    warning: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-200",
+    error: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200",
+    success: "bg-green-100  text-green-800 dark:bg-green-900/30 dark:text-green-200",
 };
 
 const variantIcons : Record<Variant, React.ReactNode> = {
-    info: <FontAwesomeIcon icon={faInfoCircle} className="text-blue-950 bg-blue-100" />,
-    warning: <FontAwesomeIcon icon={faWarning} className="text-yellow-950 bg-yellow-100" />,
-    error: <FontAwesomeIcon icon={faXmarkCircle} className="text-red-950 bg-red-100" />,
-    success: <FontAwesomeIcon icon={faCheckCircle} className="text-green-950 bg-green-100" />,
+    info: <FontAwesomeIcon icon={faInfoCircle} className="text-blue-950 bg-blue-100 dark:text-blue-200 dark:bg-blue-900/30" />,
+    warning: <FontAwesomeIcon icon={faWarning} className="text-yellow-950 bg-yellow-100 dark:text-yellow-200 dark:bg-yellow-900/30" />,
+    error: <FontAwesomeIcon icon={faXmarkCircle} className="text-red-950 bg-red-100 dark:text-red-200 dark:bg-red-900/30" />,
+    success: <FontAwesomeIcon icon={faCheckCircle} className="text-green-950 bg-green-100 dark:text-green-200 dark:bg-green-900/30" />,
 };
 
 type AlertProps = {

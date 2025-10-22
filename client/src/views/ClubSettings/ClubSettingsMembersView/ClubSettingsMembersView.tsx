@@ -109,7 +109,7 @@ export function ClubSettingsMembersView({
                 <Words className="text-sm">
                   Send this link to the person you want to invite.
                 </Words>
-                <div className="flex flex-row items-baseline gap-3">
+                <div className="flex flex-row items-end gap-1">
                   <TextInput
                     onFocus={(e) => e.target.select()}
                     disabled={false}
@@ -117,7 +117,7 @@ export function ClubSettingsMembersView({
                     readOnly
                     className="flex-grow"
                   />
-                  <CopyIconButton value={inviteUrl} />
+                  <CopyIconButton value={inviteUrl} className="pb-0.5" />
                 </div>
               </div>
             </Alert>
