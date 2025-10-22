@@ -2,12 +2,10 @@ import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { Form } from "@cafe/minibridge/components/Form";
 import { Club } from "@cafe/types/club";
 import { ClubMembership } from "@cafe/types/clubMembership";
-import { Modal, Stack, Select, Group, Button } from "@mantine/core";
-import { useEffect, useRef, useState } from "react";
+import { Stack, Select, Group, Button } from "@mantine/core";
+import { useRef, useState } from "react";
 
 type EditMemberFormProps = {
-  opened: boolean;
-  onClose: () => void;
   onSubmit?: () => void;
   membership: ClubMembership | null;
   canEdit: boolean;
@@ -15,9 +13,7 @@ type EditMemberFormProps = {
 };
 
 export function EditMemberForm({
-  opened,
-  onClose,
-  onSubmit = onClose,
+  onSubmit,
   membership,
   canEdit,
   club,
@@ -26,19 +22,8 @@ export function EditMemberForm({
   const csrfInput = useCSRFTokenInput();
   const [deleteWarningClicked, setDeleteWarningClicked] = useState(false);
 
-  useEffect(() => {
-    if (opened) {
-      setDeleteWarningClicked(false);
-    }
-  }, [opened]);
-
   return (
-    <Modal
-      opened={opened}
-      onClose={onClose}
-      centered
-      title={`Editing user ${membership && membership.user.displayName}`}
-    >
+    <div>
       {membership && (
         <>
           <Form
@@ -103,6 +88,6 @@ export function EditMemberForm({
           </Form>
         </>
       )}
-    </Modal>
+    </div>
   );
 }
