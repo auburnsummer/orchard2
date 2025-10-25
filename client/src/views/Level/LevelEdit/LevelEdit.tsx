@@ -1,4 +1,4 @@
-import { EditLevelForm } from "@cafe/components/EditLevelForm/EditLevelForm";
+import { EditLevelForm } from "@cafe/components/EditLevelForm";
 import { RDLevel } from "@cafe/types/rdLevelBase";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

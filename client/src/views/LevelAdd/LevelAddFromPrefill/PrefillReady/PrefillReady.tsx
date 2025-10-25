@@ -4,7 +4,7 @@ import { RDLevel } from "@cafe/types/rdLevelBase";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
-import { EditLevelForm } from "@cafe/components/EditLevelForm/EditLevelForm";
+import { EditLevelForm } from "@cafe/components/EditLevelForm";
 import { Alert } from "@cafe/components/ui/Alert";
 import { Words } from "@cafe/components/ui/Words";
 

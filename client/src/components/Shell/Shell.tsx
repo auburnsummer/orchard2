@@ -44,7 +44,7 @@ export function Shell({ children, navbar, aside }: ShellProps) {
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-300 dark:bg-slate-600">
-      <header className="flex h-12 items-stretch bg-violet-300 dark:bg-violet-950 shadow-sm">
+      <header className="fixed top-0 left-0 right-0 z-30 flex h-12 items-stretch bg-violet-300 dark:bg-violet-950 shadow-sm">
         <Logo className="z-10"/>
         <SearchBar
           className="ml-4"
@@ -111,7 +111,7 @@ export function Shell({ children, navbar, aside }: ShellProps) {
           )}
         </div>
       </header>
-      <div className="flex-grow flex items-stretch">
+      <div className="relative flex-grow flex items-stretch justify-stretch pt-12">
         { /* sidebar visible alway past sm */}
         {navbar && <div className="hidden sm:flex w-72 flex-col">{navbar}</div>}
         { /* sidebar as overlay on small screens */}
@@ -127,10 +127,10 @@ export function Shell({ children, navbar, aside }: ShellProps) {
             </Popover>
           )
         }
-        <main className="flex-grow">
+        <main className="flex-grow overflow-y-auto">
           {children}
         </main>
-        {aside && <aside>{aside}</aside>}
+        {aside && <aside className="flex-shrink-0 overflow-y-auto sticky top-12 h-screen">{aside}</aside>}
       </div>
     </div>
   );
