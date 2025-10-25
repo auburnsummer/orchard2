@@ -109,6 +109,7 @@ export function EditLevelForm({
           />
           <TagInput
             legend="Artists"
+            allowBlank={false}
             values={level.artist_tokens}
             onChange={(values) =>
               setLevel((l) => {
@@ -117,21 +118,7 @@ export function EditLevelForm({
                 }
               })
             }
-            inputLabelFunc={(index) => `Artist ${index + 1}`}
           />
-          {/* <TagsInput
-            label="Artists"
-            description="Press [Enter] after typing to add an artist."
-            value={level.artist_tokens}
-            splitChars={[]}
-            onChange={(values) =>
-              setLevel((l) => {
-                if (values.length > 0) {
-                  l.artist_tokens = values;
-                }
-              })
-            }
-          /> */}
           {/* <Fieldset legend="BPM">
             <Group align="end">
               <NumberInput

@@ -9,7 +9,9 @@ const Fieldset: React.FC<FieldsetProps> = ({ legend, children }) => {
     return (
         <fieldset className="border border-gray-300 rounded-md p-4 mb-4">
             <Words as="legend">{legend}</Words>
-            {children}
+            <div className="-mt-3">
+                {children}
+            </div>
         </fieldset>
     );
 };

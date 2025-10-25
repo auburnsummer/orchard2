@@ -1,10 +1,10 @@
 import { useSetAtom } from "jotai";
 import { formDataToSearchParams, makeCanonicalURL } from "../utils";
 import { formSubmitAtom, navigateAtom } from "../atoms";
+import React from "react";
 
-type FormProps = React.FormHTMLAttributes<HTMLFormElement> & {
+type FormProps = React.ComponentPropsWithRef<'form'> & {
   action?: string;
-  ref?: React.Ref<HTMLFormElement>;
 };
 
 export function Form(props: FormProps) {

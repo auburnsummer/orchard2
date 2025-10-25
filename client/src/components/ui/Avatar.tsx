@@ -1,8 +1,8 @@
-import { ImgHTMLAttributes } from "react";
+import React from "react";
 
 import cc from "clsx";
 
-type AvatarProps = ImgHTMLAttributes<HTMLImageElement> & {
+type AvatarProps = React.ComponentPropsWithRef<'img'> & {
     username?: string;
 };
 
