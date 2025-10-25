@@ -1,5 +1,5 @@
 import { LevelCard } from "@cafe/components/LevelCard/LevelCard";
-import { ShellDramaticCenter } from "@cafe/components/ShellDramaticCenter/ShellDramaticCenter";
+import { ShellDramaticCenter } from "@cafe/components/ShellDramaticCenter";
 import { RDLevel } from "@cafe/types/rdLevelBase";
 import { Paper, Title, Text } from "@mantine/core";
 

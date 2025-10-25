@@ -3,7 +3,7 @@ import { ProfileNavbar } from "./ProfileNavbar";
 
 import { Club } from "@cafe/types/club";
 import { useDisclosure } from "@mantine/hooks";
-import { CreateClubForm } from "@cafe/components/CreateClubForm/CreateClubForm";
+import { CreateClubForm } from "@cafe/components/CreateClubForm";
 import { Link } from "@cafe/minibridge/components/Link";
 import { useAtomValue } from "jotai";
 import { locationAtom } from "@cafe/minibridge/atoms";

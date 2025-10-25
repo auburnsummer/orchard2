@@ -1,4 +1,4 @@
-import { ShellDramaticCenter } from "@cafe/components/ShellDramaticCenter/ShellDramaticCenter";
+import { ShellDramaticCenter } from "@cafe/components/ShellDramaticCenter";
 import { Button } from "@cafe/components/ui/Button";
 import { Words } from "@cafe/components/ui/Words";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";

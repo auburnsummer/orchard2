@@ -1,4 +1,4 @@
-import { ShellDramaticCenter } from "@cafe/components/ShellDramaticCenter/ShellDramaticCenter";
+import { ShellDramaticCenter } from "@cafe/components/ShellDramaticCenter";
 import { navigateAtom } from "@cafe/minibridge/atoms";
 import { djangoGet } from "@cafe/minibridge/fetch";
 import { RDLevelPrefill } from "@cafe/types/rdLevelPrefill";

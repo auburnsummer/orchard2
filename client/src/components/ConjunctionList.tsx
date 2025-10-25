@@ -27,7 +27,7 @@ export function ConjunctionList({
   }, [items]);
 
   return (
-    <ul className={cc(className, styles.base)} {...rest}>
+    <ul className={cc(className, "flex flex-row items-center")} {...rest}>
       {fragments.map((f) => (
         <li>
           {f.type === "element"
