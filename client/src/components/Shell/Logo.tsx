@@ -1,8 +1,12 @@
 import { Link } from "@cafe/minibridge/components/Link";
 
-export function Logo() {
+type LogoProps = {
+  className?: string;
+};
+
+export function Logo({ className }: LogoProps) {
   return (
-    <Link href="/">
+    <Link href="/" className={className}>
       <svg
         className="mt-3 h-11 fill-violet-400 opacity-75 hover:opacity-100 dark:fill-violet-600"
         fillRule="evenodd"

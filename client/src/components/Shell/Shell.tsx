@@ -45,7 +45,7 @@ export function Shell({ children, navbar, aside }: ShellProps) {
   return (
     <div className="flex flex-col min-h-screen bg-slate-300 dark:bg-slate-600">
       <header className="flex h-12 items-stretch bg-violet-300 dark:bg-violet-950 shadow-sm">
-        <Logo />
+        <Logo className="z-10"/>
         <SearchBar
           className="ml-4"
           initialValue={searchParams.get("q") || ""}
