@@ -1,7 +1,7 @@
 import React from "react";
 import cc from "clsx";
 
-type TextInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+type TextInputProps = React.ComponentPropsWithRef<'input'> & {
   label?: string;
   className?: string;
   labelClassName?: string;
@@ -21,15 +21,20 @@ export function TextInput({
 }: TextInputProps) {
   return (
     <div className={className}>
-      <label
-        htmlFor={props.id}
-        className={cc(
-          "block text-sm/6 font-medium text-slate-900 dark:text-white",
-          labelClassName,
-        )}
-      >
-        {label}
-      </label>
+      {
+        label && (
+          <label
+            htmlFor={props.id}
+            className={cc(
+              "block text-sm/6 font-medium text-slate-900 dark:text-white",
+              labelClassName,
+            )}
+          >
+            {label}
+          </label>
+        )
+      }
+
       <div className="mt-2 grid grid-cols-1">
         <input
           {...props}
