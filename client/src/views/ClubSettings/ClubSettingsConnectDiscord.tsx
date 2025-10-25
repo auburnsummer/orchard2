@@ -1,10 +1,10 @@
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { Club } from "@cafe/types/club";
 
-import { CreateClubForm } from "@cafe/components/CreateClubForm/CreateClubForm";
+import { CreateClubForm } from "@cafe/components/CreateClubForm";
 import { useState } from "react";
 import { DiscordGuild } from "@cafe/types/discordGuild";
-import { ShellDramaticCenter } from "@cafe/components/ShellDramaticCenter/ShellDramaticCenter";
+import { ShellDramaticCenter } from "@cafe/components/ShellDramaticCenter";
 import { Form } from "@cafe/minibridge/components/Form";
 import { Dialog } from "@cafe/components/ui/Dialog";
 import { Words } from "@cafe/components/ui/Words";

@@ -1,8 +1,8 @@
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import styles from "./CreateClubForm.module.css";
 import { Form } from "@cafe/minibridge/components/Form";
-import { TextInput } from "../ui/TextInput";
-import { Button } from "../ui/Button";
+import { TextInput } from "./ui/TextInput";
+import { Button } from "./ui/Button";
 
 type CreateClubFormProps = {
   redirectTo?: string;

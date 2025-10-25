@@ -16,7 +16,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { DifficultyDecorator } from "./DifficultyDecorator/DifficultyDecorator";
-import { ConjunctionList } from "../ConjunctionList/ConjunctionList";
+import { ConjunctionList } from "../ConjunctionList";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { Link } from "@cafe/minibridge/components/Link";
 

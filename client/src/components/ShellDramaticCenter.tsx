@@ -1,9 +1,9 @@
-import { Shell, ShellProps } from "../Shell/Shell";
+import { Shell, ShellProps } from "./Shell/Shell";
 
 import commonStyles from "@cafe/theme/commonPatterns.module.css";
 
 import cc from "clsx";
-import { Surface } from "../ui/Surface";
+import { Surface } from "./ui/Surface";
 
 type ShellDramaticCenterProps = ShellProps;
 

@@ -1,4 +1,4 @@
-import { ConjunctionList } from "@cafe/components/ConjunctionList/ConjunctionList";
+import { ConjunctionList } from "@cafe/components/ConjunctionList";
 import { Shell } from "@cafe/components/Shell";
 import { RDLevel } from "@cafe/types/rdLevelBase";
 import {
