@@ -1,8 +1,6 @@
-import styles from "./FacetSelect.module.css";
-
-import cc from "clsx";
-
-import { Checkbox, Group, Loader, Stack, Text, TextInput } from "@mantine/core";
+import { Checkbox } from "@cafe/components/ui/Checkbox";
+import { TextInput } from "@cafe/components/ui/TextInput";
+import { Words } from "@cafe/components/ui/Words";
 import { Facet } from "../../LevelSearch";
 
 import { useEffect, useMemo, useState } from "react";
@@ -11,6 +9,8 @@ import { notifications } from "@mantine/notifications";
 import { useSearchParams } from "@cafe/minibridge/hooks";
 import { removeDuplicates } from "@cafe/utils/list";
 import { useDebouncedValue } from "@mantine/hooks";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
 
 type FacetSelectProps = React.HTMLAttributes<HTMLDivElement> & {
   facetName: string;
@@ -81,33 +81,37 @@ export function FacetSelect({
   }, [searchResults, facets]);
 
   return (
-    <div className={cc(styles.container, className)} {...rest}>
-      <Group gap="xs">
-        <Text fw={700} className={styles.label}>
+    <div className={className} {...rest}>
+      <div className="flex items-center gap-2 mb-2">
+        <Words variant="label">
           {facetName}
-        </Text>
-        {isSearching && <Loader size="xs" type="dots" />}
-      </Group>
+        </Words>
+        {isSearching && (
+          <FontAwesomeIcon 
+            icon={faCircleNotch} 
+            className="animate-spin text-violet-600 dark:text-violet-400" 
+            size="xs" 
+          />
+        )}
+      </div>
       <TextInput
         placeholder="Filter..."
-        size="xs"
-        className={styles.input}
-        radius="xs"
+        className="pr-1 mb-1.5"
         value={filter}
         onChange={(e) => setFilter(e.currentTarget.value)}
       />
-      <Stack gap="0.125rem">
+      <div className="flex flex-col gap-0.5">
         {displayFacets.map(({ value, count }) => (
           <Checkbox
             key={value}
             defaultChecked={selectedFacets.some((f) => f.value === value)}
             label={
-              <Group gap="0.25rem" align="baseline">
-                <Text size="sm">{value}</Text>
-                <Text size="xs" c="dimmed">
+              <span className="flex items-baseline gap-1">
+                <Words variant="sm">{value}</Words>
+                <Words variant="xs">
                   ({count})
-                </Text>
-              </Group>
+                </Words>
+              </span>
             }
             onChange={(event) => {
               const checked = event.currentTarget.checked;
@@ -121,7 +125,7 @@ export function FacetSelect({
             }}
           />
         ))}
-      </Stack>
+      </div>
     </div>
   );
 }

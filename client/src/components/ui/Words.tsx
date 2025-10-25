@@ -1,7 +1,7 @@
 import cc from "clsx";
 import React from "react";
 
-type Variant = "default" | "muted" | "header" | "subheader" | "link";
+type Variant = "default" | "muted" | "header" | "subheader" | "link" | "label" | "sm" | "xs";
 
 const variantStyles: Record<Variant, string> = {
     default: "text-slate-900 dark:text-slate-100",
@@ -9,6 +9,9 @@ const variantStyles: Record<Variant, string> = {
     header: "text-lg font-semibold text-slate-900 dark:text-slate-100",
     subheader: "text-md font-medium text-slate-900 dark:text-slate-100",
     link: "text-violet-600 hover:underline dark:text-violet-400",
+    label: "font-bold text-slate-900 dark:text-slate-100",
+    sm: "text-sm text-slate-900 dark:text-slate-100",
+    xs: "text-xs text-slate-600 dark:text-slate-400",
 }
 
 type WordsBaseProps = {

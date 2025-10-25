@@ -76,8 +76,10 @@ export const handleResponseAtom = atom(
       // otherwise we will have multiple of the same URL in the stack
       if (url.toString() !== new URL(document.location.href).toString()) {
         set(locationAtom, url);
-        // todo: scroll restoration? tbh I'd rather just move all the way to SSE at some point
-        window.scrollTo(0, 0);
+        // scroll to top if the page has changed (i.e. the pathname)
+        if (url.pathname !== document.location.pathname) {
+          window.scrollTo(0, 0);
+        }
       }
     } else if (response.action === "reload") {
       // reload the page

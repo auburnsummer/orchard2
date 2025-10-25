@@ -1,5 +1,4 @@
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
-import styles from "./CreateClubForm.module.css";
 import { Form } from "@cafe/minibridge/components/Form";
 import { TextInput } from "./ui/TextInput";
 import { Button } from "./ui/Button";
@@ -19,7 +18,7 @@ export function CreateClubForm({
     <Form
       action="/groups/create/"
       method="POST"
-      className={styles.base}
+      className="flex flex-col gap-4"
       onSubmit={onSubmit}
     >
       {csrfInput}

@@ -43,8 +43,8 @@ export function Shell({ children, navbar, aside }: ShellProps) {
   ].filter((a) => a !== null);
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-300 dark:bg-slate-600">
-      <header className="fixed top-0 left-0 right-0 z-30 flex h-12 items-stretch bg-violet-300 dark:bg-violet-950 shadow-sm">
+    <div className="flex flex-col h-screen bg-slate-300 dark:bg-slate-600">
+      <header className="flex-shrink-0 flex h-12 items-stretch bg-violet-300 dark:bg-violet-950 shadow-sm">
         <Logo className="z-10"/>
         <SearchBar
           className="ml-4"
@@ -111,9 +111,9 @@ export function Shell({ children, navbar, aside }: ShellProps) {
           )}
         </div>
       </header>
-      <div className="relative flex-grow flex items-stretch justify-stretch pt-12">
+      <div className="relative flex flex-grow items-stretch justify-stretch min-h-0">
         { /* sidebar visible alway past sm */}
-        {navbar && <div className="hidden sm:flex w-72 flex-col">{navbar}</div>}
+        {navbar && <div className="hidden sm:flex min-w-72 flex-col items-stretch overflow-y-auto">{navbar}</div>}
         { /* sidebar as overlay on small screens */}
         {
           navbar && (
@@ -121,7 +121,7 @@ export function Shell({ children, navbar, aside }: ShellProps) {
               <PopoverButton className="absolute top-12 left-0 bg-violet-300 rounded-tr-lg rounded-br-lg opacity-60 hover:opacity-100 hover:cursor-pointer">
                 <FontAwesomeIcon icon={faBars} className="text-xs text-violet-600" />
               </PopoverButton>
-              <PopoverPanel className="fixed top-12 left-0 z-20 h-full w-72 flex flex-col">
+              <PopoverPanel className="fixed top-12 left-0 z-20 h-full w-72 flex flex-col overflow-y-auto">
                 {navbar}
               </PopoverPanel>
             </Popover>
