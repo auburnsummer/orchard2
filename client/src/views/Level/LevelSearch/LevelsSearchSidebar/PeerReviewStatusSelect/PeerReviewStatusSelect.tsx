@@ -1,5 +1,6 @@
 import { useSearchParams } from "@cafe/minibridge/hooks";
-import { Text, Stack, Radio } from "@mantine/core";
+import { Radio } from "@cafe/components/ui/Radio";
+import { Words } from "@cafe/components/ui/Words";
 import { useState, useEffect } from "react";
 
 const PEER_REVIEW_STATUSES = [
@@ -22,11 +23,12 @@ export function PeerReviewStatusSelect() {
 
   return (
     <div>
-      <Text fw={700}>Peer Review Status</Text>
-      <Stack gap="0.125rem">
+      <Words variant="label" className="mb-2 block">Peer Review Status</Words>
+      <div className="flex flex-col gap-0.5">
         {PEER_REVIEW_STATUSES.map((status) => (
           <Radio
             key={status.value}
+            name="peer_review"
             label={status.label}
             checked={currentStatus === status.value}
             onChange={() => {
@@ -39,7 +41,7 @@ export function PeerReviewStatusSelect() {
             }}
           />
         ))}
-      </Stack>
+      </div>
     </div>
   );
 }

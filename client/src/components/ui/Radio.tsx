@@ -1,23 +1,21 @@
 import React from "react";
 import cc from "clsx";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
-type CheckboxProps = Omit<React.ComponentPropsWithRef<'input'>, 'type'> & {
-  label?: string | React.ReactNode;
+type RadioProps = Omit<React.ComponentPropsWithRef<'input'>, 'type'> & {
+  label?: React.ReactNode;
   className?: string;
   labelClassName?: string;
   description?: string;
 };
 
-export function Checkbox({
+export function Radio({
   label,
   className,
   labelClassName,
   description,
   id,
   ...props
-}: CheckboxProps) {
+}: RadioProps) {
   const labelId = id ? `${id}-label` : undefined;
   const descriptionId = id && description ? `${id}-description` : undefined;
 
@@ -28,14 +26,10 @@ export function Checkbox({
           <input
             {...props}
             id={id}
-            type="checkbox"
+            type="radio"
             aria-labelledby={labelId}
             aria-describedby={descriptionId}
-            className="peer size-4 appearance-none rounded border border-slate-300 bg-white transition-colors duration-150 checked:border-violet-500 checked:bg-violet-500 hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:checked:border-violet-600 dark:checked:bg-violet-600 dark:hover:border-slate-500 dark:focus:ring-violet-600 dark:focus:ring-offset-slate-900"
-          />
-          <FontAwesomeIcon
-            icon={faCheck}
-            className="pointer-events-none absolute left-0.5 top-0.5 size-3 text-white scale-0 transition-transform duration-150 peer-checked:scale-100"
+            className="relative size-4 appearance-none rounded-full border border-slate-300 bg-white transition-all duration-150 before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-violet-600 checked:bg-violet-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-600 disabled:border-slate-300 disabled:bg-slate-100 disabled:before:bg-slate-400 dark:border-white/10 dark:bg-white/5 dark:checked:border-violet-500 dark:checked:bg-violet-500 dark:focus-visible:outline-violet-500 dark:disabled:border-white/5 dark:disabled:bg-white/10 dark:disabled:before:bg-white/20 forced-colors:appearance-auto forced-colors:before:hidden"
           />
         </div>
       </div>

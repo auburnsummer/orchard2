@@ -1,6 +1,6 @@
 import { useSearchParams } from "@cafe/minibridge/hooks";
-import styles from "./DifficultySelect.module.css";
-import { Checkbox, Stack, Text } from "@mantine/core";
+import { Checkbox } from "@cafe/components/ui/Checkbox";
+import { Words } from "@cafe/components/ui/Words";
 
 const DIFFICULTY_NAMES = ["Easy", "Medium", "Tough", "Very Tough"];
 
@@ -10,11 +10,11 @@ export function DifficultySelect() {
   const selectedDifficulties = searchParams.getAll("difficulty").map(Number);
 
   return (
-    <div className={styles.container}>
-      <Text fw={700} className={styles.label}>
+    <div>
+      <Words variant="label" className="mb-2 block">
         Difficulty
-      </Text>
-      <Stack gap="0.125rem">
+      </Words>
+      <div className="flex flex-col gap-0.5">
         {[0, 1, 2, 3].map((level) => (
           <Checkbox
             key={level}
@@ -32,7 +32,7 @@ export function DifficultySelect() {
             }}
           />
         ))}
-      </Stack>
+      </div>
     </div>
   );
 }
