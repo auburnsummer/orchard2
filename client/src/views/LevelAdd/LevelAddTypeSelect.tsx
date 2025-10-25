@@ -1,7 +1,9 @@
 import { ShellDramaticCenter } from "@cafe/components/ShellDramaticCenter/ShellDramaticCenter";
+import { Button } from "@cafe/components/ui/Button";
+import Select from "@cafe/components/ui/Select";
+import { Words } from "@cafe/components/ui/Words";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { Form } from "@cafe/minibridge/components/Form";
-import { Button, Paper, Select, Stack } from "@mantine/core";
 import { useState } from "react";
 
 type LevelAddTypeSelectProps = {
@@ -13,7 +15,7 @@ export function LevelAddTypeSelect({
   code: _code,
   code_valid,
 }: LevelAddTypeSelectProps) {
-  const [addType, setAddType] = useState<string | null>(null);
+  const [addType, setAddType] = useState<string | undefined>(undefined);
   const csrfInput = useCSRFTokenInput();
 
   const selectData = [
@@ -24,32 +26,29 @@ export function LevelAddTypeSelect({
   const content = code_valid ? (
     <Form method="POST">
       {csrfInput}
-      <Stack align="start" justify="start">
+      <div className="flex flex-col">
         <Select
-          clearable
           value={addType}
           label="Is this a new level or an update to an existing level?"
           data={selectData}
           onChange={setAddType}
           name="prefill_type"
         ></Select>
-        <Button type="submit" disabled={addType == null}>
+        <Button type="submit" variant="primary" disabled={addType == undefined} className="mt-8">
           Continue
         </Button>
-      </Stack>
+      </div>
     </Form>
   ) : (
     <>
-      <p>This link to add a level is invalid or has expired.</p>
-      <p>Please run the command again to get a fresh link.</p>
+      <Words as="p">This link to add a level is invalid or has expired.</Words>
+      <Words as="p">Please run the command again to get a fresh link.</Words>
     </>
   );
 
   return (
     <ShellDramaticCenter>
-      <Paper shadow="md" p="xl">
-        {content}
-      </Paper>
+      {content}
     </ShellDramaticCenter>
   );
 }

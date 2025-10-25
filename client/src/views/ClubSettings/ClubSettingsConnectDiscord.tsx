@@ -1,12 +1,16 @@
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { Club } from "@cafe/types/club";
-import { Alert, Button, Paper, Select, Stack, Text } from "@mantine/core";
 
 import { CreateClubForm } from "@cafe/components/CreateClubForm/CreateClubForm";
 import { useState } from "react";
 import { DiscordGuild } from "@cafe/types/discordGuild";
 import { ShellDramaticCenter } from "@cafe/components/ShellDramaticCenter/ShellDramaticCenter";
 import { Form } from "@cafe/minibridge/components/Form";
+import { Dialog } from "@cafe/components/ui/Dialog";
+import { Words } from "@cafe/components/ui/Words";
+import { Button } from "@cafe/components/ui/Button";
+import { Alert } from "@cafe/components/ui/Alert";
+import Select from "@cafe/components/ui/Select";
 
 type ClubConnectDiscordProps = {
   clubs: Club[];
@@ -19,18 +23,22 @@ function ClubConnectDiscordNotOwned() {
 
   return (
     <>
-      <CreateClubForm
-        opened={createClubFormOpen}
+      <Dialog
+        open={createClubFormOpen}
         onClose={() => setCreateClubFormOpen(false)}
-        redirectTo={window.location.pathname}
-      />
-      <Stack>
-        <Text>You are not an owner of any groups.</Text>
-        <Text>Create a group first to get started.</Text>
-        <Button onClick={() => setCreateClubFormOpen(true)}>
+      >
+        <CreateClubForm
+          onSubmit={() => setCreateClubFormOpen(false)}
+          redirectTo={window.location.pathname}
+        />
+      </Dialog>
+      <div>
+        <Words as="p">You are not an owner of any groups.</Words>
+        <Words as="p">Create a group first to get started.</Words>
+        <Button onClick={() => setCreateClubFormOpen(true)} className="mt-2" variant="primary">
           Create a group
         </Button>
-      </Stack>
+      </div>
     </>
   );
 }
@@ -45,22 +53,21 @@ function ClubConnectDiscordForm({
   return (
     <Form method="POST">
       {csrfInput}
-      <Stack justify="start" align="start">
+      <div className="flex flex-col gap-2">
         {existing_guild !== null && (
-          <Alert>
-            <Text>This Discord server is already connected to a group!</Text>
-            <Text>
+          <Alert variant="warning">
+            <Words as="p">This Discord server is already connected to a group!</Words>
+            <Words as="p">
               A Discord server can only be connected to one group at a time.
-            </Text>
-            <Text>
+            </Words>
+            <Words as="p">
               If you connect a new group, the existing group (
               {existing_guild.club.name}) will be disconnected.
-            </Text>
+            </Words>
           </Alert>
         )}
-        <Text>Select a group to connect to the Discord server:</Text>
+        <Words as="p">Select a group to connect to this Discord server:</Words>
         <Select
-          clearable
           label="Group"
           value={selectedClub?.id || ""}
           data={clubs.map((club) => ({
@@ -73,10 +80,10 @@ function ClubConnectDiscordForm({
             setSelectedClub(club || null);
           }}
         ></Select>
-        <Button disabled={!selectedClub} type="submit">
+        <Button disabled={!selectedClub} type="submit" className="mt-4" variant="primary">
           Connect
         </Button>
-      </Stack>
+      </div>
     </Form>
   );
 }
@@ -91,10 +98,10 @@ export function ClubSettingsConnectDiscord({
   if (guild_id === null) {
     content = (
       <>
-        <p>
+        <Words as="p">
           Signature not valid or has expired. Try running the command again.
-        </p>
-        <p>If it still doesn't work, it's a bug; please ping auburn!</p>
+        </Words>
+        <Words as="p">If it still doesn't work, it's a bug; please ping auburn!</Words>
       </>
     );
   } else if (clubs.length === 0) {
@@ -107,9 +114,7 @@ export function ClubSettingsConnectDiscord({
 
   return (
     <ShellDramaticCenter>
-      <Paper shadow="md" p="xl">
-        {content}
-      </Paper>
+      {content}
     </ShellDramaticCenter>
   );
 }

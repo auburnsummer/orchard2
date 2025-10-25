@@ -2,7 +2,8 @@ import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { Form } from "@cafe/minibridge/components/Form";
 import { Club } from "@cafe/types/club";
 import { ClubMembership } from "@cafe/types/clubMembership";
-import { Stack, Select, Group, Button } from "@mantine/core";
+import Select from "@cafe/components/ui/Select";
+import { Button } from "@cafe/components/ui/Button";
 import { useRef, useState } from "react";
 
 type EditMemberFormProps = {
@@ -40,8 +41,9 @@ export function EditMemberForm({
             onSubmit={onSubmit}
           >
             {csrfInput}
-            <Stack align="start">
+            <div className="flex flex-col items-start gap-4">
               <Select
+                className="w-32"
                 label="User role"
                 disabled={!canEdit}
                 allowDeselect={false}
@@ -57,14 +59,14 @@ export function EditMemberForm({
                     value: "admin",
                   },
                 ]}
-              ></Select>
-              <Group>
-                <Button type="submit" disabled={!canEdit}>
+              />
+              <div className="flex gap-2 mt-4">
+                <Button type="submit" disabled={!canEdit} variant="primary">
                   Submit
                 </Button>
                 {deleteWarningClicked ? (
                   <Button
-                    color="red"
+                    variant="danger"
                     type="button"
                     onClick={() => {
                       if (deleteFormRef.current) {
@@ -77,14 +79,14 @@ export function EditMemberForm({
                 ) : (
                   <Button
                     type="button"
-                    color="grey"
+                    variant="default"
                     onClick={() => setDeleteWarningClicked(true)}
                   >
-                    Delete user
+                    Remove member from group
                   </Button>
                 )}
-              </Group>
-            </Stack>
+              </div>
+            </div>
           </Form>
         </>
       )}

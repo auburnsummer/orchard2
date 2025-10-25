@@ -9,23 +9,15 @@ import commonStyles from "@cafe/theme/commonPatterns.module.css";
 import styles from "./EditLevelForm.module.css";
 
 import cc from "clsx";
-import {
-  Button,
-  Center,
-  Checkbox,
-  Fieldset,
-  Grid,
-  Group,
-  NumberInput,
-  Slider,
-  Stack,
-  Switch,
-  TagsInput,
-  Textarea,
-  TextInput,
-} from "@mantine/core";
+
 import { LevelCard } from "../LevelCard/LevelCard";
 import { Form } from "@cafe/minibridge/components/Form";
+import { Button } from "../ui/Button";
+import { TextInput } from "../ui/TextInput";
+import Fieldset from "../ui/Fieldset";
+import { Surface } from "../ui/Surface";
+import Textarea from "../ui/Textarea";
+import { TagInput } from "../ui/TagInput";
 
 const CHECKBOXES = [
   ["single_player", "Single Player"],
@@ -51,9 +43,9 @@ type EditLevelFormProps = {
 
 function PrefillPreview({ level }: { level: RDLevel }) {
   return (
-    <Center className={cc(styles.aside, commonStyles.paperBg)}>
+    <div className={cc("flex items-center justify-center flex-grow p-2", commonStyles.paperBg)}>
       <LevelCard level={level} className={styles.preview} />
-    </Center>
+    </div>
   );
 }
 
@@ -69,160 +61,174 @@ export function EditLevelForm({
 
   return (
     <Shell aside={<PrefillPreview level={level} />}>
-      <Stack p="md" gap="md">
+      <Surface className="flex flex-col gap-4 m-4">
         {preamble}
-        <Group justify="space-between">
-          <Button onClick={(_) => setLevel(initialLevel)}>Reset</Button>
-          {/* the addlevel button is a secret form.
-                     since we have some 'exotic' inputs from mantine that don't natively output formdata,
-                     instead we have a hidden input with the edited prefill as json.
-                    */}
-          <Form method="POST">
-            {csrfInput}
-            <input type="hidden" name="prefill" value={JSON.stringify(level)} />
-            <Button type="submit">{submitButtonText}</Button>
-          </Form>
-        </Group>
-        <Group align="end">
-          <TextInput
-            label="Song Name"
-            onChange={(e) =>
-              setLevel((l) => {
-                l.song = e.target.value;
-              })
-            }
-            value={level.song}
-          ></TextInput>
-          <TextInput
-            label="Song Name (alternate)"
-            value={level.song_alt}
-            onChange={(e) =>
-              setLevel((l) => {
-                l.song_alt = e.target.value;
-              })
-            }
-            description="Alternate name of the song, such as a localised or romanized name."
-          />
-        </Group>
-        <Textarea
-          label="Description"
-          description="Note: <color> tags are not supported. Any <color> tags have been removed."
-          value={level.description}
-          onChange={(e) =>
-            setLevel((l) => {
-              l.description = e.target.value;
-            })
-          }
-        />
-        <TagsInput
-          label="Artists"
-          description="Press [Enter] after typing to add an artist."
-          value={level.artist_tokens}
-          splitChars={[]}
-          onChange={(values) =>
-            setLevel((l) => {
-              if (values.length > 0) {
-                l.artist_tokens = values;
-              }
-            })
-          }
-        />
-        <Fieldset legend="BPM">
-          <Group align="end">
-            <NumberInput
-              label="Min BPM"
-              value={level.min_bpm}
-              min={0}
-              max={bpmSync ? 1000 : level.max_bpm}
-              onChange={(value) =>
+        <div className="mx-4">
+          <div className="flex justify-between">
+            <Button onClick={(_) => setLevel(initialLevel)} variant="default">Reset</Button>
+            {/* the addlevel button is a secret form.
+                because the level format is a bit complex,
+                we have a hidden input with the edited prefill as json which is what gets submitted
+            */}
+            <Form method="POST">
+              {csrfInput}
+              <input type="hidden" name="prefill" value={JSON.stringify(level)} />
+              <Button type="submit" variant="primary">{submitButtonText}</Button>
+            </Form>
+          </div>
+          <div className="flex flex-row flex-wrap gap-4 pt-4">
+            <TextInput
+              label="Song Name"
+              onChange={(e) =>
                 setLevel((l) => {
-                  if (typeof value === "number") {
-                    l.min_bpm = value;
-                    if (bpmSync) {
-                      l.max_bpm = value;
-                    }
-                  }
+                  l.song = e.target.value;
                 })
               }
-            />
-            <NumberInput
-              label="Max BPM"
-              value={level.max_bpm}
-              min={bpmSync ? 0 : level.min_bpm}
-              max={1000}
-              onChange={(value) =>
+              value={level.song}
+            ></TextInput>
+            <TextInput
+              label="Song Name (alternate)"
+              value={level.song_alt}
+              onChange={(e) =>
                 setLevel((l) => {
-                  if (typeof value === "number") {
-                    l.max_bpm = value;
-                    if (bpmSync) {
+                  l.song_alt = e.target.value;
+                })
+              }
+              description="Alternate name of the song, such as a localised or romanized name."
+            />
+          </div>
+          <Textarea
+            label="Description"
+            description="Note: <color> tags are not supported. Any <color> tags have been removed."
+            value={level.description}
+            onChange={(e) =>
+              setLevel((l) => {
+                l.description = e.target.value;
+              })
+            }
+          />
+          <TagInput
+            legend="Artists"
+            values={level.artist_tokens}
+            onChange={(values) =>
+              setLevel((l) => {
+                if (values.length > 0) {
+                  l.artist_tokens = values;
+                }
+              })
+            }
+            inputLabelFunc={(index) => `Artist ${index + 1}`}
+          />
+          {/* <TagsInput
+            label="Artists"
+            description="Press [Enter] after typing to add an artist."
+            value={level.artist_tokens}
+            splitChars={[]}
+            onChange={(values) =>
+              setLevel((l) => {
+                if (values.length > 0) {
+                  l.artist_tokens = values;
+                }
+              })
+            }
+          /> */}
+          {/* <Fieldset legend="BPM">
+            <Group align="end">
+              <NumberInput
+                label="Min BPM"
+                value={level.min_bpm}
+                min={0}
+                max={bpmSync ? 1000 : level.max_bpm}
+                onChange={(value) =>
+                  setLevel((l) => {
+                    if (typeof value === "number") {
                       l.min_bpm = value;
+                      if (bpmSync) {
+                        l.max_bpm = value;
+                      }
                     }
-                  }
+                  })
+                }
+              />
+              <NumberInput
+                label="Max BPM"
+                value={level.max_bpm}
+                min={bpmSync ? 0 : level.min_bpm}
+                max={1000}
+                onChange={(value) =>
+                  setLevel((l) => {
+                    if (typeof value === "number") {
+                      l.max_bpm = value;
+                      if (bpmSync) {
+                        l.min_bpm = value;
+                      }
+                    }
+                  })
+                }
+              />
+              <Switch
+                checked={bpmSync}
+                onChange={(event) => setBpmSync(event.currentTarget.checked)}
+                label="Sync BPM inputs"
+              ></Switch>
+            </Group>
+          </Fieldset>
+          <Fieldset legend="Difficulty" pb="xl">
+            <Slider
+              label={null}
+              step={0.001}
+              w={300}
+              min={0}
+              max={3}
+              value={level.difficulty}
+              onChange={(value) =>
+                setLevel((l) => {
+                  l.difficulty = value;
                 })
               }
+              restrictToMarks={true}
+              marks={[
+                { value: 0, label: "Easy" },
+                { value: 1, label: "Medium" },
+                { value: 2, label: "Tough" },
+                { value: 3, label: "Very Tough" },
+              ]}
             />
-            <Switch
-              checked={bpmSync}
-              onChange={(event) => setBpmSync(event.currentTarget.checked)}
-              label="Sync BPM inputs"
-            ></Switch>
-          </Group>
-        </Fieldset>
-        <Fieldset legend="Difficulty" pb="xl">
-          <Slider
-            label={null}
-            step={0.001}
-            w={300}
-            min={0}
-            max={3}
-            value={level.difficulty}
-            onChange={(value) =>
+          </Fieldset>
+          <TagsInput
+            label="Tags"
+            description="Press [Enter] after typing to add an tag."
+            value={level.tags}
+            splitChars={[]}
+            onChange={(values) =>
               setLevel((l) => {
-                l.difficulty = value;
+                if (values.length > 0) {
+                  l.tags = values;
+                }
               })
             }
-            restrictToMarks={true}
-            marks={[
-              { value: 0, label: "Easy" },
-              { value: 1, label: "Medium" },
-              { value: 2, label: "Tough" },
-              { value: 3, label: "Very Tough" },
-            ]}
           />
-        </Fieldset>
-        <TagsInput
-          label="Tags"
-          description="Press [Enter] after typing to add an tag."
-          value={level.tags}
-          splitChars={[]}
-          onChange={(values) =>
-            setLevel((l) => {
-              if (values.length > 0) {
-                l.tags = values;
-              }
-            })
-          }
-        />
-        <Fieldset p="md">
-          <Grid justify="flex-start" align="flex-start">
-            {CHECKBOXES.map(([key, label]) => {
-              return (
-                <Grid.Col span={4}>
-                  <Checkbox
-                    checked={level[key]}
-                    label={label}
-                    onChange={(e) =>
-                      setLevel((l) => {
-                        l[key] = e.target.checked;
-                      })
-                    }
-                  />
-                </Grid.Col>
-              );
-            })}
-          </Grid>
-        </Fieldset>
-      </Stack>
+          <Fieldset p="md">
+            <Grid justify="flex-start" align="flex-start">
+              {CHECKBOXES.map(([key, label]) => {
+                return (
+                  <Grid.Col span={4}>
+                    <Checkbox
+                      checked={level[key]}
+                      label={label}
+                      onChange={(e) =>
+                        setLevel((l) => {
+                          l[key] = e.target.checked;
+                        })
+                      }
+                    />
+                  </Grid.Col>
+                );
+              })}
+            </Grid>
+          </Fieldset> */}
+        </div>
+      </Surface>
     </Shell>
   );
 }

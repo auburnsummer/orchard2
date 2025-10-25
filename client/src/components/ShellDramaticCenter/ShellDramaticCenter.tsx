@@ -1,10 +1,9 @@
-import { Center } from "@mantine/core";
 import { Shell, ShellProps } from "../Shell/Shell";
 
-import styles from "./ShellDramaticCenter.module.css";
 import commonStyles from "@cafe/theme/commonPatterns.module.css";
 
 import cc from "clsx";
+import { Surface } from "../ui/Surface";
 
 type ShellDramaticCenterProps = ShellProps;
 
@@ -14,9 +13,11 @@ export function ShellDramaticCenter({
 }: ShellDramaticCenterProps) {
   return (
     <Shell navbar={navbar}>
-      <Center className={cc(styles.base, commonStyles.paperBg)}>
-        {children}
-      </Center>
+      <div className={cc("relative min-h-screen w-full flex items-center justify-center", commonStyles.paperBg)} >
+        <Surface className="p-6">
+          {children}
+        </Surface>
+      </div>
     </Shell>
   );
 }

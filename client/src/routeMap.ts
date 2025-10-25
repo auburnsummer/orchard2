@@ -2,8 +2,8 @@
  * Mapping of url path names (from server/cafe-backend/cafe/urls.py) to components to render.
  */
 
-import { ClubSettingsCheckConnectDiscord } from "./views/ClubSettings/ClubSettingsCheckConnectDiscord/ClubSettingsCheckConnectDiscord";
-import { ClubSettingsConnectDiscord } from "./views/ClubSettings/ClubSettingsConnectDiscord/ClubSettingsConnectDiscord";
+import { ClubSettingsCheckConnectDiscord } from "./views/ClubSettings/ClubSettingsCheckConnectDiscord";
+import { ClubSettingsConnectDiscord } from "./views/ClubSettings/ClubSettingsConnectDiscord";
 import { ClubSettingsInfoView } from "./views/ClubSettings/ClubSettingsInfoView";
 import { ClubSettingsMembersView } from "./views/ClubSettings/ClubSettingsMembersView/ClubSettingsMembersView";
 import { HomeView } from "./views/HomeView";
@@ -15,7 +15,7 @@ import { LevelAddTypeSelect } from "./views/LevelAdd/LevelAddTypeSelect";
 import { ProfileClubsView } from "./views/Profile/ProfileClubsView";
 import { ProfileIndexView } from "./views/Profile/ProfileIndexView";
 import { ProfileSettingsView } from "./views/Profile/ProfileSettingsView";
-import { ClubSettingsRedeemInvite } from "./views/ClubSettings/ClubSettingsRedeemInvite/ClubSettingsRedeemInvite";
+import { ClubSettingsRedeemInvite } from "./views/ClubSettings/ClubSettingsRedeemInvite";
 
 export const appName = "cafe";
 

@@ -1,11 +1,12 @@
 import { RDLevelPrefillReady } from "@cafe/types/rdLevelPrefill";
-import { Alert, Text } from "@mantine/core";
 
 import { RDLevel } from "@cafe/types/rdLevelBase";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { EditLevelForm } from "@cafe/components/EditLevelForm/EditLevelForm";
+import { Alert } from "@cafe/components/ui/Alert";
+import { Words } from "@cafe/components/ui/Words";
 
 function buildInitialLevel(prefill: RDLevelPrefillReady): RDLevel {
   return {
@@ -27,16 +28,20 @@ export function PrefillReady({ prefill }: PrefillReadyProps) {
     <EditLevelForm
       level={buildInitialLevel(prefill)}
       preamble={
-        <Alert icon={<FontAwesomeIcon icon={faInfoCircle} />}>
-          <Text>
+        <Alert variant="info" className="m-4">
+          <Words as="p">
             We've filled out the fields below based on the rdzip file.
-          </Text>
-          <Text>
+          </Words>
+          <Words as="p">
             If it all looks OK, you can simply click "Add Level" now to add the
             level.
-          </Text>
-          <Text>Otherwise, make changes, and then click "Add Level".</Text>
-          <Text>You will be able to come back and edit later.</Text>
+          </Words>
+          <Words as="p">
+            Otherwise, make changes, and then click "Add Level".
+          </Words>
+          <Words as="p">
+            You will be able to come back and edit later.
+          </Words>
         </Alert>
       }
       submitButtonText="Add Level"

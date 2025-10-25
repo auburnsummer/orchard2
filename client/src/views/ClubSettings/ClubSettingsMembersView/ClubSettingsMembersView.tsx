@@ -4,9 +4,9 @@ import { ClubSettingsNavbar } from "../ClubSettingsNavbar";
 import { ClubMembership } from "@cafe/types/clubMembership";
 import { useState } from "react";
 import { AddMemberForm } from "./AddMemberForm";
-import { EditMemberForm } from "./EditMemberForm/EditMemberForm";
+import { EditMemberForm } from "./EditMemberForm";
 import { useSearchParams } from "@cafe/minibridge/hooks";
-import { CopyIconButton } from "@cafe/components/CopyIconButton/CopyIconButton";
+import { CopyIconButton } from "@cafe/components/CopyIconButton";
 import { Surface } from "@cafe/components/ui/Surface";
 import { Words } from "@cafe/components/ui/Words";
 import { TextInput } from "@cafe/components/ui/TextInput";
@@ -74,22 +74,20 @@ export function ClubSettingsMembersView({
 
   return (
     <Shell navbar={<ClubSettingsNavbar club={club} />}>
-      {/* <EditMemberForm
-        opened={editMemberFormOpen}
-        onClose={() => setEditMemberFormOpen(false)}
-        membership={membershipBeingEdited}
-        canEdit={
-          memberships.find(
-            (m) => m.membership.user === membershipBeingEdited?.user,
-          )?.permissions.can_change || false
-        }
-        club={club}
-      /> */}
       <Dialog
         open={editMemberFormOpen}
         onClose={() => setEditMemberFormOpen(false)}
       >
-        <p>edit member form</p>
+        <EditMemberForm
+          membership={membershipBeingEdited}
+          canEdit={
+            memberships.find(
+              (m) => m.membership.user.id === membershipBeingEdited?.user.id,
+            )?.permissions.can_change || false
+          }
+          club={club}
+          onSubmit={() => setEditMemberFormOpen(false)}
+        />
       </Dialog>
       <Dialog
         open={addMemberFormOpen}

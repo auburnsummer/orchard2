@@ -2,11 +2,12 @@ import { ShellDramaticCenter } from "@cafe/components/ShellDramaticCenter/ShellD
 import { navigateAtom } from "@cafe/minibridge/atoms";
 import { djangoGet } from "@cafe/minibridge/fetch";
 import { RDLevelPrefill } from "@cafe/types/rdLevelPrefill";
-import { Loader, Paper, Stack, Text, Alert } from "@mantine/core";
 import { useSetAtom } from "jotai";
 import { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
+import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
+import { Words } from "@cafe/components/ui/Words";
+import { Alert } from "@cafe/components/ui/Alert";
 
 type PrefillLoadingProps = {
   error: string;
@@ -38,34 +39,29 @@ export function PrefillLoading({ error, prefillType }: PrefillLoadingProps) {
 
   return (
     <ShellDramaticCenter>
-      <Paper shadow="md" p="xl">
-        {error === "" ? (
-          <Stack align="center">
-            <Loader size="2rem" />
-            {prefillType === "update" ? (
-              <Text>Uploading level...</Text>
-            ) : (
-              <Text>Analysing level...</Text>
-            )}
-          </Stack>
-        ) : (
-          <Stack>
-            <Text>An error occurred while attempting to load this level:</Text>
-            <Alert
-              variant="light"
-              color="red"
-              title="Error Trace"
-              icon={<FontAwesomeIcon icon={faExclamationCircle} />}
-            >
-              <pre>{error}</pre>
-            </Alert>
-            <Text>
-              Please try the command again. If it still doesn't work, let Auburn
-              know, thanks
-            </Text>
-          </Stack>
-        )}
-      </Paper>
+      {error === "" ? (
+        <div className="flex flex-col items-center gap-4">
+          <FontAwesomeIcon icon={faCircleNotch} className="animate-spin text-violet-700 dark:text-violet-300" size="2x"/>
+          {prefillType === "update" ? (
+            <Words>Uploading level...</Words>
+          ) : (
+            <Words>Analysing level...</Words>
+          )}
+        </div>
+      ) : (
+        <div className="flex flex-col gap-4">
+          <Words>An error occurred while attempting to load this level:</Words>
+          <Alert
+            variant="error"
+          >
+            <pre>{error}</pre>
+          </Alert>
+          <Words>
+            Please try the command again. If it still doesn't work, let Auburn
+            know, thanks
+          </Words>
+        </div>
+      )}
     </ShellDramaticCenter>
   );
 }

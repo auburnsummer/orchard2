@@ -41,7 +41,7 @@ import { Form } from "@cafe/minibridge/components/Form";
 import { Link } from "@cafe/minibridge/components/Link";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { DIFFICULTY_STRINGS } from "@cafe/utils/constants";
-import { CopyIconButton } from "@cafe/components/CopyIconButton/CopyIconButton";
+import { CopyIconButton } from "@cafe/components/CopyIconButton";
 
 type LevelViewProps = {
   rdlevel: RDLevel;
