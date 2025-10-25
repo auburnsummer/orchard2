@@ -3,19 +3,21 @@ import Fieldset from "./Fieldset";
 import { TextInput } from "./TextInput";
 import { faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "./Button";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useLayoutEffect } from "react";
 
 type TagInputProps = {
   legend: string;
   values: string[];
   onChange: (values: string[]) => void;
   allowBlank?: boolean;
+  className?: string;
 };
 
-export function TagInput({ legend, values, onChange, allowBlank = true }: TagInputProps) {
+export function TagInput({ legend, values, onChange, allowBlank = true, className }: TagInputProps) {
   // Internal state tracks all values including blanks
   const [internalValues, setInternalValues] = useState<string[]>(values);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const [focusIndex, setFocusIndex] = useState<number | null>(null);
   
   // Sync internal state when external values change (but don't overwrite if we have blanks)
   useEffect(() => {
@@ -26,7 +28,15 @@ export function TagInput({ legend, values, onChange, allowBlank = true }: TagInp
     }
   }, [values, allowBlank, internalValues]);
   
-  const hasBlankValues = !allowBlank && internalValues.some((v) => v.trim() === "");
+  // Focus the input when focusIndex changes
+  useLayoutEffect(() => {
+    if (focusIndex !== null) {
+      inputRefs.current[focusIndex]?.focus();
+      setFocusIndex(null);
+    }
+  }, [focusIndex]);
+  
+  const hasBlankValues = !allowBlank && internalValues.some((v) => v.trim() !== "");
 
   const emitChanges = (newValues: string[]) => {
     setInternalValues(newValues);
@@ -35,7 +45,7 @@ export function TagInput({ legend, values, onChange, allowBlank = true }: TagInp
   };
 
   return (
-    <Fieldset legend={legend}>
+    <Fieldset legend={legend} className={className}>
       <div className="flex flex-row flex-wrap gap-3">
         {internalValues.map((value, index) => (
           <TextInput
@@ -57,11 +67,15 @@ export function TagInput({ legend, values, onChange, allowBlank = true }: TagInp
                   emitChanges(newValues);
                   // Focus the previous input if it exists
                   if (index > 0) {
-                    setTimeout(() => {
-                      inputRefs.current[index - 1]?.focus();
-                    }, 0);
+                    setFocusIndex(index - 1);
                   }
                 }
+                e.preventDefault();
+              } else if (e.key === "Enter") {
+                // Add new tag and focus it
+                const newIndex = internalValues.length;
+                emitChanges([...internalValues, ""]);
+                setFocusIndex(newIndex);
                 e.preventDefault();
               }
             }}
@@ -91,7 +105,9 @@ export function TagInput({ legend, values, onChange, allowBlank = true }: TagInp
           variant="secondary"
           className="mt-2"
           onClick={() => {
+            const newIndex = internalValues.length;
             emitChanges([...internalValues, ""]);
+            setFocusIndex(newIndex);
           }}
           disabled={hasBlankValues}
         >

@@ -3,21 +3,20 @@ import { atom, useAtom } from "jotai";
 import { useRef, useState } from "react";
 import { withImmer } from "jotai-immer";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
-import { Shell } from "../Shell";
+import { Shell } from "./Shell";
 
-import commonStyles from "@cafe/theme/commonPatterns.module.css";
-import styles from "./EditLevelForm.module.css";
-
-import cc from "clsx";
-
-import { LevelCard } from "../LevelCard/LevelCard";
+import { LevelCard } from "./LevelCard/LevelCard";
 import { Form } from "@cafe/minibridge/components/Form";
-import { Button } from "../ui/Button";
-import { TextInput } from "../ui/TextInput";
-import Fieldset from "../ui/Fieldset";
-import { Surface } from "../ui/Surface";
-import Textarea from "../ui/Textarea";
-import { TagInput } from "../ui/TagInput";
+import { Button } from "./ui/Button";
+import { TextInput } from "./ui/TextInput";
+import Fieldset from "./ui/Fieldset";
+import { Surface } from "./ui/Surface";
+import Textarea from "./ui/Textarea";
+import { TagInput } from "./ui/TagInput";
+import { NumberInput } from "./ui/NumberInput";
+import { Toggle } from "./ui/Toggle";
+import { Slider } from "./ui/Slider";
+import { Checkbox } from "./ui/Checkbox";
 
 const CHECKBOXES = [
   ["single_player", "Single Player"],
@@ -43,8 +42,8 @@ type EditLevelFormProps = {
 
 function PrefillPreview({ level }: { level: RDLevel }) {
   return (
-    <div className={cc("flex items-center justify-center flex-grow p-2", commonStyles.paperBg)}>
-      <LevelCard level={level} className={styles.preview} />
+    <div className="h-full flex items-center justify-center flex-grow p-2 pr-4">
+      <LevelCard level={level} />
     </div>
   );
 }
@@ -109,6 +108,7 @@ export function EditLevelForm({
           />
           <TagInput
             legend="Artists"
+            className="mt-2"
             allowBlank={false}
             values={level.artist_tokens}
             onChange={(values) =>
@@ -119,8 +119,8 @@ export function EditLevelForm({
               })
             }
           />
-          {/* <Fieldset legend="BPM">
-            <Group align="end">
+          <Fieldset legend="BPM">
+            <div className="flex flex-row items-end gap-6">
               <NumberInput
                 label="Min BPM"
                 value={level.min_bpm}
@@ -153,18 +153,18 @@ export function EditLevelForm({
                   })
                 }
               />
-              <Switch
+              <Toggle
+                className="mb-1"
                 checked={bpmSync}
                 onChange={(event) => setBpmSync(event.currentTarget.checked)}
                 label="Sync BPM inputs"
-              ></Switch>
-            </Group>
+              />
+            </div>
           </Fieldset>
-          <Fieldset legend="Difficulty" pb="xl">
+          <Fieldset legend="Difficulty">
             <Slider
               label={null}
               step={0.001}
-              w={300}
               min={0}
               max={3}
               value={level.difficulty}
@@ -182,11 +182,9 @@ export function EditLevelForm({
               ]}
             />
           </Fieldset>
-          <TagsInput
-            label="Tags"
-            description="Press [Enter] after typing to add an tag."
-            value={level.tags}
-            splitChars={[]}
+          <TagInput
+            legend="Tags"
+            values={level.tags}
             onChange={(values) =>
               setLevel((l) => {
                 if (values.length > 0) {
@@ -195,11 +193,11 @@ export function EditLevelForm({
               })
             }
           />
-          <Fieldset p="md">
-            <Grid justify="flex-start" align="flex-start">
+          <Fieldset legend="">
+            <div className="flex flex-wrap gap-4 justify-start items-start pt-4 pl-1">
               {CHECKBOXES.map(([key, label]) => {
                 return (
-                  <Grid.Col span={4}>
+                  <div className="w-1/4" key={key}>
                     <Checkbox
                       checked={level[key]}
                       label={label}
@@ -209,11 +207,11 @@ export function EditLevelForm({
                         })
                       }
                     />
-                  </Grid.Col>
+                  </div>
                 );
               })}
-            </Grid>
-          </Fieldset> */}
+            </div>
+          </Fieldset>
         </div>
       </Surface>
     </Shell>
