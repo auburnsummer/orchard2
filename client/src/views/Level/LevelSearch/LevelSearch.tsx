@@ -1,9 +1,9 @@
 import React, { useMemo } from "react";
-import styles from "./LevelSearch.module.css";
 import { RDLevel } from "@cafe/types/rdLevelBase";
 import { Shell } from "@cafe/components/Shell";
 import { LevelCard } from "@cafe/components/LevelCard/LevelCard";
-import { Button, Title, Text } from "@mantine/core";
+import { Button } from "@cafe/components/ui/Button";
+import { Words } from "@cafe/components/ui/Words";
 import { useSearchParams } from "@cafe/minibridge/hooks";
 import { LevelsSearchSidebar } from "./LevelsSearchSidebar/LevelsSearchSidebar";
 
@@ -72,14 +72,14 @@ export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
       return "All levels";
     } else if (results.hits.length === 0) {
       return (
-        <span className={styles.noResults}>
-          No results found for "<span className={styles.query}>{query}</span>"
+        <span>
+          No results found for "<span className="text-violet-600 dark:text-violet-400">{query}</span>"
         </span>
       );
     } else if (results.estimatedTotalHits === 1000) {
       return (
-        <span className={styles.moreResults}>
-          Results for "<span className={styles.query}>{query}</span>"
+        <span>
+          Results for "<span className="text-violet-600 dark:text-violet-400">{query}</span>"
         </span>
       );
     } else {
@@ -91,20 +91,16 @@ export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
   const showNext = results.hits.length > LEVELS_PER_PAGE;
 
   const nextPrevButtons = (
-    <div className={styles.nextPrevButtons}>
+    <div className="flex gap-2">
       <Button
         onClick={onPrev}
         disabled={!showPrevious}
-        variant="outline"
-        size="compact-sm"
       >
         Previous
       </Button>
       <Button
         onClick={onNext}
         disabled={!showNext}
-        variant="outline"
-        size="compact-sm"
       >
         Next
       </Button>
@@ -115,34 +111,37 @@ export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
     <Shell
       navbar={
         <LevelsSearchSidebar
-          className={styles.sidebar}
+          className="pl-2 mt-4 mb-3"
           facets={results.facetDistribution}
         />
       }
     >
-      <div className={styles.levelsContainer}>
-        <div className={styles.levelsHeader}>
-          <Title order={4} className={styles.levelsTitle}>
+      <div className="p-4">
+        <div className="flex justify-between items-center mb-4">
+          <Words as="h2" variant="header">
             {levelTitleText}
-          </Title>
+          </Words>
           {nextPrevButtons}
         </div>
-        <ul className={styles.gridContainer}>
+        <ul className="list-none grid gap-4 [--grid-column-count:3] [--grid-item--min-width:18rem] [--gap-count:calc(var(--grid-column-count)-1)] [--total-gap-width:calc(var(--gap-count)*1rem)] [--grid-item--max-width:calc((100%-var(--total-gap-width))/var(--grid-column-count))] grid-cols-[repeat(auto-fill,minmax(max(var(--grid-item--min-width),var(--grid-item--max-width)),1fr))]">
           {results.hits.slice(0, LEVELS_PER_PAGE).map((level) => (
             <li key={level.id}>
               <LevelCard
                 level={level}
-                className={styles.levelCard}
+                className="w-full h-full"
                 href={`/levels/${level.id}/`}
               />
             </li>
           ))}
         </ul>
-        <div className={styles.levelsFooter}>
-          <Text size="xs" c="dimmed" className={styles.processingTime}>
+        <div className="flex justify-between items-center mt-8">
+          <Words variant="xs">
             Δ{results.processingTimeMs}ms
-          </Text>
-          {nextPrevButtons}
+          </Words>
+          {
+            /* only show bottom buttons if there are enough results to need them */
+            results.hits.length > (LEVELS_PER_PAGE / 2) && nextPrevButtons
+          }
         </div>
       </div>
     </Shell>
