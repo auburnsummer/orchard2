@@ -1,16 +1,16 @@
+import { useTheme } from "@cafe/hooks/useTheme";
 import { useCurrentRequestId, useIsLoading } from "@cafe/minibridge/hooks";
-import { useMantineTheme } from "@mantine/core";
 import { useState, useEffect } from "react";
 import { useLoadingBar } from "react-top-loading-bar";
 
 export function LoadingBar() {
-  const theme = useMantineTheme();
   const pageLoading = useIsLoading();
   const currentRequestId = useCurrentRequestId();
   const [barStarted, setBarStarted] = useState(false);
 
-  const color = theme.colors.blue[5];
-  const { start, complete } = useLoadingBar({ color, height: 2 });
+  const theme = useTheme();
+
+  const { start, complete } = useLoadingBar({ color: theme === "dark" ? "var(--color-blue-400)" : "var(--color-blue-500)", height: 2 });
 
   useEffect(() => {
     if (pageLoading && !barStarted) {
