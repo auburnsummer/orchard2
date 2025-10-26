@@ -1,10 +1,11 @@
 import cc from "clsx";
 import React from "react";
 
-type Variant = "default" | "muted" | "header" | "subheader" | "link" | "label" | "sm" | "xs";
+type Variant = "default" | "muted" | "header" | "subheader" | "link" | "label" | "sm" | "xs" | "alwaysLight";
 
 const variantStyles: Record<Variant, string> = {
     default: "text-slate-900 dark:text-slate-100",
+    alwaysLight: "text-slate-100",
     muted: "text-slate-600 dark:text-slate-400",
     header: "text-lg font-semibold text-slate-900 dark:text-slate-100",
     subheader: "text-md font-medium text-slate-900 dark:text-slate-100",

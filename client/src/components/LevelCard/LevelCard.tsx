@@ -2,7 +2,6 @@ import { RDLevel } from "@cafe/types/rdLevelBase";
 
 import cc from "clsx";
 
-import { Text, UnstyledButton } from "@mantine/core";
 import { useClipboard } from "@mantine/hooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -18,6 +17,7 @@ import { DifficultyDecorator } from "./DifficultyDecorator/DifficultyDecorator";
 import { ConjunctionList } from "../ConjunctionList";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { Link } from "@cafe/minibridge/components/Link";
+import { Words } from "../ui/Words";
 
 type LevelCardProps = React.HTMLAttributes<HTMLDivElement> & {
   level: RDLevel;
@@ -67,7 +67,7 @@ export function LevelCard({
         )}>
           <div className="text-sm leading-4 flex-grow overflow-y-auto">
             {level.description.split("\n").map((p, i) => (
-              <Text key={i}>{p}</Text>
+              <Words variant="alwaysLight" key={i}>{p}</Words>
             ))}
           </div>
           <div className="w-8 ml-2 flex flex-col items-center gap-4">
@@ -144,9 +144,9 @@ export function LevelCard({
               className="ml-1 p-0 list-none"
               elementRender={(v) =>
                 typeof v === "string" ? (
-                  <UnstyledButton className="whitespace-pre text-slate-500 dark:text-slate-400 text-xs enabled:hover:text-slate-700 enabled:hover:underline enabled:hover:cursor-pointer dark:enabled:hover:text-slate-200">
+                  <Words as="button" className="whitespace-pre text-slate-500 dark:text-slate-400 text-xs enabled:hover:text-slate-700 enabled:hover:underline enabled:hover:cursor-pointer dark:enabled:hover:text-slate-200">
                     {v}
-                  </UnstyledButton>
+                  </Words>
                 ) : (
                   <></>
                 )
@@ -159,15 +159,15 @@ export function LevelCard({
           </div>
           <div className="flex items-center text-xs leading-[1.125rem] text-slate-500 dark:text-slate-400">
             <FontAwesomeIcon icon={faHeartPulse} className="w-4 h-4" />
-            <Text className="ml-1 whitespace-pre text-slate-500 dark:text-slate-400 text-xs">
+            <Words className="ml-1 whitespace-pre text-slate-500 dark:text-slate-400 text-xs">
               {bpmText}
-            </Text>
+            </Words>
           </div>
           <div className="flex items-center text-xs leading-[1.125rem] text-slate-500 dark:text-slate-400">
             <FontAwesomeIcon icon={faDiscord} className="w-4 h-4" />
-            <Text className="ml-1 whitespace-pre text-slate-500 dark:text-slate-400 text-xs">
+            <Words className="ml-1 whitespace-pre text-slate-500 dark:text-slate-400 text-xs">
               {level.club.name}
-            </Text>
+            </Words>
           </div>
           <div
             className={cc(
@@ -223,7 +223,7 @@ export function LevelCard({
             </li>
           ))}
         </ul>
-        {showId && <Text className="absolute bottom-0 right-1 text-[0.65rem] text-slate-400">{level.id}</Text>}
+        {showId && <Words className="absolute bottom-0 right-1 text-[0.65rem] text-slate-400">{level.id}</Words>}
       </div>
     </article>
   );
