@@ -1,7 +1,7 @@
 import { Checkbox } from "@cafe/components/ui/Checkbox";
 import { TextInput } from "@cafe/components/ui/TextInput";
 import { Words } from "@cafe/components/ui/Words";
-import { Facet } from "../../LevelSearch";
+import { Facet } from "../LevelSearch";
 
 import { useEffect, useMemo, useState } from "react";
 import { djangoGet } from "@cafe/minibridge/fetch";

@@ -1,9 +1,9 @@
 import type { FacetDistribution } from "../LevelSearch";
 
-import { FacetSelect } from "./FacetSelect/FacetSelect";
-import { DifficultySelect } from "./DifficultySelect/DifficultySelect";
-import { BPMSelect } from "./BPMSelect/BPMSelect";
-import { PeerReviewStatusSelect } from "./PeerReviewStatusSelect/PeerReviewStatusSelect";
+import { FacetSelect } from "./FacetSelect";
+import { DifficultySelect } from "./DifficultySelect";
+import { BPMSelect } from "./BPMSelect";
+import { PeerReviewStatusSelect } from "./PeerReviewStatusSelect";
 import { Surface } from "@cafe/components/ui/Surface";
 
 import cc from "clsx";

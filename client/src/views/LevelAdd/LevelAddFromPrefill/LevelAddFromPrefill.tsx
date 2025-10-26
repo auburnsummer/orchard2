@@ -1,9 +1,9 @@
 import { RDLevelPrefill } from "@cafe/types/rdLevelPrefill";
-import { PrefillLoading } from "./PrefillLoading/PrefillLoading";
-import { PrefillReady } from "./PrefillReady/PrefillReady";
-import { PrefillUpdate } from "./PrefillUpdate/PrefillUpdate";
+import { PrefillLoading } from "./PrefillLoading";
+import { PrefillReady } from "./PrefillReady";
+import { PrefillUpdate } from "./PrefillUpdate";
 import { RDLevel } from "@cafe/types/rdLevelBase";
-import { LevelAlreadyExists } from "./LevelAlreadyExists/LevelAlreadyExists";
+import { LevelAlreadyExists } from "./LevelAlreadyExists";
 
 type LevelAddFromPrefillProps = {
   prefill: RDLevelPrefill;
