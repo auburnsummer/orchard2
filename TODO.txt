@@ -1,6 +1,19 @@
+ - PR flow
+    - special club for pharmacists. hardcoded club id.
+        - membership follows normal club rules (invite links etc)
+    - pharmacists can edit the peer review metadata
+        - should they be able to edit the other metadata (ex localised name)?
+        - probably, we're already trusting them
+        - they probably shouldn't be able to delete though
+    - special views for pharmacists? or just reuse the pr tool?
+
  - daily blend??
+ - way to recover a deleted level
  - add public test server in plpasscode
  - think about what we should actually put on the user's profile page for now
  - user can access a list of all their levels
  - club admins/owners can access a list of all the club's levels
- - PR flow
+ - sync to a datasette instance for continued levelsync support
+ - replace placeholder image for bot avatar
+ - favicon
+ - migration plan for RDL (i.e. transition line the second)
