@@ -8,6 +8,7 @@ from cafe.views.types import HttpRequest
 
 from cafe.management.commands.setuptypesense import get_typesense_client, RDLEVEL_ALIAS_NAME
 from cafe.models import RDLevel
+from cafe.tasks.sync_level_to_typesense import sync_level_to_typesense
 
 RESULTS_PER_PAGE = 20
 
@@ -214,7 +215,10 @@ def search_levels(request: HttpRequest):
         "query_by_weights": "10,10,8,8,6,6",
         "filter_by": get_typesense_filter_query(params),
         "offset": offset,
-        "limit": RESULTS_PER_PAGE + 1,
+        # fetch a bit more so that the frontend can know if there are more results
+        # why 3? there's an edge case where a level that's deleted from the DB could still be in Typesense for a bit
+        # so we fetch a couple extra to avoid false negatives on "are there more results"
+        "limit": RESULTS_PER_PAGE + 3,
         "facet_by": "artist_tokens,tags,authors,difficulty,single_player,two_player,has_classics,has_oneshots,has_squareshots,has_freezeshots,has_freetimes,has_holds,has_window_dance,submitter.id,club.id",
         "include_fields": "id",
         "sort_by": "_text_match:desc"
@@ -226,12 +230,20 @@ def search_levels(request: HttpRequest):
     typesense_client = get_typesense_client()
     search_results = typesense_client.collections[RDLEVEL_ALIAS_NAME].documents.search(filter_opts)
 
-    # this is fine! https://www.sqlite.org/np1queryprob.html
+    rdlevels: list[RDLevel] = []
+    for level_id in (hit['document']['id'] for hit in search_results['hits']):
+        try:
+            # this is fine! https://www.sqlite.org/np1queryprob.html
+            rdlevel = RDLevel.objects.get(id=level_id)
+            rdlevels.append(rdlevel)
+        except RDLevel.DoesNotExist:
+            # did the call to delete from typesense fail?
+            # we should try to sync to typesense again
+            sync_level_to_typesense(level_id)
+
     levels = [
-        RDLevel.objects.get(id=level_id).to_dict()
-        for level_id in (
-            hit['document']['id'] for hit in search_results['hits']
-        )
+        rdlevel.to_dict()
+        for rdlevel in rdlevels
     ]
 
     facet_distribution = {}

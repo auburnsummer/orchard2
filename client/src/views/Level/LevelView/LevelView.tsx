@@ -1,4 +1,3 @@
-import { ConjunctionList } from "@cafe/components/ConjunctionList";
 import { Shell } from "@cafe/components/Shell";
 import { RDLevel } from "@cafe/types/rdLevelBase";
 import {
@@ -13,28 +12,6 @@ import {
   faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  Container,
-  Group,
-  Image,
-  Stack,
-  Title,
-  Text,
-  UnstyledButton,
-  Button,
-  Modal,
-  Card,
-  Badge,
-  Grid,
-  Divider,
-  Box,
-  Paper,
-  TextInput,
-} from "@mantine/core";
-
-import styles from "./LevelView.module.css";
-import commonPatterns from "@cafe/theme/commonPatterns.module.css";
-
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { useClipboard, useDisclosure } from "@mantine/hooks";
 import { Form } from "@cafe/minibridge/components/Form";
@@ -42,6 +19,14 @@ import { Link } from "@cafe/minibridge/components/Link";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { DIFFICULTY_STRINGS } from "@cafe/utils/constants";
 import { CopyIconButton } from "@cafe/components/CopyIconButton";
+import { ConjunctionList } from "@cafe/components/ConjunctionList";
+import { Button } from "@cafe/components/ui/Button";
+import { Dialog } from "@cafe/components/ui/Dialog";
+import { Surface } from "@cafe/components/ui/Surface";
+import { TextInput } from "@cafe/components/ui/TextInput";
+import { Words } from "@cafe/components/ui/Words";
+
+import styles from "./LevelView.module.css";
 
 type LevelViewProps = {
   rdlevel: RDLevel;
@@ -62,11 +47,11 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
   const csrfInput = useCSRFTokenInput();
 
   // TODO: align with DifficultyDecorator.tsx
-  const getDifficultyColor = (difficulty: number) => {
-    if (difficulty === 0) return "green"; // Easy
-    if (difficulty === 1) return "yellow"; // Medium
-    if (difficulty === 2) return "orange"; // Tough
-    return "red"; // Very Tough
+  const getDifficultyBadgeClass = (difficulty: number) => {
+    if (difficulty === 0) return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"; // Easy
+    if (difficulty === 1) return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300"; // Medium
+    if (difficulty === 2) return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300"; // Tough
+    return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"; // Very Tough
   };
 
   const getDifficultyString = (difficulty: number) => {
@@ -75,78 +60,73 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
 
   return (
     <Shell>
-      <Modal
-        opened={showDeleteForm}
-        onClose={closeDeleteForm}
-        title={`Delete ${rdlevel.song}`}
-        centered
-      >
+      <Dialog open={showDeleteForm} onClose={closeDeleteForm}>
+        <Words as="h3" variant="subheader" className="mb-4">
+          Delete {rdlevel.song}
+        </Words>
         <Form method="POST" action={`/levels/${rdlevel.id}/delete/`}>
           {csrfInput}
-          <Stack>
-            <Text>Are you sure you want to delete this level?</Text>
-            <Text c="dimmed" size="sm">
+          <div className="flex flex-col gap-4">
+            <Words>Are you sure you want to delete this level?</Words>
+            <Words variant="muted" className="text-sm">
               This action cannot be undone.
-            </Text>
-            <Group justify="flex-end">
-              <Button variant="default" onClick={closeDeleteForm}>
+            </Words>
+            <div className="flex justify-end gap-2">
+              <Button type="button" onClick={closeDeleteForm}>
                 Cancel
               </Button>
               <Button
                 type="submit"
-                color="red"
-                leftSection={<FontAwesomeIcon icon={faTrash} />}
+                variant="danger"
               >
+                <FontAwesomeIcon icon={faTrash} className="mr-2" />
                 Delete Level
               </Button>
-            </Group>
-          </Stack>
+            </div>
+          </div>
         </Form>
-      </Modal>
+      </Dialog>
 
-      <Container size="xl" py="xl">
-        <Grid>
+      <div className="max-w-7xl mx-auto py-8 px-4">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           {/* Main Content */}
-          <Grid.Col span={{ base: 12, md: 8 }}>
-            <Card shadow="sm" padding="lg" radius="md" withBorder>
-              <Group align="flex-start" mb="md">
-                <Image
+          <div className="md:col-span-8">
+            <Surface className="p-6">
+              <div className="flex flex-col md:flex-row gap-4 mb-6 items-start">
+                <img
                   src={rdlevel.image_url}
                   alt={`${rdlevel.song} cover`}
-                  radius="md"
-                  h={200}
-                  w={355}
-                  fit="cover"
+                  className="rounded-md h-[200px] w-full md:w-[355px] object-cover"
                 />
 
-                <Stack flex={1} gap="xs">
+                <div className="flex-1 flex flex-col gap-2">
                   <div>
                     <ConjunctionList
                       className={styles.artistList}
                       items={rdlevel.artist_tokens}
                       elementRender={(v) => (
-                        <Text c="dimmed" size="sm">
+                        <Words variant="muted" className="text-sm">
                           {v}
-                        </Text>
+                        </Words>
                       )}
                       literalRender={(v) => (
-                        <Text c="dimmed" size="sm">
+                        <Words variant="muted" className="text-sm">
                           {v}
-                        </Text>
+                        </Words>
                       )}
                     />
-                    <Title order={1} size="h2" mb="xs">
+                    <Words as="h1" className="text-2xl font-bold mb-2">
                       {rdlevel.song}
                       {rdlevel.song_alt && (
-                        <Text span c="dimmed" ml="xs">
+                        <Words as="span" variant="muted" className="ml-2">
                           ({rdlevel.song_alt})
-                        </Text>
+                        </Words>
                       )}
-                    </Title>
+                    </Words>
                   </div>
 
-                  <Group gap="md" wrap="wrap">
-                    <Group gap="xs">
+                  <div className="flex flex-wrap gap-4">
+                    <div className="flex items-center gap-1">
                       <FontAwesomeIcon
                         icon={faPen}
                         className={styles.metaIcon}
@@ -155,224 +135,206 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
                         className={styles.metadataList}
                         elementRender={(v) =>
                           typeof v === "string" ? (
-                            <UnstyledButton className={styles.authorButton}>
+                            <button className={styles.authorButton}>
                               {v}
-                            </UnstyledButton>
+                            </button>
                           ) : (
                             <></>
                           )
                         }
                         literalRender={(v) => (
-                          <Text span size="sm">
+                          <Words className="text-sm">
                             {v}
-                          </Text>
+                          </Words>
                         )}
                         items={rdlevel.authors}
                       />
-                    </Group>
+                    </div>
 
-                    <Group gap="xs">
+                    <div className="flex items-center gap-1">
                       <FontAwesomeIcon
                         icon={faHeartPulse}
                         className={styles.metaIcon}
                       />
-                      <Text size="sm">{bpmText}</Text>
-                    </Group>
+                      <Words className="text-sm">{bpmText}</Words>
+                    </div>
 
-                    <Group gap="xs">
+                    <div className="flex items-center gap-1">
                       <FontAwesomeIcon
                         icon={faDiscord}
                         className={styles.metaIcon}
                       />
-                      <Text size="sm">{rdlevel.club.name}</Text>
-                    </Group>
-                  </Group>
+                      <Words className="text-sm">{rdlevel.club.name}</Words>
+                    </div>
+                  </div>
 
-                  <Group gap="xs" mt="xs">
-                    <Badge
-                      color={getDifficultyColor(rdlevel.difficulty)}
-                      variant="light"
-                      size="lg"
-                    >
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    <span className={`px-3 py-1 rounded-md text-sm font-medium ${getDifficultyBadgeClass(rdlevel.difficulty)}`}>
                       {getDifficultyString(rdlevel.difficulty)}
-                    </Badge>
+                    </span>
 
                     {rdlevel.seizure_warning && (
-                      <Badge
-                        color="red"
-                        variant="light"
-                        leftSection={
-                          <FontAwesomeIcon icon={faExclamationTriangle} />
-                        }
-                      >
+                      <span className="px-3 py-1 rounded-md text-sm font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 flex items-center gap-1">
+                        <FontAwesomeIcon icon={faExclamationTriangle} />
                         Seizure Warning
-                      </Badge>
+                      </span>
                     )}
 
                     {rdlevel.single_player && rdlevel.two_player ? (
-                      <Badge
-                        variant="light"
-                        leftSection={<FontAwesomeIcon icon={faUsers} />}
-                      >
+                      <span className="px-3 py-1 rounded-md text-sm font-medium bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 flex items-center gap-1">
+                        <FontAwesomeIcon icon={faUsers} />
                         1-2 Players
-                      </Badge>
+                      </span>
                     ) : rdlevel.two_player ? (
-                      <Badge
-                        variant="light"
-                        leftSection={<FontAwesomeIcon icon={faUsers} />}
-                      >
+                      <span className="px-3 py-1 rounded-md text-sm font-medium bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 flex items-center gap-1">
+                        <FontAwesomeIcon icon={faUsers} />
                         2 Players
-                      </Badge>
+                      </span>
                     ) : (
-                      <Badge
-                        variant="light"
-                        leftSection={<FontAwesomeIcon icon={faUsers} />}
-                      >
+                      <span className="px-3 py-1 rounded-md text-sm font-medium bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 flex items-center gap-1">
+                        <FontAwesomeIcon icon={faUsers} />
                         1 Player
-                      </Badge>
+                      </span>
                     )}
-                  </Group>
-                </Stack>
-              </Group>
+                  </div>
+                </div>
+              </div>
 
-              <Divider my="md" />
+              <hr className="my-6 border-slate-200 dark:border-slate-700" />
 
               {/* Action Buttons */}
-              <Group mb="md">
+              <div className="flex flex-wrap gap-2 mb-6">
                 <Button
-                  component="a"
+                  as="a"
                   href={rdlevel.rdzip_url}
-                  leftSection={<FontAwesomeIcon icon={faDownload} />}
-                  size="md"
+                  variant="primary"
                 >
+                  <FontAwesomeIcon icon={faDownload} className="mr-2" />
                   Download
                 </Button>
                 <Button
-                  variant="light"
-                  leftSection={<FontAwesomeIcon icon={faLink} />}
                   onClick={() => clipboard.copy(rdlevel.rdzip_url)}
                 >
+                  <FontAwesomeIcon icon={faLink} className="mr-2" />
                   {clipboard.copied ? "Copied!" : "Copy Link"}
                 </Button>
                 {can_edit && (
                   <Button
-                    component={Link}
+                    as={Link}
                     href={`/levels/${rdlevel.id}/edit/`}
-                    variant="light"
-                    leftSection={<FontAwesomeIcon icon={faEdit} />}
                   >
+                    <FontAwesomeIcon icon={faEdit} className="mr-2" />
                     Edit
                   </Button>
                 )}
                 {can_delete && (
                   <Button
-                    color="red"
-                    variant="light"
-                    leftSection={<FontAwesomeIcon icon={faTrash} />}
+                    variant="danger"
                     onClick={openDeleteForm}
                   >
+                    <FontAwesomeIcon icon={faTrash} className="mr-2" />
                     Delete
                   </Button>
                 )}
-              </Group>
+              </div>
 
               {/* Description */}
               {rdlevel.description && (
-                <Box>
-                  <Text fw={500} mb="xs">
+                <div>
+                  <Words className="font-medium mb-2">
                     Description
-                  </Text>
-                  <Paper p="md" className={commonPatterns.paperBg}>
+                  </Words>
+                  <div className="p-4 bg-slate-100 dark:bg-slate-900 rounded-lg">
                     {rdlevel.description.split("\n").map((paragraph, index) => (
-                      <Text key={index} mb="xs">
+                      <Words key={index} className="mb-2">
                         {paragraph}
-                      </Text>
+                      </Words>
                     ))}
-                  </Paper>
-                </Box>
+                  </div>
+                </div>
               )}
-            </Card>
-          </Grid.Col>
+            </Surface>
+          </div>
 
           {/* Sidebar */}
-          <Grid.Col span={{ base: 12, md: 4 }}>
-            <Stack gap="md">
+          <div className="md:col-span-4">
+            <div className="flex flex-col gap-4">
               {/* Tags */}
               {rdlevel.tags.length > 0 && (
-                <Card shadow="sm" padding="md" radius="md" withBorder>
-                  <Group gap="xs" mb="xs">
+                <Surface className="p-4">
+                  <div className="flex items-center gap-1 mb-2">
                     <FontAwesomeIcon
                       icon={faTags}
                       className={styles.sectionIcon}
                     />
-                    <Text fw={500}>Tags</Text>
-                  </Group>
-                  <Group gap="xs">
+                    <Words className="font-medium">Tags</Words>
+                  </div>
+                  <div className="flex flex-wrap gap-1">
                     {rdlevel.tags.map((tag) => (
-                      <Badge key={tag} variant="light" size="sm">
+                      <span key={tag} className="px-3 py-0.5 rounded-full text-xs bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-200">
                         {tag}
-                      </Badge>
+                      </span>
                     ))}
-                  </Group>
-                </Card>
+                  </div>
+                </Surface>
               )}
 
               {/* Game Mechanics */}
-              <Card shadow="sm" padding="md" radius="md" withBorder>
-                <Text fw={500} mb="md">
+              <Surface className="p-4">
+                <Words className="font-medium mb-4">
                   Game Mechanics
-                </Text>
-                <Stack gap="xs">
+                </Words>
+                <div className="flex flex-col gap-2">
                   {rdlevel.has_classics && (
-                    <Group gap="xs">
-                      <Badge color="blue" variant="dot" size="xs" />
-                      <Text size="sm">Classic Beats</Text>
-                    </Group>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-blue-500" />
+                      <Words className="text-sm">Classic Beats</Words>
+                    </div>
                   )}
                   {rdlevel.has_oneshots && (
-                    <Group gap="xs">
-                      <Badge color="green" variant="dot" size="xs" />
-                      <Text size="sm">Oneshots</Text>
-                    </Group>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-green-500" />
+                      <Words className="text-sm">Oneshots</Words>
+                    </div>
                   )}
                   {rdlevel.has_squareshots && (
-                    <Group gap="xs">
-                      <Badge color="orange" variant="dot" size="xs" />
-                      <Text size="sm">Squareshots</Text>
-                    </Group>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-orange-500" />
+                      <Words className="text-sm">Squareshots</Words>
+                    </div>
                   )}
                   {rdlevel.has_freezeshots && (
-                    <Group gap="xs">
-                      <Badge color="cyan" variant="dot" size="xs" />
-                      <Text size="sm">Freezeshots</Text>
-                    </Group>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-cyan-500" />
+                      <Words className="text-sm">Freezeshots</Words>
+                    </div>
                   )}
                   {rdlevel.has_freetimes && (
-                    <Group gap="xs">
-                      <Badge color="purple" variant="dot" size="xs" />
-                      <Text size="sm">Freetimes</Text>
-                    </Group>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-purple-500" />
+                      <Words className="text-sm">Freetimes</Words>
+                    </div>
                   )}
                   {rdlevel.has_holds && (
-                    <Group gap="xs">
-                      <Badge color="pink" variant="dot" size="xs" />
-                      <Text size="sm">Holds</Text>
-                    </Group>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-pink-500" />
+                      <Words className="text-sm">Holds</Words>
+                    </div>
                   )}
                   {rdlevel.has_skipshots && (
-                    <Group gap="xs">
-                      <Badge color="red" variant="dot" size="xs" />
-                      <Text size="sm">Skipshots</Text>
-                    </Group>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-red-500" />
+                      <Words className="text-sm">Skipshots</Words>
+                    </div>
                   )}
                   {rdlevel.has_window_dance && (
-                    <Group gap="xs">
-                      <Badge color="teal" variant="dot" size="xs" />
-                      <Text size="sm">Window Dance</Text>
-                    </Group>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-teal-500" />
+                      <Words className="text-sm">Window Dance</Words>
+                    </div>
                   )}
-                </Stack>
-              </Card>
+                </div>
+              </Surface>
 
               {/* level ID, shown only if user is able to edit
                              this is since they might need the level id to enter in manually on the update page
@@ -382,13 +344,13 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
                   label="Level ID"
                   value={rdlevel.id}
                   readOnly
-                  rightSection={<CopyIconButton value={rdlevel.id} />}
+                  rightSlot={<CopyIconButton value={rdlevel.id} />}
                 />
               )}
-            </Stack>
-          </Grid.Col>
-        </Grid>
-      </Container>
+            </div>
+          </div>
+        </div>
+      </div>
     </Shell>
   );
 }
