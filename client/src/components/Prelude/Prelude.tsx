@@ -1,6 +1,3 @@
-import { shadcnCssVariableResolver } from "@cafe/theme/cssVariableResolver";
-import { shadcnTheme } from "@cafe/theme/theme";
-import { MantineProvider } from "@mantine/core";
 import { ReactNode, useEffect } from "react";
 import { Notifications } from "./Notifications";
 import { useUser } from "@cafe/hooks/useUser";
@@ -41,17 +38,11 @@ export function Prelude({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <MantineProvider
-        theme={shadcnTheme}
-        cssVariablesResolver={shadcnCssVariableResolver}
-        forceColorScheme={"light"}
-      >
-        <LoadingBarContainer>
-          <LoadingBar />
-          <Notifications />
-          {children}
-        </LoadingBarContainer>
-      </MantineProvider>
+      <LoadingBarContainer>
+        <LoadingBar />
+        <Notifications />
+        {children}
+      </LoadingBarContainer>
     </>
   );
 }

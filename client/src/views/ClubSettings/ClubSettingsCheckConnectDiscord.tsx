@@ -8,8 +8,6 @@ import { Words } from "@cafe/components/ui/Words";
 import { TextInput } from "@cafe/components/ui/TextInput";
 import { Button } from "@cafe/components/ui/Button";
 import { Alert } from "@cafe/components/ui/Alert";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExternalLink } from "@fortawesome/free-solid-svg-icons";
 import { ExternalLink } from "@cafe/components/ui/ExternalLink";
 
 type ClubSettingsCheckConnectDiscordProps = {

@@ -1,6 +1,5 @@
 import cc from "clsx";
 
-import styles from "./ConjunctionList.module.css";
 import { ReactNode, useMemo } from "react";
 
 const formatter = new Intl.ListFormat("en", {
