@@ -1,4 +1,4 @@
- - home page??
+ - daily blend??
  - add public test server in plpasscode
  - think about what we should actually put on the user's profile page for now
  - user can access a list of all their levels

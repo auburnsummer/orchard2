@@ -56,7 +56,7 @@ export function HomeView() {
           <div className="w-full max-w-md aspect-square rounded-lg shadow-lg flex items-center justify-center bg-purple-200 dark:bg-purple-600">
             <div className="flex flex-col gap-4">
               <Words className="text-center px-8">
-                I'm going to put some fanart here
+                The daily blend goes here probably
               </Words>
             </div>
           </div>
