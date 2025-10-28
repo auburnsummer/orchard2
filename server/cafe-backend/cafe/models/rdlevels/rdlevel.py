@@ -11,7 +11,7 @@ from rules.contrib.models import RulesModel
 import rules
 
 from cafe.tasks.sync_level_to_typesense import sync_level_to_typesense
-
+from cafe.models.clubs.predicates import is_pharmacist
 
 @rules.predicate
 def is_at_least_admin_of_connected_club(user: UserType, level: "RDLevel"):
@@ -22,8 +22,11 @@ def is_at_least_admin_of_connected_club(user: UserType, level: "RDLevel"):
 def is_submitter(user: UserType, level: "RDLevel"):
     return level.submitter == user
 
-can_change = rules.is_authenticated & (rules.is_superuser | is_at_least_admin_of_connected_club | is_submitter)
+can_change = rules.is_authenticated & (rules.is_superuser | is_pharmacist | is_at_least_admin_of_connected_club | is_submitter)
+# pharmacists cannot delete levels
+can_delete = rules.is_authenticated & (rules.is_superuser | is_at_least_admin_of_connected_club | is_submitter)
 
+can_review = rules.is_authenticated & (rules.is_superuser | is_pharmacist)
 
 class RDLevel(RulesModel):
     """
@@ -139,5 +142,7 @@ class RDLevel(RulesModel):
             # cafe.change_rdlevel
             "change": can_change,
             # cafe.delete_rdlevel
-            "delete": can_change
+            "delete": can_delete,
+            # cafe.peerreview_rdlevel
+            "peerreview": can_review
         }

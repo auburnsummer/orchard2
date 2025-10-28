@@ -19,7 +19,7 @@ class Club(RulesModel):
     In the website we refer to these as "groups". They're called Clubs internally to avoid
     confusion with the inbuilt django groups.
     """
-    id = models.CharField(max_length=CLUB_ID_LENGTH, primary_key=True, default=generate_club_id)
+    id = models.CharField(max_length=20, primary_key=True, default=generate_club_id)
     name = models.CharField(max_length=100)
 
     members = models.ManyToManyField("cafe.User", through="cafe.ClubMembership")
