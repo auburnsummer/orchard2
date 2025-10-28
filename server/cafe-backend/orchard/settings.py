@@ -300,3 +300,12 @@ if SENTRY_DSN:
             LoguruIntegration(sentry_logs_level=LoggingLevels.WARNING.value),
         ]
     )
+
+# constants for special users/clubs
+# Steward club for unclubbed levels
+STEWARD_CLUB_ID = "csteward"
+# Steward user holds unusered levels 
+STEWARD_USER_ID = "usteward"
+
+# Pharmacy club is used to control membership of people who can peer review levels
+PHARMACY_CLUB_ID = "cpharmacy"

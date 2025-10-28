@@ -37,4 +37,15 @@ def is_permission_subject(user: User, clubmembership: ClubMembership):
         return False
     return clubmembership.user == user
 
+@rules.predicate
+def is_pharmacist(user: User):
+    from cafe.models.clubs.club import Club
+    try:
+        pharmacy_club = Club.objects.get(id="cpharmacy")
+    except Club.DoesNotExist:
+        return False
 
+    for role in ["admin", "owner"]:
+        if is_role_of_club(role)(user, pharmacy_club):
+            return True
+    return False
