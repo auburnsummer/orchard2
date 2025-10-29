@@ -35,7 +35,6 @@ def edit_rdlevel(request: AuthenticatedHttpRequest, level_id: str):
         else:
             messages.error(request, "An error occurred validating the form")
 
-
     props = {
         "rdlevel": rdlevel.to_dict()
     }
