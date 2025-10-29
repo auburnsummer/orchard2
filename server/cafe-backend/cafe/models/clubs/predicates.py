@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cafe.models.predicates import not_anonymous
+from orchard.settings import PHARMACY_CLUB_ID
 import rules
 
 if TYPE_CHECKING:
@@ -41,7 +42,7 @@ def is_permission_subject(user: User, clubmembership: ClubMembership):
 def is_pharmacist(user: User):
     from cafe.models.clubs.club import Club
     try:
-        pharmacy_club = Club.objects.get(id="cpharmacy")
+        pharmacy_club = Club.objects.get(id=PHARMACY_CLUB_ID)
     except Club.DoesNotExist:
         return False
 

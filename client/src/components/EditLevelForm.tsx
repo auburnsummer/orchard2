@@ -36,8 +36,6 @@ type EditLevelFormProps = {
   level: RDLevel;
   preamble: React.ReactNode;
   submitButtonText: string;
-  // form submit url
-  // preamble html element to go before the form
 };
 
 function PrefillPreview({ level }: { level: RDLevel }) {
@@ -51,7 +49,7 @@ function PrefillPreview({ level }: { level: RDLevel }) {
 export function EditLevelForm({
   level: initialLevel,
   preamble,
-  submitButtonText,
+  submitButtonText
 }: EditLevelFormProps) {
   const levelAtom = useRef(withImmer(atom(initialLevel)));
   const csrfInput = useCSRFTokenInput();
