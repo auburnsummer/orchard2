@@ -2,7 +2,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.models import AbstractUser, UserManager
-from django.db.models import Q, CharField, CheckConstraint, EmailField, QuerySet
+from django.core.signing import Signer, BadSignature
+from django.db.models import Q, CharField, CheckConstraint, EmailField, QuerySet, IntegerField
 
 from .id_utils import generate_user_id, USER_ID_PREFIX
 
@@ -40,6 +41,7 @@ class User(AbstractUser):
     username = CharField(max_length=150, unique=False, blank=True)
     display_name = CharField(max_length=150, unique=False, blank=True)
     email = EmailField(default=None, null=True, unique=True, blank=True)
+    api_key_iter = IntegerField(default=0)
     theme_preference = CharField(choices={
         'light': 'Light',
         'dark': 'Dark',
@@ -54,6 +56,85 @@ class User(AbstractUser):
     
     def get_short_name(self) -> str:
         return self.display_name
+    
+    def generate_api_key(self) -> str:
+        """
+        Generate a new API key for this user, revoking any existing one.
+        
+        Returns a signed token containing the user ID and iteration number.
+        The iteration number is incremented each time a new key is generated,
+        automatically invalidating all previous keys.
+        """
+        # Increment the iteration counter
+        self.api_key_iter += 1
+        self.save()
+        
+        # Create a signed token with user_id and iteration
+        signer = Signer()
+        value = {"user_id": self.id, "iter": self.api_key_iter}
+        signed_token = signer.sign_object(value)
+        
+        return signed_token
+    
+    def check_api_key(self, signed_token: str) -> bool:
+        """
+        Check if the provided signed API key is valid for this user.
+        
+        Validates both the signature and that the iteration number matches.
+        """
+        try:
+            signer = Signer()
+            value = signer.unsign_object(signed_token)
+            
+            # Check that it's for this user and the iteration matches
+            return (
+                value.get("user_id") == self.id and
+                value.get("iter") == self.api_key_iter
+            )
+            
+        except (BadSignature, AttributeError, TypeError):
+            return False
+    
+    @classmethod
+    def get_user_from_api_key(cls, signed_token: str) -> "User | None":
+        """
+        Get the user associated with a signed API key.
+        
+        Unsigns the token to extract the user ID, looks up that user,
+        and validates that the iteration number matches.
+        
+        Returns None if the token is invalid or doesn't match.
+        """
+        try:
+            signer = Signer()
+            value = signer.unsign_object(signed_token)
+            
+            # Extract user_id from the unsigned object
+            user_id = value.get("user_id")
+            if not user_id:
+                return None
+            
+            # Look up the user
+            user = cls.objects.get(id=user_id)
+            
+            # Validate the full token (including iteration check)
+            if user.check_api_key(signed_token):
+                return user
+            
+        except (BadSignature, cls.DoesNotExist, AttributeError, TypeError):
+            pass
+        
+        return None
+    
+    def revoke_api_key(self) -> None:
+        """
+        Revoke the user's API key by incrementing the iteration counter.
+        
+        This invalidates all previously generated keys without needing to
+        track them individually.
+        """
+        self.api_key_iter += 1
+        self.save()
 
     def __str__(self):
         return f"{self.display_name} ({self.id})"

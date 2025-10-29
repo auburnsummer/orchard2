@@ -7,6 +7,13 @@
         - probably, we're already trusting them
         - they probably shouldn't be able to delete though
     - special views for pharmacists? or just reuse the pr tool?
+      - reuse the pr tool
+    - api key system implemented (replacing tokens). they'll still need to
+      manually copy their api key into the appropriate box
+    - add UI to modify/view api key
+    - add JSON endpoints to
+      - get unreviewed levels
+      - review a level
 
  - daily blend
     - probably a table with [date, level] and date is unique
