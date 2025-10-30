@@ -14,10 +14,7 @@ def api_key_view(request: AuthenticatedHttpRequest) -> HttpResponse:
     The key is only shown once when first generated.
     """
     api_key = None
-    print("here1")
-    print(request.method)
     if request.method == "POST":
-        print("here")
         api_key = request.user.generate_api_key()
         
     has_api_key = request.user.api_key_iter > 0
