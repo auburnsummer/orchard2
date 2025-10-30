@@ -20,8 +20,8 @@ def test_api_key_view_shows_no_key_initially(bridge_client: Client, user_with_no
     response = bridge_client.get('/accounts/profile/api-key/')
     assert response.status_code == 200
     response_data = response.json()
-    assert response_data['props']['hasApiKey'] is False
-    # Note: apiKey is not returned in the view response since keys are hashed
+    assert response_data['props']['has_api_key'] is False
+    assert response_data['props']['api_key'] is None
 
 
 @pytest.mark.django_db
@@ -30,25 +30,20 @@ def test_generate_api_key(bridge_client: Client, user_with_no_clubs):
     bridge_client.force_login(user_with_no_clubs)
     
     # Generate API key
-    response = bridge_client.post('/accounts/profile/api-key/generate/')
+    response = bridge_client.post('/accounts/profile/api-key/')
     assert response.status_code == 200
     response_data = response.json()
     
     # Check response structure
-    assert response_data['props']['hasApiKey'] is True
-    assert response_data['props']['apiKey'] is not None
-    assert len(response_data['props']['apiKey']) > 0
-    
-    # Check success message
-    assert len(response_data['messages']) == 1
-    assert response_data['messages'][0]['level'] == 'success'
-    assert 'API key generated' in response_data['messages'][0]['html']
+    assert response_data['props']['has_api_key'] is True
+    assert response_data['props']['api_key'] is not None
+    assert len(response_data['props']['api_key']) > 0
     
     # Verify the iteration counter was incremented
     user_with_no_clubs.refresh_from_db()
     assert user_with_no_clubs.api_key_iter == 1
     # The signed token should validate correctly
-    assert user_with_no_clubs.check_api_key(response_data['props']['apiKey'])
+    assert user_with_no_clubs.check_api_key(response_data['props']['api_key'])
 
 
 @pytest.mark.django_db
@@ -57,12 +52,12 @@ def test_generate_api_key_revokes_previous(bridge_client: Client, user_with_no_c
     bridge_client.force_login(user_with_no_clubs)
     
     # Generate first API key
-    response1 = bridge_client.post('/accounts/profile/api-key/generate/')
-    first_key = response1.json()['props']['apiKey']
+    response1 = bridge_client.post('/accounts/profile/api-key/')
+    first_key = response1.json()['props']['api_key']
     
     # Generate second API key
-    response2 = bridge_client.post('/accounts/profile/api-key/generate/')
-    second_key = response2.json()['props']['apiKey']
+    response2 = bridge_client.post('/accounts/profile/api-key/')
+    second_key = response2.json()['props']['api_key']
     
     # Keys should be different
     assert first_key != second_key
@@ -77,61 +72,9 @@ def test_generate_api_key_revokes_previous(bridge_client: Client, user_with_no_c
 
 
 @pytest.mark.django_db
-def test_revoke_api_key(bridge_client: Client, user_with_no_clubs):
-    """Test revoking an API key"""
-    bridge_client.force_login(user_with_no_clubs)
-    
-    # First generate a key
-    response = bridge_client.post('/accounts/profile/api-key/generate/')
-    generated_key = response.json()['props']['apiKey']
-    user_with_no_clubs.refresh_from_db()
-    assert user_with_no_clubs.api_key_iter == 1
-    
-    # Revoke the key
-    response = bridge_client.post('/accounts/profile/api-key/revoke/')
-    assert response.status_code == 200
-    response_data = response.json()
-    
-    # Check response structure
-    assert response_data['props']['hasApiKey'] is False
-    
-    # Check success message
-    assert len(response_data['messages']) == 1
-    assert response_data['messages'][0]['level'] == 'success'
-    assert 'API key revoked' in response_data['messages'][0]['html']
-    
-    # Verify the iteration counter was incremented (invalidating the old key)
-    user_with_no_clubs.refresh_from_db()
-    assert user_with_no_clubs.api_key_iter == 2
-    # Old key should no longer work
-    assert not user_with_no_clubs.check_api_key(generated_key)
-
-
-@pytest.mark.django_db
-def test_revoke_api_key_when_none_exists(bridge_client: Client, user_with_no_clubs):
-    """Test that revoking when no key exists doesn't cause errors"""
-    bridge_client.force_login(user_with_no_clubs)
-    
-    # Revoke without having a key
-    response = bridge_client.post('/accounts/profile/api-key/revoke/')
-    assert response.status_code == 200
-    response_data = response.json()
-    
-    assert response_data['props']['hasApiKey'] is False
-
-
-@pytest.mark.django_db
 def test_generate_api_key_requires_login(client: Client):
     """Test that generating API key requires authentication"""
-    response = client.post('/accounts/profile/api-key/generate/')
-    assert response.status_code == 302
-    assert '/accounts/login/' in response.url
-
-
-@pytest.mark.django_db
-def test_revoke_api_key_requires_login(client: Client):
-    """Test that revoking API key requires authentication"""
-    response = client.post('/accounts/profile/api-key/revoke/')
+    response = client.post('/accounts/profile/api-key/')
     assert response.status_code == 302
     assert '/accounts/login/' in response.url
 

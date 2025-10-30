@@ -15,13 +15,13 @@
       - get unreviewed levels
       - review a level
     -> test with peer review tool v10
-
+ - way to recover a deleted level
+    - not sure if HistoricalRecords covers this
+ - figure out how to host files in CDN. or at least geodistributed in some way
  - daily blend
     - probably a table with [date, level] and date is unique
     - so that you can schedule them easily
     - notifications?? how do we get the discord message out
- - way to recover a deleted level
-    - not sure if HistoricalRecords covers this
  - add public test server in plpasscode
  - think about what we should actually put on the user's profile page for now
  - user can access a list of all their levels
