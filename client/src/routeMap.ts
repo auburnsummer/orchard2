@@ -16,6 +16,7 @@ import { ProfileClubsView } from "./views/Profile/ProfileClubsView";
 import { ProfileIndexView } from "./views/Profile/ProfileIndexView";
 import { ProfileSettingsView } from "./views/Profile/ProfileSettingsView";
 import { ClubSettingsRedeemInvite } from "./views/ClubSettings/ClubSettingsRedeemInvite";
+import { ProfileApiKeyView } from "./views/Profile/ProfileApiKeyView";
 
 export const appName = "cafe";
 
@@ -24,6 +25,7 @@ export const routeMap: { [key: string]: React.FunctionComponent<any> } = {
   "cafe:profile": ProfileIndexView,
   "cafe:profile_settings": ProfileSettingsView,
   "cafe:profile_clubs": ProfileClubsView,
+  "cafe:profile_api_key": ProfileApiKeyView,
 
   "cafe:club_connect_discord": ClubSettingsConnectDiscord,
   "cafe:club_settings_info": ClubSettingsInfoView,

@@ -14,6 +14,7 @@
     - add JSON endpoints to
       - get unreviewed levels
       - review a level
+    -> test with peer review tool v10
 
  - daily blend
     - probably a table with [date, level] and date is unique
@@ -37,3 +38,4 @@
  - delete account (what do we do about their levels?)
  - delete club (what do we do about their levels?)
  - migration plan for RDL (i.e. transition line the second)
+ - make the loading screen not suck

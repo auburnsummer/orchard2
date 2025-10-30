@@ -5,7 +5,7 @@ from .views.index import index
 from .views.accounts.profile.index import profile  
 from .views.accounts.profile.profile_settings import settings as profile_settings
 from .views.accounts.profile.profile_clubs import profile_clubs
-from .views.accounts.profile.api_key import api_key_view, generate_api_key, revoke_api_key
+from .views.accounts.profile.api_key import api_key_view
 from .views.clubs.create_club import create_club
 from .views.rdlevels.search_levels import search_levels
 
@@ -27,6 +27,9 @@ from .views.rdlevels.prefill.prefill_stage_one import prefill_stage_one
 from .views.rdlevels.prefill.prefill_stage_two import prefill_stage_two
 from .views.rdlevels.view_rdlevel import view_rdlevel
 
+from .views.rdlevels.peerreview.peer_review_pending_levels import peer_review_pending_levels
+from .views.rdlevels.peerreview.peer_review_review_level import peer_review_review_level
+
 def trigger_error(request):
     division_by_zero = 1 / 0
 
@@ -42,8 +45,6 @@ urlpatterns = [
     path("accounts/profile/settings/", profile_settings, name="profile_settings"),
     path("accounts/profile/groups/", profile_clubs, name="profile_clubs"),
     path("accounts/profile/api-key/", api_key_view, name="profile_api_key"),
-    path("accounts/profile/api-key/generate/", generate_api_key, name="profile_api_key_generate"),
-    path("accounts/profile/api-key/revoke/", revoke_api_key, name="profile_api_key_revoke"),
 
     path("groups/create/", create_club, name="create_club"),
 
@@ -62,5 +63,8 @@ urlpatterns = [
     path("levels/<level_id>/", view_rdlevel, name="level_view"),
     path("levels/<level_id>/edit/", edit_rdlevel, name="level_edit"),
     path("levels/<level_id>/delete/", delete_rdlevel, name="level_delete"),
-    path("levels/", search_levels, name="level_search")
+    path("levels/", search_levels, name="level_search"),
+
+    path("api/levels/pr/pending/", peer_review_pending_levels, name="level_pr_pending"),
+    path("api/levels/pr/<level_id>/", peer_review_review_level, name="level_pr_review")
 ]

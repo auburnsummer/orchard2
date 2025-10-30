@@ -12,10 +12,6 @@ class ApiKeyAuthenticationMiddleware:
     
     If no API key is provided or authentication fails, the request proceeds normally
     (allowing session-based authentication to work).
-    
-    Note: API keys are cryptographically signed tokens containing user_id:iteration.
-    The signature is validated and the iteration number is checked against the user's
-    current api_key_iter to ensure the key hasn't been revoked.
     """
     
     def __init__(self, get_response):

@@ -26,6 +26,10 @@ export function ProfileNavbar() {
       label: "Groups",
       href: "/accounts/profile/groups/",
     },
+    {
+      label: "API Key",
+      href: "/accounts/profile/api-key/"
+    }
   ];
 
   return (
