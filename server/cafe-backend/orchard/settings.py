@@ -36,6 +36,9 @@ ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https' if DOMAIN_URL.startswith('https://') els
 ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS = [DOMAIN_URL]
 
+# CORS settings
+CORS_ALLOW_ALL_ORIGINS = True
+
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
@@ -60,6 +63,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'corsheaders',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -76,6 +81,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
