@@ -119,7 +119,7 @@ class Command(BaseCommand):
                     sha1 = row['sha1']
                     try:
                         existing_level = RDLevel.objects.get(sha1=sha1)
-                        if row['approval'] < existing_level.approval:
+                        if row['approval'] > existing_level.approval:
                             existing_level.approval = row['approval']
                             existing_level.save()
                         continue
