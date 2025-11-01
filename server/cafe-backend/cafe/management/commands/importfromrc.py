@@ -120,6 +120,7 @@ class Command(BaseCommand):
                     try:
                         existing_level = RDLevel.objects.get(sha1=sha1)
                         if existing_level.approval == 0 and row['approval'] != 0:
+                            logger.info(f"Found existing level {existing_level} with differing approval, updating approval to {row['approval']}")
                             existing_level.approval = row['approval']
                             existing_level.save()
                         continue
