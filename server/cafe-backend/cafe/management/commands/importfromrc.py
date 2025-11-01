@@ -139,4 +139,16 @@ class Command(BaseCommand):
 
                 pool.close()
                 pool.join()
+
+            # next, check levels in the club that have no matching sha1 in rc1, and delete them
+            club_levels = RDLevel.objects.filter(club=club)
+            for level in club_levels:
+                try:
+                    cur.execute("SELECT * FROM combined WHERE sha1 = ?", (level.sha1,))
+                    row = cur.fetchone()
+                    if row is None:
+                        logger.info(f"Deleting level {level} as it no longer exists in rc1")
+                        level.delete()
+                except Exception as e:
+                    logger.error(f"Error checking level {level}: {e}")
             conn.close()
