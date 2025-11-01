@@ -15,6 +15,7 @@ from pathlib import Path
 import sentry_sdk
 from sentry_sdk.integrations import logging
 from sentry_sdk.integrations.loguru import LoggingLevels, LoguruIntegration
+from corsheaders.defaults import default_headers
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,6 +39,11 @@ CSRF_TRUSTED_ORIGINS = [DOMAIN_URL]
 
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_HEADERS = (
+    *default_headers,
+    "X-Requested-By"
+)
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
