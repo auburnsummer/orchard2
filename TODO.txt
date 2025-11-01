@@ -15,6 +15,7 @@
       - get unreviewed levels
       - review a level
     -> test with peer review tool v10
+ - sync approval status as well
  - way to recover a deleted level
     - not sure if HistoricalRecords covers this
  - figure out how to host files in CDN. or at least geodistributed in some way
