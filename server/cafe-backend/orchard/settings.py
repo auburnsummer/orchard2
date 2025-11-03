@@ -294,6 +294,12 @@ S3_SECRET_ACCESS_KEY = os.environ.get("S3_SECRET_ACCESS_KEY", "")
 S3_REGION = os.environ.get("S3_REGION", "")
 S3_PUBLIC_CDN_URL = os.environ.get("S3_PUBLIC_CDN_URL", "")
 
+S3_BACKUP_API_URL = os.environ.get("S3_BACKUP_API_URL", "")
+S3_BACKUP_ACCESS_KEY_ID = os.environ.get("S3_BACKUP_ACCESS_KEY_ID", "")
+S3_BACKUP_SECRET_ACCESS_KEY = os.environ.get("S3_BACKUP_SECRET_ACCESS_KEY", "")
+S3_BACKUP_REGION = os.environ.get("S3_BACKUP_REGION", "")
+S3_BACKUP_PUBLIC_CDN_URL = os.environ.get("S3_BACKUP_PUBLIC_CDN_URL", "")
+
 
 SENTRY_DSN = os.environ.get("SENTRY_DSN", "")
 if SENTRY_DSN:
