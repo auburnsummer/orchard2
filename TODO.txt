@@ -16,9 +16,6 @@
       - review a level
     -> test with peer review tool v11
 
- - db backups???
-   - setup on lulu side
-
  - way to recover a deleted level
     - not sure if HistoricalRecords covers this
    
