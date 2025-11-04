@@ -7,6 +7,7 @@ on:
         description: 'Management command to run (e.g., "migrate", "collectstatic", "helloworld --name=test")'
         required: true
         type: string
+  workflow-call:
 
 permissions:
   contents: read
