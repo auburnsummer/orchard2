@@ -35,6 +35,12 @@ COMMANDS = [
         "name": "Add to Rhythm Café (delegated)",
         "type": 3,
         "default_member_permissions": "0"
+    },
+    {
+        "name": "becomeadmin",
+        "type": 1,
+        "description": "Become an admin of this server's connected group",
+        "default_member_permissions": "0"
     }
 ]
 

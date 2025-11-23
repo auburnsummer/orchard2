@@ -19,7 +19,8 @@ class ClubMembership(RulesModel):
     /add command in the discord server can also add levels, even if they're not an Admin.
     Since currently you can only add levels via a Discord server anyway, we're delegating the "Member"
     responsibility to Discord. If we ever allow adding levels through the web interface, we can revisit this decision.
-    - btw, why are we only allowing level uploads through discord? it's mostly to avoid spam and abuse.
+    - btw, why are we only allowing level uploads through discord? mostly because I do not want to deal
+      with file upload scanning etc
     """
     user = models.ForeignKey(UserType, on_delete=models.CASCADE, related_name="memberships")
     club = models.ForeignKey(ClubType, on_delete=models.CASCADE, related_name="memberships")
