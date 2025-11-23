@@ -15,9 +15,7 @@
       - get unreviewed levels
       - review a level
     -> test with peer review tool v11
-   
- - figure out how to host files in CDN. or at least geodistributed in some way
-
+       
  - daily blend
     - probably a table with [date, level] and date is unique
     - so that you can schedule them easily
