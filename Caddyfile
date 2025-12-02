@@ -6,7 +6,7 @@ http:// {
         not header X-Maintenance-Bypass true
     }
     handle @maintenanceModeActive {
-        respond "Rhythm Cafe is currently under maintenance."
+        respond "Rhythm Cafe is currently under maintenance." 503
     }
     encode zstd gzip
     root * /var/www/rhythm.cafe
