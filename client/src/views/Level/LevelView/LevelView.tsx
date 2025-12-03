@@ -279,74 +279,12 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
                 </Surface>
               )}
 
-              {/* Game Mechanics */}
-              <Surface className="p-4">
-                <Words className="font-medium mb-4">
-                  Game Mechanics
-                </Words>
-                <div className="flex flex-col gap-2">
-                  {rdlevel.has_classics && (
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-blue-500" />
-                      <Words className="text-sm">Classic Beats</Words>
-                    </div>
-                  )}
-                  {rdlevel.has_oneshots && (
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-green-500" />
-                      <Words className="text-sm">Oneshots</Words>
-                    </div>
-                  )}
-                  {rdlevel.has_squareshots && (
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-orange-500" />
-                      <Words className="text-sm">Squareshots</Words>
-                    </div>
-                  )}
-                  {rdlevel.has_freezeshots && (
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-cyan-500" />
-                      <Words className="text-sm">Freezeshots</Words>
-                    </div>
-                  )}
-                  {rdlevel.has_freetimes && (
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-purple-500" />
-                      <Words className="text-sm">Freetimes</Words>
-                    </div>
-                  )}
-                  {rdlevel.has_holds && (
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-pink-500" />
-                      <Words className="text-sm">Holds</Words>
-                    </div>
-                  )}
-                  {rdlevel.has_skipshots && (
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-red-500" />
-                      <Words className="text-sm">Skipshots</Words>
-                    </div>
-                  )}
-                  {rdlevel.has_window_dance && (
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-teal-500" />
-                      <Words className="text-sm">Window Dance</Words>
-                    </div>
-                  )}
-                </div>
-              </Surface>
-
-              {/* level ID, shown only if user is able to edit
-                             this is since they might need the level id to enter in manually on the update page
-                            */}
-              {can_edit && (
-                <TextInput
-                  label="Level ID"
-                  value={rdlevel.id}
-                  readOnly
-                  rightSlot={<CopyIconButton value={rdlevel.id} />}
-                />
-              )}
+              <TextInput
+                label="Level ID"
+                value={rdlevel.id}
+                readOnly
+                rightSlot={<CopyIconButton value={rdlevel.id} />}
+              />
             </div>
           </div>
         </div>

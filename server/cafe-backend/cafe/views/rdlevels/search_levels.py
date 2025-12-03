@@ -28,13 +28,6 @@ class SearchLevelParams:
     difficulties: Optional[List[int]]
     single_player: Optional[bool]
     two_player: Optional[bool]
-    has_classics: Optional[bool]
-    has_oneshots: Optional[bool]
-    has_squareshots: Optional[bool]
-    has_freezeshots: Optional[bool]
-    has_freetimes: Optional[bool]
-    has_holds: Optional[bool]
-    has_window_dance: Optional[bool]
     tags_all: Optional[List[str]]
     tags_any: Optional[List[str]]
     authors_all: Optional[List[str]]
@@ -107,15 +100,6 @@ def get_search_params(request: HttpRequest) -> SearchLevelParams:
     # 1p/2p
     single_player = parse_bool_param(request.GET.get('single_player'))
     two_player = parse_bool_param(request.GET.get('two_player'))
-    
-    # step type filters
-    has_classics = parse_bool_param(request.GET.get('has_classics'))
-    has_oneshots = parse_bool_param(request.GET.get('has_oneshots'))
-    has_squareshots = parse_bool_param(request.GET.get('has_squareshots'))
-    has_freezeshots = parse_bool_param(request.GET.get('has_freezeshots'))
-    has_freetimes = parse_bool_param(request.GET.get('has_freetimes'))
-    has_holds = parse_bool_param(request.GET.get('has_holds'))
-    has_window_dance = parse_bool_param(request.GET.get('has_window_dance'))
 
     # tags
     tags_all = request.GET.getlist('tags_all')
@@ -139,13 +123,6 @@ def get_search_params(request: HttpRequest) -> SearchLevelParams:
         difficulties=difficulties,
         single_player=single_player,
         two_player=two_player,
-        has_classics=has_classics,
-        has_oneshots=has_oneshots,
-        has_squareshots=has_squareshots,
-        has_freezeshots=has_freezeshots,
-        has_freetimes=has_freetimes,
-        has_holds=has_holds,
-        has_window_dance=has_window_dance,
         tags_all=tags_all,
         tags_any=tags_any,
         authors_all=authors_all,
@@ -176,13 +153,6 @@ def get_typesense_filter_query(params: SearchLevelParams) -> str:
     bool_params = [
         ("single_player", params.single_player),
         ("two_player", params.two_player),
-        ("has_classics", params.has_classics),
-        ("has_oneshots", params.has_oneshots),
-        ("has_squareshots", params.has_squareshots),
-        ("has_freezeshots", params.has_freezeshots),
-        ("has_freetimes", params.has_freetimes),
-        ("has_holds", params.has_holds),
-        ("has_window_dance", params.has_window_dance),
         ("seizure_warning", params.seizure_warning)
     ]
 
@@ -219,7 +189,7 @@ def search_levels(request: HttpRequest):
         # why 3? there's an edge case where a level that's deleted from the DB could still be in Typesense for a bit
         # so we fetch a couple extra to avoid false negatives on "are there more results"
         "limit": RESULTS_PER_PAGE + 3,
-        "facet_by": "artist_tokens,tags,authors,difficulty,single_player,two_player,has_classics,has_oneshots,has_squareshots,has_freezeshots,has_freetimes,has_holds,has_window_dance,submitter.id,club.id",
+        "facet_by": "artist_tokens,tags,authors,difficulty,single_player,two_player,submitter.id,club.id",
         "include_fields": "id",
         "sort_by": "_text_match:desc"
     }

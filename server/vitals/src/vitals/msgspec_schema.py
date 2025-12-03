@@ -18,14 +18,6 @@ class VitalsLevelBaseMutable(msgspec.Struct):
     single_player: bool
     two_player: bool
     tags: List[str]
-    has_classics: bool
-    has_oneshots: bool
-    has_squareshots: bool
-    has_freezeshots: bool
-    has_freetimes: bool
-    has_holds: bool
-    has_skipshots: bool
-    has_window_dance: bool
 
 class VitalsLevelBaseImmutable(msgspec.Struct):
     "The properties on VitalsLevel that the client cannot change, because they are derived from rdzip"

@@ -7,7 +7,6 @@ from .facets.artist_list_facet import artist_list_facet
 from .facets.rdlevel_sha1_facet import rdlevel_sha1_facet
 from .facets.sha1_facet import sha1_facet
 from .facets.author_facet import author_facet
-from .facets.event_type_facet import event_type_facet
 from .facets.bpm_facet import bpm_facet
 from .facets.difficulty_facet import difficulty_facet
 from .facets.icon_facet import icon_facet
@@ -78,16 +77,6 @@ def vitals(f: IO[bytes]) -> VitalsLevel:
         "tags": tags_facet,
         ("image", "thumb", "is_animated"): thumbnail_facet,
         "icon": icon_facet,
-        (
-            "has_classics",
-            "has_oneshots",
-            "has_squareshots",
-            "has_freezeshots",
-            "has_freetimes",
-            "has_holds",
-            "has_skipshots",
-            "has_window_dance",
-        ): event_type_facet,
         "sha1": sha1_facet,
         "rdlevel_sha1": rdlevel_sha1_facet,
         "rd_md5": rdmd5_facet

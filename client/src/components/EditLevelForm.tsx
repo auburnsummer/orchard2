@@ -21,15 +21,7 @@ import { Checkbox } from "./ui/Checkbox";
 const CHECKBOXES = [
   ["single_player", "Single Player"],
   ["two_player", "Two Player"],
-  ["seizure_warning", "Seizure Warning"],
-  ["has_classics", "Has classic beats"],
-  ["has_oneshots", "Has Oneshots"],
-  ["has_squareshots", "Has Squareshots"],
-  ["has_freezeshots", "Has Freezeshots"],
-  ["has_freetimes", "Has Freetimes"],
-  ["has_holds", "Has Holds"],
-  ["has_skipshots", "Skipshots"],
-  ["has_window_dance", "Has Window Dance"],
+  ["seizure_warning", "Seizure Warning"]
 ] as const;
 
 type EditLevelFormProps = {

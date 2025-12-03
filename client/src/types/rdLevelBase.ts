@@ -32,14 +32,6 @@ export type RDLevelBase = RDLevelUpdatePrefillData & {
   single_player: boolean;
   two_player: boolean;
   tags: string[];
-  has_classics: boolean;
-  has_oneshots: boolean;
-  has_squareshots: boolean;
-  has_freezeshots: boolean;
-  has_freetimes: boolean;
-  has_holds: boolean;
-  has_skipshots: boolean;
-  has_window_dance: boolean;
 };
 
 // some additional fields

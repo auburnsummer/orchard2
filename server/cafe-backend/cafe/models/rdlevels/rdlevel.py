@@ -57,14 +57,6 @@ class RDLevel(RulesModel):
     two_player = models.BooleanField(blank=False)
     last_updated = models.DateTimeField(blank=False)
     tags = models.JSONField(blank=False)
-    has_classics = models.BooleanField(blank=False)
-    has_oneshots = models.BooleanField(blank=False)
-    has_squareshots = models.BooleanField(blank=False)
-    has_freezeshots = models.BooleanField(blank=False)
-    has_freetimes = models.BooleanField(blank=False)
-    has_holds = models.BooleanField(blank=False)
-    has_skipshots = models.BooleanField(blank=False)
-    has_window_dance = models.BooleanField(blank=False)
 
     sha1 = models.TextField(blank=False, unique=True)
     rdlevel_sha1 = models.TextField(blank=False)
@@ -108,14 +100,6 @@ class RDLevel(RulesModel):
             "two_player": self.two_player,
             "last_updated": self.last_updated.isoformat(),
             "tags": self.tags,
-            "has_classics": self.has_classics,
-            "has_oneshots": self.has_oneshots,
-            "has_squareshots": self.has_squareshots,
-            "has_freezeshots": self.has_freezeshots,
-            "has_freetimes": self.has_freetimes,
-            "has_holds": self.has_holds,
-            "has_skipshots": self.has_skipshots,
-            "has_window_dance": self.has_window_dance,
             "sha1": self.sha1,
             "rdlevel_sha1": self.rdlevel_sha1,
             "rd_md5": self.rd_md5,
