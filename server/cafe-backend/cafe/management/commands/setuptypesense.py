@@ -138,46 +138,6 @@ class Command(BaseCommand):
                         "locale": "ja"
                     },
                     {
-                        "name": "has_classics",
-                        "type": "bool",
-                        "facet": True
-                    },
-                    {
-                        "name": "has_oneshots",
-                        "type": "bool",
-                        "facet": True
-                    },
-                    {
-                        "name": "has_squareshots",
-                        "type": "bool",
-                        "facet": True
-                    },
-                    {
-                        "name": "has_freezeshots",
-                        "type": "bool",
-                        "facet": True
-                    },
-                    {
-                        "name": "has_freetimes",
-                        "type": "bool",
-                        "facet": True
-                    },
-                    {
-                        "name": "has_holds",
-                        "type": "bool",
-                        "facet": True
-                    },
-                    {
-                        "name": "has_skipshots",
-                        "type": "bool",
-                        "facet": True
-                    },
-                    {
-                        "name": "has_window_dance",
-                        "type": "bool",
-                        "facet": True
-                    },
-                    {
                         "name": "submitter.id",
                         "type": "string",
                         "facet": True

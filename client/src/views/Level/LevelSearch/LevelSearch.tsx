@@ -21,13 +21,6 @@ export type FacetDistribution = {
   authors: Facet[];
   "club.id": Facet[];
   difficulty: Facet[];
-  has_classics: Facet[];
-  has_freetimes: Facet[];
-  has_freezeshots: Facet[];
-  has_holds: Facet[];
-  has_oneshots: Facet[];
-  has_squareshots: Facet[];
-  has_window_dance: Facet[];
   single_player: Facet[];
   "submitter.id": Facet[];
   tags: Facet[];
