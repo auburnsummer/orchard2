@@ -191,7 +191,7 @@ def search_levels(request: HttpRequest):
         "limit": RESULTS_PER_PAGE + 3,
         "facet_by": "artist_tokens,tags,authors,difficulty,single_player,two_player,submitter.id,club.id",
         "include_fields": "id",
-        "sort_by": "_text_match:desc"
+        "sort_by": "_text_match:desc,last_updated:desc"
     }
 
     if params.facet_query and params.facet_query_field:
