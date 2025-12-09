@@ -1,6 +1,8 @@
 from django.urls import path
 from django.views.generic import TemplateView
 
+from cafe.views.rdlevels.peerreview.peer_review_resolve_user_first import peer_review_resolve_user_first
+
 from .views.index import index
 from .views.accounts.profile.index import profile  
 from .views.accounts.profile.profile_settings import settings as profile_settings
@@ -66,5 +68,6 @@ urlpatterns = [
     path("levels/", search_levels, name="level_search"),
 
     path("api/levels/pr/pending/", peer_review_pending_levels, name="level_pr_pending"),
-    path("api/levels/pr/<level_id>/", peer_review_review_level, name="level_pr_review")
+    path("api/levels/pr/<level_id>/", peer_review_review_level, name="level_pr_review"),
+    path("api/levels/pr/<level_id>/resolve_first/", peer_review_resolve_user_first, name="level_pr_resolve_first"),
 ]
