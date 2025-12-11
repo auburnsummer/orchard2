@@ -119,7 +119,11 @@ export const navigateAtom = atom(
       !skipCache
     ) {
       // if we have a cached response, use that instead of making a new request
-      set(handleResponseAtom, cachedResponse.response, url);
+      const cachedResponseWithoutMessages = {
+        ...cachedResponse.response,
+        messages: [],
+      };
+      set(handleResponseAtom, cachedResponseWithoutMessages, url);
       return;
     }
     const requestId = get(currentRequestIdAtom) + 1;
