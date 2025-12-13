@@ -1,4 +1,4 @@
-
+from datetime import datetime
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import get_object_or_404
 import msgspec
@@ -20,6 +20,8 @@ def peer_review_review_level(request: HttpRequest, level_id: int) -> JsonRespons
     print(pr_payload)
     # set level approval and save
     level.approval = pr_payload.approval
+    if level.approval == 10:
+        level.last_updated = datetime.now()
     level.save()
     # return success
     return JsonResponse({"level": level.to_dict()})
