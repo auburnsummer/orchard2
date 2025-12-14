@@ -5,9 +5,10 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: mode === "production" ? "/static/" : "/",
+  base: "/static",
   server: {
     cors: true,
+    origin: "http://localhost:5173",
   },
   build: {
     manifest: true,
