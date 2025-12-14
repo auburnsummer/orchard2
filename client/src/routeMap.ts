@@ -17,6 +17,9 @@ import { ProfileIndexView } from "./views/Profile/ProfileIndexView";
 import { ProfileSettingsView } from "./views/Profile/ProfileSettingsView";
 import { ClubSettingsRedeemInvite } from "./views/ClubSettings/ClubSettingsRedeemInvite";
 import { ProfileApiKeyView } from "./views/Profile/ProfileApiKeyView";
+import React from "react";
+
+const PeerReviewMainView = React.lazy(() => import("./views/PeerReview/PeerReviewMainView").then(m => ({ default: m.PeerReviewMainView })));
 
 export const appName = "cafe";
 
@@ -39,4 +42,6 @@ export const routeMap: { [key: string]: React.FunctionComponent<any> } = {
   "cafe:level_search": LevelSearch,
   "cafe:level_view": LevelView,
   "cafe:level_edit": LevelEdit,
+
+  "cafe:peer_review_main": PeerReviewMainView
 };

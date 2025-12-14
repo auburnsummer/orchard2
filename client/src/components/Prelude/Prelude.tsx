@@ -2,7 +2,6 @@ import { ReactNode, useEffect } from "react";
 import { Notifications } from "./Notifications";
 import { useUser } from "@cafe/hooks/useUser";
 import { LoadingBarContainer } from "react-top-loading-bar";
-import { LoadingBar } from "./LoadingBar";
 
 export function Prelude({ children }: { children: ReactNode }) {
   const user = useUser();
@@ -39,7 +38,6 @@ export function Prelude({ children }: { children: ReactNode }) {
   return (
     <>
       <LoadingBarContainer>
-        <LoadingBar />
         {children}
         <Notifications />
       </LoadingBarContainer>

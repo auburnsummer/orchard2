@@ -1,6 +1,6 @@
-import { Context, FunctionComponent } from "react";
+import { Context, FunctionComponent, LazyExoticComponent } from "react";
 
 export interface Config {
   contextProviders: Record<string, Context<any>>;
-  views: Record<string, FunctionComponent>;
+  views: Record<string, FunctionComponent | LazyExoticComponent<FunctionComponent<any>>>;
 }

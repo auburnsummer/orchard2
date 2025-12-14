@@ -179,7 +179,6 @@ WSGI_APPLICATION = 'orchard.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 if os.environ.get('DJANGO_DB_DIR'):
     # Use the directory specified in the environment variable for the SQLite database
     db_path = Path(os.environ['DJANGO_DB_DIR']).resolve() / 'db.sqlite3'
@@ -213,7 +212,6 @@ REDIS_PORT = os.environ.get('REDIS_PORT', '')
 REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD', None)
 
 NUMBER_OF_WORKERS = int(os.environ.get('NUMBER_OF_WORKERS', 1))
-
 
 
 # settings.py
