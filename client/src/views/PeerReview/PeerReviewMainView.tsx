@@ -16,8 +16,14 @@ export function PeerReviewMainView({ levels }: PeerReviewMainViewProps) {
                 <Words variant="header" className="mb-4">
                     Welcome to Peer Review!
                 </Words>
-                <img src={prart} alt="Peer Review Art" className="mb-4 w-md" />
-                <Words>
+                <img src={prart} alt="Peer Review Art" className="mb-4 w-md" title="Art by @fruit-sy on Tumblr" />
+                <Words variant="muted" as="p">
+                    (Art by @fruit-sy on Tumblr)
+                </Words>
+                <Words variant="subheader">
+                    Instructions
+                </Words>
+                <Words as="p">
                     instructions to go here
                 </Words>
             </Surface>

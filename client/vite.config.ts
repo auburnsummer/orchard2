@@ -4,8 +4,8 @@ import tailwindcss from "@tailwindcss/vite";
 // import { analyzer } from 'vite-bundle-analyzer'
 
 // https://vite.dev/config/
-export default defineConfig(({ mode }) => ({
-  base: "/static",
+export default defineConfig(() => ({
+  base: "/static/",
   server: {
     cors: true,
     origin: "http://localhost:5173",
