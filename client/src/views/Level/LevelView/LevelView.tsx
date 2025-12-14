@@ -278,6 +278,29 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
                   </div>
                 </Surface>
               )}
+              {/* PR status */}
+              <Surface className="p-4">
+                <div className="flex items-center gap-1 mb-2">
+                  <FontAwesomeIcon
+                    icon={faPen}
+                    className={styles.sectionIcon}
+                  />
+                  <Words className="font-medium ml-1">Peer Review Status</Words>
+                </div>
+                {rdlevel.approval === 10 ? (
+                  <Words variant="sm">
+                    Peer Reviewed
+                  </Words>
+                ) : rdlevel.approval === -1 ? (
+                  <Words variant="sm">
+                    Non-Refeered
+                  </Words>
+                ) : (
+                  <Words variant="sm">
+                    Pending Peer Review
+                  </Words>
+                )}
+              </Surface>
 
               <TextInput
                 label="Level ID"
@@ -285,6 +308,7 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
                 readOnly
                 rightSlot={<CopyIconButton value={rdlevel.id} />}
               />
+
             </div>
           </div>
         </div>
