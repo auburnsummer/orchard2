@@ -14,7 +14,7 @@ const MESSAGE_ELEMENTS: Record<MessageLevel, React.ReactNode> = {
 }
 
 // 7 seconds
-const MESSAGE_TIMEOUT = 7000;
+const MESSAGE_TIMEOUT = 70000000000000;
 
 export function Notifications() {
   // set by minibridge
@@ -42,9 +42,9 @@ export function Notifications() {
       {/* Global notification live region, render this permanently at the end of the document */}
       <div
         aria-live="assertive"
-        className="pointer-events-none fixed inset-0 top-12 flex items-end px-4 py-6 sm:items-start sm:p-6 z-50"
+        className="pointer-events-none fixed inset-0 top-12 flex flex-col-reverse items-end px-4 py-6 sm:items-start sm:p-6 z-50"
       >
-        <div className="flex w-full flex-col items-center space-y-4 sm:items-end">
+        <div className="flex w-full space-y-4 items-end">
           {/* Notification panel, dynamically insert this into the live region when it needs to be displayed */}
           <Transition show={displayedMessage !== undefined && showMessage}>
             <div className="pointer-events-auto w-full max-w-sm rounded-lg bg-white shadow-lg outline-1 outline-black/5 transition data-closed:opacity-0 data-enter:transform data-enter:duration-300 data-enter:ease-out data-closed:data-enter:translate-y-2 data-leave:duration-100 data-leave:ease-in data-closed:data-enter:sm:translate-x-2 data-closed:data-enter:sm:translate-y-0 dark:bg-gray-800 dark:-outline-offset-1 dark:outline-white/10">

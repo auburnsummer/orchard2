@@ -147,6 +147,7 @@ class User(AbstractUser):
             "avatarURL": try_get_avatar(self),
             "theme_preference": self.theme_preference,
             "is_superuser": self.is_superuser,
+            "is_peer_reviewer": self.has_perm("cafe.peerreview_rdlevel"),
         }
     
     def to_dict(self):

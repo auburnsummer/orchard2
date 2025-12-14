@@ -40,8 +40,8 @@ export function Prelude({ children }: { children: ReactNode }) {
     <>
       <LoadingBarContainer>
         <LoadingBar />
-        <Notifications />
         {children}
+        <Notifications />
       </LoadingBarContainer>
     </>
   );

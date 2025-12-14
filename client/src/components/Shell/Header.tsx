@@ -31,6 +31,9 @@ export function Header() {
     user.authenticated && user.is_superuser
       ? { name: "Admin", href: "/adminnn/" }
       : null,
+    user.authenticated && user.is_peer_reviewer
+      ? { name: "Peer Review Dashboard", href: "/peer-review/" }
+      : null,
     { name: "Log out", onClick: () => logOutForm.current?.submit() },
   ].filter((a) => a !== null);
 

@@ -11,6 +11,7 @@ export type AuthenticatedUser = {
   avatarURL: string | null;
   theme_preference: "light" | "dark" | "system";
   is_superuser: boolean;
+  is_peer_reviewer: boolean;
 };
 
 export type User = UnauthenticatedUser | AuthenticatedUser;
