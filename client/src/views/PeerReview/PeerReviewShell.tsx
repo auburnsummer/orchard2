@@ -8,6 +8,7 @@ import { RDLevel } from "@cafe/types/rdLevelBase"
 import { useAtomValue } from "jotai";
 
 import { useIsConfigured } from "./PeerReviewConfiguration";
+import { PendingLevelNavItem } from "./PendingLevelNavItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWarning } from "@fortawesome/free-solid-svg-icons";
 
@@ -38,14 +39,12 @@ function PeerReviewNavbar({pendingLevels}: PeerReviewShellProps) {
             {pendingLevels.length > 0 && <hr className="my-2 mx-4 border-t border-gray-300 dark:border-gray-700" />}
             {
                 pendingLevels.map((level) => (
-                    <NavEntry 
+                    <PendingLevelNavItem
                         key={level.id}
-                        as={Link}
+                        level={level}
                         href={`/peer-review/${level.id}/`}
                         active={pathname === `/peer-review/${level.id}/`}
-                    >
-                        {level.song}
-                    </NavEntry>
+                    />
                 ))
             }
         </Surface>
