@@ -2,7 +2,6 @@ import { NavEntry } from "@cafe/components/ui/NavEntry";
 import { Link } from "@cafe/minibridge/components/Link";
 import { RDLevel } from "@cafe/types/rdLevelBase";
 import { useState } from "react";
-import cc from "clsx";
 
 type PendingLevelNavItemProps = {
     level: RDLevel;

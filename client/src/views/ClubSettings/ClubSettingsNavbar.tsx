@@ -6,8 +6,6 @@ import { Surface } from "@cafe/components/ui/Surface";
 import { Words } from "@cafe/components/ui/Words";
 import { NavEntry } from "@cafe/components/ui/NavEntry";
 
-import cc from "clsx";
-
 type ClubSettingsNavbarProps = {
   club: Club;
 };

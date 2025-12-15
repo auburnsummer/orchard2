@@ -5,7 +5,6 @@ import { locationAtom } from "@cafe/minibridge/atoms";
 import { Avatar } from "@cafe/components/ui/Avatar";
 import { NavEntry } from "@cafe/components/ui/NavEntry";
 
-import cc from "clsx";
 import { Surface } from "@cafe/components/ui/Surface";
 import { Words } from "@cafe/components/ui/Words";
 
