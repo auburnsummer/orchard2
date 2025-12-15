@@ -27,6 +27,7 @@ import { TextInput } from "@cafe/components/ui/TextInput";
 import { Words } from "@cafe/components/ui/Words";
 
 import styles from "./LevelView.module.css";
+import { useUser } from "@cafe/hooks/useUser";
 
 type LevelViewProps = {
   rdlevel: RDLevel;
@@ -57,6 +58,10 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
   const getDifficultyString = (difficulty: number) => {
     return DIFFICULTY_STRINGS[difficulty] || "Unknown";
   };
+
+  const user = useUser();
+
+  const canPeerReview = user.authenticated && user.is_peer_reviewer;
 
   return (
     <Shell>
@@ -300,6 +305,13 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
                     Pending Peer Review
                   </Words>
                 )}
+                {
+                  canPeerReview && (
+                    <Words variant="link" as={Link} href={`/peer-review/${rdlevel.id}/`} className="mt-2 block text-sm">
+                      Go to PR Page for this level
+                    </Words>
+                  )
+                }
               </Surface>
 
               <TextInput

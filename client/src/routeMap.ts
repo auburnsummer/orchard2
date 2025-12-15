@@ -20,6 +20,7 @@ import { ProfileApiKeyView } from "./views/Profile/ProfileApiKeyView";
 import React from "react";
 
 const PeerReviewMainView = React.lazy(() => import("./views/PeerReview/PeerReviewMainView").then(m => ({ default: m.PeerReviewMainView })));
+const PeerReviewConfiguration = React.lazy(() => import("./views/PeerReview/PeerReviewConfiguration").then(m => ({ default: m.PeerReviewConfiguration })));
 
 export const appName = "cafe";
 
@@ -43,5 +44,6 @@ export const routeMap: { [key: string]: React.FunctionComponent<any> } = {
   "cafe:level_view": LevelView,
   "cafe:level_edit": LevelEdit,
 
-  "cafe:peer_review_main": PeerReviewMainView
+  "cafe:peer_review_main": PeerReviewMainView,
+  "cafe:peer_review_config": PeerReviewConfiguration
 };

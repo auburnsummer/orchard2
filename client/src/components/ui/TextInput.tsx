@@ -8,6 +8,7 @@ type TextInputProps = React.ComponentPropsWithRef<'input'> & {
   inputClassName?: string;
   description?: string;
   rightSlot?: React.ReactNode;
+  required?: boolean;
 };
 
 export function TextInput({
@@ -17,6 +18,7 @@ export function TextInput({
   inputClassName,
   description,
   rightSlot,
+  required,
   ...props
 }: TextInputProps) {
   return (
@@ -31,6 +33,7 @@ export function TextInput({
             )}
           >
             {label}
+            {required && <span className="text-red-500 ml-1">*</span>}
           </label>
         )
       }

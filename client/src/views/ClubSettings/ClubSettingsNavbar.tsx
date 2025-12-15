@@ -41,7 +41,7 @@ export function ClubSettingsNavbar({ club }: ClubSettingsNavbarProps) {
             key={link.href}
             as={Link} 
             href={link.href}
-            className={cc({"bg-violet-100 dark:bg-white/10" : pathname === link.href})}
+            active={pathname === link.href}
           >
             {link.label}
           </NavEntry>

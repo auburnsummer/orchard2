@@ -40,7 +40,7 @@ export function ProfileNavbar() {
       </div>
       <div className="flex flex-col">
         {links.map((link) => (
-          <NavEntry as={Link} href={link.href} className={cc({"bg-violet-100 dark:bg-white/10" : pathname === link.href})}>
+          <NavEntry as={Link} href={link.href} active={pathname === link.href}>
             {link.label}
           </NavEntry>
         ))}
