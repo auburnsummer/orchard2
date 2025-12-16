@@ -26,6 +26,7 @@
     "json-edit-react": "^1.26.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-tooltip": "^5.30.0",
     "react-top-loading-bar": "^3.0.2",
     "tailwindcss": "^4.1.14"
   },

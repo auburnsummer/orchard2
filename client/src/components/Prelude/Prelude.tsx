@@ -2,6 +2,7 @@ import { ReactNode, useEffect } from "react";
 import { Notifications } from "./Notifications";
 import { useUser } from "@cafe/hooks/useUser";
 import { LoadingBarContainer } from "react-top-loading-bar";
+import { TooltipProvider } from "@cafe/hooks/useTooltip";
 
 export function Prelude({ children }: { children: ReactNode }) {
   const user = useUser();
@@ -38,8 +39,10 @@ export function Prelude({ children }: { children: ReactNode }) {
   return (
     <>
       <LoadingBarContainer>
-        {children}
-        <Notifications />
+        <TooltipProvider>
+          {children}
+          <Notifications />
+        </TooltipProvider>
       </LoadingBarContainer>
     </>
   );

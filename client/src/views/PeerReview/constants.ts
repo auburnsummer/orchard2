@@ -1,15 +1,6 @@
 export const BAD_THING_CATS = ['level', 'rows', 'metadata'] as const;
 
-export type BadThingCategory = typeof BAD_THING_CATS[number];
-
-export type BadThing = {
-    name: string;
-    description: string;
-    category: BadThingCategory;
-    hidden?: boolean;
-};
-
-export const BAD_THINGS: BadThing[] = [
+export const BAD_THINGS = [
     {
         name: "(did not play completely, might have other problems)",
         description: "A pharmacist did not review the entirety of the level. This often happens when pharmacists have a lot of levels to get through. Levels CANNOT be PRd if this is selected.",
@@ -186,3 +177,9 @@ export const BAD_THINGS: BadThing[] = [
         category: "metadata"
     } as const,
 ].sort((a, b) => a.name.localeCompare(b.name));
+
+export type BadThing = typeof BAD_THINGS[number];
+
+export type BadThingCategory = typeof BAD_THING_CATS[number];
+
+export type BadThingNames = BadThing['name'];

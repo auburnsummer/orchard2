@@ -4,6 +4,7 @@ import { Surface } from "@cafe/components/ui/Surface";
 import { Words } from "@cafe/components/ui/Words";
 
 import prart from "./prart.jpg";
+import { Checkbox } from "@cafe/components/ui/Checkbox";
 
 type PeerReviewMainViewProps = {
     levels: RDLevel[];
@@ -26,6 +27,11 @@ export function PeerReviewMainView({ levels }: PeerReviewMainViewProps) {
                 <Words as="p">
                     instructions to go here
                 </Words>
+                <Checkbox
+                    label="I agree to receive 238 potatos each month."
+                    description="efwefwafwef"
+                    showDescriptionAsTooltip={true}
+                />
             </Surface>
         </PeerReviewShell>
     )

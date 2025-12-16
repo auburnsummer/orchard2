@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useRef } from "react";
 import cc from "clsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { useTooltip } from "@cafe/hooks/useTooltip";
 
 type CheckboxProps = Omit<React.ComponentPropsWithRef<'input'>, 'type'> & {
   label?: string | React.ReactNode;
   className?: string;
   labelClassName?: string;
   description?: string;
+  showDescriptionAsTooltip?: boolean;
 };
 
 export function Checkbox({
@@ -16,13 +18,33 @@ export function Checkbox({
   labelClassName,
   description,
   id,
+  showDescriptionAsTooltip = false,
   ...props
 }: CheckboxProps) {
   const labelId = id ? `${id}-label` : undefined;
   const descriptionId = id && description ? `${id}-description` : undefined;
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const tooltip = useTooltip();
+
+  const handleMouseEnter = () => {
+    if (showDescriptionAsTooltip && description && wrapperRef.current) {
+      tooltip.show(description, wrapperRef.current);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (showDescriptionAsTooltip && description) {
+      tooltip.hide();
+    }
+  };
 
   return (
-    <div className={cc("flex items-start gap-3", className)}>
+    <div 
+      ref={wrapperRef}
+      className={cc("flex items-start gap-3", className)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <div className="flex h-6 items-center">
         <div className="group relative">
           <input
@@ -43,11 +65,15 @@ export function Checkbox({
       {(label || description) && (
         <div className="text-sm">
           {label && (
-            <label id={labelId} htmlFor={id} className={cc("font-medium text-slate-900 dark:text-white cursor-pointer", labelClassName)}>
+            <label 
+              id={labelId} 
+              htmlFor={id} 
+              className={cc("font-medium text-slate-900 dark:text-white cursor-pointer", labelClassName)}
+            >
               {label}
             </label>
           )}
-          {description && (
+          {!showDescriptionAsTooltip && description && (
             <p id={descriptionId} className="mt-0.5 text-slate-500 dark:text-slate-400">
               {description}
             </p>

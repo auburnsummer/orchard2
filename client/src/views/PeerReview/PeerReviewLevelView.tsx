@@ -2,6 +2,10 @@ import { RDLevel } from "@cafe/types/rdLevelBase";
 import { PeerReviewShell } from "./PeerReviewShell";
 import { Surface } from "@cafe/components/ui/Surface";
 import { PixelButton } from "./PixelButton";
+import { useState } from "react";
+import { BAD_THING_CATS, BAD_THINGS } from "./constants";
+import Fieldset from "@cafe/components/ui/Fieldset";
+import { Checkbox } from "@cafe/components/ui/Checkbox";
 
 type PeerReviewMainViewProps = {
     levels: RDLevel[];
@@ -56,6 +60,8 @@ function getApprovalStatus(approval: number): { text: string; variant: 'pr' | 'n
 export function PeerReviewLevelView({ levels, rdlevel }: PeerReviewMainViewProps) {
     const approvalStatus = getApprovalStatus(rdlevel.approval);
 
+    const [reasons, setReasons] = useState<Set<string>>(new Set());
+
     return (
         <PeerReviewShell pendingLevels={levels}>
             <Surface className="m-4 relative p-6 shadow-xl border border-gray-300 dark:border-gray-700 bg-white/70 dark:bg-slate-800/70 backdrop-blur-lg overflow-hidden">
@@ -88,6 +94,7 @@ export function PeerReviewLevelView({ levels, rdlevel }: PeerReviewMainViewProps
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-3xl font-extrabold text-blue-600 dark:text-blue-400 hover:underline"
+                                
                             >
                                 {rdlevel.song}
                             </a>
@@ -137,6 +144,26 @@ export function PeerReviewLevelView({ levels, rdlevel }: PeerReviewMainViewProps
                         {new Date(rdlevel.last_updated).toLocaleString()}
                     </div>
                 </div>
+
+                {/* form display */}
+                {
+                    BAD_THING_CATS.map(cat => (
+                        <Fieldset legend={cat} key={cat} className="capitalize">
+                            <div className="normal-case">
+                                {
+                                    BAD_THINGS.filter(bt => bt.category === cat).map(bt => (
+                                        <Checkbox
+                                            key={bt.name}
+                                            label={bt.name}
+                                            description={bt.description}
+                                            showDescriptionAsTooltip
+                                        />
+                                    ))
+                                }
+                            </div>
+                        </Fieldset>
+                    ))
+                }
             </Surface>
         </PeerReviewShell>
     )
