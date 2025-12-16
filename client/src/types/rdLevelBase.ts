@@ -40,5 +40,9 @@ export type RDLevel = RDLevelBase & {
   song_alt: string;
   submitter: UserPublic;
   club: Club;
+  // 10 = peer-reviewed, 0 = pending, -1 = non-refereed
+  // other numbers are unused. I had some idea about 0-9 being different kinds
+  // of pending a la http status codes
+  // like you could mark a level as "pending minor changes" or "i want a second opinion"
   approval: number;
 };

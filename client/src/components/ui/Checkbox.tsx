@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useId, useRef } from "react";
 import cc from "clsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
@@ -21,8 +21,10 @@ export function Checkbox({
   showDescriptionAsTooltip = false,
   ...props
 }: CheckboxProps) {
-  const labelId = id ? `${id}-label` : undefined;
-  const descriptionId = id && description ? `${id}-description` : undefined;
+  const generatedId = useId();
+  const checkboxId = id ?? generatedId;
+  const labelId = `${checkboxId}-label`;
+  const descriptionId = description ? `${checkboxId}-description` : undefined;
   const wrapperRef = useRef<HTMLDivElement>(null);
   const tooltip = useTooltip();
 
@@ -49,7 +51,7 @@ export function Checkbox({
         <div className="group relative">
           <input
             {...props}
-            id={id}
+            id={checkboxId}
             type="checkbox"
             aria-labelledby={labelId}
             aria-describedby={descriptionId}
@@ -67,7 +69,7 @@ export function Checkbox({
           {label && (
             <label 
               id={labelId} 
-              htmlFor={id} 
+              htmlFor={checkboxId} 
               className={cc("font-medium text-slate-900 dark:text-white cursor-pointer", labelClassName)}
             >
               {label}

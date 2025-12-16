@@ -6,16 +6,21 @@ type PixelButtonProps = {
     children: React.ReactNode;
     onClick?: () => void;
     className?: string;
+    inactive?: boolean;
 };
+/*
+ BEAUTIFUL Custom Made & Integrated Approval Status Rhythm Doctor Styled Approval Status Buttons
 
-export function PixelButton({ variant, children, onClick, className }: PixelButtonProps) {
+ ...special thanks whoever in pathlab made these hehe
+*/
+export function PixelButton({ variant, children, onClick, className, inactive = false }: PixelButtonProps) {
     const textColor = variant === 'pd' ? 'black' : 'white';
 
     return (
         <div className={cc("pixel-button-wrapper", className)}>
             <button
                 type="button"
-                className={cc("status-button-display", variant)}
+                className={cc("status-button-display", variant, { "opacity-25": inactive })}
                 style={{ 
                     fontFamily: "Pixel-Font, 'Courier New', monospace", 
                     color: textColor 

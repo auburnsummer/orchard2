@@ -3,7 +3,7 @@ import { PeerReviewShell } from "./PeerReviewShell";
 import { Surface } from "@cafe/components/ui/Surface";
 import { PixelButton } from "./PixelButton";
 import { useState } from "react";
-import { BAD_THING_CATS, BAD_THINGS } from "./constants";
+import { BAD_THING_CATS, BAD_THINGS, BadThingNames } from "./constants";
 import Fieldset from "@cafe/components/ui/Fieldset";
 import { Checkbox } from "@cafe/components/ui/Checkbox";
 
@@ -52,22 +52,37 @@ function getPreviewText(level: RDLevel, key: typeof PROPERTIES_TO_SHOW_IN_PREVIE
 }
 
 function getApprovalStatus(approval: number): { text: string; variant: 'pr' | 'nr' | 'pd' } {
-    if (approval > 0) return { text: 'Peer-Reviewed', variant: 'pr' };
+    if (approval >= 10) return { text: 'Peer-Reviewed', variant: 'pr' };
     if (approval < 0) return { text: 'Non-Refereed', variant: 'nr' };
     return { text: 'Pending', variant: 'pd' };
 }
 
 export function PeerReviewLevelView({ levels, rdlevel }: PeerReviewMainViewProps) {
-    const approvalStatus = getApprovalStatus(rdlevel.approval);
+    const [approvalIntent, setApprovalIntent] = useState<number>(rdlevel.approval);
 
-    const [reasons, setReasons] = useState<Set<string>>(new Set());
+    const currentApprovalStatus = getApprovalStatus(rdlevel.approval);
+
+    const [reasons, setReasons] = useState<Record<BadThingNames, boolean>>(() => {
+        const initialReasons: Record<string, boolean> = {};
+        BAD_THINGS.forEach(bt => {
+            initialReasons[bt.name] = false;
+        });
+        return initialReasons as Record<BadThingNames, boolean>;
+    });
+
+    const toggleReason = (name: BadThingNames) => {
+        setReasons(prev => ({
+            ...prev,
+            [name]: !prev[name]
+        }));
+    };
 
     return (
         <PeerReviewShell pendingLevels={levels}>
             <Surface className="m-4 relative p-6 shadow-xl border border-gray-300 dark:border-gray-700 bg-white/70 dark:bg-slate-800/70 backdrop-blur-lg overflow-hidden">
                 {/* Background Blur Image */}
                 <div 
-                    className="absolute inset-0 opacity-10 blur-xl"
+                    className="absolute inset-0 opacity-10 blur-xl pointer-events-none"
                     style={{
                         backgroundImage: `url('${rdlevel.image_url}')`,
                         backgroundSize: 'cover',
@@ -134,8 +149,12 @@ export function PeerReviewLevelView({ levels, rdlevel }: PeerReviewMainViewProps
 
                 {/* Approval Badge */}
                 <br />
-                <PixelButton variant={approvalStatus.variant}>
-                    {approvalStatus.text}
+                <PixelButton
+                    variant={currentApprovalStatus.variant}
+                    onClick={() => setApprovalIntent(rdlevel.approval)}
+                    inactive={approvalIntent !== rdlevel.approval}
+                >
+                    {currentApprovalStatus.text}
                 </PixelButton>
 
                 {/* Timestamp */}
@@ -146,24 +165,54 @@ export function PeerReviewLevelView({ levels, rdlevel }: PeerReviewMainViewProps
                 </div>
 
                 {/* form display */}
-                {
-                    BAD_THING_CATS.map(cat => (
-                        <Fieldset legend={cat} key={cat} className="capitalize">
-                            <div className="normal-case">
-                                {
-                                    BAD_THINGS.filter(bt => bt.category === cat).map(bt => (
-                                        <Checkbox
-                                            key={bt.name}
-                                            label={bt.name}
-                                            description={bt.description}
-                                            showDescriptionAsTooltip
-                                        />
-                                    ))
-                                }
-                            </div>
-                        </Fieldset>
-                    ))
-                }
+                <div className="mt-4">
+                    {
+                        BAD_THING_CATS.map(cat => (
+                            <Fieldset legend={cat} key={cat} className="capitalize">
+                                <div className="normal-case grid lg:grid-cols-3 md:grid-cols-2">
+                                    {
+                                        BAD_THINGS.filter(bt => bt.category === cat).map(bt => (
+                                            <Checkbox
+                                                key={bt.name}
+                                                label={bt.name}
+                                                description={bt.description}
+                                                showDescriptionAsTooltip
+                                                checked={reasons[bt.name]}
+                                                onChange={() => toggleReason(bt.name)}
+                                            />
+                                        ))
+                                    }
+                                </div>
+                            </Fieldset>
+                        ))
+                    }
+                </div>
+
+                <div className="flex flex-row">
+                    <PixelButton 
+                        variant="nr" 
+                        className="mr-4" 
+                        onClick={() => setApprovalIntent(-1)}
+                        inactive={approvalIntent !== -1}
+                    >
+                        Non-Refereed
+                    </PixelButton>
+                    <PixelButton 
+                        variant="pd" 
+                        className="mr-4" 
+                        onClick={() => setApprovalIntent(0)}
+                        inactive={approvalIntent !== 0}
+                    >
+                        Pending
+                    </PixelButton>
+                    <PixelButton 
+                        variant="pr" 
+                        onClick={() => setApprovalIntent(10)}
+                        inactive={approvalIntent !== 10}
+                    >
+                        Peer-Reviewed
+                    </PixelButton>
+                </div>
             </Surface>
         </PeerReviewShell>
     )
