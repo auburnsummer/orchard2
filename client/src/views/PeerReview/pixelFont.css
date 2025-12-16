@@ -1,0 +1,115 @@
+@font-face {
+  font-family: 'Pixel-Font';
+  src: url('https://jgouken.github.io/PRToolVersionCheck/RD%20Pixel%20Font/rhythm-doctor-pixel-font.otf.woff2') format('woff2');
+}
+
+.pixel-button-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.status-button-display {
+  position: relative;
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  font-size: 1rem;
+  background: white;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  z-index: 0;
+  left: 8px;
+  width: calc(100% - 16px);
+}
+
+.status-button-display.pr {
+  background: #4CAF50;
+  color: white;
+}
+
+.status-button-display.nr {
+  background: #F44336;
+  color: white;
+}
+
+.status-button-display.pd {
+  background: #ffe600;
+  color: black;
+}
+
+.pixel-outline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.pixel-outline::before,
+.pixel-outline::after {
+  content: '';
+  position: absolute;
+  background-color: #e2e2e2;
+}
+
+.pixel-outline::before {
+  top: 0;
+  left: 8px;
+  right: 8px;
+  height: 7px;
+}
+
+.pixel-outline::after {
+  bottom: 0;
+  left: 8px;
+  right: 8px;
+  height: 7px;
+}
+
+.pixel-outline .side {
+  position: absolute;
+  width: 8px;
+  top: 7px;
+  bottom: 7px;
+  background: black;
+}
+
+.pixel-outline .left {
+  left: 0;
+}
+
+.pixel-outline .right {
+  right: 0;
+}
+
+.corner-dot {
+  position: absolute;
+  width: 8px;
+  height: 7px;
+  background: black;
+  z-index: 2;
+}
+
+/* Inner corner dots */
+.corner-dot.tl {
+  top: 7px;
+  left: 8px;
+}
+
+.corner-dot.tr {
+  top: 7px;
+  right: 8px;
+}
+
+.corner-dot.bl {
+  bottom: 7px;
+  left: 8px;
+}
+
+.corner-dot.br {
+  bottom: 7px;
+  right: 8px;
+}

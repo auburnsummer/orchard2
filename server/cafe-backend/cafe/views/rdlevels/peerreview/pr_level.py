@@ -3,7 +3,9 @@ from django_bridge.response import Response
 
 from cafe.models import RDLevel
 from cafe.views.types import HttpRequest
-from rules.contrib.views import objectgetter, permission_required
+from rules.contrib.views import permission_required
+
+
 
 @permission_required('cafe.peerreview_rdlevel')
 def pr_rdlevel(request: HttpRequest, level_id: str):
