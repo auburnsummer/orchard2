@@ -24,7 +24,17 @@ export function PeerReviewMainView({ levels }: PeerReviewMainViewProps) {
                     Instructions
                 </Words>
                 <Words as="p">
-                    instructions to go here
+                    1. Go to the Configuration page and fill out the two webhook URLs. A token is no longer required.
+                </Words>
+                <Words as="p">
+                    2. Click on a level from the list to review it.
+                </Words>
+                <Words variant="subheader">Updating the Form</Words>
+                <Words as="p">
+                    Since the Peer Review Tool is not a single HTML file anymore, it is a little trickier to update.
+                </Words>
+                <Words as="p">
+                    Please see instructions here todo add link on how to update the form.
                 </Words>
             </Surface>
         </PeerReviewShell>

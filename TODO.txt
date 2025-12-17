@@ -9,6 +9,7 @@
 
     - API to set a blend. reuse PR permissions.
 
+ - method to upload levels "privately"
 
  - add public test server in plpasscode
  - think about what we should actually put on the user's profile page for now
@@ -27,3 +28,7 @@
  - delete club (what do we do about their levels?)
  - migration plan for RDL (i.e. transition line the second)
  - make the loading screen not suck
+
+==== AFTER RELEASE ====
+
+ - setlists??
