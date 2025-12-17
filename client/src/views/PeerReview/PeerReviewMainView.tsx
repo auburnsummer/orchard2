@@ -27,11 +27,6 @@ export function PeerReviewMainView({ levels }: PeerReviewMainViewProps) {
                 <Words as="p">
                     instructions to go here
                 </Words>
-                <Checkbox
-                    label="I agree to receive 238 potatos each month."
-                    description="efwefwafwef"
-                    showDescriptionAsTooltip={true}
-                />
             </Surface>
         </PeerReviewShell>
     )

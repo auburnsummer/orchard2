@@ -14,7 +14,7 @@ const MESSAGE_ELEMENTS: Record<MessageLevel, React.ReactNode> = {
 }
 
 // 7 seconds
-const MESSAGE_TIMEOUT = 70000000000000;
+const MESSAGE_TIMEOUT = 7000;
 
 export function Notifications() {
   // set by minibridge
