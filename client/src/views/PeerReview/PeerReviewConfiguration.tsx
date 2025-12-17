@@ -72,7 +72,7 @@ export function PeerReviewConfiguration({ levels }: PeerReviewConfigurationProps
                     <div className="space-y-4">
                         <TextInput
                             id="pathlabWebhookUrl"
-                            label="Pathology-Lab Webhook URL"
+                            label="Pathology-Lab (Private) Webhook URL"
                             description="Find more information using the Help button above."
                             value={pathlabWebhookUrl}
                             onChange={(e) => setPathlabWebhookUrl(e.target.value)}
@@ -82,7 +82,7 @@ export function PeerReviewConfiguration({ levels }: PeerReviewConfigurationProps
                         />
                         <TextInput
                             id="publicWebhookUrl"
-                            label="Pathology-Reports Webhook URL"
+                            label="Pathology-Reports (Public) Webhook URL"
                             description="Find more information using the Help button above."
                             value={publicWebhookUrl}
                             onChange={(e) => setPublicWebhookUrl(e.target.value)}

@@ -42,6 +42,7 @@ def pr_rdlevel(request: HttpRequest, level_id: str):
         "rdlevel": rdlevel.to_dict(),
         "is_first_level": is_first_level,
         "discord_id": social_account.uid if social_account else None,
+        "prev_notes": rdlevel.approval_notes_private
     }
 
     return Response(request, request.resolver_match.view_name, props)

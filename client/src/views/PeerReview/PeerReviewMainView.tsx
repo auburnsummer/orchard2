@@ -4,7 +4,6 @@ import { Surface } from "@cafe/components/ui/Surface";
 import { Words } from "@cafe/components/ui/Words";
 
 import prart from "./prart.jpg";
-import { Checkbox } from "@cafe/components/ui/Checkbox";
 
 type PeerReviewMainViewProps = {
     levels: RDLevel[];
