@@ -8,6 +8,7 @@ from .models.clubs.club_invite import ClubInvite
 from .models.discord_guild import DiscordGuild
 from .models.rdlevels.prefill import RDLevelPrefillResult
 from .models.rdlevels.rdlevel import RDLevel
+from .models.rdlevels.daily_blend import DailyBlend
 from simple_history.admin import SimpleHistoryAdmin
 
 @admin.register(User)
@@ -31,3 +32,4 @@ admin.site.register(ClubInvite)
 admin.site.register(DiscordGuild)
 admin.site.register(RDLevelPrefillResult)
 admin.site.register(RDLevel, SimpleHistoryAdmin)
+admin.site.register(DailyBlend)

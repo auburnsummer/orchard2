@@ -28,6 +28,8 @@ can_delete = rules.is_authenticated & (rules.is_superuser | is_at_least_admin_of
 
 can_review = rules.is_authenticated & (rules.is_superuser | is_pharmacist)
 
+can_blend = can_review
+
 class RDLevel(RulesModel):
     """
     An RDLevel represents a single Rhythm Doctor level.
@@ -133,5 +135,7 @@ class RDLevel(RulesModel):
             # cafe.delete_rdlevel
             "delete": can_delete,
             # cafe.peerreview_rdlevel
-            "peerreview": can_review
+            "peerreview": can_review,
+            # cafe.blend_rdlevel
+            "blend": can_blend
         }

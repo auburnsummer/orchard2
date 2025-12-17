@@ -1,18 +1,15 @@
  - PR flow
-    - special club for pharmacists. hardcoded club id.
-        - membership follows normal club rules (invite links etc)
-        - attached discord server will be plpasscode server
-    - pharmacists can edit the peer review metadata
-        - should they be able to edit the other metadata (ex localised name)?
-        - probably, we're already trusting them
-        - they probably shouldn't be able to delete though
-    - add views for PR
-      - we're not reusing the pr tool
+    - beta test in back alley
        
  - daily blend
     - probably a table with [date, level] and date is unique
     - so that you can schedule them easily
     - notifications?? how do we get the discord message out
+    - ... we don't for now, that's the responsibility of the caller I guess
+
+    - API to set a blend. reuse PR permissions.
+
+
  - add public test server in plpasscode
  - think about what we should actually put on the user's profile page for now
  - user can access a list of all their levels

@@ -1,5 +1,6 @@
 from django.urls import path
 
+from cafe.views.api.blend.set_daily_blend import set_daily_blend
 from cafe.views.rdlevels.peerreview.pr_level import pr_rdlevel
 from cafe.views.rdlevels.peerreview.pr_main import pr_main
 
@@ -63,5 +64,7 @@ urlpatterns = [
 
     path("peer-review/", pr_main, name="peer_review_main"),
     path("peer-review/config/", pr_main, name="peer_review_config"),
-    path("peer-review/<level_id>/", pr_rdlevel, name="peer_review_level")
+    path("peer-review/<level_id>/", pr_rdlevel, name="peer_review_level"),
+
+    path("api/set_daily_blend/", set_daily_blend, name="set_daily_blend"),
 ]

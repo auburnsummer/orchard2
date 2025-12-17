@@ -1,13 +1,18 @@
 import { Link } from "@cafe/minibridge/components/Link";
 import { Shell } from "../components/Shell";
 import { Words } from "@cafe/components/ui/Words";
+import { RDLevel } from "@cafe/types/rdLevelBase";
+import { LevelCard } from "@cafe/components/LevelCard/LevelCard";
 
+type HomeViewProps = {
+  daily_blend_level: RDLevel | null;
+}
 
-export function HomeView() {
+export function HomeView({ daily_blend_level }: HomeViewProps) {
   return (
     <Shell>
       <div className="flex flex-col lg:flex-row gap-8 p-8 max-w-7xl mx-auto">
-        {/* Left side - Content */}
+        {/* left side */}
         <div className="flex-1 flex flex-col gap-6">
           <div>
             <Words as="p" className="text-lg mb-2">
@@ -51,13 +56,28 @@ export function HomeView() {
           </div>
         </div>
 
-        {/* Right side - Illustration Placeholder */}
+        {/* right side */}
         <div className="flex-1 flex items-center justify-center">
-          <div className="w-full max-w-md aspect-square rounded-lg shadow-lg flex items-center justify-center bg-purple-200 dark:bg-purple-600">
+          <div className="w-full max-w-md aspect-square rounded-md shadow-sm flex items-center justify-center bg-violet-300 dark:bg-violet-600">
             <div className="flex flex-col gap-4">
-              <Words className="text-center px-8">
-                The daily blend goes here probably
-              </Words>
+              {daily_blend_level ? (
+                <>
+                  <Words as="h2" variant="subheader" className="text-center px-8">
+                    Today's featured custom level
+                  </Words>
+                  <LevelCard
+                    level={daily_blend_level}
+                    href={`/levels/${daily_blend_level.id}`}
+                    className="shadow-lg"
+                  />
+                </>
+              ) : (
+                <>
+                  <Words as="p" className="text-center px-8">
+                    This is where the Daily Blend will appear once it has been set.
+                  </Words>
+                </>
+              )}
             </div>
           </div>
         </div>
