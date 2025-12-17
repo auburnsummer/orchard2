@@ -23,7 +23,7 @@ def pr_rdlevel(request: HttpRequest, level_id: str):
             rdlevel.approval_notes_public = form.cleaned_data.get("public_comment")
             rdlevel.approval_notes_private = form.cleaned_data.get("private_comment")
             rdlevel.save()
-            messages.add_message(request, messages.SUCCESS, "Peer review submitted successfully.")
+            messages.add_message(request, messages.SUCCESS, "Your review has been submitted! *Applauds your hard work*")
 
     rdlevel = get_object_or_404(RDLevel, id=level_id)
     submitter = rdlevel.submitter
