@@ -1,8 +1,6 @@
 from django.urls import path
-from django.views.generic import TemplateView
 
 from cafe.views.rdlevels.peerreview.pr_level import pr_rdlevel
-from cafe.views.rdlevels.peerreview.peer_review_resolve_user_first import peer_review_resolve_user_first
 from cafe.views.rdlevels.peerreview.pr_main import pr_main
 
 from .views.index import index
@@ -30,12 +28,6 @@ from .views.rdlevels.edit_rdlevel import edit_rdlevel
 from .views.rdlevels.prefill.prefill_stage_one import prefill_stage_one
 from .views.rdlevels.prefill.prefill_stage_two import prefill_stage_two
 from .views.rdlevels.view_rdlevel import view_rdlevel
-
-from .views.rdlevels.peerreview.peer_review_pending_levels import peer_review_pending_levels
-from .views.rdlevels.peerreview.peer_review_review_level import peer_review_review_level
-
-def trigger_error(request):
-    division_by_zero = 1 / 0
 
 app_name = "cafe"
 urlpatterns = [
@@ -71,9 +63,5 @@ urlpatterns = [
 
     path("peer-review/", pr_main, name="peer_review_main"),
     path("peer-review/config/", pr_main, name="peer_review_config"),
-    path("peer-review/<level_id>/", pr_rdlevel, name="peer_review_level"),
-
-    path("api/levels/pr/pending/", peer_review_pending_levels, name="level_pr_pending"),
-    path("api/levels/pr/<level_id>/", peer_review_review_level, name="level_pr_review"),
-    path("api/levels/pr/<level_id>/resolve_first/", peer_review_resolve_user_first, name="level_pr_resolve_first"),
+    path("peer-review/<level_id>/", pr_rdlevel, name="peer_review_level")
 ]

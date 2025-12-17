@@ -1,4 +1,3 @@
-import { atom } from 'jotai';
 import { createContext, useContext, useState, ReactNode, CSSProperties } from 'react';
 
 interface TooltipPosition {
