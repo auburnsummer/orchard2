@@ -183,3 +183,46 @@ export type BadThing = typeof BAD_THINGS[number];
 export type BadThingCategory = typeof BAD_THING_CATS[number];
 
 export type BadThingNames = BadThing['name'];
+
+export const JAM_TAGS = [
+    "RDRPG",
+    "Internet Jam",
+    "smol Jam",
+    "Two-Handed Jam",
+    "Workshop Jam",
+    "Vanilla Jam",
+    "Creepypasta Jam",
+    "Old Jam",
+    "Odd Jam",
+    "RDSRT",
+    "RDSRT1",
+    "RDSRT2",
+    "RDSRT3",
+    "Animal Jam",
+    "Square Jam",
+    "Tasty Jam",
+    "Spicy Jam",
+    "Street Life Jam"
+];
+
+export const BLOCKED_ARTISTS = [
+    "ICE",
+    "Project Grimoire",
+    "KIVA",
+    "Æsir",
+    "AEsir",
+    "KillerBlood",
+    "Lesitia",
+    "Sound Souler",
+    "litmus*",
+    "Zekk",
+    "Team ArcStar",
+    "antiPLUR",
+    "Paul Bazooka",
+    "Sound piercer",
+    "Cosmograph",
+    "a_hisa",
+    "xi",
+    "Tuyu",
+    "ツユ"
+];
