@@ -13,11 +13,11 @@ export function LevelEdit({ rdlevel }: LevelEditProps) {
       level={rdlevel}
       preamble={
         <Alert>
-          <Words>
+          <Words as="p">
             This page is for changing the metadata of the level without changing
             the actual .rdzip file.
           </Words>
-          <Words>
+          <Words as="p">
             If you want to upload a new .rdzip file, please upload it to Discord
             first, use the "Add to Rhythm Café" command, then select "Update to
             existing level."

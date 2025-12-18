@@ -45,4 +45,5 @@ export type RDLevel = RDLevelBase & {
   // of pending a la http status codes
   // like you could mark a level as "pending minor changes" or "i want a second opinion"
   approval: number;
+  is_private: boolean;
 };

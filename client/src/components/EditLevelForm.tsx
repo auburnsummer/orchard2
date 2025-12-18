@@ -21,7 +21,8 @@ import { Checkbox } from "./ui/Checkbox";
 const CHECKBOXES = [
   ["single_player", "Single Player"],
   ["two_player", "Two Player"],
-  ["seizure_warning", "Seizure Warning"]
+  ["seizure_warning", "Seizure Warning"],
+  ["is_private", "Private (hidden from search)"]
 ] as const;
 
 type EditLevelFormProps = {
@@ -51,7 +52,9 @@ export function EditLevelForm({
   return (
     <Shell aside={<PrefillPreview level={level} />}>
       <Surface className="flex flex-col gap-4 m-4">
-        {preamble}
+        <div className="p-4">
+          {preamble}
+        </div>
         <div className="mx-4">
           <div className="flex justify-between">
             <Button onClick={(_) => setLevel(initialLevel)} variant="default">Reset</Button>

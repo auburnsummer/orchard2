@@ -29,13 +29,6 @@ export function PeerReviewMainView({ levels }: PeerReviewMainViewProps) {
                 <Words as="p">
                     2. Click on a level from the list to review it.
                 </Words>
-                <Words variant="subheader">Updating the Form</Words>
-                <Words as="p">
-                    Since the Peer Review Tool is not a single HTML file anymore, it is a little trickier to update.
-                </Words>
-                <Words as="p">
-                    Please see instructions here todo add link on how to update the form.
-                </Words>
             </Surface>
         </PeerReviewShell>
     )

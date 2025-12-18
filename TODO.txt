@@ -1,17 +1,8 @@
  - PR flow
     - beta test in back alley
-       
- - daily blend
-    - probably a table with [date, level] and date is unique
-    - so that you can schedule them easily
-    - notifications?? how do we get the discord message out
-    - ... we don't for now, that's the responsibility of the caller I guess
-
-    - API to set a blend. reuse PR permissions.
-
- - method to upload levels "privately"
 
  - add public test server in plpasscode
+
  - think about what we should actually put on the user's profile page for now
  - user can access a list of all their levels
  - club admins/owners can access a list of all the club's levels

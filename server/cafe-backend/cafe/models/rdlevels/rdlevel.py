@@ -79,6 +79,8 @@ class RDLevel(RulesModel):
     approval_notes_private = models.TextField(blank=True, default="")
     approval_notes_public = models.TextField(blank=True, default="")
 
+    is_private = models.BooleanField(blank=False, default=False)
+
     history = HistoricalRecords()
 
     def __str__(self):
@@ -117,6 +119,7 @@ class RDLevel(RulesModel):
             "club": self.club.to_dict(),
             "approval": self.approval,
             "approval_notes_public": self.approval_notes_public,
+            "is_private": self.is_private,
             # private notes are not included in to_dict as to_dict is used for public APIs
         }
 

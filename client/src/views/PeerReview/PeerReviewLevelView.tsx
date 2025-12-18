@@ -383,6 +383,11 @@ export function PeerReviewLevelView({
         "This level already has that approval status. Are you sure?",
       );
     }
+    if (rdlevel.is_private && doPublicPost) {
+      warnings.push(
+        "This level is marked as private. Are you sure you want to post about it publicly?",
+      );
+    }
     if (rdlevel.approval !== 0) {
       warnings.push(
         "This level has already been peer-reviewed. Are you sure you want to change it?",
@@ -501,18 +506,6 @@ export function PeerReviewLevelView({
               <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
                 by {rdlevel.authors.join(", ")}
               </p>
-
-              {/* Warnings */}
-              <div className="mt-2 flex flex-wrap justify-start gap-2 text-xl">
-                {rdlevel.seizure_warning && (
-                  <span title="👁 Seizure Warning">👁</span>
-                )}
-                {rdlevel.club?.id === "prescriptions" && (
-                  <span title="🔒 Uploaded Privately to #prescriptions">
-                    🔒
-                  </span>
-                )}
-              </div>
             </div>
           </div>
 
@@ -555,6 +548,11 @@ export function PeerReviewLevelView({
           {prev_notes.length > 0 && (
             <Alert variant="info" className="mt-6">
               Previous reviewer notes: {prev_notes}
+            </Alert>
+          )}
+          {rdlevel.is_private && (
+            <Alert variant="info" className="mt-6">
+              Private level
             </Alert>
           )}
         </div>

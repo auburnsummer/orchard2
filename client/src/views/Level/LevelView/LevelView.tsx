@@ -28,6 +28,7 @@ import { Words } from "@cafe/components/ui/Words";
 
 import styles from "./LevelView.module.css";
 import { useUser } from "@cafe/hooks/useUser";
+import { Alert } from "@cafe/components/ui/Alert";
 
 type LevelViewProps = {
   rdlevel: RDLevel;
@@ -313,6 +314,12 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
                   )
                 }
               </Surface>
+
+              { rdlevel.is_private && (
+                <Alert variant="info">
+                  Private level
+                </Alert>
+              )}
 
               <TextInput
                 label="Level ID"
