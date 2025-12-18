@@ -41,7 +41,7 @@ def set_daily_blend(request: AuthenticatedHttpRequest):
     
     daily_blend, _ = DailyBlend.objects.update_or_create(
         featured_date=targeted_date,
-        level=level
+        defaults={"level": level}
     )
     
     return JsonResponse({"success": True, "level": level.to_dict(), "featured_date": str(daily_blend.featured_date)})
