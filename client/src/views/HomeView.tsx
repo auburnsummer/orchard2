@@ -25,7 +25,7 @@ export function HomeView({ daily_blend_level }: HomeViewProps) {
 
           <div className="bg-white dark:bg-slate-700 rounded-lg p-6 shadow-sm">
             <Words as="h2" variant="subheader" className="mb-4">
-              Quick Links
+              Links
             </Words>
             <ul className="space-y-3">
               <li className="flex items-center gap-2">

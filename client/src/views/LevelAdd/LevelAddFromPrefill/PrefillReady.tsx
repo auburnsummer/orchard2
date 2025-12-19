@@ -14,6 +14,7 @@ function buildInitialLevel(prefill: RDLevelPrefillReady): RDLevel {
     submitter: prefill.user,
     club: prefill.club,
     approval: 0,
+    is_private: false
   };
 }
 
