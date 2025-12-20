@@ -9,6 +9,19 @@ import Fieldset from "@cafe/components/ui/Fieldset";
 import { atomWithStorage } from "jotai/utils";
 import { useAtom, useAtomValue } from "jotai";
 
+// Simple CRC32 implementation for verification codes
+function crc32(str: string): string {
+    if (!str) return "";
+    let crc = 0xFFFFFFFF;
+    for (let i = 0; i < str.length; i++) {
+        crc ^= str.charCodeAt(i);
+        for (let j = 0; j < 8; j++) {
+            crc = (crc >>> 1) ^ (0xEDB88320 & -(crc & 1));
+        }
+    }
+    return ((crc ^ 0xFFFFFFFF) >>> 0).toString(16).toUpperCase().padStart(8, '0');
+}
+
 type PeerReviewConfigurationProps = {
     levels: RDLevel[];
 };
@@ -73,7 +86,9 @@ export function PeerReviewConfiguration({ levels }: PeerReviewConfigurationProps
                         <TextInput
                             id="pathlabWebhookUrl"
                             label="Pathology-Lab (Private) Webhook URL"
-                            description="Find more information using the Help button above."
+                            description={pathlabWebhookUrl 
+                                ? `Verification: ${crc32(pathlabWebhookUrl)}`
+                                : "Find more information using the Help button above."}
                             value={pathlabWebhookUrl}
                             onChange={(e) => setPathlabWebhookUrl(e.target.value)}
                             placeholder="https://discord.com/api/webhooks/..."
@@ -83,7 +98,9 @@ export function PeerReviewConfiguration({ levels }: PeerReviewConfigurationProps
                         <TextInput
                             id="publicWebhookUrl"
                             label="Pathology-Reports (Public) Webhook URL"
-                            description="Find more information using the Help button above."
+                            description={publicWebhookUrl 
+                                ? `Verification: ${crc32(publicWebhookUrl)}`
+                                : "Find more information using the Help button above."}
                             value={publicWebhookUrl}
                             onChange={(e) => setPublicWebhookUrl(e.target.value)}
                             placeholder="https://discord.com/api/webhooks/..."
