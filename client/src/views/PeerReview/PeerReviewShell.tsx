@@ -36,6 +36,9 @@ function PeerReviewNavbar({pendingLevels}: PeerReviewShellProps) {
                     <FontAwesomeIcon icon={faWarning} className="ml-2 text-yellow-500" title="Peer Review is not configured yet!" />
                 )}
             </NavEntry>
+            <NavEntry as={Link} href="/peer-review/make-encrypted-webhook/" active={pathname === "/peer-review/make-encrypted-webhook/"}>
+                Encrypted Webhook Maker
+            </NavEntry>
             {pendingLevels.length > 0 && <hr className="my-2 mx-4 border-t border-gray-300 dark:border-gray-700" />}
             {
                 pendingLevels.map((level) => (

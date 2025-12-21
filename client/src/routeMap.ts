@@ -18,6 +18,7 @@ import { ProfileSettingsView } from "./views/Profile/ProfileSettingsView";
 import { ClubSettingsRedeemInvite } from "./views/ClubSettings/ClubSettingsRedeemInvite";
 import { ProfileApiKeyView } from "./views/Profile/ProfileApiKeyView";
 import React from "react";
+import { PeerReviewMakeEncryptedWebhook } from "./views/PeerReview/PeerReviewMakeEncryptedWebhook";
 
 // most people won't go to PR, so lazy load it
 const PeerReviewMainView = React.lazy(() => import("./views/PeerReview/PeerReviewMainView").then(m => ({ default: m.PeerReviewMainView })));
@@ -49,5 +50,6 @@ export const routeMap: { [key: string]: React.FunctionComponent<any> } = {
 
   "cafe:peer_review_main": PeerReviewMainView,
   "cafe:peer_review_config": PeerReviewConfiguration,
-  "cafe:peer_review_level": PeerReviewLevelView
+  "cafe:peer_review_level": PeerReviewLevelView,
+  "cafe:peer_review_make_encrypted_webhook": PeerReviewMakeEncryptedWebhook,
 };

@@ -1,8 +1,10 @@
 from django.urls import path
 
 from cafe.views.api.blend.set_daily_blend import set_daily_blend
+from cafe.views.api.execute_webhook import execute_webhook
 from cafe.views.rdlevels.peerreview.pr_level import pr_rdlevel
 from cafe.views.rdlevels.peerreview.pr_main import pr_main
+from cafe.views.rdlevels.peerreview.pr_make_webhook import pr_make_webhook
 
 from .views.index import index
 from .views.accounts.profile.index import profile  
@@ -64,7 +66,9 @@ urlpatterns = [
 
     path("peer-review/", pr_main, name="peer_review_main"),
     path("peer-review/config/", pr_main, name="peer_review_config"),
+    path("peer-review/make-encrypted-webhook/", pr_make_webhook, name="peer_review_make_encrypted_webhook"),
     path("peer-review/<level_id>/", pr_rdlevel, name="peer_review_level"),
 
     path("api/set_daily_blend/", set_daily_blend, name="set_daily_blend"),
+    path("api/execute_webhook/<code>/", execute_webhook, name="execute_webhook"),
 ]

@@ -123,7 +123,7 @@ export function PeerReviewConfiguration({ levels }: PeerReviewConfigurationProps
                         />
                         <TextInput
                             id="nrAvatar"
-                            label="Not Reviewed (NR) Avatar"
+                            label="Non-Refereed (NR) Avatar"
                             description="A direct link to an image to show in #pathology-lab for when you Non-Referee a level."
                             value={nrAvatar}
                             onChange={(e) => setNrAvatar(e.target.value)}
@@ -159,7 +159,7 @@ export function PeerReviewConfiguration({ levels }: PeerReviewConfigurationProps
                             description="A little blurb of text sent in #pathology-lab for when you Non-Referee a level."
                             value={nrFlairText}
                             onChange={(e) => setNrFlairText(e.target.value)}
-                            placeholder="Not Reviewed"
+                            placeholder="Non-Refereed"
                             className="w-full"
                         />
                         <TextInput
