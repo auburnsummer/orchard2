@@ -2,6 +2,7 @@ import json
 from unittest.mock import patch
 import pytest
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey, Ed25519PublicKey
+from cryptography.fernet import Fernet
 from django.test import Client
 
 @pytest.fixture
@@ -16,6 +17,7 @@ def environment(autouse=True):
     import os
     os.environ.clear()
     os.environ["DJANGO_SECRET_KEY"] = "test_secret_key"
+    os.environ["WEBHOOK_ENCRYPTION_KEY"] = Fernet.generate_key().decode()
 
 @pytest.fixture
 def client():

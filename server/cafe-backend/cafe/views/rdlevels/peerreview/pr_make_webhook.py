@@ -14,8 +14,6 @@ from cafe.views.types import AuthenticatedHttpRequest
 class WebhookForm(forms.Form):
     webhook_url = forms.URLField()
 
-cipher = Fernet(settings.WEBHOOK_ENCRYPTION_KEY.encode())
-
 @permission_required('cafe.peerreview_rdlevel')
 def pr_make_webhook(request: AuthenticatedHttpRequest):
     # we want the oldest level first
@@ -27,6 +25,7 @@ def pr_make_webhook(request: AuthenticatedHttpRequest):
             
             try:
                 # Encrypt the webhook URL
+                cipher = Fernet(settings.WEBHOOK_ENCRYPTION_KEY.encode())
                 encrypted_url = cipher.encrypt(webhook_url.encode()).decode()
                                 
                 messages.success(request, "Webhook encrypted successfully")
