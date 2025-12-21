@@ -10,6 +10,13 @@ from cryptography.fernet import Fernet
 from cafe.models.rdlevels.rdlevel import RDLevel
 from cafe.views.types import AuthenticatedHttpRequest
 
+ALLOWED_WEBHOOK_DOMAINS = [
+    "discord.com",
+    "discordapp.com",
+    "canary.discord.com",
+    "ptb.discord.com",
+    "webhook.site"
+]
 
 class WebhookForm(forms.Form):
     webhook_url = forms.URLField()
@@ -22,6 +29,15 @@ def pr_make_webhook(request: AuthenticatedHttpRequest):
         form = WebhookForm(request.POST)
         if form.is_valid():
             webhook_url = form.cleaned_data['webhook_url']
+
+            for allowed_domain in ALLOWED_WEBHOOK_DOMAINS:
+                if webhook_url.startswith(f"https://{allowed_domain}/"):
+                    break
+            else:
+                messages.error(request, "Invalid webhook URL domain")
+                return Response(request, request.resolver_match.view_name, {
+                    "levels": [level.to_dict() for level in pr_levels]
+                })
             
             try:
                 # Encrypt the webhook URL
