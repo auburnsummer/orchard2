@@ -72,7 +72,7 @@ export function PeerReviewConfiguration({ levels }: PeerReviewConfigurationProps
                 </Words>
                 <Button
                     as="a"
-                    href="[REDACTED_URL]"
+                    href=""
                     target="_blank"
                     rel="noopener noreferrer"
                 >
