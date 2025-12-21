@@ -36,7 +36,7 @@ import { Alert } from "@cafe/components/ui/Alert";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { Dialog } from "@cafe/components/ui/Dialog";
 import { Words } from "@cafe/components/ui/Words";
-import { useClipboard, useDisclosure } from "@mantine/hooks";
+import { useClipboard } from "@mantine/hooks";
 
 type PeerReviewMainViewProps = {
   levels: RDLevel[];
