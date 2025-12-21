@@ -1,7 +1,7 @@
  - PR flow
     - beta test in back alley
 
- - add public test server in plpasscode
+ - add test server in plpasscode
 
  - think about what we should actually put on the user's profile page for now
  - user can access a list of all their levels
@@ -21,8 +21,10 @@
  - check for no placeholders remaining (e.g. links)
  - link the wiki somewhere??
  - check dark mode looks decent in all places
+ - check mobile view looks decent in all places
 
 ==== AFTER RELEASE ====
 
  - setlists??
+ - level kudos, sort by kudos?
  - localisation

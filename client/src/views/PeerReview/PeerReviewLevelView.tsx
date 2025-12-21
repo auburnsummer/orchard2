@@ -36,6 +36,7 @@ import { Alert } from "@cafe/components/ui/Alert";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { Dialog } from "@cafe/components/ui/Dialog";
 import { Words } from "@cafe/components/ui/Words";
+import { useClipboard, useDisclosure } from "@mantine/hooks";
 
 type PeerReviewMainViewProps = {
   levels: RDLevel[];
@@ -135,6 +136,8 @@ export function PeerReviewLevelView({
   discord_id,
   prev_notes,
 }: PeerReviewMainViewProps) {
+  const clipboard = useClipboard({ timeout: 500 });
+
   const [approvalIntent, setApprovalIntent] = useState<number>(
     rdlevel.approval,
   );
@@ -506,6 +509,27 @@ export function PeerReviewLevelView({
               <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
                 by {rdlevel.authors.join(", ")}
               </p>
+            </div>
+
+            {/* Buttons */}
+            <div className="mt-4 flex flex-wrap gap-2">
+              <Button
+                as="a"
+                href={rdlevel.rdzip_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="primary"
+              >
+                Download
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  clipboard.copy(rdlevel.rdzip_url);
+                }}
+              >
+                {clipboard.copied ? "Copied!" : "Copy Link"}
+              </Button>
             </div>
           </div>
 
