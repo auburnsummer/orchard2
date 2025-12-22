@@ -106,8 +106,8 @@ def test_admin_of_different_club_cannot_change_rdlevel(rdlevel):
 
 
 @pytest.mark.django_db
-def test_delete_permissions_same_as_change_permissions(rdlevel):
-    """Delete permissions should work the same as change permissions for non-pharmacists"""
+def test_non_pharmacist_delete_permissions_match_change_permissions(rdlevel):
+    """For non-pharmacists, delete permissions should match change permissions (submitter can delete)"""
     # Test with submitter
     submitter = rdlevel.submitter
     assert submitter.has_perm('cafe.delete_rdlevel', rdlevel)
@@ -133,15 +133,15 @@ def test_pharmacist_owner_can_change_any_rdlevel(rdlevel, pharmacist_owner):
 
 
 @pytest.mark.django_db
-def test_pharmacist_cannot_delete_rdlevel(rdlevel, pharmacist_user):
-    """Pharmacists cannot delete RDLevels (different from change permission)"""
-    assert not pharmacist_user.has_perm('cafe.delete_rdlevel', rdlevel)
+def test_pharmacist_can_delete_rdlevel(rdlevel, pharmacist_user):
+    """Pharmacists can delete RDLevels"""
+    assert pharmacist_user.has_perm('cafe.delete_rdlevel', rdlevel)
 
 
 @pytest.mark.django_db
-def test_pharmacist_owner_cannot_delete_rdlevel(rdlevel, pharmacist_owner):
-    """Pharmacist owners also cannot delete RDLevels"""
-    assert not pharmacist_owner.has_perm('cafe.delete_rdlevel', rdlevel)
+def test_pharmacist_owner_can_delete_rdlevel(rdlevel, pharmacist_owner):
+    """Pharmacist owners can also delete RDLevels"""
+    assert pharmacist_owner.has_perm('cafe.delete_rdlevel', rdlevel)
 
 
 @pytest.mark.django_db

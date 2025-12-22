@@ -12,11 +12,12 @@
  - delete account (what do we do about their levels?)
  - delete club (what do we do about their levels?)
  - migration plan for RDL (i.e. transition line the second)
- - make the loading screen not suck
+ - make the loading screen better
  - check for no placeholders remaining (e.g. links)
  - link the wiki somewhere??
  - check dark mode looks decent in all places
  - check mobile view looks decent in all places
+ - when you download a level the filename is understandable
 
 ==== AFTER RELEASE ====
 

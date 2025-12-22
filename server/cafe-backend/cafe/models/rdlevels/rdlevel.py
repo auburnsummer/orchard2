@@ -23,8 +23,8 @@ def is_submitter(user: UserType, level: "RDLevel"):
     return level.submitter == user
 
 can_change = rules.is_authenticated & (rules.is_superuser | is_pharmacist | is_at_least_admin_of_connected_club | is_submitter)
-# pharmacists cannot delete levels
-can_delete = rules.is_authenticated & (rules.is_superuser | is_at_least_admin_of_connected_club | is_submitter)
+
+can_delete = rules.is_authenticated & (rules.is_superuser | is_at_least_admin_of_connected_club | is_submitter | is_pharmacist)
 
 can_review = rules.is_authenticated & (rules.is_superuser | is_pharmacist)
 
