@@ -26,27 +26,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       
-      - name: Copy dump from container to host
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.LULU_IP }}
-          username: ubuntu
-          key: ${{ secrets.LULU_SSH_PRIVATE_KEY }}
-          script: |
+      - name: Download JSONL file from server
+        run: |
+          # Save SSH key to file
+          echo "${{ secrets.LULU_SSH_PRIVATE_KEY }}" > /tmp/ssh_key
+          chmod 600 /tmp/ssh_key
+          
+          # First, copy from container to host on the server
+          ssh -i /tmp/ssh_key -o StrictHostKeyChecking=no ubuntu@${{ secrets.LULU_IP }} << 'EOF'
             CONTAINER_ID=$(sudo docker ps --format=json | \
               jq -r 'select(.Image == "ghcr.io/auburnsummer/orchard2:main") | .ID' | \
               head -1)
             sudo docker cp $CONTAINER_ID:/tmp/rdlevels-dump.jsonl /tmp/rdlevels-dump.jsonl
-      
-      - name: Download JSONL file from server
-        uses: appleboy/scp-action@v1
-        with:
-          host: ${{ secrets.LULU_IP }}
-          username: ubuntu
-          key: ${{ secrets.LULU_SSH_PRIVATE_KEY }}
-          source: /tmp/rdlevels-dump.jsonl
-          target: ./
-          strip_components: 1
+            sudo chmod 644 /tmp/rdlevels-dump.jsonl
+          EOF
+          
+          # Then download from host to runner
+          scp -i /tmp/ssh_key -o StrictHostKeyChecking=no \
+            ubuntu@${{ secrets.LULU_IP }}:/tmp/rdlevels-dump.jsonl \
+            ./rdlevels-dump.jsonl
+          
+          # Clean up
+          rm /tmp/ssh_key
       
       - name: Set up Python
         uses: actions/setup-python@v5
