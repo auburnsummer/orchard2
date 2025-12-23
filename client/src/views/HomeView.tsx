@@ -18,16 +18,16 @@ const ABOVE_FOLD_LINKS = [
     text: "Level setlists (for beginners)",
   },
   {
-    href: "https://example.com",
-    text: "How to add a level",
-  },
-  {
     href: "https://rd-editor-docs.github.io/intro/",
     text: "Editor tutorial",
   },
 ];
 
 const BELOW_FOLD_LINKS = [
+  {
+    href: "https://wiki.rhythm.cafe/",
+    text: "Rhythm Doctor Wiki"
+  },
   {
     href: "https://datasette.rhythm.cafe/",
     text: "Public API"
