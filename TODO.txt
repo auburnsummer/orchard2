@@ -1,10 +1,6 @@
  [] think about what we should actually put on the user's profile page for now
  [] user can access a list of all their levels
  [] club admins/owners can access a list of all the club's levels
- [.] sync to a datasette instance for continued levelsync support
-    - datasette.rhythm.cafe is online
-    - we should link it somewhere i guess
-    
  [] replace placeholder image for bot avatar
     - let's use janitor bird for this
  [] favicon
