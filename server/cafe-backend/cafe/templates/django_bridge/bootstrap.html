@@ -5,6 +5,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
 
+{% if debug %}
+    <link rel="icon" href="http://localhost:5173/static/favicon.svg">
+{% else %}
+    <link rel="icon" href="/static/favicon.svg">
+{% endif %}
 {% if request.user.is_authenticated %}
     {% if request.user.theme_preference == 'dark' %}
         <style>

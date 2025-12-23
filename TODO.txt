@@ -3,8 +3,6 @@
  [] club admins/owners can access a list of all the club's levels
  [] replace placeholder image for bot avatar
     - let's use janitor bird for this
- [] favicon
-    - reuse existing one from rc1
  [] delete account (what do we do about their levels?)
  [] delete club (what do we do about their levels?)
  [] migration plan for RDL (i.e. transition line the second)
