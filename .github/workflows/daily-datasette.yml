@@ -1,0 +1,99 @@
+name: Daily Datasette Update
+
+on:
+  # schedule:
+  #   # Run daily at 3:00 AM UTC (after backup)
+  #   - cron: '0 3 * * *'
+  workflow_dispatch: # Allow manual triggering
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  generate-dump:
+    name: Generate JSONL Dump
+    uses: ./.github/workflows/run-manage-command.yml
+    with:
+      command: jsondump --filename=/tmp/rdlevels-dump.jsonl
+    secrets: inherit
+  
+  build-datasette:
+    name: Build and Push Datasette Container
+    needs: generate-dump
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Copy dump from container to host
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.LULU_IP }}
+          username: ubuntu
+          key: ${{ secrets.LULU_SSH_PRIVATE_KEY }}
+          script: |
+            CONTAINER_ID=$(sudo docker ps --format=json | \
+              jq -r 'select(.Image == "ghcr.io/auburnsummer/orchard2:main") | .ID' | \
+              head -1)
+            sudo docker cp $CONTAINER_ID:/tmp/rdlevels-dump.jsonl /tmp/rdlevels-dump.jsonl
+      
+      - name: Download JSONL file from server
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.LULU_IP }}
+          username: ubuntu
+          key: ${{ secrets.LULU_SSH_PRIVATE_KEY }}
+          source: /tmp/rdlevels-dump.jsonl
+          target: ./
+          strip_components: 1
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      
+      - name: Install Datasette
+        run: |
+          pip install datasette sqlite-utils
+      
+      - name: Create SQLite database from JSONL
+        run: |
+          # Create a new SQLite database from the JSONL
+          sqlite-utils insert rdlevels.db rdlevels rdlevels-dump.jsonl --nl
+          
+          # Add full-text search
+          sqlite-utils enable-fts rdlevels.db rdlevels song artist description authors --create-triggers
+          
+          # Show stats
+          sqlite-utils tables rdlevels.db --counts
+      
+      - name: Test Datasette locally
+        run: |
+          # Start datasette in background to verify it works
+          datasette rdlevels.db --port 8001 &
+          DATASETTE_PID=$!
+          sleep 3
+          curl -f http://localhost:8001/ || (echo "Datasette failed to start" && exit 1)
+          kill $DATASETTE_PID
+      
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Package and push Datasette container
+        run: |
+          # Package the database into a Docker container
+          datasette package rdlevels.db \
+            --tag ghcr.io/${{ github.repository }}/datasette:latest \
+            --port 8001 \
+            --extra-options "--cors --setting sql_time_limit_ms 3500" \
+            --title "Rhythm Cafe Level Database" \
+            --source "Rhythm Cafe" \
+            --source_url "https://rhythm.cafe"
+          
+          # Push to registry
+          docker push ghcr.io/${{ github.repository }}/datasette:latest
