@@ -1,23 +1,23 @@
- - think about what we should actually put on the user's profile page for now
- - user can access a list of all their levels
- - club admins/owners can access a list of all the club's levels
- - sync to a datasette instance for continued levelsync support
-    - we need to be a bit careful about not exposing private data
-    - I think the safest way is to to_dict the levels (which is always safe) and
-      make a totally unrelated database
- - replace placeholder image for bot avatar
+ [] think about what we should actually put on the user's profile page for now
+ [] user can access a list of all their levels
+ [] club admins/owners can access a list of all the club's levels
+ [.] sync to a datasette instance for continued levelsync support
+    - datasette.rhythm.cafe is online
+    - we should link it somewhere i guess
+    
+ [] replace placeholder image for bot avatar
     - let's use janitor bird for this
- - favicon
+ [] favicon
     - reuse existing one from rc1
- - delete account (what do we do about their levels?)
- - delete club (what do we do about their levels?)
- - migration plan for RDL (i.e. transition line the second)
- - make the loading screen better
- - check for no placeholders remaining (e.g. links)
- - link the wiki somewhere??
- - check dark mode looks decent in all places
- - check mobile view looks decent in all places
- - when you download a level the filename is understandable
+ [] delete account (what do we do about their levels?)
+ [] delete club (what do we do about their levels?)
+ [] migration plan for RDL (i.e. transition line the second)
+ [] make the loading screen better
+ [] check for no placeholders remaining (e.g. links)
+ [] link the wiki somewhere??
+ [] check dark mode looks decent in all places
+ [] check mobile view looks decent in all places
+ [] when you download a level the filename is understandable
 
 ==== AFTER RELEASE ====
 

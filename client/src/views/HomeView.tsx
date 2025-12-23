@@ -8,6 +8,36 @@ type HomeViewProps = {
   daily_blend_level: RDLevel | null;
 }
 
+const ABOVE_FOLD_LINKS = [
+  {
+    href: "/levels",
+    text: "Browse all custom levels",
+  },
+  {
+    href: "https://docs.google.com/spreadsheets/d/1Uz26L34OZIgaK6hMfLBysgtEW4TYDj7iZZ5KqOMbNKY",
+    text: "Level setlists (for beginners)",
+  },
+  {
+    href: "https://example.com",
+    text: "How to add a level",
+  },
+  {
+    href: "https://rd-editor-docs.github.io/intro/",
+    text: "Editor tutorial",
+  },
+];
+
+const BELOW_FOLD_LINKS = [
+  {
+    href: "https://datasette.rhythm.cafe/",
+    text: "Public API"
+  },
+  {
+    href: "https://github.com/auburnsummer/orchard2/wiki/Privacy-Policy",
+    text: "Privacy / Cookie Policy"
+  }
+];
+
 export function HomeView({ daily_blend_level }: HomeViewProps) {
   return (
     <Shell>
@@ -28,30 +58,29 @@ export function HomeView({ daily_blend_level }: HomeViewProps) {
               Links
             </Words>
             <ul className="space-y-3">
-              <li className="flex items-center gap-2">
-                <span className="text-violet-600 dark:text-violet-400 mt-0.5">→</span>
-                <Words as={Link} variant="link" href="/levels">
-                  Browse all custom levels
-                </Words>
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-violet-600 dark:text-violet-400 mt-0.5">→</span>
-                <Words as={Link} variant="link" href="https://docs.google.com/spreadsheets/d/1Uz26L34OZIgaK6hMfLBysgtEW4TYDj7iZZ5KqOMbNKY">
-                  Level setlists (for beginners)
-                </Words>
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-violet-600 dark:text-violet-400 mt-0.5">→</span>
-                <Words as={Link} variant="link" href="https://example.com">
-                  How to add a level
-                </Words>
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-violet-600 dark:text-violet-400 mt-0.5">→</span>
-                <Words as={Link} variant="link" href="https://rd-editor-docs.github.io/intro/">
-                  Editor tutorial
-                </Words>
-              </li>
+              {
+                ABOVE_FOLD_LINKS.map((link) => (
+                  <li key={link.href} className="flex items-center gap-2">
+                    <span className="text-violet-600 dark:text-violet-400 mt-0.5">→</span>
+                    <Words as={Link} variant="link" href={link.href}>
+                      {link.text}
+                    </Words>
+                  </li>
+                ))
+              }
+            </ul>
+            <div className="border-t border-slate-300 dark:border-slate-600 my-4" />
+            <ul className="space-y-3">
+              {
+                BELOW_FOLD_LINKS.map((link) => (
+                  <li key={link.href} className="flex items-center gap-2">
+                    <span className="text-slate-600 dark:text-slate-400 mt-0.5 text-sm">→</span>
+                    <Words as={Link} variant="muted" href={link.href} className="text-sm hover:underline">
+                      {link.text}
+                    </Words>
+                  </li>
+                ))
+              }
             </ul>
           </div>
         </div>

@@ -1,9 +1,8 @@
 name: Daily Datasette Update
 
 on:
-  # schedule:
-  #   # Run daily at 3:00 AM UTC (after backup)
-  #   - cron: '0 3 * * *'
+  schedule:
+    - cron: '0 3 * * *'
   workflow_dispatch: # Allow manual triggering
 
 permissions:

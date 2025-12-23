@@ -25,6 +25,7 @@ class UserAdmin(DjangoUserAdmin):
             },
         ),
     )
+    search_fields = ('display_name', 'email')
 
 admin.site.register(Club, SimpleHistoryAdmin)
 admin.site.register(ClubMembership)
