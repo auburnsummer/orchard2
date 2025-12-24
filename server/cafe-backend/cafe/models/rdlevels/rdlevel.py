@@ -122,6 +122,7 @@ class RDLevel(RulesModel):
             "approval": self.approval,
             "approval_notes_public": self.approval_notes_public,
             "is_private": self.is_private,
+            "prefill_version": self.prefill_version
             # private notes are not included in to_dict as to_dict is used for public APIs
         }
 
