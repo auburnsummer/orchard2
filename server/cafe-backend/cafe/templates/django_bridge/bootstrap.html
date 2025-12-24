@@ -15,10 +15,39 @@
         <style>
             body {
                 background-color: #1e1f21;
+                --loading-text-color: #ffffff;
             }
         </style>
     {% endif %}
 {% endif %}
+<style>
+    .django-bridge-load {
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-family: "Atkinson Hyperlegible Next", sans-serif;
+        color: var(--loading-text-color, #000000);
+    }
+    .loading-image {
+        width: 80px;
+        height: 80px;
+        image-rendering: pixelated;
+    }
+</style>
+{% endblock %}
+
+{% block loader %}
+<div class="django-bridge-load">
+    <img class="loading-image" src="data:image/png;base64,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">
+    <p>Rhythm Café is loading...</p>
+</div>
+{% endblock %}
+
+{% block loader_js %}
+
 {% endblock %}
 
 {# <!-- https://github.com/django-bridge/django-bridge/blob/main/python/django_bridge/templates/django_bridge/bootstrap.html --> #}

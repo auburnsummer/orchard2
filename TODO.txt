@@ -1,12 +1,9 @@
  [] think about what we should actually put on the user's profile page for now
  [] user can access a list of all their levels
  [] club admins/owners can access a list of all the club's levels
- [] replace placeholder image for bot avatar
-    - let's use janitor bird for this
  [] delete account (what do we do about their levels?)
  [] delete club (what do we do about their levels?)
  [] migration plan for RDL (i.e. transition line the second)
- [] make the loading screen better
  [] check for no placeholders remaining (e.g. links)
  [] check dark mode looks decent in all places
  [] check mobile view looks decent in all places

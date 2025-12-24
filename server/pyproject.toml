@@ -24,3 +24,8 @@ env = [
     "S3_REGION = ",
     "S3_PUBLIC_CDN_URL = "
 ]
+
+[dependency-groups]
+dev = [
+    "ty>=0.0.6",
+]

@@ -30,10 +30,7 @@ export function App({ config, initialResponse, children }: AppProps) {
   useEffect(() => {
     const loadingScreen = document.querySelector(".django-bridge-load");
     if (loadingScreen instanceof HTMLElement) {
-      loadingScreen.classList.add("django-bridge-load--hidden");
-      setTimeout(() => {
-        loadingScreen.remove();
-      }, 200);
+      loadingScreen.remove();
     }
   }, []);
 
