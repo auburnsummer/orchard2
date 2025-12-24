@@ -1,5 +1,7 @@
- [] think about what we should actually put on the user's profile page for now
  [] user can access a list of all their levels
+ [] add fields for rikri
+     [] has_* incl new ones, synco, holdshots, burnshots, subdivs
+     [] also total_hits
  [] club admins/owners can access a list of all the club's levels
  [] delete account (what do we do about their levels?)
  [] delete club (what do we do about their levels?)

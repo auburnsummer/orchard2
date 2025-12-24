@@ -35,6 +35,7 @@ class SearchLevelParams:
     seizure_warning: Optional[bool]
     facet_query_field: Optional[str]
     facet_query: Optional[str]
+    submitter_id: Optional[str]
 
 
 def parse_bool_param(value: Optional[str]) -> Optional[bool]:
@@ -109,10 +110,15 @@ def get_search_params(request: HttpRequest) -> SearchLevelParams:
     authors_all = request.GET.getlist('authors_all')
     artists_all = request.GET.getlist('artists_all')
 
+    # seizure warning
     seizure_warning = parse_bool_param(request.GET.get('seizure_warning'))
 
+    # facet query
     facet_query = request.GET.get('facet_query', None)
     facet_query_field = request.GET.get('facet_query_field', None)
+
+    # submitter id
+    submitter_id = request.GET.get('submitter_id', None)
     
     return SearchLevelParams(
         q=request.GET.get('q', ""),
@@ -129,7 +135,8 @@ def get_search_params(request: HttpRequest) -> SearchLevelParams:
         artists_all=artists_all,
         seizure_warning=seizure_warning,
         facet_query=facet_query,
-        facet_query_field=facet_query_field
+        facet_query_field=facet_query_field,
+        submitter_id=submitter_id
     )
 
 def get_typesense_filter_query(params: SearchLevelParams) -> str:
@@ -172,6 +179,9 @@ def get_typesense_filter_query(params: SearchLevelParams) -> str:
     if params.artists_all:
         for artist in params.artists_all:
             parts.append(f"artist_tokens:=`{artist}`")
+
+    if params.submitter_id:
+        parts.append(f"submitter.id:={params.submitter_id}")
 
     return " && ".join(parts)
 
