@@ -15,23 +15,19 @@ export function ProfileNavbar() {
   const links = [
     {
       label: "Settings",
-      href: "/accounts/profile/settings/",
-      openInNewTab: false,
+      href: "/accounts/profile/settings/"
     },
     {
       label: "Your levels",
-      href: `/levels?q=&submitter_id=${user.id}&peer_review=all`,
-      openInNewTab: true,
+      href: `/levels?q=&submitter_id=${user.id}&peer_review=all`
     },
     {
       label: "Groups",
-      href: "/accounts/profile/groups/",
-      openInNewTab: false,
+      href: "/accounts/profile/groups/"
     },
     {
       label: "API Key",
-      href: "/accounts/profile/api-key/",
-      openInNewTab: false,
+      href: "/accounts/profile/api-key/"
     }
   ];
 
@@ -43,7 +39,7 @@ export function ProfileNavbar() {
       </div>
       <div className="flex flex-col mt-3">
         {links.map((link) => (
-          <NavEntry as={Link} href={link.href} active={pathname === link.href} target={link.openInNewTab ? "_blank" : undefined} key={link.href}>
+          <NavEntry as={Link} href={link.href} active={pathname === link.href} key={link.href}>
             {link.label}
           </NavEntry>
         ))}
