@@ -14,10 +14,6 @@ export function ProfileNavbar() {
 
   const links = [
     {
-      label: "Profile",
-      href: "/accounts/profile/",
-    },
-    {
       label: "Settings",
       href: "/accounts/profile/settings/",
     },
@@ -37,7 +33,7 @@ export function ProfileNavbar() {
         <Avatar src={user.avatarURL || undefined} className="w-14 h-14 border-violet-400 border-2" />
         <Words className="ml-3" as="h2">{user.displayName}</Words>
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col mt-3">
         {links.map((link) => (
           <NavEntry as={Link} href={link.href} active={pathname === link.href}>
             {link.label}

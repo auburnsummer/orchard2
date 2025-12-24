@@ -92,7 +92,7 @@ export function HomeView({ daily_blend_level }: HomeViewProps) {
               {daily_blend_level ? (
                 <>
                   <Words as="h2" variant="subheader" className="text-center px-8">
-                    Today's featured custom level
+                    Today's featured level
                   </Words>
                   <LevelCard
                     level={daily_blend_level}

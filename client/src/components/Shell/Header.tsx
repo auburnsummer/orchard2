@@ -27,7 +27,7 @@ export function Header() {
   };
 
   const menuItems = [
-    { name: "Profile", href: "/accounts/profile/" },
+    { name: "Settings", href: "/accounts/profile/settings/" },
     user.authenticated && user.is_superuser
       ? { name: "Admin", href: "/adminnn/" }
       : null,
