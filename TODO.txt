@@ -1,4 +1,3 @@
- [] user can access a list of all their levels
  [] add fields for rikri
      [] has_* incl new ones, synco, holdshots, burnshots, subdivs
      [] also total_hits

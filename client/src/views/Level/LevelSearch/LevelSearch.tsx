@@ -6,6 +6,7 @@ import { Button } from "@cafe/components/ui/Button";
 import { Words } from "@cafe/components/ui/Words";
 import { useSearchParams } from "@cafe/minibridge/hooks";
 import { LevelsSearchSidebar } from "./LevelsSearchSidebar/LevelsSearchSidebar";
+import { useUser } from "@cafe/hooks/useUser";
 
 // nb: there are 21 levels per page in the API, but we only show 20 here
 // the last one is used to determine if there are more pages
@@ -47,6 +48,8 @@ function getPageFromSearchParams(searchParams: URLSearchParams): number {
 export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
   const [searchParams, navigateViaSearchParams] = useSearchParams();
 
+  const user = useUser();
+
   const query = searchParams.get("q") || "";
   const page = getPageFromSearchParams(searchParams);
 
@@ -61,6 +64,13 @@ export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
   const onPrev = () => movePage(-1);
 
   const levelTitleText = useMemo(() => {
+
+    if (user.authenticated && searchParams.get("submitter_id") == user.id) {
+      return "Your levels";
+    }
+    // ok so yeah technically they could put someone else's submitter_id in the URL
+    // and we'd say "All levels" even if they weren't viewing all levels
+    // ¯\_(ツ)_/¯
     if (query === "") {
       return "All levels";
     } else if (results.hits.length === 0) {
