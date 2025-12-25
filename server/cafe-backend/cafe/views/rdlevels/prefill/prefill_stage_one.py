@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from rules.contrib.views import permission_required
 from django_bridge.response import Response
+from vitals.vitals import PREFILL_VERSION
 from .predicates import register_permissions
 
 from cafe.views.types import AuthenticatedHttpRequest
@@ -38,7 +39,7 @@ def _prefill_stage_one_post(request: AuthenticatedHttpRequest, code: str):
         club = get_object_or_404(Club, id=club_id)
         rdlevel_prefill_result = RDLevelPrefillResult.objects.create(
             url=level_url,
-            version=1,
+            version=PREFILL_VERSION,
             user=user,
             prefill_type=prefill_type,
             club=club

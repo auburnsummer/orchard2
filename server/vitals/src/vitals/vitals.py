@@ -21,6 +21,8 @@ from .msgspec_schema import VitalsLevel, VitalsLevelImmutable
 
 import msgspec
 
+PREFILL_VERSION = 1
+
 class VitalsException(Exception):
     pass
 

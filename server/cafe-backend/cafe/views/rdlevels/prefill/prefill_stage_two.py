@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.db import transaction
 from rules.contrib.views import objectgetter, permission_required
+from vitals.vitals import PREFILL_VERSION
 from cafe.views.types import AuthenticatedHttpRequest
 from cafe.models.rdlevels.prefill import RDLevelPrefillResult
 from cafe.models.rdlevels.rdlevel import RDLevel
@@ -29,6 +30,7 @@ def prefill_stage_two(request: AuthenticatedHttpRequest, prefill_id: str):
                     args = {
                         **prefill.data,
                         **msgspec.structs.asdict(parsed),
+                        "prefill_version": prefill.version,
                         "approval": 0,
                         "submitter": prefill.user,
                         "club": prefill.club

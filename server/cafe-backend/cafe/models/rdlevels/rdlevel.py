@@ -81,7 +81,7 @@ class RDLevel(RulesModel):
 
     is_private = models.BooleanField(blank=False, default=False)
 
-    prefill_version = models.IntegerField(blank=False, default=0)
+    prefill_version = models.IntegerField(blank=False, default=1)
 
     history = HistoricalRecords()
 

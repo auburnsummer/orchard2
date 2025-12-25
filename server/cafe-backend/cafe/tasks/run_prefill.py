@@ -53,7 +53,7 @@ async def upload_files(level: VitalsLevel | VitalsLevelImmutable, f: BufferedRan
         )
 
 
-@db_task()
+@db_task(priority=200)
 def run_prefill(prefill_id: str):
     prefill_result = RDLevelPrefillResult.objects.get(id=prefill_id)
     try:

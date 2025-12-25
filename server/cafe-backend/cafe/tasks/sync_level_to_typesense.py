@@ -66,7 +66,7 @@ def mass_sync_levels_to_typesense(level_ids: Iterable[str]):
 
     
 
-@task()
+@task(priority=100)
 def sync_level_to_typesense(level_id: str):
     typesense_client = get_typesense_client()
     from cafe.models import RDLevel
