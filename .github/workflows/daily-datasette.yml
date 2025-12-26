@@ -99,7 +99,7 @@ jobs:
           docker push ghcr.io/${{ github.repository }}/datasette:latest
 
   deploy:
-    needs: build
+    needs: build-datasette
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request'
     steps:
