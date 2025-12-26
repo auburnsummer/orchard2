@@ -1,3 +1,4 @@
+from re import M
 import zipfile
 from typing import IO
 import msgspec
@@ -16,6 +17,8 @@ from .facets.tags_facet import tags_facet
 from .facets.thumbnail_facet import thumbnail_facet
 from .facets.updated_facet import updated_facet
 from .facets.rdmd5_facet import rdmd5_facet
+from .facets.total_hits_approx_facet import total_hits_approx_facet
+from .facets.beat_types_facet import event_type_facet
 
 from .msgspec_schema import VitalsLevel, VitalsLevelImmutable
 
@@ -47,7 +50,7 @@ def _vitals(facets: dict, f: IO[bytes]) -> dict:
                             final[key] = result
                     except Exception as e:
                         raise VitalsException(
-                            f"vitals: An unhandled error occured in a facet: {e}"
+                            f"vitals: An unhandled error occured in a facet {func.__name__}: {e}"
                         )
                 return final
 
@@ -69,6 +72,23 @@ def vitals(f: IO[bytes]) -> VitalsLevel:
         "description": make_color_enabled_key_facet(
             ["settings", "description"]
         ),
+        (
+            "has_classics",
+            "has_oneshots",
+            "has_squareshots",
+            "has_freezeshots",
+            "has_burnshots",
+            "has_holdshots",
+            "has_triangleshots",
+            "has_skipshots",
+            "has_subdivs",
+            "has_synco",
+            "has_freetimes",
+            "has_holds",
+            "has_window_dance",
+            "has_rdcode"
+        ): event_type_facet,
+        "total_hits_approx": total_hits_approx_facet,
         "hue": make_key_facet(["settings", "songNameHue"], 0.0),
         "authors_raw": make_key_facet(["settings", "author"]),
         "authors": author_facet,
