@@ -97,3 +97,13 @@ jobs:
           
           # Push to registry
           docker push ghcr.io/${{ github.repository }}/datasette:latest
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    steps:
+      - name: deploy to Dokploy
+        run: | 
+          curl --location --request POST \
+            --url '${{ secrets.DATASETTE_DOKPLOY_WEBHOOK }}'
