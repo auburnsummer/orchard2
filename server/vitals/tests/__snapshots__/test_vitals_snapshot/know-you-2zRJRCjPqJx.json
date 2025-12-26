@@ -10,6 +10,20 @@
   "authors_raw": "lugi",
   "description": "Two lonely stars, wandering in the dark...",
   "difficulty": 1,
+  "has_burnshots": false,
+  "has_classics": true,
+  "has_freetimes": true,
+  "has_freezeshots": false,
+  "has_holds": false,
+  "has_holdshots": false,
+  "has_oneshots": true,
+  "has_rdcode": false,
+  "has_skipshots": false,
+  "has_squareshots": false,
+  "has_subdivs": false,
+  "has_synco": false,
+  "has_triangleshots": false,
+  "has_window_dance": false,
   "hue": 0.47,
   "icon": "<binary>",
   "image": "<binary>",
@@ -29,5 +43,6 @@
     "pop"
   ],
   "thumb": "<binary>",
+  "total_hits_approx": 72,
   "two_player": true
 }

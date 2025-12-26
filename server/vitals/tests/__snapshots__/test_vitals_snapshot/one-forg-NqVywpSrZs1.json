@@ -10,6 +10,20 @@
   "authors_raw": "BluPen",
   "description": "Patient experiencing sudden heart strain again. Solve the patient's concerns.",
   "difficulty": 2,
+  "has_burnshots": false,
+  "has_classics": true,
+  "has_freetimes": false,
+  "has_freezeshots": false,
+  "has_holds": false,
+  "has_holdshots": false,
+  "has_oneshots": true,
+  "has_rdcode": true,
+  "has_skipshots": false,
+  "has_squareshots": false,
+  "has_subdivs": false,
+  "has_synco": false,
+  "has_triangleshots": false,
+  "has_window_dance": true,
   "hue": 0.1,
   "icon": "<binary>",
   "image": "<binary>",
@@ -29,5 +43,6 @@
     "window dance"
   ],
   "thumb": "<binary>",
+  "total_hits_approx": 177,
   "two_player": true
 }

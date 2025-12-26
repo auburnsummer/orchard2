@@ -317,6 +317,21 @@ def test_prefill_stage_two_post_create_new_level(mock_sync, bridge_client, test_
         "two_player": False,
         "seizure_warning": False,
         "tags": ["test"],
+        "has_classics": True,
+        "has_oneshots": True,
+        "has_squareshots": False,
+        "has_freezeshots": True,
+        "has_burnshots": False,
+        "has_holdshots": True,
+        "has_triangleshots": False,
+        "has_skipshots": False,
+        "has_subdivs": True,
+        "has_synco": True,
+        "has_freetimes": False,
+        "has_holds": True,
+        "has_window_dance": False,
+        "has_rdcode": False,
+        "total_hits_approx": 100,
     }
     
     response = bridge_client.post(f'/levels/from_prefill/{prefill_result_ready.id}/', {
