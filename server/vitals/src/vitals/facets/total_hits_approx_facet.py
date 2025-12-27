@@ -1,4 +1,6 @@
 
+CLOSE_ENOUGH = 0.001
+
 def total_hits_approx_facet(obj, **kwargs):
     """
     We are NOT going to attempt to be perfectly accurate here, there are
@@ -37,7 +39,7 @@ def total_hits_approx_facet(obj, **kwargs):
         # classic and freetimes are always worth one hit
         if evt["type"] == "AddClassicBeat":
             total += 1
-        if evt["type"] == "AddFreetimeBeat":
+        if evt["type"] == "AddFreeTimeBeat":
             total += 1
         # the more complicated oneshot beats...
         # assume that all oneshots that are in between the start and the end
@@ -50,7 +52,7 @@ def total_hits_approx_facet(obj, **kwargs):
             end_bar, end_beat = add_beat_to_bar_and_beat(evt["bar"], evt["beat"], duration * loops)
             end_abs_this_event = bar_and_beat_to_absolute_beat(end_bar, end_beat)
 
-            if start_abs_this_event >= start_abs_curr_oneshot and start_abs_this_event <= end_abs_curr_oneshot:
+            if start_abs_this_event >= (start_abs_curr_oneshot-CLOSE_ENOUGH) and start_abs_this_event <= (end_abs_curr_oneshot+CLOSE_ENOUGH):
                 # this oneshot is within the current oneshot, so ignore it
                 continue
 

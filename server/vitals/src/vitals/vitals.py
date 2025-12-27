@@ -4,6 +4,7 @@ from typing import IO
 import msgspec
 
 from rdlevel_parse import parse
+from vitals.facets.has_cpu_rows_facet import has_cpu_rows_facet
 from .facets.artist_list_facet import artist_list_facet
 from .facets.rdlevel_sha1_facet import rdlevel_sha1_facet
 from .facets.sha1_facet import sha1_facet
@@ -24,7 +25,7 @@ from .msgspec_schema import VitalsLevel, VitalsLevelImmutable
 
 import msgspec
 
-PREFILL_VERSION = 1
+PREFILL_VERSION = 2
 
 class VitalsException(Exception):
     pass
@@ -89,6 +90,7 @@ def vitals(f: IO[bytes]) -> VitalsLevel:
             "has_rdcode"
         ): event_type_facet,
         "total_hits_approx": total_hits_approx_facet,
+        "has_cpu_rows": has_cpu_rows_facet,
         "hue": make_key_facet(["settings", "songNameHue"], 0.0),
         "authors_raw": make_key_facet(["settings", "author"]),
         "authors": author_facet,

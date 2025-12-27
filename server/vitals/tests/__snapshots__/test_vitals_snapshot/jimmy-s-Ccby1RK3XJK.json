@@ -14,6 +14,7 @@
   "difficulty": 1,
   "has_burnshots": false,
   "has_classics": true,
+  "has_cpu_rows": false,
   "has_freetimes": false,
   "has_freezeshots": false,
   "has_holds": false,

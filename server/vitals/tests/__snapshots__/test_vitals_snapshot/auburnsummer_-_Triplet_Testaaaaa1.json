@@ -13,6 +13,7 @@
   "difficulty": 2,
   "has_burnshots": false,
   "has_classics": true,
+  "has_cpu_rows": true,
   "has_freetimes": false,
   "has_freezeshots": false,
   "has_holds": false,
@@ -45,6 +46,6 @@
     "Two-handed"
   ],
   "thumb": "<binary>",
-  "total_hits_approx": 195,
+  "total_hits_approx": 194,
   "two_player": true
 }

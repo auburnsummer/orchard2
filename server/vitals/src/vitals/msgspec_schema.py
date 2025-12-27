@@ -32,6 +32,7 @@ class VitalsLevelBaseMutable(msgspec.Struct):
     has_holds: bool
     has_window_dance: bool
     has_rdcode: bool
+    has_cpu_rows: bool
     total_hits_approx: int
 
 

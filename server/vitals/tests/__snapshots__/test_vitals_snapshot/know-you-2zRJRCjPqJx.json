@@ -12,6 +12,7 @@
   "difficulty": 1,
   "has_burnshots": false,
   "has_classics": true,
+  "has_cpu_rows": true,
   "has_freetimes": true,
   "has_freezeshots": false,
   "has_holds": false,
@@ -43,6 +44,6 @@
     "pop"
   ],
   "thumb": "<binary>",
-  "total_hits_approx": 72,
+  "total_hits_approx": 84,
   "two_player": true
 }

@@ -9,6 +9,7 @@ cd "$(dirname "$0")"
 # Array of files to download
 FILES=(
     "auburnsummer_-_Triplet_Testaaaaa1.rdzip"
+    "onething.rdzip"
     "bdf3cf10799f4309ecea59f37f1fdba2538f5.rdzip"
     "yi-xiao-Hg3afme47nr.rdzip"
     "swing-c2QGYcw8GLq.rdzip"

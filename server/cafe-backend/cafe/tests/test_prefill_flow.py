@@ -331,7 +331,8 @@ def test_prefill_stage_two_post_create_new_level(mock_sync, bridge_client, test_
         "has_holds": True,
         "has_window_dance": False,
         "has_rdcode": False,
-        "total_hits_approx": 100,
+        "has_cpu_rows": False,
+        "total_hits_approx": 100
     }
     
     response = bridge_client.post(f'/levels/from_prefill/{prefill_result_ready.id}/', {

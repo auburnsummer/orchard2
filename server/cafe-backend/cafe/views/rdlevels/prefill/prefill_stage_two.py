@@ -45,7 +45,7 @@ def prefill_stage_two(request: AuthenticatedHttpRequest, prefill_id: str):
                     new_level_id = level.id
                     return redirect("cafe:level_view", new_level_id)
                 except msgspec.ValidationError:
-                    messages.error(request, "An error occurred validating the level")
+                    messages.error(request, "An error occurred validating the level") 
             else:
                 messages.error(request, "An error occurred validating the form")
         if prefill.prefill_type == 'update':

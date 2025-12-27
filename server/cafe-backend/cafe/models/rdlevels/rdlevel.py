@@ -83,6 +83,23 @@ class RDLevel(RulesModel):
 
     prefill_version = models.IntegerField(blank=False, default=1)
 
+    has_classics = models.BooleanField(blank=False, default=False)
+    has_oneshots = models.BooleanField(blank=False, default=False)
+    has_squareshots = models.BooleanField(blank=False, default=False)
+    has_freezeshots = models.BooleanField(blank=False, default=False)
+    has_burnshots = models.BooleanField(blank=False, default=False)
+    has_holdshots = models.BooleanField(blank=False, default=False)
+    has_triangleshots = models.BooleanField(blank=False, default=False)
+    has_skipshots = models.BooleanField(blank=False, default=False)
+    has_subdivs = models.BooleanField(blank=False, default=False)
+    has_synco = models.BooleanField(blank=False, default=False)
+    has_freetimes = models.BooleanField(blank=False, default=False)
+    has_holds = models.BooleanField(blank=False, default=False)
+    has_window_dance = models.BooleanField(blank=False, default=False)
+    has_rdcode = models.BooleanField(blank=False, default=False)
+    has_cpu_rows = models.BooleanField(blank=False, default=False)
+    total_hits_approx = models.IntegerField(blank=False, default=0)
+
     history = HistoricalRecords()
 
     def __str__(self):

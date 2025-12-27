@@ -12,6 +12,7 @@
   "difficulty": 0,
   "has_burnshots": false,
   "has_classics": true,
+  "has_cpu_rows": true,
   "has_freetimes": true,
   "has_freezeshots": false,
   "has_holds": false,
@@ -45,6 +46,6 @@
     "lyrics"
   ],
   "thumb": "<binary>",
-  "total_hits_approx": 108,
+  "total_hits_approx": 124,
   "two_player": false
 }

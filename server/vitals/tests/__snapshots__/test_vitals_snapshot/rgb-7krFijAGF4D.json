@@ -13,6 +13,7 @@
   "difficulty": 2,
   "has_burnshots": false,
   "has_classics": true,
+  "has_cpu_rows": true,
   "has_freetimes": true,
   "has_freezeshots": false,
   "has_holds": false,
@@ -47,6 +48,6 @@
     "namine ritsu"
   ],
   "thumb": "<binary>",
-  "total_hits_approx": 257,
+  "total_hits_approx": 262,
   "two_player": false
 }
