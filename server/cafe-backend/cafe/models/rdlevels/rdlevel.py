@@ -138,9 +138,25 @@ class RDLevel(RulesModel):
             "club": self.club.to_dict(),
             "approval": self.approval,
             "approval_notes_public": self.approval_notes_public,
-            "is_private": self.is_private,
-            "prefill_version": self.prefill_version
             # private notes are not included in to_dict as to_dict is used for public APIs
+            "is_private": self.is_private,
+            "prefill_version": self.prefill_version,
+            "has_classics": self.has_classics,
+            "has_oneshots": self.has_oneshots,
+            "has_squareshots": self.has_squareshots,
+            "has_freezeshots": self.has_freezeshots,
+            "has_burnshots": self.has_burnshots,
+            "has_holdshots": self.has_holdshots,
+            "has_triangleshots": self.has_triangleshots,
+            "has_skipshots": self.has_skipshots,
+            "has_subdivs": self.has_subdivs,
+            "has_synco": self.has_synco,
+            "has_freetimes": self.has_freetimes,
+            "has_holds": self.has_holds,
+            "has_window_dance": self.has_window_dance,
+            "has_rdcode": self.has_rdcode,
+            "has_cpu_rows": self.has_cpu_rows,
+            "total_hits_approx": self.total_hits_approx
         }
 
     def save(self, *args, **kwargs):
