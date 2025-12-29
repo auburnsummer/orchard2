@@ -4,7 +4,6 @@ import { Surface } from "@cafe/components/ui/Surface";
 import { Words } from "@cafe/components/ui/Words";
 import { TextInput } from "@cafe/components/ui/TextInput";
 import { Toggle } from "@cafe/components/ui/Toggle";
-import { Button } from "@cafe/components/ui/Button";
 import Fieldset from "@cafe/components/ui/Fieldset";
 import { atomWithStorage } from "jotai/utils";
 import { useAtom, useAtomValue } from "jotai";

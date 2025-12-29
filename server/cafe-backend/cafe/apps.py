@@ -17,11 +17,11 @@ class CafeConfig(AppConfig):
         Telepath does things like converting Django forms, etc to JS objects, but we don't
         use those features, we're always only sending plain dicts/lists/strings/numbers/bools.
         
-        It also does some "clever" serialization of long strings where
+        It also does some clever serialization of long strings where
         it tries to take repeated strings and store them only once and otherwise store a 
         { _ref: } object. This is kinda annoying because we'd have to reimplement the
-        client logic, and in addition, anyone who consumes our frankenstein API would also
-        need to implement that logic.
+        client logic, also I'm pretty sus about the benefit of this optimization,
+        compression algorithms will do a decent enough job anyway.
         
         So instead, we just bypass telepath entirely.
         
