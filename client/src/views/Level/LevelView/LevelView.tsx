@@ -64,6 +64,8 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
 
   const canPeerReview = user.authenticated && user.is_peer_reviewer;
 
+  const filenameToDownloadAs = `${rdlevel.song} - ${rdlevel.authors.join(',')}.rdzip`;
+
   return (
     <Shell>
       <Dialog open={showDeleteForm} onClose={closeDeleteForm}>
@@ -212,8 +214,9 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
               <div className="flex flex-wrap gap-2 mb-6">
                 <Button
                   as="a"
-                  href={rdlevel.rdzip_url}
+                  href={`${rdlevel.rdzip_url}?filename=${encodeURIComponent(filenameToDownloadAs)}`}
                   variant="primary"
+                  download={`${rdlevel.song} - ${rdlevel.authors.join(',')}.rdzip`}
                 >
                   <FontAwesomeIcon icon={faDownload} className="mr-2" />
                   Download
