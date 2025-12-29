@@ -1,6 +1,7 @@
  [] add fields for rikri
      [] has_* incl new ones, synco, holdshots, burnshots, subdivs
      [] also total_hits
+     [] slow migration from prefill_version 1 to 2
  [] club admins/owners can access a list of all the club's levels
  [] delete account (what do we do about their levels?)
  [] delete club (what do we do about their levels?)
