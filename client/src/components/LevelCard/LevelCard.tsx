@@ -43,7 +43,7 @@ export function LevelCard({
   return (
     <article 
       className={cc(
-        "w-[26rem] rounded-lg flex flex-col bg-slate-100 dark:bg-slate-700",
+        "w-[26rem] max-w-screen rounded-lg flex flex-col bg-slate-100 dark:bg-slate-700",
         "group",
         onClick !== undefined && "hover:bg-slate-200 hover:shadow-md dark:hover:bg-slate-800",
         className

@@ -1,7 +1,8 @@
 import { useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { Menu, MenuButton, MenuItem, MenuItems, Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { useUser } from "@cafe/hooks/useUser";
 import { useLocation, useSearchParams } from "@cafe/minibridge/hooks";
@@ -11,7 +12,7 @@ import { NavEntry } from "../ui/NavEntry";
 import { Logo } from "./Logo";
 import { SearchBar } from "./SearchBar";
 
-export function Header() {
+export function Header({ navbar }: { navbar?: React.ReactNode }) {
   const user = useUser();
   const csrfInput = useCSRFTokenInput();
   const logOutForm = useRef<HTMLFormElement>(null);
@@ -39,7 +40,17 @@ export function Header() {
 
   return (
     <header className="flex-shrink-0 flex h-12 items-stretch bg-violet-300 dark:bg-violet-950 shadow-sm">
-      <Logo className="z-10" />
+      {navbar && (
+        <Popover className="sm:hidden relative flex flex-col">
+          <PopoverButton className="ml-2 px-2 hover:bg-violet-400 dark:hover:bg-violet-900 rounded hover:cursor-pointer flex-grow">
+            <FontAwesomeIcon icon={faBars} className="text-violet-700 dark:text-violet-300 flex-grow" />
+          </PopoverButton>
+          <PopoverPanel className="fixed top-12 left-0 bottom-0 z-20 w-72 flex flex-col overflow-y-auto">
+            {navbar}
+          </PopoverPanel>
+        </Popover>
+      )}
+      <Logo className="z-10 hidden sm:block" />
       <SearchBar
         className="ml-4"
         initialValue={searchParams.get("q") || ""}

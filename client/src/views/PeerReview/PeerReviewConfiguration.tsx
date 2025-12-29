@@ -70,14 +70,6 @@ export function PeerReviewConfiguration({ levels }: PeerReviewConfigurationProps
                 <Words variant="subheader">
                     Peer Review Configuration
                 </Words>
-                <Button
-                    as="a"
-                    href=""
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Help
-                </Button>
             </div>
 
             <div className="space-y-6">
@@ -88,7 +80,7 @@ export function PeerReviewConfiguration({ levels }: PeerReviewConfigurationProps
                             label="Pathology-Lab (Private) Webhook URL"
                             description={pathlabWebhookUrl 
                                 ? `Verification: ${crc32(pathlabWebhookUrl)}`
-                                : "Find more information using the Help button above."}
+                                : "See pins in #pathology-lab for more information."}
                             value={pathlabWebhookUrl}
                             onChange={(e) => setPathlabWebhookUrl(e.target.value)}
                             placeholder="https://discord.com/api/webhooks/..."
@@ -100,7 +92,7 @@ export function PeerReviewConfiguration({ levels }: PeerReviewConfigurationProps
                             label="Pathology-Reports (Public) Webhook URL"
                             description={publicWebhookUrl 
                                 ? `Verification: ${crc32(publicWebhookUrl)}`
-                                : "Find more information using the Help button above."}
+                                : "See pins in #pathology-reports for more information."}
                             value={publicWebhookUrl}
                             onChange={(e) => setPublicWebhookUrl(e.target.value)}
                             placeholder="https://discord.com/api/webhooks/..."

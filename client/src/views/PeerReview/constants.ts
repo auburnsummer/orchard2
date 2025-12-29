@@ -155,6 +155,21 @@ export const BAD_THINGS = [
         category: "rows"
     } as const,
     {
+        name: "Undisclosed AI Assets",
+        description: "The level includes generative AI assets but does not have the 'GenAI Assets' tag. In this case, the level is deleted.",
+        category: "metadata",
+    } as const,
+    {
+        name: "Bad AI Assets",
+        description: "The level includes generative AI assets but its use is 'low quality.'",
+        category: "metadata",
+    } as const,
+    {
+        name: "Rulebreaking AI Usage",
+        description: "The level makes use of AI generated, voice cloning, or covered of songs. In this case, the level is deleted.",
+        category: "metadata",
+    } as const,
+    {
         name: "Blacklisted",
         description: "The artist or song used is blacklisted. In this case, the level is deleted.",
         category: "metadata",
@@ -173,7 +188,7 @@ export const BAD_THINGS = [
     } as const,
     {
         name: "Incorrect Metadata",
-        description: "If the level breaks any metadata rules.",
+        description: "If the level breaks any metadata rules. NOTE: you can edit the metadata yourself to fix this if you want; go to the level page.",
         category: "metadata"
     } as const,
 ].sort((a, b) => a.name.localeCompare(b.name));

@@ -1,6 +1,3 @@
-import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Header } from "./Header";
 
 export type ShellProps = {
@@ -12,23 +9,10 @@ export type ShellProps = {
 export function Shell({ children, navbar, aside }: ShellProps) {
   return (
     <div className="flex flex-col h-screen bg-slate-300 dark:bg-slate-600">
-      <Header />
+      <Header navbar={navbar} />
       <div className="relative flex flex-grow items-stretch min-h-0">
-        { /* sidebar visible alway past sm */}
+        {/* sidebar visible always past sm */}
         {navbar && <div className="hidden sm:flex min-w-72 flex-col overflow-y-auto">{navbar}</div>}
-        { /* sidebar as overlay on small screens */}
-        {
-          navbar && (
-            <Popover className="sm:hidden relative">
-              <PopoverButton className="absolute top-12 left-0 bg-violet-300 rounded-tr-lg rounded-br-lg opacity-60 hover:opacity-100 hover:cursor-pointer">
-                <FontAwesomeIcon icon={faBars} className="text-xs text-violet-600" />
-              </PopoverButton>
-              <PopoverPanel className="fixed top-12 left-0 z-20 h-full w-72 flex flex-col overflow-y-auto">
-                {navbar}
-              </PopoverPanel>
-            </Popover>
-          )
-        }
         <main className="flex-grow overflow-y-auto">
           {children}
         </main>

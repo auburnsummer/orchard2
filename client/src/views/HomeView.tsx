@@ -19,7 +19,7 @@ const ABOVE_FOLD_LINKS = [
   },
   {
     href: "https://rd-editor-docs.github.io/intro/",
-    text: "Editor tutorial",
+    text: "Editor tutorial by Klyzx et al",
   },
 ];
 
