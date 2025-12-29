@@ -1,9 +1,16 @@
  [] delete account (what do we do about their levels?)
  [] delete club (what do we do about their levels?)
  [] migration plan for RDL (i.e. transition line the second)
+    - [] Daily Blend should use the new API
+        - the API should take an rdzip_url as well as an option I think
+    - [] Set a snowflake that orchard1 won't scrape past
+    - [] ask RDL moderators to setup RDL into a club and stuff
+    - [] migrate levels from csteward to RDL club
+    - [] "How to add a Level" image
 
 ==== AFTER RELEASE ====
 
  - level kudos, sort by kudos?
  - setlists??
  - localisation
+ - numerical difficulty scale?
