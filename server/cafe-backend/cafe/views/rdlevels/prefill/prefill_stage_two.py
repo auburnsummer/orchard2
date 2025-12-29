@@ -60,6 +60,9 @@ def prefill_stage_two(request: AuthenticatedHttpRequest, prefill_id: str):
                     else:
                         for key, value in prefill.data.items():
                             setattr(level, key, value)
+                        # if it's NR'ed, bump it back to pending
+                        if level.approval == -1:
+                            level.approval = 0
                         with transaction.atomic():
                             level.save()
                             prefill.delete()
