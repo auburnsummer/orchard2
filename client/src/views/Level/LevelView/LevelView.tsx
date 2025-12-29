@@ -26,7 +26,6 @@ import { Surface } from "@cafe/components/ui/Surface";
 import { TextInput } from "@cafe/components/ui/TextInput";
 import { Words } from "@cafe/components/ui/Words";
 
-import styles from "./LevelView.module.css";
 import { useUser } from "@cafe/hooks/useUser";
 import { Alert } from "@cafe/components/ui/Alert";
 
@@ -48,12 +47,11 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
 
   const csrfInput = useCSRFTokenInput();
 
-  // TODO: align with DifficultyDecorator.tsx
   const getDifficultyBadgeClass = (difficulty: number) => {
-    if (difficulty === 0) return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"; // Easy
-    if (difficulty === 1) return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300"; // Medium
-    if (difficulty === 2) return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300"; // Tough
-    return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"; // Very Tough
+    if (difficulty === 0) return "bg-teal-100 text-teal-600 dark:bg-teal-900 dark:text-teal-200"; // Easy
+    if (difficulty === 1) return "bg-amber-100 text-amber-600 dark:bg-amber-900 dark:text-amber-200"; // Medium
+    if (difficulty === 2) return "bg-pink-100 text-pink-600 dark:bg-pink-900 dark:text-pink-200"; // Tough
+    return "bg-violet-100 text-violet-600 dark:bg-violet-900 dark:text-violet-200"; // Very Tough
   };
 
   const getDifficultyString = (difficulty: number) => {
@@ -110,7 +108,6 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
                 <div className="flex-1 flex flex-col gap-2">
                   <div>
                     <ConjunctionList
-                      className={styles.artistList}
                       items={rdlevel.artist_tokens}
                       elementRender={(v) => (
                         <Words variant="muted" className="text-sm">
@@ -136,16 +133,16 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
                   <div className="flex flex-wrap gap-4">
                     <div className="flex items-center gap-1">
                       <FontAwesomeIcon
+                        className="text-slate-700 dark:text-slate-300"
                         icon={faPen}
-                        className={styles.metaIcon}
                       />
                       <ConjunctionList
-                        className={styles.metadataList}
+                        className="gap-1"
                         elementRender={(v) =>
                           typeof v === "string" ? (
-                            <button className={styles.authorButton}>
+                            <Words className="text-sm">
                               {v}
-                            </button>
+                            </Words>
                           ) : (
                             <></>
                           )
@@ -161,16 +158,16 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
 
                     <div className="flex items-center gap-1">
                       <FontAwesomeIcon
+                        className="text-slate-700 dark:text-slate-300"
                         icon={faHeartPulse}
-                        className={styles.metaIcon}
                       />
                       <Words className="text-sm">{bpmText}</Words>
                     </div>
 
                     <div className="flex items-center gap-1">
                       <FontAwesomeIcon
+                        className="text-slate-700 dark:text-slate-300"
                         icon={faDiscord}
-                        className={styles.metaIcon}
                       />
                       <Words className="text-sm">{rdlevel.club.name}</Words>
                     </div>
@@ -196,7 +193,7 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
                     ) : rdlevel.two_player ? (
                       <span className="px-3 py-1 rounded-md text-sm font-medium bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 flex items-center gap-1">
                         <FontAwesomeIcon icon={faUsers} />
-                        2 Players
+                        2 Players / 2 Handed
                       </span>
                     ) : (
                       <span className="px-3 py-1 rounded-md text-sm font-medium bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 flex items-center gap-1">
@@ -273,8 +270,8 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
                 <Surface className="p-4">
                   <div className="flex items-center gap-1 mb-2">
                     <FontAwesomeIcon
+                      className="text-slate-700 dark:text-slate-300"
                       icon={faTags}
-                      className={styles.sectionIcon}
                     />
                     <Words className="font-medium">Tags</Words>
                   </div>
@@ -291,8 +288,8 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
               <Surface className="p-4">
                 <div className="flex items-center gap-1 mb-2">
                   <FontAwesomeIcon
+                    className="text-slate-700 dark:text-slate-300"
                     icon={faPen}
-                    className={styles.sectionIcon}
                   />
                   <Words className="font-medium ml-1">Peer Review Status</Words>
                 </div>

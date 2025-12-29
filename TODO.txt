@@ -9,7 +9,6 @@
  [] check for no placeholders remaining (e.g. links)
  [] check dark mode looks decent in all places
  [] check mobile view looks decent in all places
- [] when you download a level the filename is understandable
 
 ==== AFTER RELEASE ====
 

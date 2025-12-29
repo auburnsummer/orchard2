@@ -87,7 +87,7 @@ export function HomeView({ daily_blend_level }: HomeViewProps) {
 
         {/* right side */}
         <div className="flex-1 flex items-center justify-center">
-          <div className="p-4 w-full max-w-md aspect-square rounded-md shadow-sm flex items-center justify-center bg-violet-300 dark:bg-violet-600">
+          <div className="p-4 w-full max-w-md aspect-square rounded-md shadow-sm flex items-center justify-center bg-violet-300 dark:bg-violet-950">
             <div className="flex flex-col gap-4">
               {daily_blend_level ? (
                 <>

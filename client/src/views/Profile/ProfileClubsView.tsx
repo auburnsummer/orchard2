@@ -48,7 +48,7 @@ export function ProfileClubsView({ clubs }: ProfileClubsViewProps) {
         {ownerClubs.length > 0 && (
           <>
             <Words as="h3" variant="subheader">Owner</Words>
-            <ul className="list-disc pl-5">
+            <ul className="list-disc pl-5 dark:text-slate-100">
               {ownerClubs.map((c) => (
                 <li key={c.club.id}>
                   <LinkToClub club={c.club} />

@@ -144,7 +144,7 @@ export function LevelCard({
               className="ml-1 p-0 list-none"
               elementRender={(v) =>
                 typeof v === "string" ? (
-                  <Words as="button" className="whitespace-pre text-slate-500 dark:text-slate-400 text-xs enabled:hover:text-slate-700 enabled:hover:underline enabled:hover:cursor-pointer dark:enabled:hover:text-slate-200">
+                  <Words as="span" className="whitespace-pre text-slate-500 dark:text-slate-400 text-xs">
                     {v}
                   </Words>
                 ) : (
@@ -217,7 +217,7 @@ export function LevelCard({
           )}
           {level.tags.map((tag, i) => (
             <li key={i}>
-              <span className="text-xs leading-4 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 px-3 py-0.5 rounded-full flex items-center hover:bg-slate-300 dark:hover:bg-slate-700 hover:cursor-pointer">
+              <span className="text-xs leading-4 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 px-3 py-0.5 rounded-full flex items-center">
                 {tag}
               </span>
             </li>
