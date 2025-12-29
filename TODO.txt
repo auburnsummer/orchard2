@@ -1,15 +1,10 @@
- [] add fields for rikri
-     [] has_* incl new ones, synco, holdshots, burnshots, subdivs
-     [] also total_hits
-     [] slow migration from prefill_version 1 to 2
  [] club admins/owners can access a list of all the club's levels
  [] delete account (what do we do about their levels?)
  [] delete club (what do we do about their levels?)
  [] migration plan for RDL (i.e. transition line the second)
- [] check mobile view looks decent in all places
 
 ==== AFTER RELEASE ====
 
- - setlists??
  - level kudos, sort by kudos?
+ - setlists??
  - localisation

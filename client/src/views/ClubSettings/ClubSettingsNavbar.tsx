@@ -26,6 +26,10 @@ export function ClubSettingsNavbar({ club }: ClubSettingsNavbarProps) {
       label: "Connected Discord servers",
       href: `/groups/${club.id}/settings/connections/discord/`,
     },
+    {
+      label: "Levels",
+      href: `/levels?q=&club_id=${club.id}&peer_review=all`
+    }
   ];
 
   return (

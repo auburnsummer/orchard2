@@ -36,6 +36,7 @@ class SearchLevelParams:
     facet_query_field: Optional[str]
     facet_query: Optional[str]
     submitter_id: Optional[str]
+    club_id: Optional[str]
 
 
 def parse_bool_param(value: Optional[str]) -> Optional[bool]:
@@ -119,6 +120,9 @@ def get_search_params(request: HttpRequest) -> SearchLevelParams:
 
     # submitter id
     submitter_id = request.GET.get('submitter_id', None)
+
+    # club id
+    club_id = request.GET.get('club_id', None)
     
     return SearchLevelParams(
         q=request.GET.get('q', ""),
@@ -136,7 +140,8 @@ def get_search_params(request: HttpRequest) -> SearchLevelParams:
         seizure_warning=seizure_warning,
         facet_query=facet_query,
         facet_query_field=facet_query_field,
-        submitter_id=submitter_id
+        submitter_id=submitter_id,
+        club_id=club_id
     )
 
 def get_typesense_filter_query(params: SearchLevelParams) -> str:
@@ -182,6 +187,9 @@ def get_typesense_filter_query(params: SearchLevelParams) -> str:
 
     if params.submitter_id:
         parts.append(f"submitter.id:={params.submitter_id}")
+
+    if params.club_id:
+        parts.append(f"club.id:={params.club_id}")
 
     return " && ".join(parts)
 
