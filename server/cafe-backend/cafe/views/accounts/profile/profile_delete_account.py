@@ -26,15 +26,15 @@ def profile_delete_account(request: AuthenticatedHttpRequest):
             level_handling = form.cleaned_data["level_handling"]
             if level_handling == "delete":
                 user.delete() # Delete cascade will handle associated levels.
+                messages.success(request, "Your account has been deleted.")
             elif level_handling == "transfer":
                 steward = User.objects.get(username=STEWARD_USER_ID)
                 if not steward:
                     raise Exception("Steward user does not exist.")
                 levels = RDLevel.objects.filter(submitter=user)
                 levels.update(submitter=steward)
-                deleted_user, created = User.objects.get_or_create(username="Deleted User")
-                levels.update(submitter=deleted_user)
-            user.delete()
+                user.delete()
+                messages.success(request, "Your account has been deleted.")
             return redirect("cafe:index")
         else:
             messages.error(request, "Invalid form submission.")
