@@ -34,7 +34,7 @@ def create_club(request: AuthenticatedHttpRequest):
             new_club.save()
             current_user_membership.save()
 
-            messages.success(request, "Club created!")
+            messages.success(request, "Group created!")
 
             return HttpResponseRedirect(form.cleaned_data.get("redirect") or f"/groups/{new_club.id}/settings")
 

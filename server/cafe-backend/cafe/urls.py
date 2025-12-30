@@ -1,7 +1,9 @@
 from django.urls import path
 
+from cafe.views.accounts.profile.profile_delete_account import profile_delete_account
 from cafe.views.api.blend.set_daily_blend import set_daily_blend
 from cafe.views.api.execute_webhook import execute_webhook
+from cafe.views.clubs.settings.club_delete import club_delete
 from cafe.views.rdlevels.peerreview.pr_level import pr_rdlevel
 from cafe.views.rdlevels.peerreview.pr_main import pr_main
 from cafe.views.rdlevels.peerreview.pr_make_webhook import pr_make_webhook
@@ -44,6 +46,7 @@ urlpatterns = [
     path("accounts/profile/settings/", profile_settings, name="profile_settings"),
     path("accounts/profile/groups/", profile_clubs, name="profile_clubs"),
     path("accounts/profile/api-key/", api_key_view, name="profile_api_key"),
+    path("accounts/profile/delete/", profile_delete_account, name="profile_delete_account"),
 
     path("groups/create/", create_club, name="create_club"),
 
@@ -51,6 +54,7 @@ urlpatterns = [
     path("groups/connect_discord/<code>/", connect_discord, name="club_connect_discord"),
 
     path("groups/<club_id>/settings/", info, name="club_settings_info"),
+    path("groups/<club_id>/settings/delete/", club_delete, name="club_delete"),
     path("groups/<club_id>/settings/members/", members, name="club_settings_members"),
     path("groups/<club_id>/settings/members/invite/", create_invite, name="club_settings_membership_invite"),
     path("groups/<club_id>/settings/members/<user_id>/edit/", alter_membership, name="club_settings_alter_membership"),

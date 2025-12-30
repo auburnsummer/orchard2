@@ -19,6 +19,8 @@ import { ClubSettingsRedeemInvite } from "./views/ClubSettings/ClubSettingsRedee
 import { ProfileApiKeyView } from "./views/Profile/ProfileApiKeyView";
 import React from "react";
 import { PeerReviewMakeEncryptedWebhook } from "./views/PeerReview/PeerReviewMakeEncryptedWebhook";
+import { ProfileDeleteAccount } from "./views/Profile/ProfileDeleteAccount";
+import { ClubSettingsDeleteView } from "./views/ClubSettings/ClubSettingsDelete";
 
 // most people won't go to PR, so lazy load it
 const PeerReviewMainView = React.lazy(() => import("./views/PeerReview/PeerReviewMainView").then(m => ({ default: m.PeerReviewMainView })));
@@ -34,11 +36,13 @@ export const routeMap: { [key: string]: React.FunctionComponent<any> } = {
   "cafe:profile_settings": ProfileSettingsView,
   "cafe:profile_clubs": ProfileClubsView,
   "cafe:profile_api_key": ProfileApiKeyView,
+  "cafe:profile_delete_account": ProfileDeleteAccount,
 
   "cafe:club_connect_discord": ClubSettingsConnectDiscord,
   "cafe:club_settings_info": ClubSettingsInfoView,
   "cafe:club_settings_members": ClubSettingsMembersView,
   "cafe:club_settings_connected_discords": ClubSettingsCheckConnectDiscord,
+  "cafe:club_delete": ClubSettingsDeleteView,
 
   "cafe:redeem_invite": ClubSettingsRedeemInvite,
 
