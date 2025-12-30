@@ -20,7 +20,13 @@ class DeleteAccountForm(forms.Form):
 def profile_delete_account(request: AuthenticatedHttpRequest):
     user = request.user
 
+    club_memberships = ClubMembership.objects.filter(user=user, role="owner")
+    number_of_clubs = club_memberships.count()
+
     if request.method == "POST":
+        if number_of_clubs > 0:
+            messages.error(request, "You must transfer or delete ownership of your groups before deleting your account.")
+            return redirect("cafe:profile_delete_account")
         form = DeleteAccountForm(request.POST)
         if form.is_valid():
             level_handling = form.cleaned_data["level_handling"]
@@ -42,8 +48,6 @@ def profile_delete_account(request: AuthenticatedHttpRequest):
     levels = RDLevel.objects.filter(submitter=user)
     number_of_levels = levels.count()
 
-    club_memberships = ClubMembership.objects.filter(user=user, role="owner")
-    number_of_clubs = club_memberships.count()
     
     return Response(request, request.resolver_match.view_name, {
         "number_of_levels": number_of_levels,
