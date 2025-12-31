@@ -14,7 +14,7 @@ from orchard.settings import STEWARD_USER_ID
 def steward_user():
     """Create or get the steward user that levels are transferred to"""
     user, _ = User.objects.get_or_create(
-        username=STEWARD_USER_ID,
+        id=STEWARD_USER_ID,
         defaults={'display_name': 'Steward'}
     )
     return user
@@ -388,7 +388,7 @@ def test_steward_user_must_exist_for_transfer(bridge_client: Client, user_with_l
     bridge_client.force_login(user_with_levels)
     
     # Ensure steward user doesn't exist
-    User.objects.filter(username=STEWARD_USER_ID).delete()
+    User.objects.filter(id=STEWARD_USER_ID).delete()
     
     # Try to transfer levels
     with pytest.raises(User.DoesNotExist):

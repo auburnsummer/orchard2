@@ -34,7 +34,7 @@ def profile_delete_account(request: AuthenticatedHttpRequest):
                 user.delete() # Delete cascade will handle associated levels.
                 messages.success(request, "Your account has been deleted.")
             elif level_handling == "transfer":
-                steward = User.objects.get(username=STEWARD_USER_ID)
+                steward = User.objects.get(id=STEWARD_USER_ID)
                 if not steward:
                     raise Exception("Steward user does not exist.")
                 levels = RDLevel.objects.filter(submitter=user)
