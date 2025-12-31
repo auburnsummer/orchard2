@@ -58,6 +58,7 @@ export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
       let next = page + n;
       params.set("page", `${next}`);
     });
+    document.getElementById("shell-main")?.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const onNext = () => movePage(1);

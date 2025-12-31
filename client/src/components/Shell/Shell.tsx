@@ -13,7 +13,7 @@ export function Shell({ children, navbar, aside }: ShellProps) {
       <div className="relative flex flex-grow items-stretch min-h-0">
         {/* sidebar visible always past sm */}
         {navbar && <div className="hidden sm:flex min-w-72 flex-col overflow-y-auto">{navbar}</div>}
-        <main className="flex-grow overflow-y-auto">
+        <main className="flex-grow overflow-y-auto" id="shell-main">
           {children}
         </main>
         {aside && <aside className="flex-shrink-0 overflow-y-auto sticky top-12">{aside}</aside>}
