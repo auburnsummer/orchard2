@@ -100,7 +100,7 @@ class RDLevel(RulesModel):
     has_cpu_rows = models.BooleanField(blank=False, default=False)
     total_hits_approx = models.IntegerField(blank=False, default=0)
 
-    history = HistoricalRecords()
+    history = HistoricalRecords(cascade_delete_history=True)
 
     def __str__(self):
         return f"{self.song} ({self.id})"

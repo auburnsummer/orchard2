@@ -26,7 +26,7 @@ class Club(RulesModel):
     # from cafe.ClubMembership
     memberships: RelatedManager[ClubMembership]
 
-    history = HistoricalRecords()
+    history = HistoricalRecords(cascade_delete_history=True)
 
     def __str__(self):
         return f"{self.name} ({self.id})"
