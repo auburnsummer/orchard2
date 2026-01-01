@@ -20,8 +20,14 @@ export function Header({ navbar }: { navbar?: React.ReactNode }) {
   const [searchParams] = useSearchParams();
 
   const onSearch = (query: string) => {
+    const currPeerReviewQ = searchParams.get("peer_review");
+    const params = new URLSearchParams();
+    params.set("q", query);
+    if (currPeerReviewQ) {
+      params.set("peer_review", currPeerReviewQ);
+    }
     const url = new URL(
-      `/levels/?q=${encodeURIComponent(query)}`,
+      `/levels/?${params.toString()}`,
       window.location.origin,
     );
     navigate(url);
