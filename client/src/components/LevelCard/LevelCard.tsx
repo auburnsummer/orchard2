@@ -119,7 +119,7 @@ export function LevelCard({
               <h2 className="font-semibold text-lg leading-5 break-words m-0">{level.song}</h2>
             )}
             {level.song_alt && (
-              <p className="text-sm text-slate-500 dark:text-slate-400">({level.song_alt})</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">{level.song_alt}</p>
             )}
           </div>
           <ConjunctionList
