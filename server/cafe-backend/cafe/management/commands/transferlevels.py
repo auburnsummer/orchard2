@@ -12,12 +12,12 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            'from_club_id',
+            '--from_club_id',
             type=str,
             help='ID of the club to transfer levels from'
         )
         parser.add_argument(
-            'to_club_id',
+            '--to_club_id',
             type=str,
             help='ID of the club to transfer levels to'
         )
@@ -48,15 +48,25 @@ class Command(BaseCommand):
         self.stdout.write(f"  Levels to transfer: {level_count}")
 
         try:
-            with transaction.atomic():
-                self.stdout.write("\nTransferring levels...")
-                updated_count = source_levels.update(club=to_club)
-                
-                self.stdout.write(
-                    self.style.SUCCESS(
-                        f"\n✓ Successfully transferred {updated_count} level(s) from "
-                        f"'{from_club.name}' to '{to_club.name}'"
-                    )
+            updated_count = 0
+            self.stdout.write("\nTransferring levels...")
+            # nb: we need to call save() so that typesense syncs.
+            # this isn't really a time-sensitive operation, so just do them one at a time.
+            for level in source_levels:
+                level.club = to_club
+                level.save()
+                updated_count = updated_count + 1
+            
+            self.stdout.write(
+                self.style.SUCCESS(
+                    f"\n✓ Successfully transferred {updated_count} level(s) from "
+                    f"'{from_club.name}' to '{to_club.name}'"
                 )
+            )
         except Exception as e:
+            self.stdout.write(
+                self.style.WARNING(
+                    f"Transferred {updated_count} levels before an error occured"
+                )
+            )
             raise CommandError(f"Failed to transfer levels: {str(e)}")

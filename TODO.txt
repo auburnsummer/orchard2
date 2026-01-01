@@ -1,3 +1,4 @@
+ [] option to edit/not edit level before posting -- most people won't need to edit 
  [] migration plan for RDL (i.e. transition line the second)
     - [] Set a snowflake that orchard1 won't scrape past?
     - [] ask RDL moderators to setup RDL into a club and stuff
