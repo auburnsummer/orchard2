@@ -12,8 +12,9 @@ import msgspec
 from cafe.views.types import AuthenticatedHttpRequest
 
 class SetDailyBlendPayload(msgspec.Struct):
-    level_id: str
-    featured_date: Optional[str]  # ISO format date string
+    level_id: Optional[str] = None
+    level_url: Optional[str] = None
+    featured_date: Optional[str] = ""  # ISO format date string
 
 @csrf_exempt
 # @permission_required("cafe.blend_rdlevel", fn=objectgetter(RDLevel, attr_name="level_id"))
@@ -26,7 +27,14 @@ def set_daily_blend(request: AuthenticatedHttpRequest):
     except msgspec.ValidationError as e:
         return JsonResponse({"error": "Invalid payload", "details": str(e)}, status=400)
     
-    level = get_object_or_404(RDLevel, id=payload.level_id)
+    # at least one of level_id or level_url must be provided
+    if not payload.level_id and not payload.level_url:
+        return JsonResponse({"error": "Either level_id or level_url must be provided"}, status=400)
+
+    if payload.level_id:
+        level = get_object_or_404(RDLevel, id=payload.level_id)
+    elif payload.level_url:
+        level = get_object_or_404(RDLevel, rdzip_url=payload.level_url)
 
     if not request.user.has_perm("cafe.blend_rdlevel", level):
         return JsonResponse({"error": "Permission denied"}, status=403)

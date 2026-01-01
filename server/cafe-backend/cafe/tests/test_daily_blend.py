@@ -91,6 +91,20 @@ def test_get_todays_blend_ignores_future_blends(rdlevel, second_rdlevel):
 
 
 @pytest.mark.django_db
+def test_set_daily_blend_requires_at_least_one_identifier(client: Client, pharmacist_user):
+    """Test that set_daily_blend requires either level_id or level_url"""
+    client.force_login(pharmacist_user)
+    
+    response = client.post(
+        '/api/set_daily_blend/',
+        data=json.dumps({'featured_date': None}),
+        content_type='application/json'
+    )
+    assert response.status_code == 400
+    assert response.json()['error'] == 'Either level_id or level_url must be provided'
+
+
+@pytest.mark.django_db
 def test_set_daily_blend_requires_permission(client: Client, rdlevel, user_with_no_clubs):
     """Test that set_daily_blend requires blend permission"""
     client.force_login(user_with_no_clubs)
@@ -105,6 +119,20 @@ def test_set_daily_blend_requires_permission(client: Client, rdlevel, user_with_
 
 
 @pytest.mark.django_db
+def test_set_daily_blend_requires_permission_with_level_url(client: Client, rdlevel, user_with_no_clubs):
+    """Test that set_daily_blend requires blend permission when using level_url"""
+    client.force_login(user_with_no_clubs)
+    
+    response = client.post(
+        '/api/set_daily_blend/',
+        data=json.dumps({'level_url': rdlevel.rdzip_url, 'featured_date': None}),
+        content_type='application/json'
+    )
+    assert response.status_code == 403
+    assert response.json()['error'] == 'Permission denied'
+
+
+@pytest.mark.django_db
 def test_set_daily_blend_returns_404_for_nonexistent_level(client: Client, pharmacist_user):
     """Test that set_daily_blend returns 404 for nonexistent level"""
     client.force_login(pharmacist_user)
@@ -112,6 +140,19 @@ def test_set_daily_blend_returns_404_for_nonexistent_level(client: Client, pharm
     response = client.post(
         '/api/set_daily_blend/',
         data=json.dumps({'level_id': 'nonexistent_id', 'featured_date': None}),
+        content_type='application/json'
+    )
+    assert response.status_code == 404
+
+
+@pytest.mark.django_db
+def test_set_daily_blend_returns_404_for_nonexistent_level_url(client: Client, pharmacist_user):
+    """Test that set_daily_blend returns 404 for nonexistent level_url"""
+    client.force_login(pharmacist_user)
+    
+    response = client.post(
+        '/api/set_daily_blend/',
+        data=json.dumps({'level_url': 'https://example.com/nonexistent.rdzip', 'featured_date': None}),
         content_type='application/json'
     )
     assert response.status_code == 404
@@ -163,6 +204,31 @@ def test_set_daily_blend_with_specific_future_date(client: Client, rdlevel, phar
     
     # Verify in database
     blend = DailyBlend.objects.get(featured_date=datetime.date(2025, 12, 25))
+    assert blend.level == rdlevel
+
+
+@pytest.mark.django_db
+@freeze_time("2025-12-18")
+def test_set_daily_blend_with_level_url(client: Client, rdlevel, pharmacist_user):
+    """Test that set_daily_blend works with level_url parameter"""
+    from cafe.models.rdlevels.daily_blend import DailyBlend
+    
+    client.force_login(pharmacist_user)
+    
+    response = client.post(
+        '/api/set_daily_blend/',
+        data=json.dumps({'level_url': rdlevel.rdzip_url, 'featured_date': None}),
+        content_type='application/json'
+    )
+    
+    assert response.status_code == 200
+    data = response.json()
+    assert data['success'] is True
+    assert data['featured_date'] == '2025-12-18'
+    assert data['level']['id'] == rdlevel.id
+    
+    # Verify in database
+    blend = DailyBlend.objects.get(featured_date=datetime.date(2025, 12, 18))
     assert blend.level == rdlevel
 
 

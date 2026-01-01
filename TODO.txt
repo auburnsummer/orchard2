@@ -1,5 +1,3 @@
- [] delete account (what do we do about their levels?)
- [] delete club (what do we do about their levels?)
  [] migration plan for RDL (i.e. transition line the second)
     - [] Daily Blend should use the new API
         - the API should take an rdzip_url as well as an option I think
