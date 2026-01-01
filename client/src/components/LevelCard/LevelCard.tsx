@@ -110,7 +110,7 @@ export function LevelCard({
           className="absolute top-0 right-0"
         />
         <div className="flex flex-col-reverse gap-[0.075rem]">
-          <div className="flex items-baseline gap-1 text-slate-800 dark:text-slate-200">
+          <div className="flex flex-wrap items-baseline gap-1 text-slate-800 dark:text-slate-200">
             {href ? (
               <Link href={href} className="text-[--mantine-color-text] no-underline hover:underline">
                 <h2 className="font-semibold text-lg leading-5 break-words m-0">{level.song}</h2>
