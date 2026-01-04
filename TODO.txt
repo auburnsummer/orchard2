@@ -1,4 +1,26 @@
  [] option to edit/not edit level before posting -- most people won't need to edit 
+ [] daily blend
+  - [] each date has exactly one DAILY BLEND associated with it. A DAILY BLEND can either be:
+       1. A specific level, or:
+       2. Random.
+       If a date does not have a specific blend associated with it, it's assumed to be random.
+  - [] At 0500 GMT the DAILY BLEND for the current day is activated. This does the following:
+       1. If the daily blend is a specific level, get that level.
+       2. Otherwise, take a level from the RANDOM POOL and remove it from the random pool.
+       3. Post the selected level in the #daily-blend channel using a webhook. The webhook should be configurable
+          by people with PR permissions.
+       4. Mark that the DAILY BLEND for the day has been done.
+  - [] A user interface is provided which allows users to:
+       - See current blends and scheduled blends
+       - Queue blends for certain dates / delete blends
+         - should be possible to overwrite the queued random level.
+       - Add and remove levels from the RANDOM POOL
+       - Immediately trigger the DAILY BLEND. If done before 0500 GMT, this should also mark the day so that
+         the scheduled DAILY BLEND does not trigger.
+       - In the user interface, the text DAILY BLEND is always capitalised. just kidding
+  - [] if a level is deleted ahead of time before its DAILY BLEND, the database underlying object is also removed
+       and thus the date becomes a Random day.
+       - Add a way to notify when this happens? ehh it seems pretty rare. maybe after release 
  [] migration plan for RDL (i.e. transition line the second)
     - [] Set a snowflake that orchard1 won't scrape past?
     - [] ask RDL moderators to setup RDL into a club and stuff
