@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.db import transaction
 from rules.contrib.views import objectgetter, permission_required
 from vitals.vitals import PREFILL_VERSION
+from cafe.tasks.run_prefill import make_level_from_prefill
 from cafe.views.types import AuthenticatedHttpRequest
 from cafe.models.rdlevels.prefill import RDLevelPrefillResult
 from cafe.models.rdlevels.rdlevel import RDLevel
@@ -19,6 +20,7 @@ class PrefillStageTwoPayload(forms.Form):
 @permission_required('cafe.can_make_levels_from_rdlevelprefillresult', fn=objectgetter(RDLevelPrefillResult, 'prefill_id'))
 def prefill_stage_two(request: AuthenticatedHttpRequest, prefill_id: str):
     prefill = get_object_or_404(RDLevelPrefillResult, pk=prefill_id)
+
     if request.method == 'POST':
         if prefill.prefill_type == 'new':
             # we're adding a level. JSON encoded data is provided by the client in the "prefill" form property.
@@ -27,17 +29,7 @@ def prefill_stage_two(request: AuthenticatedHttpRequest, prefill_id: str):
                 prefill_data: str = form.cleaned_data.get("prefill")
                 try:
                     parsed = msgspec.json.decode(prefill_data, type=AddLevelPayload)
-                    args = {
-                        **prefill.data,
-                        **msgspec.structs.asdict(parsed),
-                        "prefill_version": prefill.version,
-                        "approval": 0,
-                        "submitter": prefill.user,
-                        "club": prefill.club
-                    }
-                    if args['icon_url'] is None:
-                        args['icon_url'] = ''
-                    level = RDLevel(**args)
+                    level = make_level_from_prefill(prefill, msgspec.structs.asdict(parsed))
                     with transaction.atomic():
                         level.save()
                         prefill.delete()
@@ -58,6 +50,8 @@ def prefill_stage_two(request: AuthenticatedHttpRequest, prefill_id: str):
                     if not request.user.has_perm('cafe.change_rdlevel', level):
                         messages.error(request, "You do not have permission to edit this level")
                     else:
+                        if prefill.data['icon_url'] is None:
+                            prefill.data['icon_url'] = ''
                         for key, value in prefill.data.items():
                             setattr(level, key, value)
                         # if it's NR'ed, bump it back to pending
@@ -75,11 +69,15 @@ def prefill_stage_two(request: AuthenticatedHttpRequest, prefill_id: str):
             else:
                 messages.error(request, "An error occurred validating the form")
 
+    # we're viewing the prefill. 
+    # if it's "update", we should show them a list of matches of what level we think they want.
     potential_matches = []
     if prefill.prefill_type == 'update' and prefill.ready:
         matches = RDLevel.objects.filter(song_raw=prefill.data['song_raw'], artist_raw=prefill.data['artist_raw'])
         potential_matches.extend(match for match in matches if request.user.has_perm('cafe.change_rdlevel', match))
 
+    # check if level already exists.
+    # unfortunately discord API does not expose the sha1 of attachment so we can't do this until after prefill completes.
     existing_level = None
     if prefill.ready:
         try:

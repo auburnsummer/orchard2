@@ -1,6 +1,6 @@
 from allauth.account.decorators import login_required
-from django.forms import CharField, Form
-from django.http import HttpResponseRedirect
+from django.forms import BooleanField, CharField, Form
+from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.urls import reverse
 from rules.contrib.views import permission_required
 from django_bridge.response import Response
@@ -22,6 +22,7 @@ register_permissions()
 
 class PrefillStageOneForm(Form):
     prefill_type = CharField(max_length=100)
+    go_to_prepost = BooleanField(required=False, initial=False)
 
 @permission_required('prefill_code.ok', fn=lambda _, code: code)
 def _prefill_stage_one_post(request: AuthenticatedHttpRequest, code: str):
@@ -29,6 +30,7 @@ def _prefill_stage_one_post(request: AuthenticatedHttpRequest, code: str):
     form = PrefillStageOneForm(request.POST)
     if form.is_valid():
         prefill_type = form.cleaned_data["prefill_type"]
+        go_to_prepost = form.cleaned_data["go_to_prepost"]
         # we don't need to check again if this is valid because the permission check would have failed if it's not.
         result = addlevel_signer.unsign_object(code, max_age=timedelta(days=1))
         discord_user_id = result['discord_user_id']
@@ -42,10 +44,13 @@ def _prefill_stage_one_post(request: AuthenticatedHttpRequest, code: str):
             version=PREFILL_VERSION,
             user=user,
             prefill_type=prefill_type,
-            club=club
+            club=club,
+            go_to_prepost=go_to_prepost
         )
         run_prefill(rdlevel_prefill_result.id)
         return HttpResponseRedirect(reverse("cafe:level_from_prefill", args=[rdlevel_prefill_result.id]))
+    else:
+        return HttpResponseBadRequest()
 
 @login_required
 def prefill_stage_one(request: AuthenticatedHttpRequest, code: str):

@@ -1,5 +1,6 @@
 import { ShellDramaticCenter } from "@cafe/components/ShellDramaticCenter";
 import { Button } from "@cafe/components/ui/Button";
+import { Checkbox } from "@cafe/components/ui/Checkbox";
 import Select from "@cafe/components/ui/Select";
 import { Words } from "@cafe/components/ui/Words";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
@@ -26,7 +27,7 @@ export function LevelAddTypeSelect({
   const content = code_valid ? (
     <Form method="POST">
       {csrfInput}
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-4">
         <Select
           value={addType}
           label="Is this a new level or an update to an existing level?"
@@ -34,7 +35,15 @@ export function LevelAddTypeSelect({
           onChange={setAddType}
           name="prefill_type"
         ></Select>
-        <Button type="submit" variant="primary" disabled={addType == undefined} className="mt-8">
+        {
+          addType === "new" && (
+            <Checkbox
+              name="go_to_prepost"
+              label="Edit level metadata before posting"
+            />
+          )
+        }
+        <Button type="submit" variant="primary" disabled={addType == undefined} className="mt-4">
           Continue
         </Button>
       </div>

@@ -6,6 +6,7 @@ from aiohttp import ClientSession
 from aiohttp_s3_client import S3Client
 from essfree.essfree import Essfree
 import msgspec
+from django.db import transaction
 from vitals import vitals, vitals_quick
 from huey.contrib.djhuey import db_periodic_task, db_task, on_commit_task
 import httpx
@@ -15,6 +16,9 @@ from vitals.msgspec_schema import VitalsLevel, VitalsLevelImmutable
 import traceback
 import sentry_sdk
 
+from django.db import IntegrityError
+
+from cafe.models.rdlevels.rdlevel import RDLevel
 from orchard.settings import S3_API_URL, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY, S3_REGION, S3_PUBLIC_CDN_URL
 
 class UploadFilesURLs(NamedTuple):
@@ -22,6 +26,21 @@ class UploadFilesURLs(NamedTuple):
     image_url: str
     icon_url: str | None
     thumb_url: str
+
+def make_level_from_prefill(prefill: RDLevelPrefillResult, overrides: dict = {}) -> RDLevel:
+    args = {
+        **prefill.data,
+        **overrides,
+        "prefill_version": prefill.version,
+        "approval": 0,
+        "submitter": prefill.user,
+        "club": prefill.club
+    }
+    if args['icon_url'] is None:
+        args['icon_url'] = ''
+    level = RDLevel(**args)
+    return level
+
 
 @async_to_sync
 async def upload_files(level: VitalsLevel | VitalsLevelImmutable, f: BufferedRandom):
@@ -78,8 +97,28 @@ def run_prefill(prefill_id: str):
             del payload['icon']
 
             prefill_result.data = payload
-            prefill_result.ready = True
-            prefill_result.save()
+
+            # the divergence point.
+            if not prefill_result.go_to_prepost:
+                # we should make a level!
+                try:
+                    with transaction.atomic():
+                        level = make_level_from_prefill(prefill_result)
+                        level.save()
+                        prefill_result.level = level
+                        prefill_result.ready = True
+                        prefill_result.save()
+                except IntegrityError:
+                    # the level probably already exists.
+                    # just set the data, we'll display the dupe level on screen later.
+                    prefill_result.ready = True
+                    prefill_result.save()
+                    pass
+            else:
+                # displaying the prefill edit screen.
+                # just set the data and we're done
+                prefill_result.ready = True
+                prefill_result.save()
 
     except Exception as e:
         # Capture exception with isolated context for better debugging

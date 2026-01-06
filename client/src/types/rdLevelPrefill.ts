@@ -5,12 +5,10 @@ import { UserPublic } from "./user";
 type RDLevelPrefillBase = {
   id: string;
   url: string;
-  created_at: {
-    _type: "Date";
-    _args: string[];
-  };
+  created_at: string;
   version: number;
   prefill_type: "update" | "new";
+  go_to_prepost: boolean;
   user: UserPublic;
   club: Club;
 };
@@ -21,13 +19,22 @@ type RDLevelPrefillNotReady = RDLevelPrefillBase & {
   data: Record<string, never>;
 };
 
-export type RDLevelPrefillReady = RDLevelPrefillBase & {
+type RDLevelPrefillReadyBase = RDLevelPrefillBase & {
   ready: true;
   errors: "";
   data: RDLevelBase;
-} & {
+}
+
+export type RDLevelPrefillReady = RDLevelPrefillReadyBase & {
   prefill_type: "new";
+  go_to_prepost: true;
 };
+
+export type RDLevelPrefillReadyNoPrepost = RDLevelPrefillReadyBase & {
+  prefill_type: "new";
+  go_to_prepost: false;
+  level_id: string;
+}
 
 export type RDLevelPrefillUpdateReady = RDLevelPrefillBase & {
   ready: true;
@@ -40,4 +47,5 @@ export type RDLevelPrefillUpdateReady = RDLevelPrefillBase & {
 export type RDLevelPrefill =
   | RDLevelPrefillNotReady
   | RDLevelPrefillReady
-  | RDLevelPrefillUpdateReady;
+  | RDLevelPrefillUpdateReady
+  | RDLevelPrefillReadyNoPrepost;

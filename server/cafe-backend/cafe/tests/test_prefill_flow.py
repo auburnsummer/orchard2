@@ -209,7 +209,8 @@ def test_prefill_stage_one_post_new_level(mock_run_prefill, bridge_client, test_
     bridge_client.force_login(test_user)
     
     response = bridge_client.post(f'/levels/add/{signed_code}/', {
-        'prefill_type': 'new'
+        'prefill_type': 'new',
+        'go_to_prepost': 'on'
     })
     
     assert response.status_code == 200
@@ -240,7 +241,8 @@ def test_prefill_stage_one_post_update_level(mock_run_prefill, bridge_client, te
     bridge_client.force_login(test_user)
     
     response = bridge_client.post(f'/levels/add/{signed_code}/', {
-        'prefill_type': 'update'
+        'prefill_type': 'update',
+        'go_to_prepost': False
     })
     
     assert response.status_code == 200
