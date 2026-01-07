@@ -1,4 +1,3 @@
- [] option to edit/not edit level before posting -- most people won't need to edit 
  [] daily blend
   - [] each date has exactly one DAILY BLEND associated with it. A DAILY BLEND can either be:
        1. A specific level, or:

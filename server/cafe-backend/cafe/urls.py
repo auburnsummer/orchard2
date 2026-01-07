@@ -4,6 +4,7 @@ from cafe.views.accounts.profile.profile_delete_account import profile_delete_ac
 from cafe.views.api.blend.set_daily_blend import set_daily_blend
 from cafe.views.api.execute_webhook import execute_webhook
 from cafe.views.clubs.settings.club_delete import club_delete
+from cafe.views.rdlevels.dailyblend.blend_config import blend_config
 from cafe.views.rdlevels.peerreview.pr_level import pr_rdlevel
 from cafe.views.rdlevels.peerreview.pr_main import pr_main
 from cafe.views.rdlevels.peerreview.pr_make_webhook import pr_make_webhook
@@ -33,6 +34,8 @@ from .views.rdlevels.edit_rdlevel import edit_rdlevel
 from .views.rdlevels.prefill.prefill_stage_one import prefill_stage_one
 from .views.rdlevels.prefill.prefill_stage_two import prefill_stage_two
 from .views.rdlevels.view_rdlevel import view_rdlevel
+
+from .views.rdlevels.dailyblend.blend_main import blend_main
 
 app_name = "cafe"
 urlpatterns = [
@@ -72,6 +75,9 @@ urlpatterns = [
     path("peer-review/config/", pr_main, name="peer_review_config"),
     path("peer-review/make-encrypted-webhook/", pr_make_webhook, name="peer_review_make_encrypted_webhook"),
     path("peer-review/<level_id>/", pr_rdlevel, name="peer_review_level"),
+
+    path("daily-blend/", blend_main, name="blend_main"),
+    path("daily-blend/config/", blend_config, name="blend_config"),
 
     path("api/set_daily_blend/", set_daily_blend, name="set_daily_blend"),
     path("api/execute_webhook/<code>/", execute_webhook, name="execute_webhook"),

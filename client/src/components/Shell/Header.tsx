@@ -41,6 +41,11 @@ export function Header({ navbar }: { navbar?: React.ReactNode }) {
     user.authenticated && user.is_peer_reviewer
       ? { name: "Peer Review Dashboard", href: "/peer-review/" }
       : null,
+    // NB: currently permissions for peer review and daily blend are
+    // tied together in the same thing (pharmacists)
+    user.authenticated && user.is_peer_reviewer
+      ? { name: "Daily Blend Dashboard", href: "/daily-blend/" }
+      : null,
     { name: "Log out", onClick: () => logOutForm.current?.submit() },
   ].filter((a) => a !== null);
 

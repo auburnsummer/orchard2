@@ -21,9 +21,10 @@ class DailyBlend(models.Model):
     """
     level = models.ForeignKey(RDLevel, on_delete=models.CASCADE)
     featured_date = models.DateField(unique=True, db_index=True)
+    blended = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-featured_date']
 
     def __str__(self):
-        return f"{self.level} - {self.featured_date}"
+        return f"{self.level} - {self.featured_date} [{"Blended" if self.blended else "Not Blended"}]"
