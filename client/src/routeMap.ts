@@ -23,6 +23,7 @@ import { ProfileDeleteAccount } from "./views/Profile/ProfileDeleteAccount";
 import { ClubSettingsDeleteView } from "./views/ClubSettings/ClubSettingsDelete";
 import { DailyBlendMainView } from "./views/DailyBlend/DailyBlendMainView";
 import { DailyBlendConfiguration } from "./views/DailyBlend/DailyBlendConfiguration";
+import { DailyBlendRandomPool } from "./views/DailyBlend/DailyBlendRandomPool";
 
 // most people won't go to PR, so lazy load it
 const PeerReviewMainView = React.lazy(() => import("./views/PeerReview/PeerReviewMainView").then(m => ({ default: m.PeerReviewMainView })));
@@ -61,4 +62,5 @@ export const routeMap: { [key: string]: React.FunctionComponent<any> } = {
 
   "cafe:blend_main": DailyBlendMainView,
   "cafe:blend_config": DailyBlendConfiguration,
+  "cafe:blend_pool": DailyBlendRandomPool,
 };

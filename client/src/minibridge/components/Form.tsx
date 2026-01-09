@@ -31,7 +31,8 @@ export function Form(props: FormProps) {
     e.preventDefault();
 
     if (e.target instanceof HTMLFormElement) {
-      const data = new FormData(e.target);
+      const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLElement | null;
+      const data = new FormData(e.target, submitter);
       if (e.target.method.toLowerCase() === "post") {
         const target =
           action !== undefined

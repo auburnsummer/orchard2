@@ -5,6 +5,7 @@ from cafe.views.api.blend.set_daily_blend import set_daily_blend
 from cafe.views.api.execute_webhook import execute_webhook
 from cafe.views.clubs.settings.club_delete import club_delete
 from cafe.views.rdlevels.dailyblend.blend_config import blend_config
+from cafe.views.rdlevels.dailyblend.blend_pool import blend_pool
 from cafe.views.rdlevels.peerreview.pr_level import pr_rdlevel
 from cafe.views.rdlevels.peerreview.pr_main import pr_main
 from cafe.views.rdlevels.peerreview.pr_make_webhook import pr_make_webhook
@@ -78,6 +79,7 @@ urlpatterns = [
 
     path("daily-blend/", blend_main, name="blend_main"),
     path("daily-blend/config/", blend_config, name="blend_config"),
+    path("daily-blend/random-pool/", blend_pool, name="blend_pool"),
 
     path("api/set_daily_blend/", set_daily_blend, name="set_daily_blend"),
     path("api/execute_webhook/<code>/", execute_webhook, name="execute_webhook"),
