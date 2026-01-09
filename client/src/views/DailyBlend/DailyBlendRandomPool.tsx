@@ -8,6 +8,9 @@ import { Form } from "@cafe/minibridge/components/Form";
 import { TextInput } from "@cafe/components/ui/TextInput";
 import { Button } from "@cafe/components/ui/Button";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
+import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@cafe/components/ui/Table";
+import { useState } from "react";
+import { Link } from "@cafe/minibridge/components/Link";
 
 type DailyBlendRandomPoolProps = {
     pool: {
@@ -17,6 +20,8 @@ type DailyBlendRandomPoolProps = {
 
 export function DailyBlendRandomPool({ pool }: DailyBlendRandomPoolProps) {
     const csrfInput = useCSRFTokenInput();
+
+    const [levelId, setLevelId] = useState("");
 
     return (
         <Shell
@@ -28,17 +33,56 @@ export function DailyBlendRandomPool({ pool }: DailyBlendRandomPoolProps) {
                 </Words>
                 <Form className="flex flex-row gap-2 items-end" method="POST">
                     {csrfInput}
-                    <TextInput label="Level ID" name="level_id" />
+                    <TextInput
+                        label="Level ID"
+                        name="level_id"
+                        value={levelId}
+                        onChange={(e) => setLevelId(e.target.value)}
+                    />
                     <Button type="submit" name="action" value="add" className="h-10" variant="primary">
-                        Add Level
+                        This level dives into the pool.
                     </Button>
-                    <Button type="submit" name="action" value="remove" className="h-10" variant="danger">
-                        Remove Level
+                    <Button type="submit" name="action" value="remove" className="h-10" variant="secondary">
+                        A lifeguard rescues this level from the pool.
                     </Button>
                 </Form>
-                {
-                    pool.map(level => <LevelCard key={level.level.id} level={level.level} showId />)
-                }
+                <Table className="mt-4">
+                    <TableHead>
+                        <TableRow>
+                            <TableHeaderCell firstColumn>Song</TableHeaderCell>
+                            <TableHeaderCell>Artist</TableHeaderCell>
+                            <TableHeaderCell>User</TableHeaderCell>
+                            <TableHeaderCell lastColumn>ID (click to select)</TableHeaderCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {
+                            pool.map(({ level }) => (
+                                <TableRow key={level.id}>
+                                    <TableCell firstColumn>
+                                        <Link
+                                            href={`/levels/${level.id}/`}
+                                        >
+                                            <Words variant="link">
+                                                {level.song}
+                                            </Words>
+                                        </Link>
+                                    </TableCell>
+                                    <TableCell>{level.artist}</TableCell>
+                                    <TableCell>{level.authors.join(', ')}</TableCell>
+                                    <TableCell lastColumn>
+                                        <Button
+                                            variant="secondary"
+                                            onClick={() => setLevelId(level.id)}
+                                        >
+                                            {level.id}
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        }
+                    </TableBody>
+                </Table>
             </Surface>
         </Shell>
     )

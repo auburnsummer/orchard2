@@ -13,6 +13,14 @@ import { TextInput } from "@cafe/components/ui/TextInput";
 import { Button } from "@cafe/components/ui/Button";
 import { Alert } from "@cafe/components/ui/Alert";
 import { Dialog } from "@cafe/components/ui/Dialog";
+import {
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableHeaderCell,
+  TableCell,
+} from "@cafe/components/ui/Table";
 
 type MembershipPermission = {
   can_change: boolean;
@@ -46,17 +54,17 @@ export function ClubSettingsMembersView({
   ).toString();
 
   const rows = memberships.map(({ membership, permissions }) => (
-    <tr key={membership.user.id}>
-      <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6 dark:text-white">
+    <TableRow key={membership.user.id}>
+      <TableCell firstColumn className="font-medium text-gray-900 dark:text-white">
         {membership.user.displayName}
-      </td>
-      <td className="px-3 py-4 text-xs whitespace-nowrap text-gray-500 dark:text-gray-400 font-mono">
+      </TableCell>
+      <TableCell className="text-xs text-gray-500 dark:text-gray-400 font-mono">
         {membership.user.id}
-      </td>
-      <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400 capitalize">
+      </TableCell>
+      <TableCell className="text-gray-500 dark:text-gray-400 capitalize">
         {membership.role}
-      </td>
-      <td className="py-4 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-6">
+      </TableCell>
+      <TableCell lastColumn align="right" className="font-medium">
         <Button
           variant="secondary"
           onClick={() => {
@@ -68,8 +76,8 @@ export function ClubSettingsMembersView({
         >
           Edit
         </Button>
-      </td>
-    </tr>
+      </TableCell>
+    </TableRow>
   ));
 
   return (
@@ -137,43 +145,20 @@ export function ClubSettingsMembersView({
             </div>
           </div>
 
-          <div className="mt-8 flow-root">
-            <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                <div className="overflow-hidden shadow-sm outline-1 outline-black/5 sm:rounded-lg dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
-                  <table className="relative min-w-full divide-y divide-gray-300 dark:divide-white/15">
-                    <thead className="bg-gray-50 dark:bg-gray-800/75">
-                      <tr>
-                        <th
-                          scope="col"
-                          className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6 dark:text-gray-200"
-                        >
-                          User
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200"
-                        >
-                          ID
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200"
-                        >
-                          Role
-                        </th>
-                        <th scope="col" className="py-3.5 pr-4 pl-3 sm:pr-6">
-                          <span className="sr-only">Edit</span>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200 bg-white dark:divide-white/10 dark:bg-gray-800/50">
-                      {rows}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
+          <div className="mt-8">
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableHeaderCell firstColumn>User</TableHeaderCell>
+                  <TableHeaderCell>ID</TableHeaderCell>
+                  <TableHeaderCell>Role</TableHeaderCell>
+                  <TableHeaderCell lastColumn>
+                    <span className="sr-only">Edit</span>
+                  </TableHeaderCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>{rows}</TableBody>
+            </Table>
           </div>
         </div>
       </Surface>
