@@ -3,7 +3,6 @@ import { Surface } from "@cafe/components/ui/Surface";
 import { Words } from "@cafe/components/ui/Words";
 import { DailyBlendNavbar } from "./DailyBlendNavbar";
 import { RDLevel } from "@cafe/types/rdLevelBase";
-import { LevelCard } from "@cafe/components/LevelCard/LevelCard";
 import { Form } from "@cafe/minibridge/components/Form";
 import { TextInput } from "@cafe/components/ui/TextInput";
 import { Button } from "@cafe/components/ui/Button";
@@ -68,8 +67,12 @@ export function DailyBlendRandomPool({ pool }: DailyBlendRandomPoolProps) {
                                             </Words>
                                         </Link>
                                     </TableCell>
-                                    <TableCell>{level.artist}</TableCell>
-                                    <TableCell>{level.authors.join(', ')}</TableCell>
+                                    <TableCell>
+                                        <Words>{level.artist}</Words>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Words>{level.authors.join(', ')}</Words>
+                                    </TableCell>
                                     <TableCell lastColumn>
                                         <Button
                                             variant="secondary"

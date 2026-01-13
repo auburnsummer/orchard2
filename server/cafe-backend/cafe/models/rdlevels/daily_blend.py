@@ -23,6 +23,13 @@ class DailyBlend(models.Model):
     featured_date = models.DateField(unique=True, db_index=True)
     blended = models.BooleanField(default=False)
 
+    def to_dict(self):
+        return {
+            "level": self.level.to_dict(),
+            "featured_date": self.featured_date.isoformat(),
+            "blended": self.blended,
+        }
+
     class Meta:
         ordering = ['-featured_date']
 

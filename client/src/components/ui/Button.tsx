@@ -11,6 +11,7 @@ const variantStyles: Record<Variant, string> = {
     primary: `${commonStyles} bg-violet-500 text-white hover:bg-violet-600 dark:bg-violet-600 dark:hover:bg-violet-700`,
     secondary: `${commonStyles} bg-slate-500 text-white hover:bg-slate-600`,
     danger: `${commonStyles} bg-red-500 text-white hover:bg-red-600`,
+
 }
 
 type ButtonBaseProps = {

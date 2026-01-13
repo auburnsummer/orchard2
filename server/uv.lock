@@ -158,6 +158,7 @@ dependencies = [
     { name = "gunicorn" },
     { name = "httpx" },
     { name = "huey" },
+    { name = "jsonata-python" },
     { name = "meilisearch" },
     { name = "names" },
     { name = "nanoid" },
@@ -185,6 +186,7 @@ requires-dist = [
     { name = "gunicorn", specifier = ">=23.0.0" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "huey", specifier = ">=2.5.2" },
+    { name = "jsonata-python", specifier = ">=0.6.1" },
     { name = "meilisearch", specifier = ">=0.34.1" },
     { name = "names", specifier = ">=0.3.0" },
     { name = "nanoid", specifier = ">=2.0.0" },
@@ -539,6 +541,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/f2/97/ebf4da567aa6827c909642694d71c9fcf53e5b504f2d96afea02718862f3/iniconfig-2.1.0.tar.gz", hash = "sha256:3abbd2e30b36733fee78f9c7f7308f2d0050e88f0087fd25c2645f63c773e1c7", size = 4793 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl", hash = "sha256:9deba5723312380e77435581c6bf4935c94cbfab9b1ed33ef8d238ea168eb760", size = 6050 },
+]
+
+[[package]]
+name = "jsonata-python"
+version = "0.6.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/b9/45/7f095befed14d95db05d56a1164b9e2c41d87faefad7277454e4fd3b2daf/jsonata_python-0.6.1.tar.gz", hash = "sha256:416a65731f31f7cf427f3711bb1bf9117174985f9795e198020cce1a38d32984", size = 362705 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6a/04/708bf06353fb43734440c3928e7e3358d1686f15cc3078c3d9a09aa33ae2/jsonata_python-0.6.1-py3-none-any.whl", hash = "sha256:21d80d0b34f1753935371c79b140406d45a2d4ad9dd5c29e4138dbf58991e6ef", size = 83706 },
 ]
 
 [[package]]

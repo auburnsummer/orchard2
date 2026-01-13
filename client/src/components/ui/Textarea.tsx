@@ -17,7 +17,7 @@ export default function Textarea({
       {label && (
         <label
           htmlFor={props.id}
-          className="block text-sm/6 font-medium text-slate-900 dark:text-white"
+          className="block text-sm/6 font-medium font-sans text-slate-900 dark:text-white"
         >
           {label}
         </label>
