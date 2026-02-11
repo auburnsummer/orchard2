@@ -1,6 +1,7 @@
 from __future__ import annotations
 from django.db import models
 from django.db.models import Manager
+from pytest import PytestAssertRewriteWarning
 
 from cafe.models.id_utils import generate_rdlevel_id, RDLEVEL_ID_LENGTH
 from cafe.models.types import UserType, ClubType
@@ -12,6 +13,7 @@ import rules
 
 from cafe.tasks.sync_level_to_typesense import sync_level_to_typesense
 from cafe.models.clubs.predicates import is_pharmacist
+from orchard.settings import DOMAIN_URL
 
 @rules.predicate
 def is_at_least_admin_of_connected_club(user: UserType, level: "RDLevel"):
@@ -178,3 +180,19 @@ class RDLevel(RulesModel):
             # cafe.blend_rdlevel
             "blend": can_blend
         }
+
+def select_rdlevel_by_id_or_url(query: str) -> RDLevel | None:
+    """
+    function to select an RDLevel by its ID or by its URL
+    """
+    if query.startswith(DOMAIN_URL):
+        # e.g. https://v2.rhythm.cafe/levels/rgDxrsJh/
+        rdlevel_id = query.split("/")[-1]
+        # may be a trailing slash
+        rdlevel_id = rdlevel_id.rstrip("/")
+    else:
+        rdlevel_id = query
+    try:
+        return RDLevel.objects.get(id=rdlevel_id)
+    except RDLevel.DoesNotExist:
+        return None

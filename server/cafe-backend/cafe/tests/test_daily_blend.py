@@ -24,9 +24,9 @@ def test_daily_blend_unique_date_constraint(rdlevel, second_rdlevel):
         )
 
 @pytest.mark.django_db
-@freeze_time("2025-12-18")
+@freeze_time("2025-12-18 06:00:00", tz_offset=0)  # After 5:00 AM GMT
 def test_get_todays_blend_returns_todays_level(rdlevel):
-    """Test that get_todays_blend returns the level for today"""
+    """Test that get_todays_blend returns the level for today after 5:00 AM GMT"""
     from cafe.models.rdlevels.daily_blend import DailyBlend, get_todays_blend
     
     DailyBlend.objects.create(
@@ -39,7 +39,7 @@ def test_get_todays_blend_returns_todays_level(rdlevel):
 
 
 @pytest.mark.django_db
-@freeze_time("2025-12-18")
+@freeze_time("2025-12-18 06:00:00", tz_offset=0)  # After 5:00 AM GMT
 def test_get_todays_blend_returns_most_recent_past_if_no_today(rdlevel, second_rdlevel):
     """Test that get_todays_blend returns the most recent past blend if no blend for today"""
     from cafe.models.rdlevels.daily_blend import DailyBlend, get_todays_blend
@@ -59,7 +59,7 @@ def test_get_todays_blend_returns_most_recent_past_if_no_today(rdlevel, second_r
 
 
 @pytest.mark.django_db
-@freeze_time("2025-12-18")
+@freeze_time("2025-12-18 06:00:00", tz_offset=0)  # After 5:00 AM GMT
 def test_get_todays_blend_returns_none_if_no_blends():
     """Test that get_todays_blend returns None if there are no blends at all"""
     from cafe.models.rdlevels.daily_blend import get_todays_blend
@@ -69,7 +69,7 @@ def test_get_todays_blend_returns_none_if_no_blends():
 
 
 @pytest.mark.django_db
-@freeze_time("2025-12-18")
+@freeze_time("2025-12-18 06:00:00", tz_offset=0)  # After 5:00 AM GMT
 def test_get_todays_blend_ignores_future_blends(rdlevel, second_rdlevel):
     """Test that get_todays_blend ignores future blends when falling back"""
     from cafe.models.rdlevels.daily_blend import DailyBlend, get_todays_blend
@@ -87,6 +87,66 @@ def test_get_todays_blend_ignores_future_blends(rdlevel, second_rdlevel):
     
     result = get_todays_blend()
     assert result == second_rdlevel  # Should return past blend, not future
+
+
+@pytest.mark.django_db
+@freeze_time("2025-12-18 04:59:00", tz_offset=0)  # Before 5:00 AM GMT
+def test_get_todays_blend_before_cutoff_returns_yesterday(rdlevel, second_rdlevel):
+    """Test that get_todays_blend returns yesterday's blend before 5:00 AM GMT cutoff"""
+    from cafe.models.rdlevels.daily_blend import DailyBlend, get_todays_blend
+    
+    # Create blend for today (Dec 18) - should NOT be returned before 5:00 AM
+    DailyBlend.objects.create(
+        level=rdlevel,
+        featured_date=datetime.date(2025, 12, 18)
+    )
+    # Create blend for yesterday (Dec 17) - should be returned
+    DailyBlend.objects.create(
+        level=second_rdlevel,
+        featured_date=datetime.date(2025, 12, 17)
+    )
+    
+    result = get_todays_blend()
+    assert result == second_rdlevel  # Should return yesterday's blend
+
+
+@pytest.mark.django_db
+@freeze_time("2025-12-18 05:00:00", tz_offset=0)  # Exactly 5:00 AM GMT
+def test_get_todays_blend_at_cutoff_returns_today(rdlevel, second_rdlevel):
+    """Test that get_todays_blend returns today's blend at exactly 5:00 AM GMT"""
+    from cafe.models.rdlevels.daily_blend import DailyBlend, get_todays_blend
+    
+    # Create blend for today (Dec 18) - should be returned at/after 5:00 AM
+    DailyBlend.objects.create(
+        level=rdlevel,
+        featured_date=datetime.date(2025, 12, 18)
+    )
+    # Create blend for yesterday (Dec 17)
+    DailyBlend.objects.create(
+        level=second_rdlevel,
+        featured_date=datetime.date(2025, 12, 17)
+    )
+    
+    result = get_todays_blend()
+    assert result == rdlevel  # Should return today's blend
+
+
+@pytest.mark.django_db
+@freeze_time("2025-12-18 04:30:00", tz_offset=0)  # Before 5:00 AM GMT
+def test_get_todays_blend_before_cutoff_falls_back_to_past(rdlevel):
+    """Test that before 5:00 AM GMT, if no yesterday blend, falls back to most recent past"""
+    from cafe.models.rdlevels.daily_blend import DailyBlend, get_todays_blend
+    
+    # Create blend for today only - should not be returned before cutoff
+    DailyBlend.objects.create(
+        level=rdlevel,
+        featured_date=datetime.date(2025, 12, 18)
+    )
+    
+    result = get_todays_blend()
+    # Before 5 AM on Dec 18, blend_date is Dec 17, and there's no blend for Dec 17
+    # So it falls back to the most recent past blend before Dec 17, which is None
+    assert result is None
 
 
 

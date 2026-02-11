@@ -39,10 +39,10 @@ export function DailyBlendRandomPool({ pool }: DailyBlendRandomPoolProps) {
                         onChange={(e) => setLevelId(e.target.value)}
                     />
                     <Button type="submit" name="action" value="add" className="h-10" variant="primary">
-                        This level dives into the pool.
+                        Add level to pool
                     </Button>
                     <Button type="submit" name="action" value="remove" className="h-10" variant="secondary">
-                        A lifeguard rescues this level from the pool.
+                        Remove level from pool
                     </Button>
                 </Form>
                 <Table className="mt-4">

@@ -1,5 +1,6 @@
 from django import forms
 from django.http import JsonResponse
+from cafe.models.rdlevels.rdlevel import select_rdlevel_by_id_or_url
 from cafe.views.types import HttpRequest
 from rules.contrib.views import permission_required
 from datetime import datetime
@@ -26,9 +27,13 @@ def blend_schedule(request: HttpRequest) -> JsonResponse:
             level_id = form.cleaned_data['level_id']
 
             if level_id:
+                level = select_rdlevel_by_id_or_url(level_id)
+                if not level:
+                    messages.error(request, f"Level with ID {level_id} does not exist.")
+                    return Response(request, request.resolver_match.view_name, {})
                 DailyBlend.objects.update_or_create(
                     featured_date=featured_date,
-                    defaults={'level_id': level_id}
+                    defaults={'level_id': level.id}
                 )
                 messages.success(request, f"Scheduled blend for {featured_date} with level ID {level_id}.")
             else:

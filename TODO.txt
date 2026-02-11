@@ -32,3 +32,4 @@
  - setlists??
  - localisation
  - numerical difficulty scale?
+ - automatic recording of levels?
