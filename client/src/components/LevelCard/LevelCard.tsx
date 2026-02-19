@@ -67,7 +67,7 @@ export function LevelCard({
         )}>
           <div className="text-sm leading-4 flex-grow overflow-y-auto">
             {level.description.split("\n").map((p, i) => (
-              <Words variant="alwaysLight" key={i}>{p}</Words>
+              <Words as="p" variant="alwaysLight" key={i}>{p}</Words>
             ))}
           </div>
           <div className="w-8 ml-2 flex flex-col items-center gap-4">

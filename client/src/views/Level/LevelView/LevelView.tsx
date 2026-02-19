@@ -252,7 +252,7 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
                   </Words>
                   <div className="p-4 bg-slate-100 dark:bg-slate-900 rounded-lg">
                     {rdlevel.description.split("\n").map((paragraph, index) => (
-                      <Words key={index} className="mb-2">
+                      <Words as="p" key={index} className="mb-2">
                         {paragraph}
                       </Words>
                     ))}
