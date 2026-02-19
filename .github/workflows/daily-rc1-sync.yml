@@ -14,5 +14,5 @@ jobs:
     name: Backup Database
     uses: ./.github/workflows/run-manage-command.yml
     with:
-      command: importfromrc --user-id=csteward --club-id=csteward
+      command: importfromrc --user-id=usteward --club-id=csteward
     secrets: inherit
