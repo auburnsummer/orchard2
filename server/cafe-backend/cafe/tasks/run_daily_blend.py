@@ -1,16 +1,15 @@
 from datetime import datetime
-from django import conf
 import httpx
-from huey.contrib.djhuey import db_periodic_task, db_task, on_commit_task
+from huey.contrib.djhuey import db_task, periodic_task
+from huey import crontab
 import random
 import jsonata
-from loguru import logger
 
-from cafe.models.rdlevels.daily_blend import DailyBlend
+from cafe.models.rdlevels.daily_blend import DailyBlend, get_blend_date
 from cafe.models.rdlevels.daily_blend_configuration import DailyBlendConfiguration
 
 def todays_blend_or_pool():
-    today = datetime.today()
+    today = get_blend_date()
     from cafe.models.rdlevels.daily_blend import DailyBlend
     try:
         daily_blend = DailyBlend.objects.get(featured_date=today)
@@ -56,7 +55,8 @@ def run_daily_blend_task(force: bool = False):
 
     blend_blend(blend)
 
-
-@db_task(priority=200)
-def run_daily_blend():
-    pass
+# at 5:00 AM GMT every day, run the task to blend the daily blend
+# actually 5:01 to be safe, since the blend updates at 5:00 AM GMT and we want to make sure we get the new blend
+@periodic_task(crontab(hour=5, minute=1, strict=True), priority=200, expires=3600)
+def daily_blend_schedule():
+    run_daily_blend_task(False)
