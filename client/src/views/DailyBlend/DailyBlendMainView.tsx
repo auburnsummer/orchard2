@@ -15,9 +15,9 @@ export function DailyBlendMainView() {
                 <Words as="p">
                     The current time in GMT is {new Date().toUTCString()}.
                 </Words>
-                {/* <Words as="p">
+                <Words as="p">
                     Blends occur at <span className="font-bold">05:00 GMT.</span>
-                </Words> */}
+                </Words>
                 <Words as="p">
                     Select "Blend Now" from the navigation to trigger an immediate blend.
                     Doing so disables the scheduled blend for the day.

@@ -23,19 +23,15 @@ def blend_pool(request: HttpRequest) -> JsonResponse:
             level_id = form.cleaned_data["level_id"]
             action = form.cleaned_data["action"]
 
-            logger.info(action)
-            logger.info(level_id)
-
             level = select_rdlevel_by_id_or_url(level_id)
 
-            if not level:
+            if level:
+                if action == "add":
+                    DailyBlendRandomPool.objects.get_or_create(level=level)
+                elif action == "remove":
+                    DailyBlendRandomPool.objects.filter(level=level).delete()
+            else:
                 messages.error(request, f"Level with ID {level_id} does not exist.")
-                return Response(request, request.resolver_match.view_name, {})
-
-            if action == "add":
-                DailyBlendRandomPool.objects.get_or_create(level=level)
-            elif action == "remove":
-                DailyBlendRandomPool.objects.filter(level=level).delete()
         else:
             logger.warning("Invalid form data submitted to blend_pool")
             messages.error(request, "Invalid data submitted.")
