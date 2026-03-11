@@ -1,9 +1,10 @@
+ [] level views need to show private levels
  [] migration plan for RDL (i.e. transition line the second)
-    - [x] Set a snowflake that orchard1 won't scrape past?
+    - [] Set a snowflake that orchard1 won't scrape past?
     - [] ask RDL moderators to setup RDL into a club and stuff
        - [] or maybe ask for temporary manage server permission?
     - [] migrate levels from csteward to RDL club
-    - [] "How to add a Level" image
+    - [x] "How to add a Level" video
 
 ==== AFTER RELEASE ====
 

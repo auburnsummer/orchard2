@@ -8,6 +8,7 @@ from functools import cache
 
 import time
 
+# if we are only ADDING NEW FIELDS, just update the collection in place.
 RDLEVEL_ALIAS_NAME = "rdlevels"
 RDLEVEL_COLLECTION_NAME = "rdlevels1"
 
@@ -42,6 +43,37 @@ def client_healthy(client: typesense.Client, max_retries=5, retry_delay=2):
                 raise Exception("Typesense failed to become healthy after maximum retries")
     return False
 
+def migration_add_is_hidden_field():
+    typesense_client = get_typesense_client()
+    try:
+        coll = typesense_client.collections[RDLEVEL_COLLECTION_NAME].retrieve()
+    except typesense.exceptions.ObjectNotFound:
+        print(f"Collection {RDLEVEL_COLLECTION_NAME} does not exist. Cannot add field.")
+        return
+    field_exists = any(field["name"] == "is_hidden" for field in coll["fields"])
+    if not field_exists:
+        print("Adding is_hidden field to Typesense collection...")
+        # set it to false for all existing documents
+        typesense_client.collections[RDLEVEL_ALIAS_NAME].documents.update({
+            "is_hidden": False
+        }, {
+            "filter_by": "id:*"
+        })
+        # then add the field to the schema
+        schema_change = {
+            "fields": [
+                {
+                    "name": "is_hidden",
+                    "type": "bool",
+                    "facet": True,
+                    "optional": False
+                }
+            ]
+        }
+        typesense_client.collections[RDLEVEL_COLLECTION_NAME].update(schema_change)
+    else:
+        print("is_hidden field already exists in Typesense collection.")
+
 class Command(BaseCommand):
     help = "Initialize Typesense collection"
     
@@ -62,7 +94,8 @@ class Command(BaseCommand):
             # so we will set it to Japanese (ja) based on the following assumptions:
             # it doesn't harm English search quality
             # segmentation for Chinese is "decent"
-            # Japanese is probably going to be the most common CJK language
+            # Japanese is probably going to be the most common CJK language since
+            # it's a rhythm game
             typesense_client.collections.create({
                 "name": RDLEVEL_COLLECTION_NAME,
                 "enable_nested_fields": True,
@@ -160,3 +193,4 @@ class Command(BaseCommand):
             "collection_name": RDLEVEL_COLLECTION_NAME
         })
         self.stdout.write(self.style.SUCCESS(f"Successfully created Typesense collection: {RDLEVEL_COLLECTION_NAME} with alias {RDLEVEL_ALIAS_NAME}"))
+        migration_add_is_hidden_field()
