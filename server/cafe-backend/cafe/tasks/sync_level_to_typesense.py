@@ -76,14 +76,6 @@ def sync_level_to_typesense(level_id: str):
 
     try:
         level = RDLevel.objects.get(id=level_id)
-        # Private levels should not be in search - delete if exists
-        if level.is_private:
-            try:
-                typesense_client.collections[RDLEVEL_ALIAS_NAME].documents[level_id].delete()
-            except Exception:
-                # Document may not exist in Typesense, that's fine
-                pass
-            return
         dict_data = apply_typesense_specific_adjustments(level.to_dict())
         typesense_client.collections[RDLEVEL_ALIAS_NAME].documents.upsert(dict_data)
     except ObjectDoesNotExist:

@@ -158,7 +158,8 @@ class RDLevel(RulesModel):
             "has_window_dance": self.has_window_dance,
             "has_rdcode": self.has_rdcode,
             "has_cpu_rows": self.has_cpu_rows,
-            "total_hits_approx": self.total_hits_approx
+            "total_hits_approx": self.total_hits_approx,
+            "is_hidden": self.is_private
         }
 
     def save(self, *args, **kwargs):
