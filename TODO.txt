@@ -1,4 +1,3 @@
- [] level views need to show private levels
  [] migration plan for RDL (i.e. transition line the second)
     - [] Set a snowflake that orchard1 won't scrape past?
     - [] ask RDL moderators to setup RDL into a club and stuff
