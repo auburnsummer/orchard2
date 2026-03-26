@@ -23,7 +23,7 @@ export function ProfileNavbar() {
     },
     {
       label: "Your levels",
-      href: `/levels?q=&submitter_id=${user.authenticated && user.id}&peer_review=all`
+      href: `/levels?q=&submitter_id=${user.authenticated && user.id}&peer_review=all&show_hidden=all`
     },
     {
       label: "Groups",

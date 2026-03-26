@@ -2,8 +2,10 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from typing import Optional, List, Dict, Any, Union
 
+from django.shortcuts import get_object_or_404
 from django_bridge.response import Response
 
+from cafe.models.clubs.club import Club
 from cafe.views.types import HttpRequest
 
 from cafe.management.commands.setuptypesense import get_typesense_client, RDLEVEL_ALIAS_NAME
@@ -17,6 +19,11 @@ class ApprovalSearchOptions(Enum):
     APPROVED_ONLY = auto()
     PENDING = auto()
     REJECTED_ONLY = auto()
+
+class HiddenFilterOptions(Enum):
+    ALL = auto()
+    HIDDEN_ONLY = auto()
+    VISIBLE_ONLY = auto()
 
 @dataclass
 class SearchLevelParams:
@@ -37,6 +44,7 @@ class SearchLevelParams:
     facet_query: Optional[str]
     submitter_id: Optional[str]
     club_id: Optional[str]
+    is_hidden: HiddenFilterOptions
 
 
 def parse_bool_param(value: Optional[str]) -> Optional[bool]:
@@ -123,7 +131,34 @@ def get_search_params(request: HttpRequest) -> SearchLevelParams:
 
     # club id
     club_id = request.GET.get('club_id', None)
-    
+
+    # show hidden. This is only acknowledged if the user is:
+    # A. the same person that is being provided in submitter_id, or
+    # B. an admin or higher of the club being provided in club_id, or
+    # C. the user is a superuser
+    # if both club_id and submitter_id are provided, then the user just needs to satisfy one of the two conditions to use show_hidden,
+    # since it would be a subset of an allowed search either way
+    show_hidden = request.GET.get('show_hidden', '')
+    can_use_show_hidden = False
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            can_use_show_hidden = True
+        elif submitter_id and request.user.id == submitter_id:
+            can_use_show_hidden = True
+        elif club_id:
+            club = get_object_or_404(Club, id=club_id)
+            if request.user.has_perm("cafe.view_info_of_club", club):
+                can_use_show_hidden = True
+
+    show_hidden_map = {
+        "all": HiddenFilterOptions.ALL,
+        "visible_only": HiddenFilterOptions.VISIBLE_ONLY,
+        "hidden_only": HiddenFilterOptions.HIDDEN_ONLY
+    }
+    is_hidden = HiddenFilterOptions.VISIBLE_ONLY
+    if show_hidden and can_use_show_hidden:
+        is_hidden = show_hidden_map.get(show_hidden, HiddenFilterOptions.VISIBLE_ONLY)
+
     return SearchLevelParams(
         q=request.GET.get('q', ""),
         page=page,
@@ -141,10 +176,14 @@ def get_search_params(request: HttpRequest) -> SearchLevelParams:
         facet_query=facet_query,
         facet_query_field=facet_query_field,
         submitter_id=submitter_id,
-        club_id=club_id
+        club_id=club_id,
+        is_hidden=is_hidden
     )
 
 def get_typesense_filter_query(params: SearchLevelParams) -> str:
+    """
+    Convert the search parameters into a Typesense filter query string.
+    """
     parts = []
     if params.approval == ApprovalSearchOptions.APPROVED_ONLY:
         parts.append("approval:>=10")
@@ -191,6 +230,11 @@ def get_typesense_filter_query(params: SearchLevelParams) -> str:
     if params.club_id:
         parts.append(f"club.id:={params.club_id}")
 
+    if params.is_hidden == HiddenFilterOptions.HIDDEN_ONLY:
+        parts.append("is_hidden:=true")
+    elif params.is_hidden == HiddenFilterOptions.VISIBLE_ONLY:
+        parts.append("is_hidden:=false")
+
     return " && ".join(parts)
 
 def search_levels(request: HttpRequest):
@@ -204,9 +248,9 @@ def search_levels(request: HttpRequest):
         "filter_by": get_typesense_filter_query(params),
         "offset": offset,
         # fetch a bit more so that the frontend can know if there are more results
-        # why 3? there's an edge case where a level that's deleted from the DB could still be in Typesense for a bit
+        # why 2? there's an edge case where a level that's deleted from the DB could still be in Typesense for a bit
         # so we fetch a couple extra to avoid false negatives on "are there more results"
-        "limit": RESULTS_PER_PAGE + 3,
+        "limit": RESULTS_PER_PAGE + 2,
         "facet_by": "artist_tokens,tags,authors,difficulty,single_player,two_player,submitter.id,club.id",
         "include_fields": "id",
         "sort_by": "_text_match:desc,last_updated:desc"

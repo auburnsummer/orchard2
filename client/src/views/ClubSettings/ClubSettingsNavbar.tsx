@@ -28,7 +28,7 @@ export function ClubSettingsNavbar({ club }: ClubSettingsNavbarProps) {
     },
     {
       label: "Levels",
-      href: `/levels?q=&club_id=${club.id}&peer_review=all`
+      href: `/levels?q=&club_id=${club.id}&peer_review=all&show_hidden=all`
     },
     {
       label: "Delete Group",
