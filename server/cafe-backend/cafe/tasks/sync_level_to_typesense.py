@@ -37,7 +37,7 @@ def mass_sync_levels_to_typesense(level_ids: Iterable[str]):
                 continue
             dict_data = apply_typesense_specific_adjustments(level.to_dict())
             data.append(dict_data)
-        except ObjectDoesNotExist:
+        except RDLevel.DoesNotExist:
             # If the level does not exist, we skip it in mass sync
             continue
         except Exception as e:
@@ -73,12 +73,23 @@ def sync_level_to_typesense(level_id: str):
     if not client_healthy(typesense_client):
         print("Typesense is not healthy. Exiting sync.")
         return
+    
+    if level_id is None:
+        print("No level ID provided for sync. Exiting.")
+        with sentry_sdk.push_scope() as scope:
+            scope.set_context("typesense_sync", {
+                "level_id": level_id,
+                "task": "sync_level_to_typesense",
+                "operation": "sync_level"
+            })
+            sentry_sdk.capture_message("No level ID provided for sync_level_to_typesense task")
+        return
 
     try:
         level = RDLevel.objects.get(id=level_id)
         dict_data = apply_typesense_specific_adjustments(level.to_dict())
         typesense_client.collections[RDLEVEL_ALIAS_NAME].documents.upsert(dict_data)
-    except ObjectDoesNotExist:
+    except RDLevel.DoesNotExist:
         try:
             typesense_client.collections[RDLEVEL_ALIAS_NAME].documents[level_id].delete()
         except Exception as e:
