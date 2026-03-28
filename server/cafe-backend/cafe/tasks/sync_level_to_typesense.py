@@ -67,7 +67,7 @@ def mass_sync_levels_to_typesense(level_ids: Iterable[str]):
     
 
 @task(priority=100)
-def sync_level_to_typesense(level_id: str):
+def sync_level_to_typesense(level_id: str, caller: str | None = None):
     typesense_client = get_typesense_client()
     from cafe.models import RDLevel
     if not client_healthy(typesense_client):
@@ -79,6 +79,7 @@ def sync_level_to_typesense(level_id: str):
         with sentry_sdk.push_scope() as scope:
             scope.set_context("typesense_sync", {
                 "level_id": level_id,
+                "caller": caller,
                 "task": "sync_level_to_typesense",
                 "operation": "sync_level"
             })

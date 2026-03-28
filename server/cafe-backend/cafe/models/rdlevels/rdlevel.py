@@ -164,11 +164,12 @@ class RDLevel(RulesModel):
 
     def save(self, *args, **kwargs):
         super(RDLevel, self).save(*args, **kwargs)
-        sync_level_to_typesense(self.id)
+        sync_level_to_typesense(self.id, caller="RDLevel.save")
 
     def delete(self, *args, **kwargs):
+        level_id = self.id
         super(RDLevel, self).delete(*args, **kwargs)
-        sync_level_to_typesense(self.id)
+        sync_level_to_typesense(level_id, caller="RDLevel.delete")
 
     class Meta:
         rules_permissions = {
