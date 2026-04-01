@@ -37,6 +37,7 @@ import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { Dialog } from "@cafe/components/ui/Dialog";
 import { Words } from "@cafe/components/ui/Words";
 import { useClipboard } from "@mantine/hooks";
+import { getRdzipDownloadUrl } from "@cafe/utils/constants";
 
 type PeerReviewMainViewProps = {
   levels: RDLevel[];
@@ -235,7 +236,7 @@ export function PeerReviewLevelView({
         : "";
     const words = word + (flair ? ` (${flair})` : "");
 
-    const url = rdlevel.rdzip_url;
+    const url = getRdzipDownloadUrl(rdlevel);
     const color =
       approvalIntent === 10
         ? "3066993"
@@ -515,17 +516,18 @@ export function PeerReviewLevelView({
             <div className="mt-4 flex flex-wrap gap-2">
               <Button
                 as="a"
-                href={rdlevel.rdzip_url}
+                href={getRdzipDownloadUrl(rdlevel)}
                 target="_blank"
                 rel="noopener noreferrer"
                 variant="primary"
+                download
               >
                 Download
               </Button>
               <Button
                 variant="secondary"
                 onClick={() => {
-                  clipboard.copy(rdlevel.rdzip_url);
+                  clipboard.copy(getRdzipDownloadUrl(rdlevel));
                 }}
               >
                 {clipboard.copied ? "Copied!" : "Copy Link"}

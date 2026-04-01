@@ -16,6 +16,7 @@ import {
 import { DifficultyDecorator } from "./DifficultyDecorator/DifficultyDecorator";
 import { ConjunctionList } from "../ConjunctionList";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
+import { getRdzipDownloadUrl } from "@cafe/utils/constants";
 import { Link } from "@cafe/minibridge/components/Link";
 import { Words } from "../ui/Words";
 
@@ -73,7 +74,7 @@ export function LevelCard({
           <div className="w-8 ml-2 flex flex-col items-center gap-4">
             <button
               onClick={() => {
-                clipboard.copy(level.rdzip_url);
+                clipboard.copy(getRdzipDownloadUrl(level));
               }}
               className={cc(
                 "w-8 border border-white p-2 rounded flex items-center justify-center",
@@ -90,7 +91,8 @@ export function LevelCard({
               <FontAwesomeIcon icon={faPaste} className="w-4 h-4" />
             </button>
             <a
-              href={level.rdzip_url}
+              href={getRdzipDownloadUrl(level)}
+              download
               className="w-8 border border-white p-2 rounded flex items-center justify-center bg-transparent text-white hover:bg-[--mantine-color-primary-4] hover:cursor-pointer"
             >
               <FontAwesomeIcon icon={faDownload} className="w-4 h-4" />
