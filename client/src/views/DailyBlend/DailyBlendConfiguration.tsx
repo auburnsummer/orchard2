@@ -5,6 +5,7 @@ import { DailyBlendNavbar } from "./DailyBlendNavbar";
 import { Form } from "@cafe/minibridge/components/Form";
 import Textarea from "@cafe/components/ui/Textarea";
 import { Button } from "@cafe/components/ui/Button";
+import { Checkbox } from "@cafe/components/ui/Checkbox";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 
 import jsonata from "jsonata";
@@ -22,6 +23,7 @@ type DailyBlendConfigurationProps = {
   config: {
     webhook_urls: string;
     jsonata_script: string;
+    paused: boolean;
   };
 };
 
@@ -123,6 +125,13 @@ export function DailyBlendConfiguration({
         </Words>
         <Form method="POST">
           {csrfInput}
+          <Checkbox
+            name="paused"
+            label="Pause daily blend"
+            description="When checked, the daily blend task will not run."
+            defaultChecked={config.paused}
+            className="mb-4"
+          />
           <Textarea
             name="webhook_urls"
             label="Webhook URLs (one per line)"

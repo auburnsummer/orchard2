@@ -46,6 +46,10 @@ def blend_blend(blend: DailyBlend):
 
 @db_task(priority=200)
 def run_daily_blend_task(force: bool = False):
+    config = DailyBlendConfiguration.get_config()
+    if config.paused:
+        return  # daily blend is paused
+
     blend = todays_blend_or_pool()
     if blend is None:
         raise ValueError("No daily blend available and pool is empty")

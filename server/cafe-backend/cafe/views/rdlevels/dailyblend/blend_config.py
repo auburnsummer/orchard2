@@ -11,6 +11,7 @@ from django.contrib import messages
 class BlendConfigForm(forms.Form):
     webhook_urls = forms.CharField(required=False)
     jsonata_script = forms.CharField(required=False)
+    paused = forms.BooleanField(required=False)
 
 @permission_required('cafe.blend_rdlevel')
 def blend_config(request: HttpRequest) -> JsonResponse:
@@ -21,6 +22,7 @@ def blend_config(request: HttpRequest) -> JsonResponse:
         if form.is_valid():
             config.webhook_urls = form.cleaned_data['webhook_urls']
             config.jsonata_script = form.cleaned_data['jsonata_script']
+            config.paused = form.cleaned_data['paused']
             config.save()
             messages.success(request, "Configuration updated successfully.")
         else:

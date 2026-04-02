@@ -10,6 +10,7 @@ class DailyBlendConfiguration(RulesModel):
     """
     webhook_urls = models.TextField(blank=True, default="")
     jsonata_script = models.TextField(blank=True, default="")
+    paused = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         """Ensure only one instance exists."""
@@ -28,4 +29,5 @@ class DailyBlendConfiguration(RulesModel):
         return {
             "webhook_urls": self.webhook_urls,
             "jsonata_script": self.jsonata_script,
+            "paused": self.paused,
         }
