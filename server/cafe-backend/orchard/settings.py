@@ -34,11 +34,11 @@ DOMAIN_URL = os.environ.get('DOMAIN_URL', '')
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https' if DOMAIN_URL.startswith('https://') else 'http'
 
 # host SHOULD be restricted in the reverse proxy layer
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [DOMAIN_URL.replace("https://", "").replace("http://", "")]
 CSRF_TRUSTED_ORIGINS = [DOMAIN_URL]
 
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOW_HEADERS = (
     *default_headers,

@@ -17,7 +17,7 @@ class SetDailyBlendPayload(msgspec.Struct):
     featured_date: Optional[str] = ""  # ISO format date string
 
 @csrf_exempt
-# @permission_required("cafe.blend_rdlevel", fn=objectgetter(RDLevel, attr_name="level_id"))
+@permission_required("cafe.blend_rdlevel", fn=objectgetter(RDLevel, attr_name="level_id"))
 def set_daily_blend(request: AuthenticatedHttpRequest):
     if request.method != "POST":
         return JsonResponse({"error": "Method not allowed"}, status=405)
