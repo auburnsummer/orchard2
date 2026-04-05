@@ -10,7 +10,7 @@ from .predicates import register_permissions
 from cafe.views.types import AuthenticatedHttpRequest
 
 from cafe.models.rdlevels.prefill import RDLevelPrefillResult
-from cafe.views.discord_bot.handlers.add import addlevel_signer
+from cafe.signing import addlevel_signer
 from cafe.models.rdlevels.tempuser import get_or_create_discord_user
 from cafe.models.clubs.club import Club
 from django.utils.timezone import timedelta

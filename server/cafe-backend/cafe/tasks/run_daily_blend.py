@@ -7,6 +7,7 @@ import jsonata
 
 from cafe.models.rdlevels.daily_blend import DailyBlend, get_blend_date
 from cafe.models.rdlevels.daily_blend_configuration import DailyBlendConfiguration
+from cafe.webhooks import is_allowed_webhook_url
 
 def todays_blend_or_pool():
     today = get_blend_date()
@@ -41,6 +42,8 @@ def blend_blend(blend: DailyBlend):
     for url in webhook_urls.splitlines():
         url = url.strip()
         if url == "":
+            continue
+        if not is_allowed_webhook_url(url):
             continue
         httpx.post(url, json=payload)
 

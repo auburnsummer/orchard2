@@ -1,7 +1,6 @@
 from django.urls import path
 
 from cafe.views.accounts.profile.profile_delete_account import profile_delete_account
-from cafe.views.api.blend.set_daily_blend import set_daily_blend
 from cafe.views.api.execute_webhook import execute_webhook
 from cafe.views.clubs.settings.club_delete import club_delete
 from cafe.views.rdlevels.dailyblend.blend_config import blend_config
@@ -85,6 +84,5 @@ urlpatterns = [
     path("daily-blend/schedule/", blend_schedule, name="blend_schedule"),
     path("daily-blend/blend-now/", blend_now, name="blend_now"),
 
-    path("api/set_daily_blend/", set_daily_blend, name="set_daily_blend"),
     path("api/execute_webhook/<code>/", execute_webhook, name="execute_webhook"),
 ]

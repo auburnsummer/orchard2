@@ -25,7 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 AUTH_USER_MODEL = "cafe.User"
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '')
+if os.environ.get('DJANGO_SECRET_KEY'):
+    SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
+else:
+    raise ValueError("DJANGO_SECRET_KEY environment variable is not set")
 
 DEBUG = os.environ.get('DEBUG', 'false').lower() == 'true'
 

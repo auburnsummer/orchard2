@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, TypedDict, Literal
 from django.core.signing import BadSignature
 from django.utils.timezone import timedelta
 import rules
-from cafe.views.discord_bot.handlers.add import addlevel_signer
+from cafe.signing import addlevel_signer
 
 from cafe.models import User
 from cafe.models.clubs.club import Club

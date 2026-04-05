@@ -1,12 +1,10 @@
-from django.core.signing import TimestampSigner
 from .utils import ephemeral_response, get_club_from_guild_id
 
 from orchard.settings import DOMAIN_URL
 from django.urls import reverse
+from cafe.signing import addlevel_signer
 
 NO_GROUP_RESPONSE = ephemeral_response("No group found for this server (the server owner needs to use the `/connectgroup` command)")
-
-addlevel_signer = TimestampSigner(salt="addlevel")
 
 def _add(data, check_user_is_poster):
     club = get_club_from_guild_id(data['guild']['id'])

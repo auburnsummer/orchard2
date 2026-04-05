@@ -6,6 +6,7 @@ import requests
 from urllib.parse import unquote
 
 from cafe.views.types import AuthenticatedHttpRequest
+from cafe.webhooks import is_allowed_webhook_url
 from cryptography.fernet import Fernet, InvalidToken
 
 @csrf_exempt
@@ -23,6 +24,12 @@ def execute_webhook(request: AuthenticatedHttpRequest, code: str):
         
         encrypted_url = unquote(code)
         decrypted_url = cipher.decrypt(encrypted_url.encode()).decode()
+        
+        if not is_allowed_webhook_url(decrypted_url):
+            return JsonResponse(
+                {"error": "Webhook URL domain is not allowed"},
+                status=403
+            )
         
         # Forward the request to the decrypted webhook URL
         headers = {
