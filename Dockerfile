@@ -51,7 +51,7 @@ RUN uv sync
 ENV STATIC_ROOT=/var/www/rhythm.cafe/static
 WORKDIR cafe-backend
 
-RUN uv run ./manage.py collectstatic --noinput --no-default-ignore
+RUN DJANGO_SECRET_KEY=build-only-not-for-production uv run ./manage.py collectstatic --noinput --no-default-ignore
 
 WORKDIR /app
 
