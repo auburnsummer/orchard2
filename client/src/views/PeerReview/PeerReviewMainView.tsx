@@ -12,6 +12,7 @@ type PeerReviewMainViewProps = {
 export function PeerReviewMainView({ levels }: PeerReviewMainViewProps) {
     return (
         <PeerReviewShell pendingLevels={levels}>
+            <title>Peer Review | Rhythm Café</title>
             <Surface className="m-3 p-4">
                 <Words variant="header" className="mb-4">
                     Welcome to Peer Review!

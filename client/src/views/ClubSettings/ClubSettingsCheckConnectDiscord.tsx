@@ -23,6 +23,7 @@ export function ClubSettingsCheckConnectDiscord({
 }: ClubSettingsCheckConnectDiscordProps) {
   return (
     <Shell navbar={<ClubSettingsNavbar club={club} />}>
+      <title>Check Discord Connection | Rhythm Café</title>
       <Surface className="m-3 p-6 flex-grow">
         <div>
           <Words as="p">

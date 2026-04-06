@@ -114,6 +114,7 @@ export function ClubSettingsConnectDiscord({
 
   return (
     <ShellDramaticCenter>
+      <title>Connect Discord | Rhythm Café</title>
       {content}
     </ShellDramaticCenter>
   );

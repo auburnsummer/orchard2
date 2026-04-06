@@ -31,12 +31,18 @@ export function LevelAddFromPrefill({
 }: LevelAddFromPrefillProps) {
   if (!prefill.ready ){
     return (
-      <PrefillLoading prefillType={prefill.prefill_type} error={prefill.errors} />
+      <>
+        <title>Add Level | Rhythm Café</title>
+        <PrefillLoading prefillType={prefill.prefill_type} error={prefill.errors} />
+      </>
     );
   }
   if (prefill.prefill_type === "update") {
     return (
-      <PrefillUpdate prefill={prefill} potentialMatches={potential_matches} />
+      <>
+        <title>Add Level | Rhythm Café</title>
+        <PrefillUpdate prefill={prefill} potentialMatches={potential_matches} />
+      </>
     );
   }
   if (prefill.go_to_prepost == false) {
@@ -44,8 +50,18 @@ export function LevelAddFromPrefill({
   }
 
   if (existing_level) {
-    return <LevelAlreadyExists existingLevel={existing_level} />;
+    return (
+      <>
+        <title>Add Level | Rhythm Café</title>
+        <LevelAlreadyExists existingLevel={existing_level} />
+      </>
+    );
   }
 
-  return <PrefillReady prefill={prefill} />;
+  return (
+    <>
+      <title>Add Level | Rhythm Café</title>
+      <PrefillReady prefill={prefill} />
+    </>
+  );
 }

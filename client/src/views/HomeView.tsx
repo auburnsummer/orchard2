@@ -41,6 +41,7 @@ const BELOW_FOLD_LINKS = [
 export function HomeView({ daily_blend_level }: HomeViewProps) {
   return (
     <Shell>
+      <title>Rhythm Café</title>
       <div className="flex flex-col lg:flex-row gap-8 p-8 max-w-7xl mx-auto">
         {/* left side */}
         <div className="flex-1 flex flex-col gap-6">

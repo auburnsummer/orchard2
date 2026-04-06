@@ -25,6 +25,7 @@ export function PeerReviewMakeEncryptedWebhook({
 
     return (
         <PeerReviewShell pendingLevels={levels}>
+            <title>Generate Encrypted Webhook | Rhythm Café</title>
             <Surface className="mt-4 p-4">
                 {
                     encrypted_url && (

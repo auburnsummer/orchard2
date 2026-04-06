@@ -82,6 +82,7 @@ export function ClubSettingsMembersView({
 
   return (
     <Shell navbar={<ClubSettingsNavbar club={club} />}>
+      <title>{club.name} Members | Rhythm Café</title>
       <Dialog
         open={editMemberFormOpen}
         onClose={() => setEditMemberFormOpen(false)}

@@ -139,6 +139,7 @@ export function DailyBlendSchedule(props: DailyBlendScheduleProps) {
         <Shell
             navbar={<DailyBlendNavbar />}
         >
+            <title>Daily Blend Schedule | Rhythm Café</title>
             <Dialog
                 open={showEditDialog}
                 onClose={() => setShowEditDialog(false)}

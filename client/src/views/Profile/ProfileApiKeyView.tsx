@@ -20,6 +20,7 @@ export function ProfileApiKeyView({ has_api_key, api_key }: ProfileApiKeyView) {
 
     return (
         <Shell navbar={<ProfileNavbar />}>
+            <title>API Key | Rhythm Café</title>
             <Surface className="m-3 p-6 flex-grow flex flex-col gap-4">
                 {
                     api_key && (

@@ -64,6 +64,7 @@ export function PeerReviewConfiguration({ levels }: PeerReviewConfigurationProps
     const [doIPC, setDoIPC] = useAtom(doIPCAtom);
 
     return <PeerReviewShell pendingLevels={levels}>
+        <title>Peer Review Configuration | Rhythm Café</title>
         <Surface className="m-3 p-4">
             <div className="flex items-center justify-between mb-4">
                 <Words variant="subheader">

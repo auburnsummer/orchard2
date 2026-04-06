@@ -8,6 +8,7 @@ export function DailyBlendMainView() {
         <Shell
             navbar={<DailyBlendNavbar />}
         >
+            <title>Daily Blend | Rhythm Café</title>
             <Surface className="m-3 p-4">
                 <Words variant="header" className="mb-4">
                     Daily Blend

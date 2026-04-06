@@ -120,6 +120,7 @@ export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
         />
       }
     >
+      <title>Browse Levels | Rhythm Café</title>
       <div className="p-4">
         <div className="flex justify-between items-center mb-4">
           <Words as="h2" variant="header">

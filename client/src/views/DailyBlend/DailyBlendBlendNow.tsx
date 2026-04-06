@@ -13,6 +13,7 @@ export function DailyBlendBlendNow() {
         <Shell
             navbar={<DailyBlendNavbar />}
         >
+            <title>Blend Now | Rhythm Café</title>
             <Surface
                 className="mt-3 p-40 mr-3"
             >

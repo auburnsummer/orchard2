@@ -16,6 +16,7 @@ export function ProfileSettingsView() {
 
   return (
     <Shell navbar={<ProfileNavbar />}>
+      <title>Settings | Rhythm Café</title>
       <Surface className="m-3 p-6 flex-grow">
         <Words as="h2" variant="header">Settings</Words>
         <Form className="pt-2" method="post">

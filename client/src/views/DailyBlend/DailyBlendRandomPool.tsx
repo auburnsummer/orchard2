@@ -26,6 +26,7 @@ export function DailyBlendRandomPool({ pool }: DailyBlendRandomPoolProps) {
         <Shell
             navbar={<DailyBlendNavbar />}
         >
+            <title>Daily Blend Random Pool | Rhythm Café</title>
             <Surface className="m-3 p-4">
                 <Words variant="header" className="mb-4">
                     Random Pool

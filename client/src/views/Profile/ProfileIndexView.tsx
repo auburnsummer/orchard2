@@ -6,6 +6,7 @@ import { Words } from "@cafe/components/ui/Words";
 export function ProfileIndexView() {
   return (
     <Shell navbar={<ProfileNavbar />}>
+      <title>Profile | Rhythm Café</title>
       <Surface className="m-3 p-6 flex-grow">
         <Words as="p">This is your profile page! There isn't anything here yet.</Words>
         <Words as="p" className="mt-4">

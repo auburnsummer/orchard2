@@ -12,17 +12,20 @@ export function LevelEdit({ rdlevel }: LevelEditProps) {
     <EditLevelForm
       level={rdlevel}
       preamble={
-        <Alert>
-          <Words as="p">
-            This page is for changing the metadata of the level without changing
-            the actual .rdzip file.
-          </Words>
-          <Words as="p">
-            If you want to upload a new .rdzip file, please upload it to Discord
-            first, use the "Add to Rhythm Café" command, then select "Update to
-            existing level."
-          </Words>
-        </Alert>
+        <>
+          <title>Edit {rdlevel.song} | Rhythm Café</title>
+          <Alert>
+            <Words as="p">
+              This page is for changing the metadata of the level without changing
+              the actual .rdzip file.
+            </Words>
+            <Words as="p">
+              If you want to upload a new .rdzip file, please upload it to Discord
+              first, use the "Add to Rhythm Café" command, then select "Update to
+              existing level."
+            </Words>
+          </Alert>
+        </>
       }
       submitButtonText="Edit Level"
     />

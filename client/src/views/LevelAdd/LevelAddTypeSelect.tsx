@@ -57,6 +57,7 @@ export function LevelAddTypeSelect({
 
   return (
     <ShellDramaticCenter>
+      <title>Add Level | Rhythm Café</title>
       {content}
     </ShellDramaticCenter>
   );

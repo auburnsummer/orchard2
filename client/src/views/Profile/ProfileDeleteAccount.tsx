@@ -74,6 +74,7 @@ export function ProfileDeleteAccount(props: ProfileDeleteAccountProps) {
 
   return (
     <Shell navbar={<ProfileNavbar />}>
+      <title>Delete Account | Rhythm Café</title>
       <Surface className="m-3 p-6 flex-grow">
         <Words as="h2" variant="header">Delete Account</Words>
         {content}

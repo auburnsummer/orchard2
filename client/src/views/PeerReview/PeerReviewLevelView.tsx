@@ -444,6 +444,7 @@ export function PeerReviewLevelView({
 
   return (
     <PeerReviewShell pendingLevels={levels}>
+      <title>{rdlevel.song} | Peer Review | Rhythm Café</title>
       {/* invisible form containing the actual data to be submitted */}
       <Dialog
         open={showWarningDialog}

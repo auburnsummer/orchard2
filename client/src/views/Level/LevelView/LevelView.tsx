@@ -66,6 +66,7 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
 
   return (
     <Shell>
+      <title>{rdlevel.song} | Rhythm Café</title>
       <Dialog open={showDeleteForm} onClose={closeDeleteForm}>
         <Words as="h3" variant="subheader" className="mb-4">
           Delete {rdlevel.song}

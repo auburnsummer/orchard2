@@ -37,6 +37,7 @@ export function ProfileClubsView({ clubs }: ProfileClubsViewProps) {
 
   return (
     <Shell navbar={<ProfileNavbar />}>
+      <title>My Groups | Rhythm Café</title>
       <Dialog open={createClubFormOpen} onClose={closeCreateClub}>
         <CreateClubForm
           redirectTo={pathname}

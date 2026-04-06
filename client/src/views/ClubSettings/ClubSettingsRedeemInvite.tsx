@@ -74,6 +74,7 @@ export function ClubSettingsRedeemInvite(props: ClubSettingsRedeemInviteProps) {
   }
   return (
     <ShellDramaticCenter>
+      <title>Redeem Invite | Rhythm Café</title>
       {content}
     </ShellDramaticCenter>
   );
