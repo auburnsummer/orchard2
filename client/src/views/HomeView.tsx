@@ -12,29 +12,40 @@ const ABOVE_FOLD_LINKS = [
   {
     href: "/levels",
     text: "Browse all custom levels",
+    openInNewTab: false,
   },
   {
     href: "https://docs.google.com/spreadsheets/d/1Uz26L34OZIgaK6hMfLBysgtEW4TYDj7iZZ5KqOMbNKY",
     text: "Level setlists (for beginners)",
+    openInNewTab: true,
   },
   {
     href: "https://rd-editor-docs.github.io/intro/",
     text: "Editor tutorial by Klyzx et al",
+    openInNewTab: true,
   },
+  {
+    href: "https://rhythm-doctor-lounge.notion.site/Rhythm-Doctor-Lounge-Server-Rules-820b615767f449ec97c4c43fbb223592#bbfc0b8f35ac44bf9c76eb3ca78161d8",
+    text: "Rules for level submissions",
+    openInNewTab: true,
+  }
 ];
 
 const BELOW_FOLD_LINKS = [
   {
     href: "https://wiki.rhythm.cafe/",
-    text: "Rhythm Doctor Wiki"
+    text: "Rhythm Doctor Wiki",
+    openInNewTab: true,
   },
   {
     href: "https://datasette.rhythm.cafe/",
-    text: "Public API"
+    text: "Public API",
+    openInNewTab: true,
   },
   {
     href: "https://github.com/auburnsummer/orchard2/wiki/Privacy-Policy",
-    text: "Privacy / Cookie Policy"
+    text: "Privacy / Cookie Policy",
+    openInNewTab: true,
   }
 ];
 
@@ -63,7 +74,7 @@ export function HomeView({ daily_blend_level }: HomeViewProps) {
                 ABOVE_FOLD_LINKS.map((link) => (
                   <li key={link.href} className="flex items-center gap-2">
                     <span className="text-violet-600 dark:text-violet-400 mt-0.5">→</span>
-                    <Words as={Link} variant="link" href={link.href}>
+                    <Words as={Link} variant="link" href={link.href} {...(link.openInNewTab && { target: '_blank', rel: 'noopener noreferrer' })}>
                       {link.text}
                     </Words>
                   </li>
@@ -76,7 +87,7 @@ export function HomeView({ daily_blend_level }: HomeViewProps) {
                 BELOW_FOLD_LINKS.map((link) => (
                   <li key={link.href} className="flex items-center gap-2">
                     <span className="text-slate-600 dark:text-slate-400 mt-0.5 text-sm">→</span>
-                    <Words as={Link} variant="muted" href={link.href} className="text-sm hover:underline">
+                    <Words as={Link} variant="muted" href={link.href} className="text-sm hover:underline" {...(link.openInNewTab && { target: '_blank', rel: 'noopener noreferrer' })}>
                       {link.text}
                     </Words>
                   </li>
