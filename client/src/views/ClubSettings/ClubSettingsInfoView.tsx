@@ -21,7 +21,7 @@ export function ClubSettingsInfoView({
 
   return (
     <Shell navbar={<ClubSettingsNavbar club={club} />}>
-      <title>{club.name} Settings | Rhythm Café</title>
+      <title>{`${club.name} Settings | Rhythm Café`}</title>
       <Surface className="m-3 p-6 flex-grow">
         <Words as="h2" variant="header">Group {club.name} settings</Words>
         <Form className="pt-2" method="post">

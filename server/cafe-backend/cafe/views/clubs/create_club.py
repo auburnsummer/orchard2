@@ -1,11 +1,13 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.forms import ModelForm, CharField
+from django.forms import ModelForm, CharField, ValidationError
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.contrib import messages
+from django.utils.http import url_has_allowed_host_and_scheme
 from django_bridge.response import Response
 from cafe.models import Club, ClubMembership
+from orchard.settings import DOMAIN_URL
 
 from cafe.views.types import AuthenticatedHttpRequest
 
@@ -15,6 +17,16 @@ class CreateClubForm(ModelForm):
     class Meta:
         model = Club
         fields = ["name"]
+
+    def clean_redirect(self):
+        url = self.cleaned_data.get("redirect")
+        if url and not url_has_allowed_host_and_scheme(
+            url=url,
+            allowed_hosts={DOMAIN_URL.replace("https://", "").replace("http://", "")},
+            require_https=DOMAIN_URL.startswith("https://"),
+        ):
+            raise ValidationError("Invalid redirect URL.")
+        return url
 
 @login_required
 @transaction.atomic

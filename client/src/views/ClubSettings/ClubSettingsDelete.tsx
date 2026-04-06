@@ -21,7 +21,7 @@ export function ClubSettingsDeleteView({
 
   return (
     <Shell navbar={<ClubSettingsNavbar club={club} />}>
-      <title>Delete {club.name} | Rhythm Café</title>
+      <title>{`Delete ${club.name} | Rhythm Café`}</title>
       <Surface className="m-3 flex-grow p-6">
         <Words as="h2" variant="header">
           Delete Group {club.name}

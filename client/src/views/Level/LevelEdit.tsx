@@ -13,7 +13,7 @@ export function LevelEdit({ rdlevel }: LevelEditProps) {
       level={rdlevel}
       preamble={
         <>
-          <title>Edit {rdlevel.song} | Rhythm Café</title>
+          <title>{`Edit ${rdlevel.song} | Rhythm Café`}</title>
           <Alert>
             <Words as="p">
               This page is for changing the metadata of the level without changing
