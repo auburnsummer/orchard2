@@ -17,7 +17,7 @@ from .views.accounts.profile.profile_settings import settings as profile_setting
 from .views.accounts.profile.profile_clubs import profile_clubs
 from .views.accounts.profile.api_key import api_key_view
 from .views.clubs.create_club import create_club
-from .views.rdlevels.search_levels import search_levels
+from .views.rdlevels.search_levels import search_levels, search_levels_api
 
 from .views.clubs.settings.info import info
 from .views.clubs.settings.members import members
@@ -85,4 +85,5 @@ urlpatterns = [
     path("daily-blend/blend-now/", blend_now, name="blend_now"),
 
     path("api/execute_webhook/<code>/", execute_webhook, name="execute_webhook"),
+    path("api/levels/", search_levels_api, name="api_level_search"),
 ]

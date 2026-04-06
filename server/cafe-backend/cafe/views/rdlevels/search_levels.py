@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from typing import Optional, List, Dict, Any, Union
 
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django_bridge.response import Response
 
@@ -237,7 +238,8 @@ def get_typesense_filter_query(params: SearchLevelParams) -> str:
 
     return " && ".join(parts)
 
-def search_levels(request: HttpRequest):
+def _execute_search(request: HttpRequest):
+    """Core search logic shared between the Django-Bridge view and the JSON API."""
     params = get_search_params(request)
     offset = (params.page - 1) * RESULTS_PER_PAGE
 
@@ -283,11 +285,11 @@ def search_levels(request: HttpRequest):
         facet_distribution[facet['field_name']] = facet['counts']
 
     if params.facet_query and params.facet_query_field:
-        return Response(request, request.resolver_match.view_name, {
+        return {
             "facets": facet_distribution[params.facet_query_field]
-        })
+        }
 
-    return Response(request, request.resolver_match.view_name, {
+    return {
         "results": {
             "hits": levels,
             "estimatedTotalHits": search_results['found'],
@@ -297,4 +299,13 @@ def search_levels(request: HttpRequest):
             "query": params.q,
             "facetDistribution": facet_distribution
         }
-    })
+    }
+
+
+def search_levels(request: HttpRequest):
+    props = _execute_search(request)
+    return Response(request, request.resolver_match.view_name, props)
+
+
+def search_levels_api(request: HttpRequest):
+    return JsonResponse(_execute_search(request))
