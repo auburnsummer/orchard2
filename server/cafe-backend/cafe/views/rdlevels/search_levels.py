@@ -45,6 +45,7 @@ class SearchLevelParams:
     facet_query: Optional[str]
     submitter_id: Optional[str]
     club_id: Optional[str]
+    per_page: int
     is_hidden: HiddenFilterOptions
 
 
@@ -94,6 +95,11 @@ def get_search_params(request: HttpRequest) -> SearchLevelParams:
     
     # page
     page = parse_int_param(request.GET.get('page', '1'), min_value=1) or 1
+
+    # per_page
+    per_page = parse_int_param(request.GET.get('per_page'), min_value=1)
+    if per_page is None or per_page > 100:
+        per_page = RESULTS_PER_PAGE
     
     # bpm
     min_bpm = parse_float_param(request.GET.get('min_bpm'))
@@ -178,6 +184,7 @@ def get_search_params(request: HttpRequest) -> SearchLevelParams:
         facet_query_field=facet_query_field,
         submitter_id=submitter_id,
         club_id=club_id,
+        per_page=per_page,
         is_hidden=is_hidden
     )
 
@@ -241,7 +248,7 @@ def get_typesense_filter_query(params: SearchLevelParams) -> str:
 def _execute_search(request: HttpRequest):
     """Core search logic shared between the Django-Bridge view and the JSON API."""
     params = get_search_params(request)
-    offset = (params.page - 1) * RESULTS_PER_PAGE
+    offset = (params.page - 1) * params.per_page
 
     filter_opts = {
         "q": params.q,
@@ -252,7 +259,7 @@ def _execute_search(request: HttpRequest):
         # fetch a bit more so that the frontend can know if there are more results
         # why 2? there's an edge case where a level that's deleted from the DB could still be in Typesense for a bit
         # so we fetch a couple extra to avoid false negatives on "are there more results"
-        "limit": RESULTS_PER_PAGE + 2,
+        "limit": params.per_page + 2,
         "facet_by": "artist_tokens,tags,authors,difficulty,single_player,two_player,submitter.id,club.id",
         "include_fields": "id",
         "sort_by": "_text_match:desc,last_updated:desc"
@@ -294,7 +301,7 @@ def _execute_search(request: HttpRequest):
             "hits": levels,
             "estimatedTotalHits": search_results['found'],
             "processingTimeMs": search_results['search_time_ms'],
-            "limit": RESULTS_PER_PAGE,
+            "limit": params.per_page,
             "offset": offset,
             "query": params.q,
             "facetDistribution": facet_distribution
