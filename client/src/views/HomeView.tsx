@@ -43,6 +43,11 @@ const BELOW_FOLD_LINKS = [
     openInNewTab: true,
   },
   {
+    href: "https://github.com/auburnsummer/orchard2",
+    text: "Source Code",
+    openInNewTab: true,
+  },
+  {
     href: "https://github.com/auburnsummer/orchard2/wiki/Privacy-Policy",
     text: "Privacy / Cookie Policy",
     openInNewTab: true,
