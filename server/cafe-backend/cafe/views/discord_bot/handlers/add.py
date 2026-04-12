@@ -1,10 +1,248 @@
-from .utils import ephemeral_response, get_club_from_guild_id
+from code import interact
+from email.mime import application
+import json
+from operator import add
+import textwrap
+
+from django.http import JsonResponse
+import httpx
+import huey
+from vitals.vitals import PREFILL_VERSION
+
+from cafe.models.add_session import AddSession
+from cafe.models.clubs import club
+from cafe.models.rdlevels.prefill import RDLevelPrefillResult
+from cafe.models.rdlevels.rdlevel import RDLevel
+from cafe.models.rdlevels.tempuser import get_or_create_discord_user
+from cafe.tasks.run_prefill import run_prefill_v2
+
+from .utils import Flags, ResponseType, action_row, button, deferred_response, ephemeral_response, get_club_from_guild_id, label, option, seperator, string_select, test_message_component_response, text, text_input
 
 from orchard.settings import DOMAIN_URL
 from django.urls import reverse
 from cafe.signing import addlevel_signer
 
 NO_GROUP_RESPONSE = ephemeral_response("No group found for this server (the server owner needs to use the `/connectgroup` command)")
+NO_ATTACHMENTS_RESPONSE = ephemeral_response("The post doesn't have any attachments ending with .rdzip!")
+
+def get_attachments_from_message(data):
+    target_id = data['data']['target_id']
+    message = data['data']['resolved']['messages'][target_id]
+    attachments = [a for a in message['attachments'] if a['filename'].endswith('.rdzip')]
+    return attachments
+
+def add_phase_one(session: AddSession):
+    """
+    Phase 1: if the message has multiple attachments, we need to ask the user which one they're operating on.
+    If the message only has one attachment, this phase renders nothing.
+    """
+    attachments = session.attachments
+    if not attachments:
+        return [
+            text("No attachments found in the message. If you see this, it's a bug.")
+        ]
+    if len(attachments) == 1:
+        return []
+    return [
+        text("This post has multiple attachments. Which one do you want to add?"),
+        action_row(
+            string_select(
+                "p1_select_attachment",
+                [option(a['filename'], a['id'], a['url'] == session.selected_attachment_url) for a in attachments],
+                placeholder="Select attachment..."
+            )
+        )
+    ]
+
+def add_phase_two(session: AddSession):
+    """
+    Phase TWO: the user is asked if this is a new level or an update to an existing level.
+    """
+    if session.phase < 2:
+        return []
+    base = [
+        seperator(),
+        text("Is this a new level, or an update to an existing level?"),
+        action_row(
+            string_select(
+                "p2_type_select",
+                [
+                    option("New level", "new", session.add_type == "new"),
+                    option("Update to existing level", "update", session.add_type == "update")
+                ]
+            )
+        )
+    ]
+    if session.add_type == "new":
+        # a checkbox if they want to edit the metadata first
+        base.extend([
+            seperator(),
+            action_row(
+                button("p2_new_submit", "Add level", 1),
+                button("p2_new_submit_edit", "Edit level metadata before adding", 2)
+            )
+        ])
+    if session.add_type == "update":
+        # just a button to submit
+        base.extend([
+            seperator(),
+            action_row(
+                button("p2_update_submit", "Click here to continue", 1)
+            )
+        ])
+
+    return base
+
+def add_phase_four(session: AddSession):
+    """
+    Phase FOUR: report results
+    """
+    prefill = session.prefill
+    if not prefill:
+        # this should never happen, we should always have a prefill in phase 4.
+        return [text("No prefill found in phase 4. If you see this, it's a bug.")]
+
+    # did we make a level from it? (i.e. prepost was skipped)
+    if prefill.level:
+        link = DOMAIN_URL + reverse('cafe:level_view', args=[prefill.level.id])
+        return [
+            text(f"Level uploaded successfully! [Link here]({link})")
+        ]
+
+    # check if level already exists.
+    existing_level = RDLevel.objects.filter(sha1=prefill.data['sha1']).first()
+    if existing_level:
+        link = DOMAIN_URL + reverse('cafe:level_view', args=[existing_level.id])
+        lines = [
+            text(f"This level has already been uploaded: [Link here]({link})")
+        ]
+        return lines
+    
+    # otherwise, send them a link to the prefill to finish the submission.
+    prefill_url = DOMAIN_URL + reverse('cafe:level_from_prefill', args=[prefill.id])
+
+    return [
+        text(f"Please click the link to finish the submission: [Link here]({prefill_url})")
+    ]
+
+def render_add_session_components(add_session):
+    # phase 3: loading message and nothing else
+    if add_session.phase == 3:
+        return [text("## Uploading level, please wait... ##")]
+    # phase 4: report results and link to prefill if necessary
+    if add_session.phase == 4:
+        return add_phase_four(add_session)
+    # phase 1 + 2
+    components = []
+    components.extend(add_phase_one(add_session))
+    components.extend(add_phase_two(add_session))
+    return components
+
+def render_add_session(add_session):
+    return {
+        # type is either 4 or 7 depending on whether this is an initial response or a followup response.
+        # the caller of this function is responsible for setting the correct type.
+        "data": {
+            "flags": Flags.IS_COMPONENTS_V2.value | Flags.EPHEMERAL.value,
+            "components": render_add_session_components(add_session)
+        }
+    }
+
+def add_v2(data):
+    club = get_club_from_guild_id(data['guild']['id'])
+
+    if not club:
+        return NO_GROUP_RESPONSE
+
+    attachments = get_attachments_from_message(data)
+    if not attachments:
+        return NO_ATTACHMENTS_RESPONSE
+    
+    # if there are multiple attachments, we need to ask the user which one they want to add, which means we are on phase 1
+    # if there is only one attachment, we can skip straight to phase 2, which asks the user if this is a new level or an update to an existing level.
+    phase = 1 if len(attachments) > 1 else 2
+
+    # create an AddSession to keep track of the user's progress in the add flow
+    session = AddSession.objects.create(
+        id = data['id'],
+        interaction_token = data['token'],
+        phase = phase,
+        attachments = attachments
+    )
+    # if we are on phase 2, set selected_attachment_url straight away
+    if phase == 2:
+        session.selected_attachment_url = attachments[0]['url']
+        session.save()
+
+    return JsonResponse({
+        "type": ResponseType.CHANNEL_MESSAGE_WITH_SOURCE.value,
+        **render_add_session(session)
+    })
+
+def update_modal():
+    return {
+        "type": ResponseType.MODAL.value,
+        "data": {
+            "custom_id": "update_modal",
+            "title": "Update level",
+            "components": [
+                text(textwrap.dedent("""
+                     Enter the ID of the level you want to update.
+                                     
+                    TODO add instructions about going to the level page and copying the ID from the "level ID" section in the sidebar, or from the URL of the level page.
+                """)),
+                label(
+                    "ID of the level you want to update",
+                    text_input("update_level_id", style=1, placeholder="Enter level ID here...")
+                )
+            ]
+        }
+    }
+
+def add_step(data):
+    session = AddSession.objects.get(id=data['message']['interaction']['id'])
+
+    if data['data']['custom_id'] == "p1_select_attachment":
+        # the user has selected which attachment they want to add, so we save that in the session and move on to phase 2.
+        selected_id = data['data']['values'][0]
+        selected_attachment = next(a for a in session.attachments if a['id'] == selected_id)
+        session.selected_attachment_url = selected_attachment['url']
+        session.phase = 2
+        session.save()
+
+    if data['data']['custom_id'] == "p2_type_select":
+        session.add_type = data['data']['values'][0]
+        session.save()
+
+    if data['data']['custom_id'] == "p2_update_submit":
+        # for this specific case we now open a modal where they enter the id of the level they want to update
+        return JsonResponse(update_modal())
+    
+    # they clicked the button
+    if data['data']['custom_id'] in ["p2_new_submit", "p2_new_submit_edit"]:
+        # kickoff prefill and then set phase to 3, which is the loading state.
+        session.phase = 3
+        session.save()
+        discord_user_id = data['member']['user']['id']
+        discord_user_name_hint = data['member']['user'].get('global_name') or data['member']['user']['username']
+        user = get_or_create_discord_user(discord_user_id, discord_user_name_hint)
+        club = get_club_from_guild_id(data['guild']['id'])
+        go_to_prepost = data['data']['custom_id'] == "p2_new_submit_edit"
+        # make a prefill object
+        prefill = RDLevelPrefillResult.objects.create(
+            url=session.selected_attachment_url,
+            version=PREFILL_VERSION,
+            user=user,
+            prefill_type=session.add_type,
+            club=club,
+            go_to_prepost=go_to_prepost
+        )
+        run_prefill_v2(prefill.id, session.id)
+
+    return JsonResponse({
+        "type": ResponseType.UPDATE_ORIGINAL_MESSAGE.value,
+        **render_add_session(session)
+    })
 
 def _add(data, check_user_is_poster):
     club = get_club_from_guild_id(data['guild']['id'])
@@ -16,7 +254,7 @@ def _add(data, check_user_is_poster):
     message = data['data']['resolved']['messages'][target_id]
     attachments = [a for a in message['attachments'] if a['filename'].endswith('.rdzip')]
     if not attachments:
-        return ephemeral_response("The post doesn't have any attachments ending with .rdzip!")
+        return NO_ATTACHMENTS_RESPONSE
     
     is_webhook = 'webhook_id' in message
     invoker_id = data['member']['user']['id']
@@ -59,7 +297,8 @@ def _add(data, check_user_is_poster):
     return ephemeral_response(content)
 
 def add(data):
-    return _add(data, check_user_is_poster=True)
+    return add_v2(data)
+    # return _add(data, check_user_is_poster=True)
 
 def add_delegated(data):
     return _add(data, check_user_is_poster=False)

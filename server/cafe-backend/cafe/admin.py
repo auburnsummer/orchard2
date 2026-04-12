@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 
+from cafe.models.add_session import AddSession
 from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
 from .models import User
 
@@ -37,3 +38,4 @@ admin.site.register(RDLevelPrefillResult)
 admin.site.register(RDLevel, SimpleHistoryAdmin)
 admin.site.register(DailyBlend)
 admin.site.register(DailyBlendRandomPool)
+admin.site.register(AddSession)
