@@ -280,7 +280,7 @@ def add_step(data):
             session.phase = AddSessionPhase.ERROR_LEVEL_NOT_FOUND
             session.save()
             ok_to_proceed = False
-        if not user.has_perm('cafe.change_rdlevel', level):
+        elif not user.has_perm('cafe.change_rdlevel', level):
             session.phase = AddSessionPhase.ERROR_NO_PERMISSION
             session.save()
             ok_to_proceed = False
