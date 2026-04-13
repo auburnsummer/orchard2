@@ -10,7 +10,7 @@ from django.db import transaction
 from vitals import vitals, vitals_quick
 from huey.contrib.djhuey import db_periodic_task, db_task, on_commit_task
 import httpx
-from cafe.models.add_session import AddSession
+from cafe.models.add_session import AddSession, AddSessionPhase
 from cafe.models.rdlevels.prefill import RDLevelPrefillResult
 from asgiref.sync import async_to_sync
 from vitals.msgspec_schema import VitalsLevel, VitalsLevelImmutable
@@ -87,7 +87,7 @@ def run_prefill_v2(prefill_id: str, session_id: str):
         sha1 = prefill_result.data.get('sha1')
         duplicate = RDLevel.objects.filter(sha1=sha1).first()
         if duplicate:
-            session.phase = 7 # error state, a level with the same sha1 already exists.
+            session.phase = AddSessionPhase.ERROR_DUPLICATE
             prefill_result.level = duplicate
             prefill_result.save()
             update_ok = False
@@ -103,7 +103,7 @@ def run_prefill_v2(prefill_id: str, session_id: str):
 
     session.prefill = prefill_result
     if update_ok:
-        session.phase = 4
+        session.phase = AddSessionPhase.COMPLETE
     session.save()
     with httpx.Client() as client:
         url = f"https://discord.com/api/v10/webhooks/{DISCORD_CLIENT_ID}/{session.interaction_token}/messages/@original"

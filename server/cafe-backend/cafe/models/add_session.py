@@ -3,6 +3,18 @@ from django.db import models
 from cafe.models.rdlevels.prefill import RDLevelPrefillResult
 
 
+class AddSessionPhase(models.IntegerChoices):
+    # Normal flow
+    SELECTING_ATTACHMENT = 1  # multiple attachments — user picks which one
+    SELECTING_TYPE = 2        # user picks "new" or "update"
+    UPLOADING = 3             # prefill task is running
+    COMPLETE = 4              # prefill done, show results/link
+    # Error states
+    ERROR_LEVEL_NOT_FOUND = 5   # user entered an update level ID that doesn't exist
+    ERROR_NO_PERMISSION = 6     # user doesn't have permission to edit that level
+    ERROR_DUPLICATE = 7         # update rejected — a level with the same SHA1 already exists
+
+
 class AddSession(models.Model):
     """
     An AddSession represents a user's progress in the multi-step process of adding a level from a Discord attachment.
@@ -19,8 +31,7 @@ class AddSession(models.Model):
     # token used to send followup messages/interactions to discord, valid for 15 minutes after the initial interaction is received
     interaction_token = models.TextField()
 
-    # the current phase of the add flow the user is on. I will later make an ascii state diagram
-    phase = models.IntegerField(default=1)
+    phase = models.IntegerField(choices=AddSessionPhase.choices, default=AddSessionPhase.SELECTING_ATTACHMENT)
 
     prefill = models.ForeignKey(RDLevelPrefillResult, blank=True, null=True, default=None, on_delete=models.CASCADE)
 

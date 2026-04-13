@@ -1,22 +1,15 @@
-from code import interact
-from email.mime import application
-import json
-from operator import add
 import textwrap
 
 from django.http import JsonResponse
-import httpx
-import huey
 from vitals.vitals import PREFILL_VERSION
 
-from cafe.models.add_session import AddSession
-from cafe.models.clubs import club
+from cafe.models.add_session import AddSession, AddSessionPhase
 from cafe.models.rdlevels.prefill import RDLevelPrefillResult
 from cafe.models.rdlevels.rdlevel import RDLevel
 from cafe.models.rdlevels.tempuser import get_or_create_discord_user
 from cafe.tasks.run_prefill import run_prefill_v2
 
-from .utils import Flags, ResponseType, action_row, button, deferred_response, ephemeral_response, get_club_from_guild_id, label, option, seperator, string_select, test_message_component_response, text, text_input
+from .utils import Flags, ResponseType, action_row, button, ephemeral_response, get_club_from_guild_id, label, option, seperator, string_select, text, text_input
 
 from orchard.settings import DOMAIN_URL
 from django.urls import reverse
@@ -31,7 +24,7 @@ def get_attachments_from_message(data):
     attachments = [a for a in message['attachments'] if a['filename'].endswith('.rdzip')]
     return attachments
 
-def add_phase_one(session: AddSession):
+def phase_select_attachment(session: AddSession):
     """
     Phase 1: if the message has multiple attachments, we need to ask the user which one they're operating on.
     If the message only has one attachment, this phase renders nothing.
@@ -54,11 +47,11 @@ def add_phase_one(session: AddSession):
         )
     ]
 
-def add_phase_two(session: AddSession):
+def phase_select_type(session: AddSession):
     """
     Phase TWO: the user is asked if this is a new level or an update to an existing level.
     """
-    if session.phase < 2:
+    if session.phase < AddSessionPhase.SELECTING_TYPE:
         return []
     base = [
         seperator(),
@@ -87,9 +80,13 @@ def add_phase_two(session: AddSession):
         base.extend([
             seperator(),
         ])
-        if session.phase == 5:
+        if session.phase == AddSessionPhase.ERROR_LEVEL_NOT_FOUND:
             base.extend([
                 text("**The level ID you entered does not exist.**")
+            ])
+        if session.phase == AddSessionPhase.ERROR_NO_PERMISSION:
+            base.extend([
+                text("**You don't have permission to edit that level.**")
             ])
         base.extend([
             action_row(
@@ -99,7 +96,7 @@ def add_phase_two(session: AddSession):
 
     return base
 
-def add_phase_four(session: AddSession):
+def phase_report_results(session: AddSession):
     """
     Phase FOUR: report results
     """
@@ -132,22 +129,20 @@ def add_phase_four(session: AddSession):
     ]
 
 def render_add_session_components(add_session):
-    # phase 3: loading message and nothing else
-    if add_session.phase == 3:
+    if add_session.phase == AddSessionPhase.UPLOADING:
         return [text("## Uploading level, please wait... ##")]
-    # phase 4: report results and link to prefill if necessary
-    if add_session.phase == 4:
-        return add_phase_four(add_session)
-    # phase 7: error state for duplicate level on update
-    if add_session.phase == 7:
+    if add_session.phase == AddSessionPhase.COMPLETE:
+        return phase_report_results(add_session)
+    if add_session.phase == AddSessionPhase.ERROR_DUPLICATE:
         link_to_duplicate = DOMAIN_URL + reverse('cafe:level_view', args=[add_session.prefill.level.id])
         return [
             text(f"A level with the same file already exists in the database. The update was not applied. [Link to duplicate]({link_to_duplicate})")
         ]
-    # phase 1 + 2
+    # SELECTING_ATTACHMENT, SELECTING_TYPE, and the update error states (ERROR_LEVEL_NOT_FOUND, ERROR_NO_PERMISSION)
+    # all render the step-by-step form, with phase_select_type injecting inline error messages where appropriate.
     components = []
-    components.extend(add_phase_one(add_session))
-    components.extend(add_phase_two(add_session))
+    components.extend(phase_select_attachment(add_session))
+    components.extend(phase_select_type(add_session))
     return components
 
 def render_add_session(add_session):
@@ -193,7 +188,7 @@ def add_v2(data, check_user_is_poster=True):
     
     # if there are multiple attachments, we need to ask the user which one they want to add, which means we are on phase 1
     # if there is only one attachment, we can skip straight to phase 2, which asks the user if this is a new level or an update to an existing level.
-    phase = 1 if len(attachments) > 1 else 2
+    phase = AddSessionPhase.SELECTING_ATTACHMENT if len(attachments) > 1 else AddSessionPhase.SELECTING_TYPE
 
     # create an AddSession to keep track of the user's progress in the add flow
     session = AddSession.objects.create(
@@ -203,8 +198,8 @@ def add_v2(data, check_user_is_poster=True):
         phase = phase,
         attachments = attachments
     )
-    # if we are on phase 2, set selected_attachment_url straight away
-    if phase == 2:
+    # if we are on phase SELECTING_TYPE, set selected_attachment_url straight away
+    if phase == AddSessionPhase.SELECTING_TYPE:
         session.selected_attachment_url = attachments[0]['url']
         session.save()
 
@@ -244,12 +239,12 @@ def add_step(data):
         selected_id = data['data']['values'][0]
         selected_attachment = next(a for a in session.attachments if a['id'] == selected_id)
         session.selected_attachment_url = selected_attachment['url']
-        session.phase = 2
+        session.phase = AddSessionPhase.SELECTING_TYPE
         session.save()
 
     if data['data']['custom_id'] == "p2_type_select":
         session.add_type = data['data']['values'][0]
-        session.phase = 2 # if there was an error message from before, we want to make sure it goes away when they change the type.
+        session.phase = AddSessionPhase.SELECTING_TYPE  # if there was an error state, clear it when they change the type
         session.save()
 
     if data['data']['custom_id'] == "p2_update_submit":
@@ -258,8 +253,7 @@ def add_step(data):
     
     # they clicked the button
     if data['data']['custom_id'] in ["p2_new_submit", "p2_new_submit_edit"]:
-        # kickoff prefill and then set phase to 3, which is the loading state.
-        session.phase = 3
+        session.phase = AddSessionPhase.UPLOADING
         session.save()
         user = session.user
         club = get_club_from_guild_id(data['guild']['id'])
@@ -283,15 +277,16 @@ def add_step(data):
         club = get_club_from_guild_id(data['guild']['id'])
         ok_to_proceed = True
         if not level:
-            session.phase = 5  # error state, the level id they entered does not exist.
+            session.phase = AddSessionPhase.ERROR_LEVEL_NOT_FOUND
             session.save()
             ok_to_proceed = False
         if not user.has_perm('cafe.change_rdlevel', level):
-            session.phase = 6  # error state, they don't have permission to edit this level.
+            session.phase = AddSessionPhase.ERROR_NO_PERMISSION
             session.save()
             ok_to_proceed = False
         if ok_to_proceed:
-            # make a prefill object
+            session.phase = AddSessionPhase.UPLOADING
+            session.save()
             prefill = RDLevelPrefillResult.objects.create(
                 url=session.selected_attachment_url,
                 version=PREFILL_VERSION,
