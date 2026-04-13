@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cafe', '0050_remove_discord_interaction_token'),
+        ('cafe', '0049_addsession_prefill'),
     ]
 
     operations = [
