@@ -55,5 +55,10 @@ def entry(request):
         command_name = data['message']['interaction']['name']
         if command_name in MESSAGE_COMPONENT_HANDLERS:
             return MESSAGE_COMPONENT_HANDLERS[command_name](data)
-        
+    
+    if data['type'] == InteractionType.MODAL_SUBMIT.value:
+        command_name = data['message']['interaction']['name']
+        if command_name in MESSAGE_COMPONENT_HANDLERS:
+            return MESSAGE_COMPONENT_HANDLERS[command_name](data)
+
     return HttpResponseNotFound('Not sure how to handle this type.')

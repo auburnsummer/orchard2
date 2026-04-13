@@ -86,6 +86,12 @@ def add_phase_two(session: AddSession):
         # just a button to submit
         base.extend([
             seperator(),
+        ])
+        if session.phase == 5:
+            base.extend([
+                text("**The level ID you entered does not exist.**")
+            ])
+        base.extend([
             action_row(
                 button("p2_update_submit", "Click here to continue", 1)
             )
@@ -132,6 +138,12 @@ def render_add_session_components(add_session):
     # phase 4: report results and link to prefill if necessary
     if add_session.phase == 4:
         return add_phase_four(add_session)
+    # phase 7: error state for duplicate level on update
+    if add_session.phase == 7:
+        link_to_duplicate = DOMAIN_URL + reverse('cafe:level_view', args=[add_session.prefill.level.id])
+        return [
+            text(f"A level with the same file already exists in the database. The update was not applied. [Link to duplicate]({link_to_duplicate})")
+        ]
     # phase 1 + 2
     components = []
     components.extend(add_phase_one(add_session))
@@ -140,7 +152,7 @@ def render_add_session_components(add_session):
 
 def render_add_session(add_session):
     return {
-        # type is either 4 or 7 depending on whether this is an initial response or a followup response.
+        # type is either 4 (send initial message) or 7 (update original message) depending on whether this is an initial response or a followup response.
         # the caller of this function is responsible for setting the correct type.
         "data": {
             "flags": Flags.IS_COMPONENTS_V2.value | Flags.EPHEMERAL.value,
@@ -148,7 +160,7 @@ def render_add_session(add_session):
         }
     }
 
-def add_v2(data):
+def add_v2(data, check_user_is_poster=True):
     club = get_club_from_guild_id(data['guild']['id'])
 
     if not club:
@@ -157,6 +169,27 @@ def add_v2(data):
     attachments = get_attachments_from_message(data)
     if not attachments:
         return NO_ATTACHMENTS_RESPONSE
+
+    target_id = data['data']['target_id']
+    club = get_club_from_guild_id(data['guild']['id'])
+    message = data['data']['resolved']['messages'][target_id]
+
+    is_webhook = 'webhook_id' in message
+    invoker_id = data['member']['user']['id']
+    # nb: poster_id is the discord user id of the user who will be credited as the submitter of the level.
+    # poster_id is normally the user who posted the message,
+    # but if the message was posted by a webhook, then the poster_id is the user who ran the command.
+    # message['author']['id'] and invoker_id are not always the same,
+    # such as in the delegated scenario where someone else is running the command on behalf of the poster.
+    poster_id = message['author']['id'] if not is_webhook else invoker_id
+
+    if check_user_is_poster:
+        if is_webhook:
+            return ephemeral_response("You can't add levels from webhooks.")
+        if invoker_id != poster_id:
+            return ephemeral_response("You can only add levels from your own messages.")
+        
+    user = get_or_create_discord_user(poster_id, message['author'].get('global_name') or message['author']['username'])
     
     # if there are multiple attachments, we need to ask the user which one they want to add, which means we are on phase 1
     # if there is only one attachment, we can skip straight to phase 2, which asks the user if this is a new level or an update to an existing level.
@@ -165,6 +198,7 @@ def add_v2(data):
     # create an AddSession to keep track of the user's progress in the add flow
     session = AddSession.objects.create(
         id = data['id'],
+        user = user,
         interaction_token = data['token'],
         phase = phase,
         attachments = attachments
@@ -180,19 +214,22 @@ def add_v2(data):
     })
 
 def update_modal():
+    url_to_mylevels = DOMAIN_URL + reverse("cafe:profile_levels")
     return {
         "type": ResponseType.MODAL.value,
         "data": {
             "custom_id": "update_modal",
             "title": "Update level",
             "components": [
-                text(textwrap.dedent("""
-                     Enter the ID of the level you want to update.
+                text(textwrap.dedent(f"""
+                    Enter the ID of the level you want to update.
                                      
-                    TODO add instructions about going to the level page and copying the ID from the "level ID" section in the sidebar, or from the URL of the level page.
+                    Click [here]({url_to_mylevels}) to go to your levels and find the ID of the level you want to update.
+                    
+                    Click on the name of the level to go to the level page, then the ID is displayed on the right side of the page.                                   
                 """)),
                 label(
-                    "ID of the level you want to update",
+                    "ID of the level to update",
                     text_input("update_level_id", style=1, placeholder="Enter level ID here...")
                 )
             ]
@@ -212,6 +249,7 @@ def add_step(data):
 
     if data['data']['custom_id'] == "p2_type_select":
         session.add_type = data['data']['values'][0]
+        session.phase = 2 # if there was an error message from before, we want to make sure it goes away when they change the type.
         session.save()
 
     if data['data']['custom_id'] == "p2_update_submit":
@@ -223,9 +261,7 @@ def add_step(data):
         # kickoff prefill and then set phase to 3, which is the loading state.
         session.phase = 3
         session.save()
-        discord_user_id = data['member']['user']['id']
-        discord_user_name_hint = data['member']['user'].get('global_name') or data['member']['user']['username']
-        user = get_or_create_discord_user(discord_user_id, discord_user_name_hint)
+        user = session.user
         club = get_club_from_guild_id(data['guild']['id'])
         go_to_prepost = data['data']['custom_id'] == "p2_new_submit_edit"
         # make a prefill object
@@ -239,12 +275,42 @@ def add_step(data):
         )
         run_prefill_v2(prefill.id, session.id)
 
+    if data['data']['custom_id'] == "update_modal":
+        # they submitted the modal to update.
+        level_id = data['data']['components'][1]['component']['value']
+        level = RDLevel.objects.filter(id=level_id).first()
+        user = session.user
+        club = get_club_from_guild_id(data['guild']['id'])
+        ok_to_proceed = True
+        if not level:
+            session.phase = 5  # error state, the level id they entered does not exist.
+            session.save()
+            ok_to_proceed = False
+        if not user.has_perm('cafe.change_rdlevel', level):
+            session.phase = 6  # error state, they don't have permission to edit this level.
+            session.save()
+            ok_to_proceed = False
+        if ok_to_proceed:
+            # make a prefill object
+            prefill = RDLevelPrefillResult.objects.create(
+                url=session.selected_attachment_url,
+                version=PREFILL_VERSION,
+                user=user,
+                prefill_type="update",
+                level=level,
+                club=club,
+                go_to_prepost=False
+            )
+            run_prefill_v2(prefill.id, session.id)
+        
+
     return JsonResponse({
         "type": ResponseType.UPDATE_ORIGINAL_MESSAGE.value,
         **render_add_session(session)
     })
 
 def _add(data, check_user_is_poster):
+    "Legacy entry point. TODO remove this"
     club = get_club_from_guild_id(data['guild']['id'])
     
     if not club:
@@ -297,8 +363,7 @@ def _add(data, check_user_is_poster):
     return ephemeral_response(content)
 
 def add(data):
-    return add_v2(data)
-    # return _add(data, check_user_is_poster=True)
+    return add_v2(data, check_user_is_poster=True)
 
 def add_delegated(data):
-    return _add(data, check_user_is_poster=False)
+    return add_v2(data, check_user_is_poster=False)

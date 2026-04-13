@@ -10,6 +10,10 @@ class AddSession(models.Model):
     # this is equal to the interaction ID from Discord, which is guaranteed to be unique, so we can use it as the PK.
     id = models.TextField(primary_key=True)
 
+    # user who will be credited as the submitter of the level being added.
+    # nb: this may not be the user that initiated the add session, e.g. delegated scenario
+    user = models.ForeignKey("cafe.User", on_delete=models.CASCADE)
+
     # application_id = DISCORD_CLIENT_ID env
 
     # token used to send followup messages/interactions to discord, valid for 15 minutes after the initial interaction is received

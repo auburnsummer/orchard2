@@ -80,8 +80,30 @@ def run_prefill_v2(prefill_id: str, session_id: str):
     # then we need to report back to the session
     prefill_result = RDLevelPrefillResult.objects.get(id=prefill_id)
     session = AddSession.objects.get(id=session_id)
+
+    update_ok = True
+    # if it's an update we need to actually do the update, since in the v2 flow they've already selected the level they want to update.
+    if prefill_result.prefill_type == "update" and prefill_result.user.has_perm('cafe.change_rdlevel', prefill_result.level):
+        sha1 = prefill_result.data.get('sha1')
+        duplicate = RDLevel.objects.filter(sha1=sha1).first()
+        if duplicate:
+            session.phase = 7 # error state, a level with the same sha1 already exists.
+            prefill_result.level = duplicate
+            prefill_result.save()
+            update_ok = False
+        else:
+            if prefill_result.data['icon_url'] is None:
+                prefill_result.data['icon_url'] = ''
+            for key, value in prefill_result.data.items():
+                setattr(prefill_result.level, key, value)
+            # if it's NR'ed, bump it back to pending
+            if prefill_result.level.approval == -1:
+                prefill_result.level.approval = 0
+            prefill_result.level.save()
+
     session.prefill = prefill_result
-    session.phase = 4
+    if update_ok:
+        session.phase = 4
     session.save()
     with httpx.Client() as client:
         url = f"https://discord.com/api/v10/webhooks/{DISCORD_CLIENT_ID}/{session.interaction_token}/messages/@original"

@@ -14,5 +14,6 @@ HANDLERS = {
 }
 
 MESSAGE_COMPONENT_HANDLERS = {
-    "Add to Rhythm Café": add_step
+    "Add to Rhythm Café": add_step,
+    "Add to Rhythm Café (delegated)": add_step,
 }
