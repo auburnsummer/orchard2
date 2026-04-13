@@ -34,7 +34,6 @@ from .views.discord_bot.entry import entry
 from .views.rdlevels.delete_rdlevel import delete_rdlevel
 from .views.rdlevels.edit_rdlevel import edit_rdlevel
 
-from .views.rdlevels.prefill.prefill_stage_one import prefill_stage_one
 from .views.rdlevels.prefill.prefill_stage_two import prefill_stage_two
 from .views.rdlevels.view_rdlevel import view_rdlevel
 
@@ -68,7 +67,6 @@ urlpatterns = [
     path("groups/<club_id>/settings/members/<user_id>/delete/", delete_membership, name="club_settings_delete_membership"),
     path("groups/<club_id>/settings/connections/discord/", connected_discords, name="club_settings_connected_discords"),
 
-    path("levels/add/<code>/", prefill_stage_one, name="level_portal"),
     path("levels/from_prefill/<prefill_id>/", prefill_stage_two, name="level_from_prefill"),
     path("levels/<level_id>/", view_rdlevel, name="level_view"),
     path("levels/<level_id>/edit/", edit_rdlevel, name="level_edit"),
