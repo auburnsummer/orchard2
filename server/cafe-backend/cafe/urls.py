@@ -15,6 +15,7 @@ from .views.index import index
 from .views.accounts.profile.index import profile  
 from .views.accounts.profile.profile_settings import settings as profile_settings
 from .views.accounts.profile.profile_clubs import profile_clubs
+from .views.accounts.profile.profile_levels import profile_levels
 from .views.accounts.profile.api_key import api_key_view
 from .views.clubs.create_club import create_club
 from .views.rdlevels.search_levels import search_levels, search_levels_api
@@ -33,7 +34,6 @@ from .views.discord_bot.entry import entry
 from .views.rdlevels.delete_rdlevel import delete_rdlevel
 from .views.rdlevels.edit_rdlevel import edit_rdlevel
 
-from .views.rdlevels.prefill.prefill_stage_one import prefill_stage_one
 from .views.rdlevels.prefill.prefill_stage_two import prefill_stage_two
 from .views.rdlevels.view_rdlevel import view_rdlevel
 
@@ -50,6 +50,7 @@ urlpatterns = [
     path("accounts/profile/", profile, name="profile"),
     path("accounts/profile/settings/", profile_settings, name="profile_settings"),
     path("accounts/profile/groups/", profile_clubs, name="profile_clubs"),
+    path("accounts/profile/levels/", profile_levels, name="profile_levels"),
     path("accounts/profile/api-key/", api_key_view, name="profile_api_key"),
     path("accounts/profile/delete/", profile_delete_account, name="profile_delete_account"),
 
@@ -66,7 +67,6 @@ urlpatterns = [
     path("groups/<club_id>/settings/members/<user_id>/delete/", delete_membership, name="club_settings_delete_membership"),
     path("groups/<club_id>/settings/connections/discord/", connected_discords, name="club_settings_connected_discords"),
 
-    path("levels/add/<code>/", prefill_stage_one, name="level_portal"),
     path("levels/from_prefill/<prefill_id>/", prefill_stage_two, name="level_from_prefill"),
     path("levels/<level_id>/", view_rdlevel, name="level_view"),
     path("levels/<level_id>/edit/", edit_rdlevel, name="level_edit"),

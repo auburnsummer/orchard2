@@ -21,11 +21,11 @@ class RDLevelPrefillResult(RulesModel):
     version = models.IntegerField()
     # type of prefill that was run.
     prefill_type = models.CharField(max_length=100)
-    # true if we are going to the prepost screen before making the level.
+    # true if we are going to the prepost screen before making the level. no effect is prefill_type is "update".
     go_to_prepost = models.BooleanField(default=True)
-    # if we are NOT going to the prepost screen (i.e. `go_to_prepost` is False), then we will have
-    # already made a level after run_prefill finishes.
-    # this property points to the level that was just created by the prefill if this is the case.
+    # if prefill_type is "new" AND go_to_preopost is False, this is the newly created level.
+    # if prefill_type is "update", this is the level being updated.
+    # if prefill_type is "new" AND go_to_prepost is True, this will be null until the level is created/updated after the prepost screen.
     level = models.ForeignKey(to="cafe.RDLevel", blank=True, null=True, default=None, on_delete=models.CASCADE)
     # is set to True when the prefill is ready to be used (data has been populated)
     ready = models.BooleanField(default=False)

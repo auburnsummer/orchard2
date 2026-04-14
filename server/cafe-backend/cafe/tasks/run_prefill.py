@@ -10,6 +10,7 @@ from django.db import transaction
 from vitals import vitals, vitals_quick
 from huey.contrib.djhuey import db_periodic_task, db_task, on_commit_task
 import httpx
+from cafe.models.add_session import AddSession, AddSessionPhase
 from cafe.models.rdlevels.prefill import RDLevelPrefillResult
 from asgiref.sync import async_to_sync
 from vitals.msgspec_schema import VitalsLevel, VitalsLevelImmutable
@@ -19,7 +20,7 @@ import sentry_sdk
 from django.db import IntegrityError
 
 from cafe.models.rdlevels.rdlevel import RDLevel
-from orchard.settings import S3_API_URL, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY, S3_REGION, S3_PUBLIC_CDN_URL
+from orchard.settings import DISCORD_CLIENT_ID, S3_API_URL, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY, S3_REGION, S3_PUBLIC_CDN_URL
 
 class UploadFilesURLs(NamedTuple):
     rdzip_url: str
@@ -71,6 +72,43 @@ async def upload_files(level: VitalsLevel | VitalsLevelImmutable, f: BufferedRan
             thumb_url
         )
 
+@db_task(priority=200)
+def run_prefill_v2(prefill_id: str, session_id: str):
+    from cafe.views.discord_bot.handlers.add import render_add_session
+
+    run_prefill.call_local(prefill_id)
+    # then we need to report back to the session
+    prefill_result = RDLevelPrefillResult.objects.get(id=prefill_id)
+    session = AddSession.objects.get(id=session_id)
+
+    update_ok = True
+    # if it's an update we need to actually do the update, since in the v2 flow they've already selected the level they want to update.
+    if prefill_result.prefill_type == "update" and prefill_result.user.has_perm('cafe.change_rdlevel', prefill_result.level):
+        sha1 = prefill_result.data.get('sha1')
+        duplicate = RDLevel.objects.filter(sha1=sha1).first()
+        if duplicate:
+            session.phase = AddSessionPhase.ERROR_DUPLICATE
+            prefill_result.level = duplicate
+            prefill_result.save()
+            update_ok = False
+        else:
+            if prefill_result.data['icon_url'] is None:
+                prefill_result.data['icon_url'] = ''
+            for key, value in prefill_result.data.items():
+                setattr(prefill_result.level, key, value)
+            # if it's NR'ed, bump it back to pending
+            if prefill_result.level.approval == -1:
+                prefill_result.level.approval = 0
+            prefill_result.level.save()
+
+    session.prefill = prefill_result
+    if update_ok:
+        session.phase = AddSessionPhase.COMPLETE
+    session.save()
+    with httpx.Client() as client:
+        url = f"https://discord.com/api/v10/webhooks/{DISCORD_CLIENT_ID}/{session.interaction_token}/messages/@original"
+        payload = render_add_session(session)['data']
+        client.patch(url, json=payload)
 
 @db_task(priority=200)
 def run_prefill(prefill_id: str):

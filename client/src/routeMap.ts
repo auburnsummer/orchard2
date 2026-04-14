@@ -7,7 +7,6 @@ import { LevelEdit } from "./views/Level/LevelEdit";
 import { LevelView } from "./views/Level/LevelView/LevelView";
 import { LevelSearch } from "./views/Level/LevelSearch/LevelSearch";
 import { LevelAddFromPrefill } from "./views/LevelAdd/LevelAddFromPrefill/LevelAddFromPrefill";
-import { LevelAddTypeSelect } from "./views/LevelAdd/LevelAddTypeSelect";
 import { ProfileClubsView } from "./views/Profile/ProfileClubsView";
 import { ProfileIndexView } from "./views/Profile/ProfileIndexView";
 import { ProfileSettingsView } from "./views/Profile/ProfileSettingsView";
@@ -52,7 +51,6 @@ export const routeMap: { [key: string]: React.FunctionComponent<any> } = {
 
   "cafe:redeem_invite": ClubSettingsRedeemInvite,
 
-  "cafe:level_portal": LevelAddTypeSelect,
   "cafe:level_from_prefill": LevelAddFromPrefill,
   "cafe:level_search": LevelSearch,
   "cafe:level_view": LevelView,
