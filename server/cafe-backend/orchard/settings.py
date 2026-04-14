@@ -32,13 +32,15 @@ else:
 
 DEBUG = os.environ.get('DEBUG', 'false').lower() == 'true'
 
-DOMAIN_URL = os.environ.get('DOMAIN_URL', '')
+# Supports a single URL or a comma-separated list, e.g. "https://a.com,https://b.com"
+_domain_urls = [u.strip() for u in os.environ.get('DOMAIN_URL', '').split(',') if u.strip()]
+DOMAIN_URL = _domain_urls[0] if _domain_urls else ''
 
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https' if DOMAIN_URL.startswith('https://') else 'http'
 
 # host SHOULD be restricted in the reverse proxy layer
-ALLOWED_HOSTS = [DOMAIN_URL.replace("https://", "").replace("http://", "")]
-CSRF_TRUSTED_ORIGINS = [DOMAIN_URL]
+ALLOWED_HOSTS = [u.replace("https://", "").replace("http://", "") for u in _domain_urls]
+CSRF_TRUSTED_ORIGINS = _domain_urls
 
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = False
@@ -114,7 +116,6 @@ DISCORD_PUBLIC_KEY = os.environ.get('DISCORD_PUBLIC_KEY', '')
 DISCORD_BOT_TOKEN = os.environ.get('DISCORD_BOT_TOKEN', '')
 DISCORD_CLIENT_ID = os.environ.get('DISCORD_CLIENT_ID', '')
 DISCORD_CLIENT_SECRET = os.environ.get('DISCORD_CLIENT_SECRET', '')
-DOMAIN_URL = os.environ.get('DOMAIN_URL', '')
 
 TYPESENSE_API_KEY = os.environ.get('TYPESENSE_API_KEY', '')
 TYPESENSE_API_HOST = os.environ.get('TYPESENSE_API_HOST', '')

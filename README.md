@@ -1,7 +1,9 @@
 # Orchard 2
 
-This is the new version of rhythm.cafe, in development.
+**O**rganised **R**epository of **Cha**rts for **R**hythm **D**octor
 
-> Want to take a peek? https://v2.rhythm.cafe (lots still WIP)
+...2!
 
-I'll have more detailed instructions on how to run it here once it reaches an MVP phase.
+This is the codebase for rhythm.cafe.
+
+See [INSTALL.md](./docs/INSTALL.md) for running it locally.
