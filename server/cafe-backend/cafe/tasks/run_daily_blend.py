@@ -62,8 +62,8 @@ def run_daily_blend_task(force: bool = False):
 
     blend_blend(blend)
 
-# at 5:00 AM GMT every day, run the task to blend the daily blend
-# actually 5:01 to be safe, since the blend updates at 5:00 AM GMT and we want to make sure we get the new blend
-@periodic_task(crontab(hour=5, minute=1, strict=True), priority=200, expires=3600)
+# at 4:00 AM GMT every day, run the task to blend the daily blend
+# actually 4:01 to be safe, since the blend updates at 4:00 AM GMT and we want to make sure we get the new blend
+@periodic_task(crontab(hour=4, minute=1, strict=True), priority=200, expires=3600)
 def daily_blend_schedule():
     run_daily_blend_task(False)
