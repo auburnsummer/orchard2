@@ -72,6 +72,7 @@ def test_discord_bot_entry_unknown_command(client_with_discord_key):
     
     command_payload = {
         'type': 2,
+        'authorizing_integration_owners': {'0': '123456'},
         'data': {
             'name': 'nonexistent_command'
         }
@@ -92,7 +93,7 @@ def test_discord_bot_entry_unknown_type(client_with_discord_key):
     """Test handling of unknown interaction type."""
     client, private_key = client_with_discord_key
     
-    unknown_payload = {'type': 99}  # Unknown type
+    unknown_payload = {'type': 99, 'authorizing_integration_owners': {'0': '123456'}}  # Unknown type
     request_data = create_discord_request(unknown_payload, private_key)
     
     response = client.post('/discord_interactions/', **request_data)

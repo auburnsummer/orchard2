@@ -10,6 +10,7 @@ def test_version_returns_the_version(client_with_discord_key):
         },
         "type": 2,
         "version": 1,
+        "authorizing_integration_owners": {"0": "123456"},
     }
     req = create_discord_request(command_data, private_key)
     response = client.post('/discord_interactions/', **req)

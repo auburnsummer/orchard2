@@ -19,6 +19,7 @@ def make_discord_body(
         "token": "test_interaction_token",
         "version": 1,
         "guild": {"id": guild_id},
+        "authorizing_integration_owners": {"0": guild_id},
         "data": {
             "id": "1289938243097333825",
             "name": name,
@@ -57,6 +58,7 @@ def make_component_interaction(session_id, guild_id, custom_id, values=None, del
         "id": str(uuid.uuid4()),
         "token": "test_followup_token",
         "guild": {"id": guild_id},
+        "authorizing_integration_owners": {"0": guild_id},
         "message": {
             "interaction": {
                 "id": session_id,
@@ -81,6 +83,7 @@ def make_modal_submit(session_id, guild_id, level_id_value, delegated=False):
         "id": str(uuid.uuid4()),
         "token": "test_modal_token",
         "guild": {"id": guild_id},
+        "authorizing_integration_owners": {"0": guild_id},
         "message": {
             "interaction": {
                 "id": session_id,
