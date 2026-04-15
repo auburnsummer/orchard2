@@ -1,3 +1,4 @@
+from ast import If
 import json
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -41,6 +42,15 @@ def entry(request):
         return JsonResponse({
             "type": ResponseType.PONG.value
         })
+    
+    # check if it's installed in a user or guild context. we should only support guild context.
+    authorizing_integration_owners = data["authorizing_integration_owners"]
+    # If the key is GUILD_INSTALL ("0"), the value depends on the source of the interaction:
+    # The value will be the guild ID if the interaction is triggered from a server
+    # The value will be "0" if the interaction is triggered from a DM with the app’s bot user
+    # If the key is USER_INSTALL ("1"), the value will be the ID of the authorizing user
+    if "1" in authorizing_integration_owners.keys():
+        return HttpResponseUnauthorized('App is installed as a user.')
     
     # commands.
     if data['type'] == InteractionType.APPLICATION_COMMAND.value:
