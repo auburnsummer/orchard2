@@ -21,7 +21,6 @@ import { Checkbox } from "./ui/Checkbox";
 const CHECKBOXES = [
   ["single_player", "Single Player"],
   ["two_player", "Two Player"],
-  ["seizure_warning", "Seizure Warning"],
   ["is_private", "Private (hidden from search)"]
 ] as const;
 

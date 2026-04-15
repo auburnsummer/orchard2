@@ -8,7 +8,6 @@ class VitalsLevelBaseMutable(msgspec.Struct):
     artist: str
     artist_tokens: Annotated[List[str], msgspec.Meta(min_length=1)]
     song: Annotated[str, msgspec.Meta(min_length=1)]
-    seizure_warning: bool
     description: str
     hue: float
     authors: Annotated[List[str], msgspec.Meta(min_length=1)]
@@ -52,6 +51,7 @@ class VitalsLevelBase(VitalsLevelBaseMutable):
     """
     msgspec doesn't support multiple inheritance, so we have to repeat the fields
     """
+    seizure_warning: bool
     sha1: str
     rdlevel_sha1: str
     is_animated: bool
