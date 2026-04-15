@@ -50,7 +50,7 @@ def entry(request):
     # The value will be "0" if the interaction is triggered from a DM with the app’s bot user
     # If the key is USER_INSTALL ("1"), the value will be the ID of the authorizing user
     if "1" in authorizing_integration_owners.keys():
-        return HttpResponseUnauthorized('App is installed as a user.')
+        return ephemeral_response("This bot does not support usermode installation.")
     
     # commands.
     if data['type'] == InteractionType.APPLICATION_COMMAND.value:
