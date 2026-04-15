@@ -3,20 +3,22 @@ from django.utils import timezone
 from datetime import timedelta
 from cafe.models.rdlevels.rdlevel import RDLevel
 
+BLEND_CUTOFF_HOUR = 4  # 4:00 AM GMT cutoff for daily blend updates
+
 def get_blend_date():
     """
-    Get the current blend date based on 5:00 AM GMT cutoff.
-    The blended level updates at 0500 GMT, so before that time,
+    Get the current blend date based on 4:00 AM GMT cutoff.
+    The blended level updates at 0400 GMT, so before that time,
     the "current" blend date is still yesterday.
     """
     now_utc = timezone.now()
-    cutoff_hour = 5  # 5:00 AM GMT
+    cutoff_hour = BLEND_CUTOFF_HOUR
     
     if now_utc.hour < cutoff_hour:
-        # Before 5:00 AM GMT, use yesterday's date
+        # Before 4:00 AM GMT, use yesterday's date
         return (now_utc - timedelta(days=1)).date()
     else:
-        # After 5:00 AM GMT, use today's date
+        # After 4:00 AM GMT, use today's date
         return now_utc.date()
 
 def get_todays_blend():

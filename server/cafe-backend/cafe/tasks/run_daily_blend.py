@@ -64,6 +64,7 @@ def run_daily_blend_task(force: bool = False):
 
 # at 4:00 AM GMT every day, run the task to blend the daily blend
 # actually 4:01 to be safe, since the blend updates at 4:00 AM GMT and we want to make sure we get the new blend
+# NOTE TO AUBURN: IF YOU EDIT THIS EDIT get_blend_date IN cafe/models/rdlevels/daily_blend.py TO MATCH THE NEW TIME
 @periodic_task(crontab(hour=4, minute=1, strict=True), priority=200, expires=3600)
 def daily_blend_schedule():
     run_daily_blend_task(False)
