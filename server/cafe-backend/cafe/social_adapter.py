@@ -10,6 +10,12 @@ class CafeSocialAccountAdapter(DefaultSocialAccountAdapter):
 
     def save_user(self, request, sociallogin, form=None):
         user = super().save_user(request, sociallogin, form)
-        user.display_name = sociallogin.account.extra_data.get('global_name')
+        extra_data = sociallogin.account.extra_data
+        if 'global_name' in extra_data and extra_data['global_name']:
+            user.display_name = extra_data['global_name']
+        elif 'username' in extra_data and extra_data['username']:
+            user.display_name = extra_data['username']
+        else:
+            user.display_name = "Unknown"
         user.save()
 
