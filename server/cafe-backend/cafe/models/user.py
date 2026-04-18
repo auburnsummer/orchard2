@@ -153,8 +153,7 @@ class User(AbstractUser):
     def to_dict(self):
         return {
             "id": self.id,
-            "displayName": self.get_short_name(),
-            "avatarURL": try_get_avatar(self),
+            "displayName": self.get_short_name()
         }
 
     objects = CafeUserManager()

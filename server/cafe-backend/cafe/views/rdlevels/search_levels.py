@@ -275,7 +275,7 @@ def _execute_search(request: HttpRequest):
     for level_id in (hit['document']['id'] for hit in search_results['hits']):
         try:
             # this is fine! https://www.sqlite.org/np1queryprob.html
-            rdlevel = RDLevel.objects.get(id=level_id)
+            rdlevel = RDLevel.objects.select_related('submitter', 'club').get(id=level_id)
             rdlevels.append(rdlevel)
         except RDLevel.DoesNotExist:
             # did the call to delete from typesense fail?

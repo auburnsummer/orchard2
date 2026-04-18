@@ -72,8 +72,6 @@ const EXAMPLE_LEVEL: RDLevel = {
   submitter: {
     id: "uH5kdCcc",
     displayName: "auburn",
-    avatarURL:
-      "https://cdn.discordapp.com/avatars/297727909609603083/a8bcbcca3023d96ecdfa68be0f5a3d75.png",
   },
   club: { id: "cpharmacy", name: "Peer Reviewers" },
   approval: 0,
