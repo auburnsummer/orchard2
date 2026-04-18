@@ -33,6 +33,7 @@ from .views.login import login
 from .views.discord_bot.entry import entry
 from .views.rdlevels.delete_rdlevel import delete_rdlevel
 from .views.rdlevels.edit_rdlevel import edit_rdlevel
+from .views.rdlevels.download_rdlevel import download_rdlevel
 
 from .views.rdlevels.prefill.prefill_stage_two import prefill_stage_two
 from .views.rdlevels.view_rdlevel import view_rdlevel
@@ -71,6 +72,7 @@ urlpatterns = [
     path("levels/<level_id>/", view_rdlevel, name="level_view"),
     path("levels/<level_id>/edit/", edit_rdlevel, name="level_edit"),
     path("levels/<level_id>/delete/", delete_rdlevel, name="level_delete"),
+    path("levels/<level_id>/download/", download_rdlevel, name="level_download"),
     path("levels/", search_levels, name="level_search"),
 
     path("peer-review/", pr_main, name="peer_review_main"),

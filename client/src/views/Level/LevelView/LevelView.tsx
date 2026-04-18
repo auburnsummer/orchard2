@@ -17,7 +17,7 @@ import { useClipboard, useDisclosure } from "@mantine/hooks";
 import { Form } from "@cafe/minibridge/components/Form";
 import { Link } from "@cafe/minibridge/components/Link";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
-import { DIFFICULTY_STRINGS, getRdzipDownloadUrl } from "@cafe/utils/constants";
+import { DIFFICULTY_STRINGS, getLevelDownloadUrl } from "@cafe/utils/constants";
 import { CopyIconButton } from "@cafe/components/CopyIconButton";
 import { ConjunctionList } from "@cafe/components/ConjunctionList";
 import { Button } from "@cafe/components/ui/Button";
@@ -62,7 +62,7 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
 
   const canPeerReview = user.authenticated && user.is_peer_reviewer;
 
-  const downloadUrl = getRdzipDownloadUrl(rdlevel);
+  const downloadUrl = getLevelDownloadUrl(rdlevel);
 
   return (
     <Shell>
