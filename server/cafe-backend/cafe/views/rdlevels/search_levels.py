@@ -271,15 +271,20 @@ def _execute_search(request: HttpRequest):
     typesense_client = get_typesense_client()
     search_results = typesense_client.collections[RDLEVEL_ALIAS_NAME].documents.search(filter_opts)
 
+    hit_ids = [hit['document']['id'] for hit in search_results['hits']]
+    rdlevels_by_id = {
+        rdlevel.id: rdlevel
+        for rdlevel in RDLevel.objects.select_related('submitter', 'club').filter(id__in=hit_ids)
+    }
+    # preserve Typesense sort order
     rdlevels: list[RDLevel] = []
-    for level_id in (hit['document']['id'] for hit in search_results['hits']):
-        try:
-            # this is fine! https://www.sqlite.org/np1queryprob.html
-            rdlevel = RDLevel.objects.select_related('submitter', 'club').get(id=level_id)
-            rdlevels.append(rdlevel)
-        except RDLevel.DoesNotExist:
-            # did the call to delete from typesense fail?
-            # we should try to sync to typesense again
+    for level_id in hit_ids:
+        if level_id in rdlevels_by_id:
+            rdlevels.append(rdlevels_by_id[level_id])
+        else:
+            # if the level is not found in the DB, it was deleted but still in Typesense?
+            # this is either: 1. deleted recently and hasn't synced or 2: something failed in the sync.
+            # in either case, remove it from Typesense to avoid showing deleted levels in search results.
             sync_level_to_typesense(level_id)
 
     levels = [
