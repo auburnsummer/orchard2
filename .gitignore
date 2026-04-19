@@ -210,3 +210,5 @@ typesense-server
 server/cafe-backend/staticfiles
 
 rdprt-12.html
+
+combined.db
