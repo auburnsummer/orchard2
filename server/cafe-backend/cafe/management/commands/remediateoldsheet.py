@@ -10,6 +10,7 @@ from loguru import logger
 
 from cafe.models import RDLevel
 from cafe.models.rdlevels.tempuser import get_or_create_discord_user
+from cafe.models.user import User
 
 DB_URL = "https://api2.rhythm.cafe/datasette/combined.db"
 
@@ -100,7 +101,7 @@ class Command(BaseCommand):
                 "SELECT sha1, url FROM combined WHERE source = 'yeoldesheet'"
             ).fetchall()
 
-            updated = skipped_no_att = skipped_not_found = skipped_no_level = already_correct = 0
+            updated = skipped_no_att = skipped_not_found = skipped_no_level = not_steward = already_correct = 0
 
             for row in rows:
                 sha1 = row['sha1']
@@ -126,6 +127,16 @@ class Command(BaseCommand):
                     skipped_no_level += 1
                     continue
 
+                steward_user = User.objects.get(id="usteward")
+
+                if level.submitter != steward_user:
+                    logger.warning(
+                        f"Level {level.id} ({level.song!r}) has submitter {level.submitter_id} "
+                        f"instead of steward, skipping (url: {url})"
+                    )
+                    not_steward += 1
+                    continue
+
                 user = get_or_create_discord_user(discord_user_id, display_name)
 
                 if level.submitter_id == user.id:
@@ -147,7 +158,8 @@ class Command(BaseCommand):
                 f"Done. updated={updated} already_correct={already_correct} "
                 f"skipped_no_attachment_id={skipped_no_att} "
                 f"skipped_not_in_json={skipped_not_found} "
-                f"skipped_level_not_in_db={skipped_no_level}"
+                f"skipped_level_not_in_db={skipped_no_level} "
+                f"skipped_not_steward={not_steward}"
             )
 
         if db_path:
