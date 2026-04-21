@@ -36,7 +36,7 @@ export function TagInput({ legend, values, onChange, allowBlank = true, classNam
     }
   }, [focusIndex]);
   
-  const hasBlankValues = !allowBlank && internalValues.some((v) => v.trim() !== "");
+  const hasBlankValues = internalValues.some((v) => v.trim() == "");
 
   const emitChanges = (newValues: string[]) => {
     setInternalValues(newValues);

@@ -111,12 +111,12 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
                     <ConjunctionList
                       items={rdlevel.artist_tokens}
                       elementRender={(v) => (
-                        <Words variant="muted" className="text-sm">
+                        <Words variant="muted" className="text-sm whitespace-pre leading-4">
                           {v}
                         </Words>
                       )}
                       literalRender={(v) => (
-                        <Words variant="muted" className="text-sm">
+                        <Words variant="muted" className="text-sm whitespace-pre leading-4">
                           {v}
                         </Words>
                       )}
