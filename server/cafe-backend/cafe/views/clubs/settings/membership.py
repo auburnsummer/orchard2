@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect
 from django.forms import ModelForm
-from django_bridge.response import Response
+from cafe.bridge.response import Response
 from rules.contrib.views import permission_required
 
 from django.urls import reverse

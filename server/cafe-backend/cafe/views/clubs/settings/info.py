@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django_bridge.response import Response
+from cafe.bridge.response import Response
 from rules.contrib.views import permission_required, objectgetter
 
 from cafe.models import Club

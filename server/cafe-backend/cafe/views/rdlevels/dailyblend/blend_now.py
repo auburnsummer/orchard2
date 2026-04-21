@@ -4,7 +4,7 @@ from cafe.views.types import HttpRequest
 from rules.contrib.views import permission_required
 
 from django.contrib import messages
-from django_bridge.response import Response
+from cafe.bridge.response import Response
 
 @permission_required('cafe.blend_rdlevel')
 def blend_now(request: HttpRequest) -> JsonResponse:

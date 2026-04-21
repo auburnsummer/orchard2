@@ -12,7 +12,7 @@ from django.forms import Form, CharField
 
 from datetime import timedelta
 from django.contrib import messages
-from django_bridge.response import Response
+from cafe.bridge.response import Response
 
 from cafe.models import ClubMembership
 from cafe.models.discord_guild import DiscordGuild

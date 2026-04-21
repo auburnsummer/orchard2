@@ -10,7 +10,7 @@ from django.contrib import messages
 
 from cafe.models import ClubMembership
 from cafe.models.clubs.club_invite import ClubInvite
-from django_bridge.response import Response
+from cafe.bridge.response import Response
 
 
 class RedeemInviteView(View):

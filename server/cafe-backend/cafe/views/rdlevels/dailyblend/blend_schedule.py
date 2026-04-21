@@ -5,7 +5,7 @@ from cafe.views.types import HttpRequest
 from rules.contrib.views import permission_required
 from datetime import datetime
 
-from django_bridge.response import Response
+from cafe.bridge.response import Response
 from cafe.models.rdlevels.daily_blend import DailyBlend
 
 from django.contrib import messages

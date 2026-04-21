@@ -28,7 +28,7 @@ def client():
 def bridge_client():
     """
     Fixture to provide a test client with the X-Requested-With header.
-    This causes the django_bridge middleware to return JSON
+    This causes the bridge middleware to return JSON
     """
     from django.test import Client
     return Client(

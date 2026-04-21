@@ -1,6 +1,6 @@
 from django import forms
 from django.shortcuts import get_object_or_404, redirect
-from django_bridge.response import Response
+from cafe.bridge.response import Response
 
 from cafe.models.clubs.club import Club
 from cafe.models.rdlevels.rdlevel import RDLevel

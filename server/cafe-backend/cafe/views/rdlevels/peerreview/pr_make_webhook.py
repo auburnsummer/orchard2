@@ -3,7 +3,7 @@ from django import forms
 from django.conf import settings
 from django.contrib import messages
 from django.urls import reverse
-from django_bridge.response import Response
+from cafe.bridge.response import Response
 from rules.contrib.views import permission_required
 from cryptography.fernet import Fernet
 

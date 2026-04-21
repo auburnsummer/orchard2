@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.contrib import messages
 from django.utils.http import url_has_allowed_host_and_scheme
-from django_bridge.response import Response
+from cafe.bridge.response import Response
 from cafe.models import Club, ClubMembership
 from orchard.settings import DOMAIN_URL
 

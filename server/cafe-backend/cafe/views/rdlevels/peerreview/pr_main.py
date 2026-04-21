@@ -3,7 +3,7 @@ from cafe.views.types import HttpRequest
 from cafe.models.rdlevels.rdlevel import RDLevel
 from rules.contrib.views import objectgetter, permission_required
 
-from django_bridge.response import Response
+from cafe.bridge.response import Response
 
 @permission_required('cafe.peerreview_rdlevel')
 def pr_main(request: HttpRequest) -> JsonResponse:

@@ -4,7 +4,7 @@ from rules.contrib.views import permission_required, objectgetter
 from cafe.models import Club, ClubMembership
 from cafe.views.types import AuthenticatedHttpRequest
 
-from django_bridge.response import Response
+from cafe.bridge.response import Response
 
 @permission_required('cafe.view_member_of_club', fn=objectgetter(Club, 'club_id'))
 def members(request: AuthenticatedHttpRequest, club_id: str):

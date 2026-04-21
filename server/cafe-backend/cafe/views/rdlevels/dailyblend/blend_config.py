@@ -4,7 +4,7 @@ from cafe.models.rdlevels.daily_blend_configuration import DailyBlendConfigurati
 from cafe.views.types import HttpRequest
 from rules.contrib.views import permission_required
 
-from django_bridge.response import Response
+from cafe.bridge.response import Response
 
 from django.contrib import messages
 

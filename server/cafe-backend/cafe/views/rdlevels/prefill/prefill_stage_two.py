@@ -10,7 +10,7 @@ from cafe.views.rdlevels.common import AddLevelPayload
 from django.shortcuts import get_object_or_404, redirect
 from django import forms
 
-from django_bridge.response import Response
+from cafe.bridge.response import Response
 
 import msgspec
 
