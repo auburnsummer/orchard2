@@ -11,12 +11,21 @@ from django.templatetags.static import static
 
 from .response import BaseResponse, RedirectResponse
 
+BRIDGE_PARAM = "_bridge"
+
 
 class DjangoBridgeMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
+        is_bridge_request = BRIDGE_PARAM in request.GET
+
+        # Strip the _bridge param so view code never sees it
+        if is_bridge_request:
+            request.GET = request.GET.copy()
+            del request.GET[BRIDGE_PARAM]
+
         response = self.get_response(request)
 
         if isinstance(response, StreamingHttpResponse):
@@ -25,9 +34,8 @@ class DjangoBridgeMiddleware:
         if response.status_code == 301:
             return response
 
-        # If the request was made by Django Bridge
-        # (using `fetch()`, rather than a regular browser request)
-        if request.META.get("HTTP_X_REQUESTED_WITH") == "DjangoBridge":
+        # If the request was made via the bridge client
+        if is_bridge_request:
             # Convert redirect responses to a JSON response with a `redirect` status
             # This allows the client code to handle the redirect
             if response.status_code == 302:

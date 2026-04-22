@@ -5,7 +5,6 @@ import warnings
 from django.conf import settings
 from django.contrib import messages
 from django.http import JsonResponse
-from django.utils.cache import patch_cache_control
 from django.utils.html import conditional_escape
 from django.utils.module_loading import import_string
 
@@ -37,15 +36,6 @@ class BaseResponse(JsonResponse):
         }
         super().__init__(self.data, status=status)
         self["X-DjangoBridge-Action"] = self.action
-
-        # Make sure that Django Bridge responses are never cached by browsers
-        # We need to do this because Django Bridge responses are given on the same URLs that
-        # users would otherwise get HTML responses on if they visited those URLs
-        # directly.
-        # If a Django Bridge response is cached, there's a chance that a user could see the
-        # JSON document in their browser rather than a HTML page.
-        # This behaviour only seems to occur (intermittently) on Firefox.
-        patch_cache_control(self, no_store=True)
 
 
 class Response(BaseResponse):

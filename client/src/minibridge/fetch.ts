@@ -41,13 +41,20 @@ export type DjangoBridgeResponse =
   | ServerErrorResponse
   | NetworkErrorResponse;
 
+/**
+ * The server will respond with JSON if you give it _bridge=1, otherwise with HTML
+ */
+function bridgeUrl(url: string): string {
+  const u = new URL(url, window.location.origin);
+  u.searchParams.set("_bridge", "1");
+  return u.pathname + u.search + u.hash;
+}
+
 export async function djangoGet(url: string): Promise<DjangoBridgeResponse> {
   let response: Response;
 
-  const headers: HeadersInit = { "X-Requested-With": "DjangoBridge" };
-
   try {
-    response = await fetch(url, { headers });
+    response = await fetch(bridgeUrl(url));
   } catch (e) {
     return {
       action: "network-error",
@@ -74,12 +81,9 @@ export async function djangoPost(
 ): Promise<DjangoBridgeResponse> {
   let response: Response;
 
-  const headers: HeadersInit = { "X-Requested-With": "DjangoBridge" };
-
   try {
-    response = await fetch(url, {
+    response = await fetch(bridgeUrl(url), {
       method: "post",
-      headers,
       body: data,
     });
   } catch (e) {
