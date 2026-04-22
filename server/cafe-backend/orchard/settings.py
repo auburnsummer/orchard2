@@ -47,7 +47,6 @@ CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOW_HEADERS = (
     *default_headers,
-    "X-Requested-With"
 )
 
 AUTHENTICATION_BACKENDS = [

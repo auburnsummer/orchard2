@@ -24,18 +24,24 @@ def client():
     from django.test import Client
     return Client()
 
+class BridgeClient(Client):
+    """Test client that appends ?_bridge=1, causing the bridge middleware to return JSON."""
+
+    def _add_bridge_param(self, path):
+        sep = "&" if "?" in path else "?"
+        return f"{path}{sep}_bridge=1"
+
+    def get(self, path, *args, **kwargs):
+        return super().get(self._add_bridge_param(path), *args, **kwargs)
+
+    def post(self, path, *args, **kwargs):
+        return super().post(self._add_bridge_param(path), *args, **kwargs)
+
+
 @pytest.fixture
 def bridge_client():
-    """
-    Fixture to provide a test client with the X-Requested-With header.
-    This causes the bridge middleware to return JSON
-    """
-    from django.test import Client
-    return Client(
-        headers={
-            "X-Requested-With": "DjangoBridge"
-        }
-    )
+    """Fixture to provide a test client that goes through the bridge middleware."""
+    return BridgeClient()
 
 @pytest.fixture
 def user_with_no_clubs():
