@@ -1,5 +1,5 @@
 from allauth.account.decorators import login_required
-from django_bridge.response import Response
+from cafe.bridge.response import Response
 
 from django.forms import ModelForm
 from django.contrib import messages

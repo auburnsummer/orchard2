@@ -7,7 +7,7 @@ from rules.contrib.views import permission_required
 
 from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
 
-from django_bridge.response import Response
+from cafe.bridge.response import Response
 
 from django.contrib import messages
 

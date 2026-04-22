@@ -5,7 +5,7 @@ from cafe.models import Club
 from cafe.models.discord_guild import DiscordGuild
 from cafe.views.types import AuthenticatedHttpRequest
 
-from django_bridge.response import Response
+from cafe.bridge.response import Response
 
 @permission_required('cafe.view_member_of_club', fn=objectgetter(Club, 'club_id'))
 def connected_discords(request: AuthenticatedHttpRequest, club_id: str):

@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from django_bridge.response import Response
+from cafe.bridge.response import Response
 
 from cafe.models import RDLevel
 from cafe.views.types import HttpRequest

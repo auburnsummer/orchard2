@@ -1,6 +1,6 @@
 from django import forms
 from django.shortcuts import get_object_or_404
-from django_bridge.response import Response
+from cafe.bridge.response import Response
 from django.contrib import messages
 
 from cafe.models import RDLevel

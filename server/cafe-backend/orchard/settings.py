@@ -66,7 +66,6 @@ LOGIN_REDIRECT_URL = "/"
 
 INSTALLED_APPS = [
     'cafe',
-    'django_bridge',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -101,7 +100,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'hijack.middleware.HijackUserMiddleware',
-    'django_bridge.middleware.DjangoBridgeMiddleware',
+    'cafe.bridge.middleware.DjangoBridgeMiddleware',
     'allauth.account.middleware.AccountMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware'
 ]

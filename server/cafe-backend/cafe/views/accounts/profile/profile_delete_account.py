@@ -1,7 +1,7 @@
 from allauth.account.decorators import login_required
 from django import forms
 from django.shortcuts import redirect
-from django_bridge.response import Response
+from cafe.bridge.response import Response
 
 from cafe.models.clubs.club import Club
 from cafe.models.clubs.club_membership import ClubMembership

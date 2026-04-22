@@ -3,7 +3,7 @@ from django import forms
 from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect
-from django_bridge.response import Response
+from cafe.bridge.response import Response
 from rules.contrib.views import objectgetter, permission_required
 
 from cafe.models import RDLevel

@@ -1,5 +1,5 @@
 from django.http import HttpRequest, HttpResponse
-from django_bridge.response import Response
+from cafe.bridge.response import Response
 
 from cafe.models.rdlevels import daily_blend
 
