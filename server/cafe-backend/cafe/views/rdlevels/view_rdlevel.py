@@ -23,7 +23,7 @@ def view_rdlevel(request: HttpRequest, level_id: str):
             "title": title,
             "description": og_description,
             "image": request.build_absolute_uri(rdlevel.thumb_url),
-            "url": request.build_absolute_uri(reverse("cafe:level_download", args=[rdlevel.id])),
+            "url": request.build_absolute_uri(reverse("cafe:level_view", args=[rdlevel.id])),
             "type": "article",
             "site_name": f"Level by {', '.join(rdlevel.authors)}",
         },
