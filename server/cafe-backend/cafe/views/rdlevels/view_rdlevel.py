@@ -14,8 +14,9 @@ def view_rdlevel(request: HttpRequest, level_id: str):
         "can_edit": request.user.has_perm("cafe.change_rdlevel", rdlevel),
         "can_delete": request.user.has_perm("cafe.delete_rdlevel", rdlevel),
     }
-    title = f"{rdlevel.song} \u2014 {rdlevel.artist}"
-    og_description = rdlevel.description or f"By {', '.join(rdlevel.authors)}"
+    alt_title_frag = f"({rdlevel.song_alt})" if rdlevel.song_alt else ""
+    title = f"{rdlevel.song} {alt_title_frag} - {rdlevel.artist}"
+    og_description = rdlevel.description or ""
     metadata = Metadata(
         title=title,
         og={
@@ -23,7 +24,8 @@ def view_rdlevel(request: HttpRequest, level_id: str):
             "description": og_description,
             "image": request.build_absolute_uri(rdlevel.thumb_url),
             "url": request.build_absolute_uri(reverse("cafe:level_download", args=[rdlevel.id])),
-            "type": "website",
+            "type": "article",
+            "site_name": f"Level by {', '.join(rdlevel.authors)}",
         },
     )
     return Response(request, request.resolver_match.view_name, props, metadata=metadata)

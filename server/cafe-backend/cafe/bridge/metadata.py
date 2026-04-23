@@ -1,4 +1,4 @@
-from typing import NotRequired, TypedDict
+from typing import NotRequired, TypedDict, Literal
 
 
 # OpenGraph metadata — see https://ogp.me/
@@ -8,6 +8,7 @@ class OpenGraphMetadata(TypedDict, total=False):
     image: str
     url: str
     type: str
+    site_name: str
 
 
 class Metadata(TypedDict):
