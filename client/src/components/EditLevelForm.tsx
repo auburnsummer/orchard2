@@ -111,6 +111,19 @@ export function EditLevelForm({
               })
             }
           />
+          <TagInput
+            legend="Authors"
+            className="mt-2"
+            allowBlank={false}
+            values={level.authors}
+            onChange={(values) =>
+              setLevel((l) => {
+                if (values.length > 0) {
+                  l.authors = values;
+                }
+              })
+            }
+          />
           <Fieldset legend="BPM">
             <div className="flex flex-row items-end gap-6">
               <NumberInput

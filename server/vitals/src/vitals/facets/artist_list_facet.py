@@ -6,7 +6,6 @@ import re
 # Muse × Chrvches (note it's not the letter x, it's U+00D7 × MULTIPLICATION SIGN
 
 # note that for authors, we only store the list, but for artists, we still need to store the original string.
-from vitals.utils import try_dig
 from vitals.color_tagged_string import parse_color_tagged_string
 
 ARTIST_REGEX = r"\s*?(?:ft\.|feat\.|×|,)\s*?"
