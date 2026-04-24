@@ -139,10 +139,6 @@ export function DailyBlendConfiguration({
     return unicodeToBase64(JSON.stringify(preview));
   }, [jsonataResult]);
 
-  useEffect(() => {
-    console.log(jsonataResult);
-  }, [jsonataResult]);
-
   return (
     <Shell navbar={<DailyBlendNavbar />}>
       <title>Daily Blend Configuration | Rhythm Café</title>
