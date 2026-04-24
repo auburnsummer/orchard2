@@ -51,7 +51,7 @@ class RDLevel(RulesModel):
     description = models.TextField(blank=True)
 
     hue = models.FloatField(blank=False)
-    authors = models.JSONField(blank=False)
+    authors: models.JSONField[list[str], list[str]] = models.JSONField(blank=False)
 
     authors_raw = models.TextField(blank=False, default="")
     max_bpm = models.IntegerField(blank=False)
