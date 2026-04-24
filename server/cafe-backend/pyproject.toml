@@ -29,3 +29,8 @@ dependencies = [
     "django-cors-headers>=4.7.0",
     "jsonata-python>=0.6.1",
 ]
+
+[dependency-groups]
+dev = [
+    "django-stubs[compatible-mypy]>=6.0.3",
+]
