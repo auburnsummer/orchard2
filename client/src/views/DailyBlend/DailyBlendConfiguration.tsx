@@ -12,6 +12,7 @@ import jsonata from "jsonata";
 import { useEffect, useMemo, useState } from "react";
 import { RDLevel } from "@cafe/types/rdLevelBase";
 import { Alert } from "@cafe/components/ui/Alert";
+import { TextInput } from "@cafe/components/ui/TextInput";
 
 function unicodeToBase64(str: string): string {
   const utf8Bytes = new TextEncoder().encode(str);
@@ -84,25 +85,48 @@ export function DailyBlendConfiguration({
   const csrfInput = useCSRFTokenInput();
 
   const [jsonataScript, setJsonataScript] = useState(config.jsonata_script);
-
   const [jsonataResult, setJsonataResult] = useState<JsonataResult>({state: "idle"});
+
+  const [previewLevelId, setPreviewLevelId] = useState("");
+  const [previewLevel, setPreviewLevel] = useState<RDLevel | null>(EXAMPLE_LEVEL);
+
+  const onClickFetchLevel = async () => {
+    if (previewLevelId.trim() === "") {
+      setPreviewLevel(EXAMPLE_LEVEL);
+      return;
+    }
+    try {
+      const response = await fetch(`/api/levels/${previewLevelId}`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch level: ${response.status} ${response.statusText}`);
+      }
+      const levelData = await response.json();
+      setPreviewLevel(levelData);
+    } catch (error) {
+      console.error("Error fetching level:", error);
+      if (error instanceof Error) {
+        alert(`Error fetching level: ${error.message}`);
+      }
+    }
+  };
 
   useEffect(() => {
     (async () => {
         try {
         const exec = jsonata(jsonataScript);
-        const result = await exec.evaluate(EXAMPLE_LEVEL);
+        const result = await exec.evaluate(previewLevel);
             setJsonataResult({state: "success", result});
         } catch (e) {
             setJsonataResult({state: "error", error: e});
         }
     })();
-  }, [jsonataScript]);
+  }, [jsonataScript, previewLevel]);
 
   const previewData = useMemo(() => {
     if (jsonataResult.state !== "success") {
         return null;
     }
+    // format required by discohook
     const preview = {
         "version": "d2",
         "messages": [
@@ -113,6 +137,10 @@ export function DailyBlendConfiguration({
         ]
     }
     return unicodeToBase64(JSON.stringify(preview));
+  }, [jsonataResult]);
+
+  useEffect(() => {
+    console.log(jsonataResult);
   }, [jsonataResult]);
 
   return (
@@ -145,14 +173,26 @@ export function DailyBlendConfiguration({
             label="JSONata Script"
             rows={15}
           />
-          <Button
-            type="button"
-            onClick={() => {
-                navigator.clipboard.writeText(JSON.stringify(EXAMPLE_LEVEL, null, 2));
-            }}
-          >
-            Copy example JSON to Clipboard
-          </Button>
+          <div className="flex flex-row items-end gap-2 mt-2">
+            <TextInput
+              label="Preview Level ID"
+              placeholder="e.g. rCYFpsyZ"
+              value={previewLevelId}
+              onChange={(e) => setPreviewLevelId(e.target.value)}
+            />
+            <Button type="button" onClick={onClickFetchLevel}>
+              Fetch Level
+            </Button>
+            <Button
+              type="button"
+              onClick={() => {
+                  navigator.clipboard.writeText(JSON.stringify(previewLevel, null, 2));
+              }}
+              title="This is useful if you want to test externally, e.g. in the JSONata Exerciser (https://try.jsonata.org/)"
+            >
+              Copy JSON
+            </Button>
+          </div>
           {
             jsonataResult.state === "idle" ? null : jsonataResult.state === "error" ? (
               <Alert variant="error" className="mt-4">
@@ -160,6 +200,9 @@ export function DailyBlendConfiguration({
               </Alert>
             ) : (
               <iframe
+                className="mt-4"
+                width={500}
+                height={300}
                 src={`https://discohook.app/viewer?header=false&data=${previewData}`}
               >
 

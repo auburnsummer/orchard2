@@ -1,3 +1,4 @@
+from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from cafe.bridge.metadata import Metadata
@@ -28,4 +29,9 @@ def view_rdlevel(request: HttpRequest, level_id: str):
             "site_name": f"Level by {', '.join(rdlevel.authors)}",
         },
     )
-    return Response(request, request.resolver_match.view_name, props, metadata=metadata)
+    view_name = request.resolver_match.view_name if request.resolver_match else None
+    return Response(request, view_name, props, metadata=metadata)
+
+def view_rdlevel_api(request: HttpRequest, level_id: str):
+    rdlevel = get_object_or_404(RDLevel, id=level_id)
+    return JsonResponse(rdlevel.to_dict())

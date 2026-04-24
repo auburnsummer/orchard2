@@ -207,7 +207,7 @@ def get_typesense_filter_query(params: SearchLevelParams) -> str:
             parts.append(f"max_bpm:<={params.max_bpm}")
 
     if params.difficulties:
-        parts.append(f"difficulty:=[{','.join(map(str, params.difficulties))}]")
+        parts.append(f"difficulty:=[{','.join(str(d) for d in params.difficulties)}]")
 
     bool_params = [
         ("single_player", params.single_player),
@@ -316,7 +316,8 @@ def _execute_search(request: HttpRequest):
 
 def search_levels(request: HttpRequest):
     props = _execute_search(request)
-    return Response(request, request.resolver_match.view_name, props)
+    view_name = request.resolver_match.view_name if request.resolver_match else None
+    return Response(request, view_name, props)
 
 
 def search_levels_api(request: HttpRequest):
