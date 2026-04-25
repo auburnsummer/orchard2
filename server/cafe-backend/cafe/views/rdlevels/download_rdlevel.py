@@ -12,7 +12,7 @@ MAXIMUM_FILENAME_LENGTH = 123
 def get_filename_for_rdlevel(rdlevel: RDLevel) -> str:
     num_authors = len(rdlevel.authors)
     while num_authors > 0:
-        et_al_part = len(rdlevel.authors) == num_authors and "" or "et al."
+        et_al_part = "" if len(rdlevel.authors) == num_authors else "et al."
         proposed_filename = f"{rdlevel.song} - {', '.join(rdlevel.authors[:num_authors])} {et_al_part} {rdlevel.id}.rdzip"
 
         if len(proposed_filename) <= MAXIMUM_FILENAME_LENGTH:
