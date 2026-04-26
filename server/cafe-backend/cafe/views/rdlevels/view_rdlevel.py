@@ -35,3 +35,10 @@ def view_rdlevel(request: HttpRequest, level_id: str):
 def view_rdlevel_api(request: HttpRequest, level_id: str):
     rdlevel = get_object_or_404(RDLevel, id=level_id)
     return JsonResponse(rdlevel.to_dict())
+
+def todays_blend_api(request: HttpRequest):
+    from cafe.models.rdlevels.daily_blend import get_todays_blend
+    blend = get_todays_blend()
+    if blend is None:
+        return JsonResponse({"blend": None})
+    return JsonResponse({"blend": blend.to_dict()})

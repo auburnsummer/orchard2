@@ -36,7 +36,7 @@ from .views.rdlevels.edit_rdlevel import edit_rdlevel
 from .views.rdlevels.download_rdlevel import download_rdlevel
 
 from .views.rdlevels.prefill.prefill_stage_two import prefill_stage_two
-from .views.rdlevels.view_rdlevel import view_rdlevel, view_rdlevel_api
+from .views.rdlevels.view_rdlevel import view_rdlevel, view_rdlevel_api, todays_blend_api
 
 from .views.rdlevels.dailyblend.blend_main import blend_main
 
@@ -88,5 +88,6 @@ urlpatterns = [
 
     path("api/execute_webhook/<code>/", execute_webhook, name="execute_webhook"),
     path("api/levels/", search_levels_api, name="api_level_search"),
+    path('api/levels/todays-blend/', todays_blend_api, name="api_levels_todays_blend"),
     path("api/levels/<level_id>/", view_rdlevel_api, name="api_level_view"),
 ]
