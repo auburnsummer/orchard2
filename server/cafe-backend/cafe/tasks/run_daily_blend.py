@@ -9,7 +9,7 @@ from cafe.models.rdlevels.daily_blend import DailyBlend, get_blend_date
 from cafe.models.rdlevels.daily_blend_configuration import DailyBlendConfiguration
 from cafe.webhooks import is_allowed_webhook_url
 
-def todays_blend_or_pool():
+def todays_blend_or_pool() -> DailyBlend | None:
     today = get_blend_date()
     from cafe.models.rdlevels.daily_blend import DailyBlend
     try:
