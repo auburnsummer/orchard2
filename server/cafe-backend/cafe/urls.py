@@ -88,6 +88,6 @@ urlpatterns = [
 
     path("api/execute_webhook/<code>/", execute_webhook, name="execute_webhook"),
     path("api/levels/", search_levels_api, name="api_level_search"),
-    path('api/levels/todays-blend/', todays_blend_api, name="api_levels_todays_blend"),
+    path("api/levels/todays-blend/", todays_blend_api, name="api_levels_todays_blend"),
     path("api/levels/<level_id>/", view_rdlevel_api, name="api_level_view"),
 ]
