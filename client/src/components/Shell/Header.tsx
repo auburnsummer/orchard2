@@ -11,7 +11,6 @@ import { Avatar } from "../ui/Avatar";
 import { NavEntry } from "../ui/NavEntry";
 import { Logo } from "./Logo";
 import { SearchBar } from "./SearchBar";
-import { Button } from "../ui/Button";
 
 export function Header({ navbar }: { navbar?: React.ReactNode }) {
   const user = useUser();
