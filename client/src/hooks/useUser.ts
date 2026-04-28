@@ -1,7 +1,10 @@
 import React from "react";
 
+type ThemePreference = "light" | "dark" | "system";
+
 export type UnauthenticatedUser = {
   authenticated: false;
+  theme_preference: ThemePreference;
 };
 
 export type AuthenticatedUser = {
@@ -9,7 +12,7 @@ export type AuthenticatedUser = {
   id: string;
   displayName: string;
   avatarURL: string | null;
-  theme_preference: "light" | "dark" | "system";
+  theme_preference: ThemePreference;
   is_superuser: boolean;
   is_peer_reviewer: boolean;
 };

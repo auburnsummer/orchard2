@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faSliders } from "@fortawesome/free-solid-svg-icons";
 import { Menu, MenuButton, MenuItem, MenuItems, Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { useUser } from "@cafe/hooks/useUser";
@@ -11,6 +11,7 @@ import { Avatar } from "../ui/Avatar";
 import { NavEntry } from "../ui/NavEntry";
 import { Logo } from "./Logo";
 import { SearchBar } from "./SearchBar";
+import { Button } from "../ui/Button";
 
 export function Header({ navbar }: { navbar?: React.ReactNode }) {
   const user = useUser();
@@ -113,21 +114,28 @@ export function Header({ navbar }: { navbar?: React.ReactNode }) {
             </Menu>
           </>
         ) : (
-          <form
-            method="post"
-            action="/accounts/discord/login/"
-            className="flex"
-          >
-            <input type="hidden" name="next" value={location.pathname} />
-            {csrfInput}
-            <button
-              className="my-1 mr-3 flex items-center rounded-lg bg-violet-500 px-3 text-violet-50 hover:cursor-pointer hover:bg-violet-600"
-              type="submit"
+          <>
+            <form
+              method="post"
+              action="/accounts/discord/login/"
+              className="flex"
             >
-              <FontAwesomeIcon icon={faDiscord} className="mr-2" />
-              <span>Log in</span>
-            </button>
-          </form>
+              <input type="hidden" name="next" value={location.pathname} />
+              {csrfInput}
+              <button
+                className="my-1 mr-3 flex items-center rounded-lg bg-violet-500 px-3 text-violet-50 hover:cursor-pointer hover:bg-violet-600"
+                type="submit"
+              >
+                <FontAwesomeIcon icon={faDiscord} className="mr-2" />
+                <span>Log in</span>
+              </button>
+            </form>
+            <Link
+              href="/accounts/profile/settings/"
+              className="my-2 w-8 bg-violet-400 dark:bg-violet-500 text-violet-50 hover:bg-violet-500 flex items-center justify-center rounded-lg mr-2">
+              <FontAwesomeIcon title="Settings" icon={faSliders} />
+            </Link>
+          </>
         )}
       </div>
     </header>
