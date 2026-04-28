@@ -104,6 +104,8 @@ MIDDLEWARE = [
     'simple_history.middleware.HistoryRequestMiddleware'
 ]
 
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 365  # 365 days in seconds
+
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']

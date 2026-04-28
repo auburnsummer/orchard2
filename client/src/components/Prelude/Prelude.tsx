@@ -6,7 +6,7 @@ import { TooltipProvider } from "@cafe/hooks/useTooltip";
 
 export function Prelude({ children }: { children: ReactNode }) {
   const user = useUser();
-  const theme = user.authenticated ? user.theme_preference : "light";
+  const theme = user.theme_preference;
 
   useEffect(() => {
     if (theme === "dark") {

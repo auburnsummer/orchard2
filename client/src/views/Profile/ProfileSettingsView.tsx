@@ -2,7 +2,7 @@ import { Shell } from "@cafe/components/Shell/Shell";
 import { ProfileNavbar } from "./ProfileNavbar";
 
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
-import { useLoggedInUser } from "@cafe/hooks/useUser";
+import { useUser } from "@cafe/hooks/useUser";
 import { Form } from "@cafe/minibridge/components/Form";
 import { Surface } from "@cafe/components/ui/Surface";
 import { Words } from "@cafe/components/ui/Words";
@@ -11,25 +11,28 @@ import Select from "@cafe/components/ui/Select";
 import { Button } from "@cafe/components/ui/Button";
 
 export function ProfileSettingsView() {
-  const user = useLoggedInUser();
+  const user = useUser();
   const input = useCSRFTokenInput();
 
   return (
-    <Shell navbar={<ProfileNavbar />}>
+    <Shell navbar={user.authenticated && <ProfileNavbar />}>
       <title>Settings | Rhythm Café</title>
       <Surface className="m-3 p-6 flex-grow">
         <Words as="h2" variant="header">Settings</Words>
         <Form className="pt-2" method="post">
           {input}
           <div className="flex flex-col gap-2">
-            <TextInput
-              name="display_name"
-              label="Display name"
-              maxLength={150}
-              defaultValue={user.displayName}
-              className="max-w-64"
-            />
-
+            {
+              user.authenticated && (
+                <TextInput
+                  name="display_name"
+                  label="Display name"
+                  maxLength={150}
+                  defaultValue={user.displayName}
+                  className="max-w-64"
+                />
+              )
+            }
             <Select
               label="Theme"
               className="max-w-64"
@@ -55,6 +58,15 @@ export function ProfileSettingsView() {
             <Button type="submit" variant="primary" className="max-w-32 py-2 mt-4">Save</Button>
           </div>
         </Form>
+        {
+          !user.authenticated && (
+            <div className="mt-8">
+              <Words variant="muted" className="text-sm">
+                Note: when you are not logged in, settings are saved in a cookie.
+              </Words>
+            </div>
+          )
+        }
       </Surface>
     </Shell>
   );

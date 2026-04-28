@@ -1,11 +1,6 @@
 from django.test import Client
 import pytest
 
-def test_profile_clubs_does_not_allow_anonymous(client: Client):
-    response = client.get('/accounts/profile/settings/')
-    assert response.status_code == 302
-    assert response.url == '/accounts/login/?next=/accounts/profile/settings/'
-
 @pytest.mark.django_db
 def test_profile_settings_can_change_settings(bridge_client: Client, user_with_no_clubs):
     bridge_client.force_login(user_with_no_clubs)
@@ -213,3 +208,84 @@ def test_profile_settings_very_long_display_name(bridge_client: Client, user_wit
     assert response.status_code == 200
     # Should still have default values since form was invalid
     assert response.json()['context']['user']['displayName'] == ''
+
+@pytest.mark.django_db
+def test_anonymous_user_can_get_settings(bridge_client: Client):
+    """Anonymous users can access the settings page and get default values."""
+    response = bridge_client.get('/accounts/profile/settings/')
+    assert response.status_code == 200
+    user_ctx = response.json()['context']['user']
+    assert not user_ctx['authenticated']
+    assert user_ctx['theme_preference'] == 'light'
+    # Anonymous users have no displayName field
+    assert 'displayName' not in user_ctx
+
+
+@pytest.mark.django_db
+def test_anonymous_user_can_change_theme(bridge_client: Client):
+    """Anonymous user can POST a theme preference and it is saved in the session."""
+    response = bridge_client.post('/accounts/profile/settings/', {
+        'theme_preference': 'dark',
+        'display_name': ''
+    })
+    assert response.status_code == 200
+    assert response.json()['context']['user']['theme_preference'] == 'dark'
+
+    # A subsequent GET should reflect the updated session value
+    response = bridge_client.get('/accounts/profile/settings/')
+    assert response.status_code == 200
+    assert response.json()['context']['user']['theme_preference'] == 'dark'
+
+
+@pytest.mark.django_db
+def test_anonymous_user_settings_persist_across_requests(bridge_client: Client):
+    """Session-stored theme persists across multiple requests for the same client."""
+    bridge_client.post('/accounts/profile/settings/', {
+        'theme_preference': 'dark',
+        'display_name': ''
+    })
+
+    for _ in range(3):
+        response = bridge_client.get('/accounts/profile/settings/')
+        assert response.status_code == 200
+        assert response.json()['context']['user']['theme_preference'] == 'dark'
+
+
+@pytest.mark.django_db
+def test_anonymous_user_invalid_theme_not_saved(bridge_client: Client):
+    """Invalid theme_preference must not be saved to the session for anonymous users."""
+    # Confirm default
+    response = bridge_client.get('/accounts/profile/settings/')
+    assert response.json()['context']['user']['theme_preference'] == 'light'
+
+    # Submit invalid theme
+    response = bridge_client.post('/accounts/profile/settings/', {
+        'theme_preference': 'rainbow',
+        'display_name': ''
+    })
+    assert response.status_code == 200
+
+    # Session unchanged
+    response = bridge_client.get('/accounts/profile/settings/')
+    assert response.json()['context']['user']['theme_preference'] == 'light'
+
+@pytest.mark.django_db
+def test_anonymous_user_does_not_affect_authenticated_user(bridge_client: Client, user_with_no_clubs):
+    """
+    Changing session settings as anonymous must not affect a subsequently
+    logged-in user's stored preferences, and vice-versa.
+    """
+    # Set theme in session while anonymous
+    bridge_client.post('/accounts/profile/settings/', {
+        'theme_preference': 'dark',
+        'display_name': ''
+    })
+
+    # Log in — the user's own stored preference should take precedence
+    bridge_client.force_login(user_with_no_clubs)
+    response = bridge_client.get('/accounts/profile/settings/')
+    assert response.status_code == 200
+    user_ctx = response.json()['context']['user']
+    assert user_ctx['authenticated']
+    # The authenticated user starts with the model default, not the session value
+    assert user_ctx['theme_preference'] == 'light'
