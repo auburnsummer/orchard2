@@ -151,6 +151,8 @@ DJANGO_BRIDGE = {
         "user": "cafe.contexts.user.user"
     },
     "VITE_DEVSERVER_URL": "http://localhost:5173/static",
+    # Allow use of dev servers in production if the _dev_client cookie is set.
+    "ALLOW_CLIENT_DEV_COOKIE": os.environ.get("ALLOW_CLIENT_DEV_COOKIE", "false").lower() == "true",
 }
 
 if os.environ.get('VITE_BUNDLE_DIR'):

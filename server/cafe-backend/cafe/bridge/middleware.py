@@ -47,9 +47,12 @@ class DjangoBridgeMiddleware:
         # If the response is a Django Bridge response, wrap it in our bootstrap template
         # to load the React SPA and render the response data.
         if isinstance(response, BaseResponse):
+            ALLOW_CLIENT_DEV_COOKIE = settings.DJANGO_BRIDGE.get("ALLOW_CLIENT_DEV_COOKIE", False)
+            use_dev_client = ALLOW_CLIENT_DEV_COOKIE and "_dev_client" in request.COOKIES
+
             VITE_BUNDLE_DIR = settings.DJANGO_BRIDGE.get("VITE_BUNDLE_DIR")
             VITE_DEVSERVER_URL = settings.DJANGO_BRIDGE.get("VITE_DEVSERVER_URL")
-            if VITE_BUNDLE_DIR:
+            if VITE_BUNDLE_DIR and not use_dev_client:
                 # Production - Use asset manifest to find URLs to bundled JS/CSS
                 asset_manifest = json.loads(
                     (Path(VITE_BUNDLE_DIR) / ".vite/manifest.json").read_text()
@@ -61,14 +64,15 @@ class DjangoBridgeMiddleware:
                 css = asset_manifest["src/main.tsx"].get("css", [])
                 vite_react_refresh_runtime = None
 
-            elif VITE_DEVSERVER_URL:
+            elif VITE_DEVSERVER_URL or use_dev_client:
                 # Development - Fetch JS/CSS from Vite server
+                devserver_url = VITE_DEVSERVER_URL or "http://localhost:5173/static"
                 js = [
-                    VITE_DEVSERVER_URL + "/@vite/client",
-                    VITE_DEVSERVER_URL + "/src/main.tsx",
+                    devserver_url + "/@vite/client",
+                    devserver_url + "/src/main.tsx",
                 ]
                 css = []
-                vite_react_refresh_runtime = VITE_DEVSERVER_URL + "/@react-refresh"
+                vite_react_refresh_runtime = devserver_url + "/@react-refresh"
 
             else:
                 raise ImproperlyConfigured(
@@ -86,6 +90,7 @@ class DjangoBridgeMiddleware:
                     "js": js,
                     "css": css,
                     "vite_react_refresh_runtime": vite_react_refresh_runtime,
+                    "dev_cookie_active": use_dev_client,
                 },
             )
 
