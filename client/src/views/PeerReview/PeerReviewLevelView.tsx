@@ -38,6 +38,7 @@ import { Dialog } from "@cafe/components/ui/Dialog";
 import { Words } from "@cafe/components/ui/Words";
 import { useClipboard } from "@mantine/hooks";
 import { getLevelDownloadUrl } from "@cafe/utils/constants";
+import Textarea from "@cafe/components/ui/Textarea";
 
 type PeerReviewMainViewProps = {
   levels: RDLevel[];
@@ -574,7 +575,10 @@ export function PeerReviewLevelView({
           )}
           {prev_notes.length > 0 && (
             <Alert variant="info" className="mt-6">
-              Previous reviewer notes: {prev_notes}
+              <Words as="p">Previous reviewer notes:</Words>
+              {
+                prev_notes.split("\n").map((line, index) => <Words as="p" key={index}>{line}</Words>)
+              }
             </Alert>
           )}
           {rdlevel.is_private && (
@@ -649,13 +653,13 @@ export function PeerReviewLevelView({
         {/* Comments and First Level */}
         <Fieldset legend="Comments" className="mt-4">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <TextInput
+            <Textarea
               label="Private Comments"
               description="Only shown in #pathology-lab."
               value={privateComments}
               onChange={(e) => setPrivateComments(e.target.value)}
             />
-            <TextInput
+            <Textarea
               label="Public Comments"
               description="Shown publicly."
               value={publicComments}
