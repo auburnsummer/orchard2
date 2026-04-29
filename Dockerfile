@@ -45,7 +45,7 @@ COPY --from=hivemind /tmp/hivemind /usr/local/bin/hivemind
 
 # install python dependencies
 WORKDIR server
-RUN uv sync
+RUN uv sync --locked
 
 # collect static files for caddy to serve later
 ENV STATIC_ROOT=/var/www/rhythm.cafe/static
