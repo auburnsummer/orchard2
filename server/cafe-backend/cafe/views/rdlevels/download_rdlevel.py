@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from cafe.models.rdlevels.rdlevel import RDLevel
 
 # Including the rdzip extension.
-MAXIMUM_FILENAME_LENGTH = 100
+MAXIMUM_FILENAME_LENGTH = 80
 
 def get_filename_for_rdlevel(rdlevel: RDLevel) -> str:
     num_authors = len(rdlevel.authors)
