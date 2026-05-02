@@ -139,10 +139,10 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
                         icon={faPen}
                       />
                       <ConjunctionList
-                        className="gap-1"
+                        className="flex-wrap flex"
                         elementRender={(v) =>
                           typeof v === "string" ? (
-                            <Words className="text-sm">
+                            <Words className="text-sm whitespace-pre">
                               {v}
                             </Words>
                           ) : (
@@ -150,7 +150,7 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
                           )
                         }
                         literalRender={(v) => (
-                          <Words className="text-sm">
+                          <Words className="text-sm whitespace-pre">
                             {v}
                           </Words>
                         )}

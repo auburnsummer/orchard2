@@ -143,7 +143,7 @@ export function LevelCard({
           <div className="flex items-center text-xs leading-[1.125rem] text-slate-500 dark:text-slate-400">
             <FontAwesomeIcon icon={faPen} className="w-4 h-4" />
             <ConjunctionList
-              className="ml-1 p-0 list-none"
+              className="ml-1 p-0 list-none flex-wrap"
               elementRender={(v) =>
                 typeof v === "string" ? (
                   <Words as="span" className="whitespace-pre text-slate-500 dark:text-slate-400 text-xs">
