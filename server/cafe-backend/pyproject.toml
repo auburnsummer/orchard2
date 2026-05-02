@@ -28,6 +28,7 @@ dependencies = [
     "freezegun>=1.5.5",
     "django-cors-headers>=4.7.0",
     "jsonata-python>=0.6.1",
+    "django-waffle>=5.0.0",
 ]
 
 [dependency-groups]

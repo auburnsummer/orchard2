@@ -85,7 +85,9 @@ INSTALLED_APPS = [
 
     'hijack',
     'hijack.contrib.admin',
-    'simple_history'
+    'simple_history',
+
+    'waffle'
 ]
 
 MIDDLEWARE = [
@@ -101,7 +103,8 @@ MIDDLEWARE = [
     'hijack.middleware.HijackUserMiddleware',
     'cafe.bridge.middleware.DjangoBridgeMiddleware',
     'allauth.account.middleware.AccountMiddleware',
-    'simple_history.middleware.HistoryRequestMiddleware'
+    'simple_history.middleware.HistoryRequestMiddleware',
+    'waffle.middleware.WaffleMiddleware'
 ]
 
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 365  # 365 days in seconds
@@ -148,7 +151,8 @@ SOCIALACCOUNT_PROVIDERS = {
 DJANGO_BRIDGE = {
     "CONTEXT_PROVIDERS": {
         "csrf_token": "cafe.contexts.csrf_token.csrf_token",
-        "user": "cafe.contexts.user.user"
+        "user": "cafe.contexts.user.user",
+        "flags": "cafe.contexts.flags.flags",
     },
     "VITE_DEVSERVER_URL": "http://localhost:5173/static",
     # Allow use of dev servers in production if the _dev_client cookie is set.
