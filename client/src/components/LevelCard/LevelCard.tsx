@@ -125,7 +125,7 @@ export function LevelCard({
             )}
           </div>
           <ConjunctionList
-            className="list-none pl-0 flex"
+            className="list-none pl-0 flex flex-wrap"
             items={level.artist_tokens}
             elementRender={(v) => (
               <p className="whitespace-pre text-xs leading-4 text-slate-500 dark:text-slate-400 font-light m-0">

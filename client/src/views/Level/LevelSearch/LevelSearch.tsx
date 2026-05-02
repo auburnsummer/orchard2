@@ -128,7 +128,7 @@ export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
           </Words>
           {nextPrevButtons}
         </div>
-        <ul className="list-none grid gap-4 [--grid-column-count:3] [--grid-item--min-width:18rem] [--gap-count:calc(var(--grid-column-count)-1)] [--total-gap-width:calc(var(--gap-count)*1rem)] [--grid-item--max-width:calc((100%-var(--total-gap-width))/var(--grid-column-count))] grid-cols-[repeat(auto-fill,minmax(max(var(--grid-item--min-width),var(--grid-item--max-width)),1fr))]">
+        <ul className="list-none grid gap-4 [--grid-column-count:5] [--grid-item--min-width:18rem] [--gap-count:calc(var(--grid-column-count)-1)] [--total-gap-width:calc(var(--gap-count)*1rem)] [--grid-item--max-width:calc((100%-var(--total-gap-width))/var(--grid-column-count))] grid-cols-[repeat(auto-fill,minmax(max(var(--grid-item--min-width),var(--grid-item--max-width)),1fr))]">
           {results.hits.slice(0, LEVELS_PER_PAGE).map((level) => (
             <li key={level.id}>
               <LevelCard

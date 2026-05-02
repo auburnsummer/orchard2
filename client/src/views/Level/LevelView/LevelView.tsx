@@ -109,6 +109,7 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
                 <div className="flex-1 flex flex-col gap-2">
                   <div>
                     <ConjunctionList
+                      className="flex-wrap"
                       items={rdlevel.artist_tokens}
                       elementRender={(v) => (
                         <Words variant="muted" className="text-sm whitespace-pre leading-4">
