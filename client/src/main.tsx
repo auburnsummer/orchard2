@@ -9,12 +9,14 @@ import { routeMap } from "./routeMap";
 import { App as MinibridgeApp } from "./minibridge";
 import { Outlet } from "./minibridge/components/Outlet";
 import { Config } from "./minibridge/config";
+import { FlagContext } from "./hooks/useFlag";
 
 const config: Config = {
   views: routeMap,
   contextProviders: {
     user: UserContext,
     csrf_token: CSRFTokenContext,
+    flags: FlagContext
   },
 };
 
