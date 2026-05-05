@@ -5,7 +5,7 @@
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/base:noble",
 	"features": {
-		"ghcr.io/devcontainers/features/node:1": {},
+		"ghcr.io/devcontainers/features/node:2": {},
 		"ghcr.io/christophermacgown/devcontainer-features/minio-client:1": {},
 		"ghcr.io/itsmechlark/features/redis-server:1": {},
 		"ghcr.io/va-h/devcontainers-features/uv:1": {},
