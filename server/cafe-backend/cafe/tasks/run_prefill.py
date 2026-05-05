@@ -121,7 +121,10 @@ def run_prefill(prefill_id: str):
                 for chunk in resp.iter_bytes():
                     f.write(chunk)
             f.seek(0)
-            level = vitals_quick(f) if prefill_result.prefill_type == "update" else vitals(f)
+
+            use_quick = prefill_result.prefill_type == "update" and not prefill_result.overwrite_metadata
+
+            level = vitals_quick(f) if use_quick else vitals(f)
 
             urls = upload_files(level, f)
 
