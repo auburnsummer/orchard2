@@ -140,7 +140,7 @@ def run_prefill(prefill_id: str):
             prefill_result.data = payload
 
             # the divergence point.
-            if not prefill_result.go_to_prepost:
+            if (not prefill_result.go_to_prepost) and prefill_result.prefill_type == "new":
                 # we should make a level!
                 try:
                     with transaction.atomic():
