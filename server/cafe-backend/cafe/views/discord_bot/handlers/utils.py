@@ -98,6 +98,15 @@ def text_input(custom_id, style=1, placeholder=None, required=True):
         result["required"] = False
     return result
 
+def checkbox(custom_id, default=False):
+    result = {
+        "type": ComponentType.CHECKBOX.value,
+        "custom_id": custom_id,
+    }
+    if default:
+        result["default"] = True
+    return result
+
 def ephemeral_response(content):
     return JsonResponse({
         "type": ResponseType.CHANNEL_MESSAGE_WITH_SOURCE.value,

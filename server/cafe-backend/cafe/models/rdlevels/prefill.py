@@ -23,7 +23,7 @@ class RDLevelPrefillResult(RulesModel):
     prefill_type = models.CharField(max_length=100)
     # true if we are going to the prepost screen before making the level. no effect is prefill_type is "update".
     go_to_prepost = models.BooleanField(default=True)
-    # if prefill_type is "new" AND go_to_preopost is False, this is the newly created level.
+    # if prefill_type is "new" AND go_to_prepost is False, this is the newly created level.
     # if prefill_type is "update", this is the level being updated.
     # if prefill_type is "new" AND go_to_prepost is True, this will be null until the level is created/updated after the prepost screen.
     level = models.ForeignKey(to="cafe.RDLevel", blank=True, null=True, default=None, on_delete=models.CASCADE)
@@ -37,6 +37,9 @@ class RDLevelPrefillResult(RulesModel):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     # errors that occurred during the prefill.
     errors = models.TextField(default="")
+    # whether to overwrite the metadata of the level with the metadata from the rdzip.
+    # only relevant if prefill_type is "update".
+    overwrite_metadata = models.BooleanField(default=False)
 
     def to_dict(self):
         return {
@@ -51,7 +54,8 @@ class RDLevelPrefillResult(RulesModel):
             "data": self.data,
             "user": self.user.to_dict(),
             "club": self.club.to_dict(),
-            "errors": self.errors
+            "errors": self.errors,
+            "overwrite_metadata": self.overwrite_metadata
         }
 
     class Meta:
@@ -59,3 +63,5 @@ class RDLevelPrefillResult(RulesModel):
             # cafe.can_make_levels_from_rdlevelprefillresult
             "can_make_levels_from": can_make_level_from_prefill
         }
+
+    objects: models.Manager["RDLevelPrefillResult"]

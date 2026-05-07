@@ -75,7 +75,7 @@ def make_component_interaction(session_id, guild_id, custom_id, values=None, del
     return data
 
 
-def make_modal_submit(session_id, guild_id, level_id_value, delegated=False):
+def make_modal_submit(session_id, guild_id, level_id_value, overwrite_metadata=False, delegated=False):
     """Build a MODAL_SUBMIT (type 5) payload for the update modal."""
     name = "Add to Rhythm Café (delegated)" if delegated else "Add to Rhythm Café"
     return {
@@ -96,6 +96,7 @@ def make_modal_submit(session_id, guild_id, level_id_value, delegated=False):
             "components": [
                 {},  # text component at index 0
                 {"component": {"value": level_id_value}},  # label+text_input at index 1
+                {"component": {"value": overwrite_metadata}},  # checkbox at index 2
             ],
         },
     }
@@ -523,6 +524,7 @@ def test_step_update_modal_with_valid_level_starts_task(
     assert prefill is not None
     assert prefill.prefill_type == "update"
     assert prefill.level == level
+    assert prefill.overwrite_metadata is False
     mock_prefill.assert_called_once_with(prefill.id, session.id)
 
 
@@ -564,3 +566,27 @@ def test_step_update_modal_with_no_permission_shows_error(
 
     session.refresh_from_db()
     assert session.phase == AddSessionPhase.ERROR_NO_PERMISSION
+
+
+@pytest.mark.django_db
+@patch("cafe.views.discord_bot.handlers.add.run_prefill_v2")
+def test_step_update_modal_with_overwrite_metadata_sets_flag(
+    mock_prefill, client_with_discord_key, discord_guild_with_attached_club
+):
+    from cafe.models.rdlevels.prefill import RDLevelPrefillResult
+    client, private_key = client_with_discord_key
+    guild_id = discord_guild_with_attached_club.id
+    club = discord_guild_with_attached_club.club
+    session = _create_session(guild_id, add_type="update")
+
+    level = _create_rdlevel(session.user, club)
+
+    body = make_modal_submit(session.id, guild_id, level.id, overwrite_metadata=True)
+    request = create_discord_request(body, private_key)
+    response = client.post("/discord_interactions/", **request)
+    assert response.status_code == 200
+
+    prefill = RDLevelPrefillResult.objects.last()
+    assert prefill is not None
+    assert prefill.overwrite_metadata is True
+    mock_prefill.assert_called_once_with(prefill.id, session.id)

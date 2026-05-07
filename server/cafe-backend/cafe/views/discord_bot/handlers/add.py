@@ -9,7 +9,7 @@ from cafe.models.rdlevels.rdlevel import RDLevel
 from cafe.models.rdlevels.tempuser import get_or_create_discord_user
 from cafe.tasks.run_prefill import run_prefill_v2
 
-from .utils import Flags, ResponseType, action_row, button, ephemeral_response, get_club_from_guild_id, label, option, seperator, string_select, text, text_input
+from .utils import Flags, ResponseType, action_row, button, ephemeral_response, get_club_from_guild_id, label, option, seperator, string_select, text, text_input, checkbox
 
 from orchard.settings import DOMAIN_URL
 from django.urls import reverse
@@ -225,6 +225,10 @@ def update_modal():
                 label(
                     "ID of the level to update",
                     text_input("update_level_id", style=1, placeholder="Enter level ID here...")
+                ),
+                label(
+                    "Replace current metadata of level",
+                    component=checkbox("overwrite_metadata", default=False),
                 )
             ]
         }
@@ -271,6 +275,7 @@ def add_step(data):
     if data['data']['custom_id'] == "update_modal":
         # they submitted the modal to update.
         level_id = data['data']['components'][1]['component']['value']
+        overwrite_metadata = data['data']['components'][2]['component']['value']
         level = RDLevel.objects.filter(id=level_id).first()
         user = session.user
         club = get_club_from_guild_id(data['guild']['id'])
@@ -293,7 +298,8 @@ def add_step(data):
                 prefill_type="update",
                 level=level,
                 club=club,
-                go_to_prepost=False
+                go_to_prepost=False,
+                overwrite_metadata=overwrite_metadata
             )
             run_prefill_v2(prefill.id, session.id)
         
