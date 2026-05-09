@@ -158,7 +158,7 @@ export function PeerReviewLevelView({
   const [publicComments, setPublicComments] = useState<string>("");
 
   const [isFirstLevel, setIsFirstLevel] = useState<boolean>(is_first_level);
-  const [firstLevelDiscordID, setFirstLevelDiscordID] = useState<string>(
+  const [userDiscordID, setUserDiscordID] = useState<string>(
     discord_id || "",
   );
   const [pingUser, setPingUser] = useState<boolean>(false);
@@ -284,8 +284,8 @@ export function PeerReviewLevelView({
 
     const levelNoun = isFirstLevel ? "first level" : "level";
 
-    const firstLevelText =
-      `Hello <@${firstLevelDiscordID}>, ` +
+    const pingMessageText =
+      `Hello <@${userDiscordID}>, ` +
       (approvalIntent === 10
         ? `your ${levelNoun} got peer reviewed! This means it is now visible by default on <https://rhythm.cafe>. To learn more, ask in <#808382639748022332>!`
         : approvalIntent === -1
@@ -327,16 +327,16 @@ export function PeerReviewLevelView({
       ],
     };
 
-    const firstLevelMessage = {
+    const pingMessage = {
       avatar_url: GENERIC_AVATAR,
-      content: firstLevelText,
-      allowed_mentions: { users: [firstLevelDiscordID] },
+      content: pingMessageText,
+      allowed_mentions: { users: [userDiscordID] },
     };
 
     return {
       public: publicPayload,
       private: privatePayload,
-      firstLevelMessage,
+      pingMessage,
     };
   }, [
     approvalIntent,
@@ -352,7 +352,7 @@ export function PeerReviewLevelView({
     pdFlairText,
     dcNick,
     dcID,
-    firstLevelDiscordID,
+    userDiscordID,
     isFirstLevel,
     rdlevel,
   ]);
@@ -438,9 +438,9 @@ export function PeerReviewLevelView({
     if (doPrivatePost && pathlabWebhookUrl) {
       promises.push(webhookPost(pathlabWebhookUrl, webhookPayloads.private));
     }
-    if (isFirstLevel && firstLevelDiscordID && publicWebhookUrl) {
+    if (pingUser && userDiscordID && publicWebhookUrl) {
       promises.push(
-        webhookPost(publicWebhookUrl, webhookPayloads.firstLevelMessage),
+        webhookPost(publicWebhookUrl, webhookPayloads.pingMessage),
       );
     }
     await Promise.all(promises);
@@ -698,8 +698,8 @@ export function PeerReviewLevelView({
                 <TextInput
                   label="Discord ID"
                   description="For pinging the user in #pathology-reports. Autofills when a Discord ID is found on a level."
-                  value={firstLevelDiscordID}
-                  onChange={(e) => setFirstLevelDiscordID(e.target.value)}
+                  value={userDiscordID}
+                  onChange={(e) => setUserDiscordID(e.target.value)}
                 />
               </div>
             </div>
