@@ -57,6 +57,7 @@ const PROPERTIES_TO_SHOW_IN_PREVIEW = [
   "min_bpm",
   "id",
   "icon_url",
+  "club_name",
 ] as const;
 
 // The avatar used for public posts
@@ -79,6 +80,10 @@ function getPreviewText(
   level: RDLevel,
   key: (typeof PROPERTIES_TO_SHOW_IN_PREVIEW)[number],
 ): string {
+  if (key === "club_name") {
+    return level.club.name;
+  }
+
   const value = level[key];
 
   switch (key) {
