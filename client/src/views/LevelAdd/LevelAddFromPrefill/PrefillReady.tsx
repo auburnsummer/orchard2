@@ -15,7 +15,7 @@ function buildInitialLevel(prefill: RDLevelPrefillReady): RDLevel {
     club: prefill.club,
     approval: 0,
     is_private: false,
-    "approval_notes_public": ""
+    approval_notes_public: ""
   };
 }
 
