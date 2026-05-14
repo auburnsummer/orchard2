@@ -191,7 +191,7 @@ export function LevelCard({
               <span
                 className="flex items-center"
                 title={
-                  "Non-Referred: a trusted member of the community has checked for correct BPM/offset, metadata, and cues to ensure playability, and has found that this level does not meet standards."
+                  "Non-Refereed: a trusted member of the community has checked for correct BPM/offset, metadata, and cues to ensure playability, and has found that this level does not meet standards."
                 }
               >
                 <FontAwesomeIcon icon={faXmark} className="w-4 h-4" />

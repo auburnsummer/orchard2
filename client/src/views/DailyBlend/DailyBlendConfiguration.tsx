@@ -76,6 +76,7 @@ const EXAMPLE_LEVEL: RDLevel = {
   },
   club: { id: "cpharmacy", name: "Peer Reviewers" },
   approval: 0,
+  approval_notes_public: "",
   is_private: false,
 };
 

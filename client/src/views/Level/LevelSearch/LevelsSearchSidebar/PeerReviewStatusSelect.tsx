@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 const PEER_REVIEW_STATUSES = [
   { value: "approved", label: "Peer Reviewed" },
   { value: "pending", label: "Pending" },
-  { value: "rejected", label: "Non-Referred" },
+  { value: "rejected", label: "Non-Refereed" },
   { value: "all", label: "All" },
 ];
 

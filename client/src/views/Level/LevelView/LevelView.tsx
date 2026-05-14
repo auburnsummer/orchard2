@@ -64,6 +64,8 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
 
   const downloadUrl = getLevelDownloadUrl(rdlevel);
 
+  const [showPeerReviewReasons, { toggle: togglePeerReviewReasons }] = useDisclosure(false);
+
   return (
     <Shell>
       <title>{`${rdlevel.song} | Rhythm Café`}</title>
@@ -300,9 +302,33 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
                     Peer Reviewed
                   </Words>
                 ) : rdlevel.approval === -1 ? (
-                  <Words variant="sm">
-                    Non-Refeered
-                  </Words>
+                  <div className="flex flex-col">
+                    <div className="flex flex-row align-top">
+                      <Words variant="sm">
+                        Non-Refereed
+                      </Words>
+                      {
+                        rdlevel.approval_notes_public && (
+                          <Words variant="link" as="button" onClick={togglePeerReviewReasons} className="ml-2 text-xs">
+                            ({showPeerReviewReasons ? "Hide reasons" : "Show reasons"})
+                          </Words>
+                        )
+                      }
+                    </div>
+                    {
+                      rdlevel.approval_notes_public && showPeerReviewReasons && (
+                        <>
+                          {
+                            rdlevel.approval_notes_public.split("\n").map((paragraph, index) => (
+                              <Words as="p" key={index} variant="muted" className="text-sm mt-1 whitespace-pre-wrap">
+                                {paragraph}
+                              </Words>
+                            ))
+                          }
+                        </>
+                      )
+                    }
+                  </div>
                 ) : (
                   <Words variant="sm">
                     Pending Peer Review
