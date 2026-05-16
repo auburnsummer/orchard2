@@ -28,6 +28,7 @@ import { Words } from "@cafe/components/ui/Words";
 
 import { useUser } from "@cafe/hooks/useUser";
 import { Alert } from "@cafe/components/ui/Alert";
+import { PeerReviewStatusCard } from "./PeerReviewStatusCard";
 
 type LevelViewProps = {
   rdlevel: RDLevel;
@@ -47,6 +48,7 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
 
   const csrfInput = useCSRFTokenInput();
 
+
   const getDifficultyBadgeClass = (difficulty: number) => {
     if (difficulty === 0) return "bg-teal-100 text-teal-600 dark:bg-teal-900 dark:text-teal-200"; // Easy
     if (difficulty === 1) return "bg-amber-100 text-amber-600 dark:bg-amber-900 dark:text-amber-200"; // Medium
@@ -63,8 +65,6 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
   const canPeerReview = user.authenticated && user.is_peer_reviewer;
 
   const downloadUrl = getLevelDownloadUrl(rdlevel);
-
-  const [showPeerReviewReasons, { toggle: togglePeerReviewReasons }] = useDisclosure(false);
 
   return (
     <Shell>
@@ -289,59 +289,12 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
                 </Surface>
               )}
               {/* PR status */}
-              <Surface className="p-4">
-                <div className="flex items-center gap-1 mb-2">
-                  <FontAwesomeIcon
-                    className="text-slate-700 dark:text-slate-300"
-                    icon={faPen}
-                  />
-                  <Words className="font-medium ml-1">Peer Review Status</Words>
-                </div>
-                {rdlevel.approval === 10 ? (
-                  <Words variant="sm">
-                    Peer Reviewed
-                  </Words>
-                ) : rdlevel.approval === -1 ? (
-                  <div className="flex flex-col">
-                    <div className="flex flex-row align-top">
-                      <Words variant="sm">
-                        Non-Refereed
-                      </Words>
-                      {
-                        rdlevel.approval_notes_public && (
-                          <Words variant="link" as="button" onClick={togglePeerReviewReasons} className="ml-2 text-xs">
-                            ({showPeerReviewReasons ? "Hide reasons" : "Show reasons"})
-                          </Words>
-                        )
-                      }
-                    </div>
-                    {
-                      rdlevel.approval_notes_public && showPeerReviewReasons && (
-                        <>
-                          {
-                            rdlevel.approval_notes_public.split("\n").map((paragraph, index) => (
-                              <Words as="p" key={index} variant="muted" className="text-sm mt-1 whitespace-pre-wrap">
-                                {paragraph}
-                              </Words>
-                            ))
-                          }
-                        </>
-                      )
-                    }
-                  </div>
-                ) : (
-                  <Words variant="sm">
-                    Pending Peer Review
-                  </Words>
-                )}
-                {
-                  canPeerReview && (
-                    <Words variant="link" as={Link} href={`/peer-review/${rdlevel.id}/`} className="mt-2 block text-sm">
-                      Go to PR Page for this level
-                    </Words>
-                  )
-                }
-              </Surface>
+              <PeerReviewStatusCard
+                approval={rdlevel.approval}
+                approval_notes_public={rdlevel.approval_notes_public}
+                canPeerReview={canPeerReview}
+                levelId={rdlevel.id}
+              />
 
               { rdlevel.is_private && (
                 <Alert variant="info">
