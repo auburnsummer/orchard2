@@ -7,7 +7,7 @@ from pathlib import Path
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from django.http import StreamingHttpResponse
+from django.http import StreamingHttpResponse, QueryDict
 from django.shortcuts import render
 from django.templatetags.static import static
 
@@ -27,6 +27,7 @@ class DjangoBridgeMiddleware:
 
         # Strip the _bridge param so view code never sees it
         if is_bridge_request:
+            request.GET: QueryDict = request.GET.copy()
             del request.GET[BRIDGE_PARAM]
 
         response = self.get_response(request)
