@@ -1,5 +1,5 @@
 # Vendored from django-bridge 0.4
-from string import ascii_lowercase
+import re
 from django.http.request import HttpRequest
 
 import json
@@ -15,8 +15,10 @@ from .response import BaseResponse, RedirectResponse
 
 BRIDGE_PARAM = "_bridge"
 
-def string_only_az_and_dashes(s: str) -> bool:
-    return all(c in ascii_lowercase or c == '-' for c in s)
+_DNS_LABEL_RE = re.compile(r'^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$')
+
+def is_valid_dns_label(s: str) -> bool:
+    return bool(_DNS_LABEL_RE.match(s))
 
 class DjangoBridgeMiddleware:
     def __init__(self, get_response):
@@ -60,7 +62,7 @@ class DjangoBridgeMiddleware:
             valid_pr_client = (
                 use_pr_client
                 and pr_value
-                and string_only_az_and_dashes(pr_value)
+                and is_valid_dns_label(pr_value)
                 and settings.PR_DOMAIN
             )
             if valid_pr_client:
