@@ -58,9 +58,9 @@ class DjangoBridgeMiddleware:
             pr_value = request.COOKIES.get("_pr_client", "")
             valid_pr_client = (
                 use_pr_client
-                and bool(pr_value)
+                and pr_value
                 and string_only_az_and_dashes(pr_value)
-                and bool(getattr(settings, "PR_DOMAIN", None))
+                and settings.PR_DOMAIN
             )
             if valid_pr_client:
                 # PR deployment, JS/CSS comes from PR domain
