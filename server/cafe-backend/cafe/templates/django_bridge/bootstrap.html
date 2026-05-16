@@ -25,7 +25,7 @@
   {% endif %}
 
   {% for src in css %}
-  <link href="{% static src %}" rel="stylesheet" />
+  <link href="{{ src }}" rel="stylesheet" />
   {% endfor %}
 
   <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -341,3 +341,5 @@ STEWARD_USER_ID = "usteward"
 
 # Pharmacy club is used to control membership of people who can peer review levels
 PHARMACY_CLUB_ID = "cpharmacy"
+
+PR_DOMAIN = os.environ.get("PR_DOMAIN", "")
