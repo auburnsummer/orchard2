@@ -30,7 +30,8 @@ const EBOOKS = [
     'ThatOneGuy: everyone here who can count to 7 but not 8 in Chinese, raise your hand',
     'KubeBow: dont talk to me unless your mental breakdown sessions sample the amen break',
     'Element 27: I will say that thinking of Edega too long causes me to emit a miasma',
-    'DPS2004: WOKE RHYTHM DOCTOR BE LIKE\none PRONOUN more\nall the GENDERS\nintimate (GAY shift)\nGabe Edega\nBISEXUAL hopper'
+    'DPS2004: WOKE RHYTHM DOCTOR BE LIKE\none PRONOUN more\nall the GENDERS\nintimate (GAY shift)\nGabe Edega\nBISEXUAL hopper',
+    'Abby: since at that point the virus was a reality-warping threat, cole should be considered a god'
 ];
 
 export function getEbook() {
