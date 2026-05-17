@@ -287,15 +287,19 @@ export function PeerReviewLevelView({
     if (publicProblems.length > 2044)
       publicProblems = `${publicProblems.slice(0, 2044)}...`; // 2048
 
-    const levelNoun = isFirstLevel ? "first level" : "level";
-
-    const pingMessageText =
-      `Hello <@${userDiscordID}>, ` +
-      (approvalIntent === 10
-        ? `your ${levelNoun} got peer reviewed! This means it is now visible by default on <https://rhythm.cafe>. To learn more, ask in <#808382639748022332>!`
-        : approvalIntent === -1
-          ? `unfortunately, your ${levelNoun} was non-refereed for the reasons above. This means it is hidden by default on <https://rhythm.cafe>. If you have questions about what this means or how to fix it, feel free to read the [peer-review definitions](<https://docs.google.com/spreadsheets/d/1RKRov9kkbHKV-NJMCLWHFRL_AiKkB0I1_mg7WMG4iJA/edit>) or ask in <#808382639748022332>!`
-          : `your ${levelNoun} is pending. This means it is in the process of getting peer reviewed and is hidden by default on <https://rhythm.cafe>. To learn more, ask in <#808382639748022332>!`);
+    const pingMessageText = isFirstLevel
+      ? `Hello <@${userDiscordID}>, ` +
+        (approvalIntent === 10
+          ? `your first level got peer reviewed! This means it is now visible by default on <https://rhythm.cafe>. To learn more, ask in <#808382639748022332>!`
+          : approvalIntent === -1
+            ? `unfortunately, your first level was non-refereed for the reasons above. This means it is hidden by default on <https://rhythm.cafe>. If you have questions about what this means or how to fix it, feel free to read the [peer-review definitions](<https://docs.google.com/spreadsheets/d/1RKRov9kkbHKV-NJMCLWHFRL_AiKkB0I1_mg7WMG4iJA/edit>) or ask in <#808382639748022332>!`
+            : `your first level is pending. This means it is in the process of getting peer reviewed and is hidden by default on <https://rhythm.cafe>. To learn more, ask in <#808382639748022332>!`)
+      : `<@${userDiscordID}> ` +
+        (approvalIntent === 10
+          ? `your level got peer reviewed!`
+          : approvalIntent === -1
+            ? `your level was non-refereed.`
+            : `your level is pending.`);
 
     const privatePayload = {
       avatar_url: avatarToUse,
