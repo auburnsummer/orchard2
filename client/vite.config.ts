@@ -7,7 +7,7 @@ const isPrBuild = process.env.VITE_PR_BUILD === "true";
 
 // https://vite.dev/config/
 export default defineConfig(() => ({
-  base: "/static/",
+  base: isPrBuild ? "./" : "/static/",
   server: {
     cors: true,
     origin: "http://localhost:5173",
