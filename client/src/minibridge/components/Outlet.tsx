@@ -1,11 +1,12 @@
 import { useAtomValue } from "jotai";
-import { configAtom, currentRenderAtom, isLoadingAtom } from "../atoms";
+import { configAtom, currentRenderAtom, isLoadingAtom, locationAtom } from "../atoms";
 import { Suspense, useState, useTransition, useEffect } from "react";
 
 export function Outlet() {
   const currentRender = useAtomValue(currentRenderAtom);
   const config = useAtomValue(configAtom);
   const isLoading = useAtomValue(isLoadingAtom);
+  const location = useAtomValue(locationAtom);
   const [isPending, startTransition] = useTransition();
   const [displayRender, setDisplayRender] = useState(currentRender);
 
@@ -42,7 +43,7 @@ export function Outlet() {
         />
       )}
       <Suspense fallback={null}>
-        <View {...displayRender.props} />
+        <View key={location?.pathname} {...displayRender.props} />
       </Suspense>
     </div>
   );
