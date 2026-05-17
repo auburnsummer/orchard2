@@ -1,11 +1,13 @@
 # Vendored from django-bridge 0.4
+import re
+from django.http.request import HttpRequest
 
 import json
 from pathlib import Path
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from django.http import StreamingHttpResponse
+from django.http import StreamingHttpResponse, QueryDict
 from django.shortcuts import render
 from django.templatetags.static import static
 
@@ -13,17 +15,21 @@ from .response import BaseResponse, RedirectResponse
 
 BRIDGE_PARAM = "_bridge"
 
+_DNS_LABEL_RE = re.compile(r'^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$')
+
+def is_valid_dns_label(s: str) -> bool:
+    return bool(_DNS_LABEL_RE.match(s))
 
 class DjangoBridgeMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
-    def __call__(self, request):
+    def __call__(self, request: HttpRequest):
         is_bridge_request = BRIDGE_PARAM in request.GET
 
         # Strip the _bridge param so view code never sees it
         if is_bridge_request:
-            request.GET = request.GET.copy()
+            request.GET: QueryDict = request.GET.copy()
             del request.GET[BRIDGE_PARAM]
 
         response = self.get_response(request)
@@ -49,22 +55,23 @@ class DjangoBridgeMiddleware:
         if isinstance(response, BaseResponse):
             ALLOW_CLIENT_DEV_COOKIE = settings.DJANGO_BRIDGE.get("ALLOW_CLIENT_DEV_COOKIE", False)
             use_dev_client = ALLOW_CLIENT_DEV_COOKIE and "_dev_client" in request.COOKIES
-
+            use_pr_client = ALLOW_CLIENT_DEV_COOKIE and "_pr_client" in request.COOKIES
             VITE_BUNDLE_DIR = settings.DJANGO_BRIDGE.get("VITE_BUNDLE_DIR")
             VITE_DEVSERVER_URL = settings.DJANGO_BRIDGE.get("VITE_DEVSERVER_URL")
-            if VITE_BUNDLE_DIR and not use_dev_client:
-                # Production - Use asset manifest to find URLs to bundled JS/CSS
-                asset_manifest = json.loads(
-                    (Path(VITE_BUNDLE_DIR) / ".vite/manifest.json").read_text()
-                )
-
-                js = [
-                    static(asset_manifest["src/main.tsx"]["file"]),
-                ]
-                css = asset_manifest["src/main.tsx"].get("css", [])
+            pr_value = request.COOKIES.get("_pr_client", "")
+            valid_pr_client = (
+                use_pr_client
+                and pr_value
+                and is_valid_dns_label(pr_value)
+                and settings.PR_DOMAIN
+            )
+            if valid_pr_client:
+                # PR deployment, JS/CSS comes from PR domain
+                base_url = f"https://{pr_value}.{settings.PR_DOMAIN}"
+                js = [f"{base_url}/main.js"]
+                css = [f"{base_url}/main.css"]
                 vite_react_refresh_runtime = None
-
-            elif VITE_DEVSERVER_URL or use_dev_client:
+            elif (use_dev_client or VITE_DEVSERVER_URL):
                 # Development - Fetch JS/CSS from Vite server
                 devserver_url = VITE_DEVSERVER_URL or "http://localhost:5173/static"
                 js = [
@@ -73,7 +80,17 @@ class DjangoBridgeMiddleware:
                 ]
                 css = []
                 vite_react_refresh_runtime = devserver_url + "/@react-refresh"
+            elif VITE_BUNDLE_DIR:
+                # prod - asset manifest is bundled with us
+                asset_manifest = json.loads(
+                    (Path(VITE_BUNDLE_DIR) / ".vite/manifest.json").read_text()
+                )
 
+                js = [
+                    static(asset_manifest["src/main.tsx"]["file"]),
+                ]
+                css = [static(css_file) for css_file in asset_manifest["src/main.tsx"].get("css", [])]
+                vite_react_refresh_runtime = None
             else:
                 raise ImproperlyConfigured(
                     "DJANGO_BRIDGE['VITE_BUNDLE_DIR'] (production) or DJANGO_BRIDGE['VITE_DEVSERVER_URL'] (development) must be set"
