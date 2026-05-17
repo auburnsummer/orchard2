@@ -42,7 +42,7 @@ export function Outlet() {
         />
       )}
       <Suspense fallback={null}>
-        <View {...displayRender.props} />
+        <View key={displayRender.url} {...displayRender.props} />
       </Suspense>
     </div>
   );
