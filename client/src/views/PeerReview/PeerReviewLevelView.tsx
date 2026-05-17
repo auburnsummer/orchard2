@@ -298,7 +298,7 @@ export function PeerReviewLevelView({
         (approvalIntent === 10
           ? `your level got peer reviewed!`
           : approvalIntent === -1
-            ? `your level was non-refereed.`
+            ? `your level was non-refereed for the reasons above.`
             : `your level is pending.`);
 
     const privatePayload = {
