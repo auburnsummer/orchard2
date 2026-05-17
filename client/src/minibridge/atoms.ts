@@ -26,8 +26,12 @@ type CachedResponse = {
 
 const responseCacheAtom = atom<Record<string, CachedResponse>>({});
 
+// RenderResponse stapled with the client-side URL it was fetched for.
+// Kept together to avoid any mismatched url/props pair.
+export type RenderEntry = RenderResponse & { url: string };
+
 // the response of the last "render" request from django -- this is what view we're showing
-export const currentRenderAtom = atom<RenderResponse>();
+export const currentRenderAtom = atom<RenderEntry>();
 
 export const locationAtom = atomWithLocation();
 
@@ -70,7 +74,7 @@ export const handleResponseAtom = atom(
         }));
       }
       set(isLoadingAtom, false);
-      set(currentRenderAtom, response);
+      set(currentRenderAtom, { ...response, url: url.pathname });
       set(messagesAtom, (prev) => [...prev, ...response.messages]);
       // only set the URL if it's changed
       // otherwise we will have multiple of the same URL in the stack
