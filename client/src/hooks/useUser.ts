@@ -2,9 +2,12 @@ import React from "react";
 
 type ThemePreference = "light" | "dark" | "system";
 
+type SearchDefaultPeerReviewPreference = "approved" | "pending" | "rejected" | "all";
+
 export type UnauthenticatedUser = {
   authenticated: false;
   theme_preference: ThemePreference;
+  default_pr_preference: SearchDefaultPeerReviewPreference;
 };
 
 export type AuthenticatedUser = {
@@ -13,6 +16,7 @@ export type AuthenticatedUser = {
   displayName: string;
   avatarURL: string | null;
   theme_preference: ThemePreference;
+  default_pr_preference: SearchDefaultPeerReviewPreference;
   is_superuser: boolean;
   is_peer_reviewer: boolean;
 };
