@@ -12,14 +12,14 @@ if TYPE_CHECKING:
 
 class CafeUserManager(UserManager):
     def create_user(self, username, email=None, password=None, **extra_fields):
-        user = super().create_user(username, password=password, **extra_fields)
+        user = super().create_user(username, email=email, password=password, **extra_fields)
         if user.email == "":
             user.email = None
             user.save()
         return user
     
     def create_superuser(self, username, email=None, password=None, **extra_fields):
-        user = super().create_superuser(username, password=password, **extra_fields)
+        user = super().create_superuser(username, email=email, password=password, **extra_fields)
         if user.email == "":
             user.email = None
             user.save()
