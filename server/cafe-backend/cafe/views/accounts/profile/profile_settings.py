@@ -10,7 +10,7 @@ from cafe.views.types import HttpRequest
 class PostSettingsForm(ModelForm):
     class Meta:
         model = User
-        fields = ["display_name", "theme_preference"]
+        fields = ["display_name", "theme_preference", "default_pr_preference"]
 
 def settings(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":

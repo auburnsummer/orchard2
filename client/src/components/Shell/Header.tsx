@@ -5,6 +5,7 @@ import { faBars, faSliders } from "@fortawesome/free-solid-svg-icons";
 import { Menu, MenuButton, MenuItem, MenuItems, Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { useUser } from "@cafe/hooks/useUser";
+import { useLevelsUrl } from "@cafe/hooks/useLevelsUrl";
 import { useLocation, useSearchParams } from "@cafe/minibridge/hooks";
 import { Link } from "@cafe/minibridge/components/Link";
 import { Avatar } from "../ui/Avatar";
@@ -18,16 +19,16 @@ export function Header({ navbar }: { navbar?: React.ReactNode }) {
   const logOutForm = useRef<HTMLFormElement>(null);
   const [location, navigate] = useLocation();
   const [searchParams] = useSearchParams();
+  const buildLevelsUrl = useLevelsUrl();
 
   const onSearch = (query: string) => {
     const currPeerReviewQ = searchParams.get("peer_review");
-    const params = new URLSearchParams();
-    params.set("q", query);
+    const queryParams: Record<string, string> = { q: query };
     if (currPeerReviewQ) {
-      params.set("peer_review", currPeerReviewQ);
+      queryParams.peer_review = currPeerReviewQ;
     }
     const url = new URL(
-      `/levels/?${params.toString()}`,
+      buildLevelsUrl(queryParams),
       window.location.origin,
     );
     navigate(url);
