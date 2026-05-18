@@ -8,23 +8,19 @@ def test_profile_settings_can_change_settings(bridge_client: Client, user_with_n
     assert response.status_code == 200
     assert response.json()['context']['user']['theme_preference'] == 'light'
     assert response.json()['context']['user']['displayName'] == ''
-    assert response.json()['context']['user']['default_pr_preference'] == 'approved'
     # Now, let's change the settings
     response = bridge_client.post('/accounts/profile/settings/', {
         'theme_preference': 'dark',
-        'display_name': 'Test User',
-        'default_pr_preference': 'all'
+        'display_name': 'Test User'
     })
     assert response.status_code == 200
     assert response.json()['context']['user']['theme_preference'] == 'dark'
     assert response.json()['context']['user']['displayName'] == 'Test User'
-    assert response.json()['context']['user']['default_pr_preference'] == 'all'
     # and then if we fetch the settings again, they should be updated
     response = bridge_client.get('/accounts/profile/settings/')
     assert response.status_code == 200
     assert response.json()['context']['user']['theme_preference'] == 'dark'
     assert response.json()['context']['user']['displayName'] == 'Test User'
-    assert response.json()['context']['user']['default_pr_preference'] == 'all'
 
 @pytest.mark.django_db
 def test_profile_settings_rejects_invalid_data(bridge_client: Client, user_with_no_clubs):
@@ -39,13 +35,11 @@ def test_profile_settings_rejects_invalid_data(bridge_client: Client, user_with_
     assert response.status_code == 200
     initial_theme = response.json()['context']['user']['theme_preference']
     initial_display_name = response.json()['context']['user']['displayName']
-    initial_default_pr_preference = response.json()['context']['user']['default_pr_preference']
     
     # Try to submit invalid theme_preference
     response = bridge_client.post('/accounts/profile/settings/', {
         'theme_preference': 'invalid_theme',
-        'display_name': 'Updated Name',
-        'default_pr_preference': 'approved'
+        'display_name': 'Updated Name'
     })
     
     # The response should still be 200 (the view doesn't return errors, since 
@@ -58,13 +52,11 @@ def test_profile_settings_rejects_invalid_data(bridge_client: Client, user_with_
     assert response.status_code == 200
     assert response.json()['context']['user']['theme_preference'] == initial_theme
     assert response.json()['context']['user']['displayName'] == initial_display_name
-    assert response.json()['context']['user']['default_pr_preference'] == initial_default_pr_preference
     
     # Also test with another invalid theme value
     response = bridge_client.post('/accounts/profile/settings/', {
         'theme_preference': 'rainbow',
-        'display_name': 'Another Name',
-        'default_pr_preference': 'approved'
+        'display_name': 'Another Name'
     })
     
     # Verify again that settings were not updated
@@ -72,7 +64,6 @@ def test_profile_settings_rejects_invalid_data(bridge_client: Client, user_with_
     assert response.status_code == 200
     assert response.json()['context']['user']['theme_preference'] == initial_theme
     assert response.json()['context']['user']['displayName'] == initial_display_name
-    assert response.json()['context']['user']['default_pr_preference'] == initial_default_pr_preference
 
 
 @pytest.mark.django_db
@@ -83,16 +74,14 @@ def test_profile_settings_partial_update_theme_only(bridge_client: Client, user_
     # Set initial state
     response = bridge_client.post('/accounts/profile/settings/', {
         'theme_preference': 'light',
-        'display_name': 'Initial Name',
-        'default_pr_preference': 'approved'
+        'display_name': 'Initial Name'
     })
     assert response.status_code == 200
     
     # Update theme preference while explicitly providing display_name
     response = bridge_client.post('/accounts/profile/settings/', {
         'theme_preference': 'dark',
-        'display_name': 'Initial Name',  # Must provide to preserve
-        'default_pr_preference': 'approved'
+        'display_name': 'Initial Name'  # Must provide to preserve
     })
     assert response.status_code == 200
     
@@ -111,16 +100,14 @@ def test_profile_settings_partial_update_display_name_only(bridge_client: Client
     # Set initial state
     response = bridge_client.post('/accounts/profile/settings/', {
         'theme_preference': 'dark',
-        'display_name': 'Initial Name',
-        'default_pr_preference': 'approved'
+        'display_name': 'Initial Name'
     })
     assert response.status_code == 200
     
     # Update display name while explicitly providing theme_preference
     response = bridge_client.post('/accounts/profile/settings/', {
         'theme_preference': 'dark',  # Must provide to preserve
-        'display_name': 'Updated Name',
-        'default_pr_preference': 'approved'
+        'display_name': 'Updated Name'
     })
     assert response.status_code == 200
     
@@ -139,15 +126,13 @@ def test_profile_settings_missing_fields_resets_to_defaults(bridge_client: Clien
     # Set initial state
     response = bridge_client.post('/accounts/profile/settings/', {
         'theme_preference': 'dark',
-        'display_name': 'Test User',
-        'default_pr_preference': 'approved'
+        'display_name': 'Test User'
     })
     assert response.status_code == 200
     
     # Submit form with only theme_preference (missing display_name)
     response = bridge_client.post('/accounts/profile/settings/', {
-        'theme_preference': 'light',
-        'default_pr_preference': 'approved'
+        'theme_preference': 'light'
         # display_name is missing, so it should reset to empty
     })
     assert response.status_code == 200
@@ -166,8 +151,7 @@ def test_profile_settings_empty_display_name(bridge_client: Client, user_with_no
     
     response = bridge_client.post('/accounts/profile/settings/', {
         'theme_preference': 'dark',
-        'display_name': '',  # Empty string
-        'default_pr_preference': 'approved'
+        'display_name': ''  # Empty string
     })
     assert response.status_code == 200
     
@@ -185,8 +169,7 @@ def test_profile_settings_success_message(bridge_client: Client, user_with_no_cl
     
     response = bridge_client.post('/accounts/profile/settings/', {
         'theme_preference': 'dark',
-        'display_name': 'Test User',
-        'default_pr_preference': 'approved'
+        'display_name': 'Test User'
     })
     assert response.status_code == 200
     
@@ -216,8 +199,7 @@ def test_profile_settings_very_long_display_name(bridge_client: Client, user_wit
     
     response = bridge_client.post('/accounts/profile/settings/', {
         'theme_preference': 'dark',
-        'display_name': long_name,
-        'default_pr_preference': 'approved'
+        'display_name': long_name
     })
     assert response.status_code == 200
     
@@ -235,7 +217,6 @@ def test_anonymous_user_can_get_settings(bridge_client: Client):
     user_ctx = response.json()['context']['user']
     assert not user_ctx['authenticated']
     assert user_ctx['theme_preference'] == 'light'
-    assert user_ctx['default_pr_preference'] == 'approved'
     # Anonymous users have no displayName field
     assert 'displayName' not in user_ctx
 
@@ -245,8 +226,7 @@ def test_anonymous_user_can_change_theme(bridge_client: Client):
     """Anonymous user can POST a theme preference and it is saved in the session."""
     response = bridge_client.post('/accounts/profile/settings/', {
         'theme_preference': 'dark',
-        'display_name': '',
-        'default_pr_preference': 'approved'
+        'display_name': ''
     })
     assert response.status_code == 200
     assert response.json()['context']['user']['theme_preference'] == 'dark'
@@ -262,8 +242,7 @@ def test_anonymous_user_settings_persist_across_requests(bridge_client: Client):
     """Session-stored theme persists across multiple requests for the same client."""
     bridge_client.post('/accounts/profile/settings/', {
         'theme_preference': 'dark',
-        'display_name': '',
-        'default_pr_preference': 'approved'
+        'display_name': ''
     })
 
     for _ in range(3):
@@ -282,8 +261,7 @@ def test_anonymous_user_invalid_theme_not_saved(bridge_client: Client):
     # Submit invalid theme
     response = bridge_client.post('/accounts/profile/settings/', {
         'theme_preference': 'rainbow',
-        'display_name': '',
-        'default_pr_preference': 'approved'
+        'display_name': ''
     })
     assert response.status_code == 200
 
@@ -300,8 +278,7 @@ def test_anonymous_user_does_not_affect_authenticated_user(bridge_client: Client
     # Set theme in session while anonymous
     bridge_client.post('/accounts/profile/settings/', {
         'theme_preference': 'dark',
-        'display_name': '',
-        'default_pr_preference': 'pending'
+        'display_name': ''
     })
 
     # Log in — the user's own stored preference should take precedence
@@ -312,4 +289,3 @@ def test_anonymous_user_does_not_affect_authenticated_user(bridge_client: Client
     assert user_ctx['authenticated']
     # The authenticated user starts with the model default, not the session value
     assert user_ctx['theme_preference'] == 'light'
-    assert user_ctx['default_pr_preference'] == 'approved'

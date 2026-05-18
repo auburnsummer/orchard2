@@ -54,31 +54,6 @@ export function ProfileSettingsView() {
                 }
               ]}
             />
-            <Select
-              label="Default peer review search filter"
-              className="max-w-64"
-              allowDeselect={false}
-              defaultValue={user.default_pr_preference}
-              name="default_pr_preference"
-              data={[
-                {
-                  label: "Approved levels only",
-                  value: "approved",
-                },
-                {
-                  label: "Pending levels only",
-                  value: "pending",
-                },
-                {
-                  label: "Rejected levels only",
-                  value: "rejected",
-                },
-                {
-                  label: "All levels",
-                  value: "all",
-                }
-              ]}
-            />
 
             <Button type="submit" variant="primary" className="max-w-32 py-2 mt-4">Save</Button>
           </div>

@@ -3,13 +3,17 @@ import { Shell } from "../components/Shell";
 import { Words } from "@cafe/components/ui/Words";
 import { RDLevel } from "@cafe/types/rdLevelBase";
 import { LevelCard } from "@cafe/components/LevelCard/LevelCard";
-import { useLevelsUrl } from "@cafe/hooks/useLevelsUrl";
 
 type HomeViewProps = {
   daily_blend_level: RDLevel | null;
 }
 
 const ABOVE_FOLD_LINKS = [
+  {
+    href: "/levels",
+    text: "Browse all custom levels",
+    openInNewTab: false,
+  },
   {
     href: "https://docs.google.com/spreadsheets/d/1Uz26L34OZIgaK6hMfLBysgtEW4TYDj7iZZ5KqOMbNKY",
     text: "Level setlists (for beginners)",
@@ -51,13 +55,6 @@ const BELOW_FOLD_LINKS = [
 ];
 
 export function HomeView({ daily_blend_level }: HomeViewProps) {
-  const buildLevelsUrl = useLevelsUrl();
-
-  const aboveFoldLinks = [
-    { href: buildLevelsUrl(), text: "Browse all custom levels", openInNewTab: false },
-    ...ABOVE_FOLD_LINKS,
-  ];
-
   return (
     <Shell>
       <title>Rhythm Café</title>
@@ -79,7 +76,7 @@ export function HomeView({ daily_blend_level }: HomeViewProps) {
             </Words>
             <ul className="space-y-3">
               {
-                aboveFoldLinks.map((link) => (
+                ABOVE_FOLD_LINKS.map((link) => (
                   <li key={link.href} className="flex items-center gap-2">
                     <span className="text-violet-600 dark:text-violet-400 mt-0.5">→</span>
                     <Words as={Link} variant="link" href={link.href} {...(link.openInNewTab && { target: '_blank', rel: 'noopener noreferrer' })}>
