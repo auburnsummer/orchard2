@@ -3,23 +3,22 @@ from typing import TYPE_CHECKING
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.core.signing import Signer, BadSignature
-from django.db.models import Q, CharField, CheckConstraint, EmailField, QuerySet, IntegerField
+from django.db.models import Q, CharField, CheckConstraint, EmailField, IntegerField, Manager
 
 from .id_utils import generate_user_id, USER_ID_PREFIX
 
 if TYPE_CHECKING:
-    from cafe.models.clubs.club_membership import ClubMembership 
-    from django.db.models.manager import RelatedManager
+    from cafe.models.clubs.club_membership import ClubMembership
 
 class CafeUserManager(UserManager):
-    def create_user(self, username, password=None, **extra_fields):
+    def create_user(self, username, email=None, password=None, **extra_fields):
         user = super().create_user(username, password=password, **extra_fields)
         if user.email == "":
             user.email = None
             user.save()
         return user
     
-    def create_superuser(self, username, password, **extra_fields):
+    def create_superuser(self, username, email=None, password=None, **extra_fields):
         user = super().create_superuser(username, password=password, **extra_fields)
         if user.email == "":
             user.email = None
@@ -48,8 +47,15 @@ class User(AbstractUser):
         'system': 'System'
     }, max_length=100, default='light')
 
+    default_pr_preference = CharField(choices={
+        'approved': 'Approved',
+        'pending': 'Pending',
+        'rejected': 'Rejected',
+        'all': 'All'
+    }, max_length=100, default='approved')
+
     # from cafe.ClubMembership
-    memberships: RelatedManager[ClubMembership]
+    memberships: Manager[ClubMembership]
 
     def get_full_name(self) -> str:
         return self.display_name
@@ -146,6 +152,7 @@ class User(AbstractUser):
             "displayName": self.get_short_name(),
             "avatarURL": try_get_avatar(self),
             "theme_preference": self.theme_preference,
+            "default_pr_preference": self.default_pr_preference,
             "is_superuser": self.is_superuser,
             "is_peer_reviewer": self.has_perm("cafe.peerreview_rdlevel"),
         }
@@ -165,7 +172,7 @@ class User(AbstractUser):
         constraints = [
             CheckConstraint(
                 name="cafe__user_id_starts_with_u",
-                check=Q(id__startswith=USER_ID_PREFIX),
+                condition=Q(id__startswith=USER_ID_PREFIX),
             )
         ]
 
