@@ -364,9 +364,12 @@ def test_banned_user_api_key_rejected_by_middleware(client: Client):
     user = User.objects.create_user(username="testuser")
     api_key = user.generate_api_key()
 
-    user.is_active = False
-    user.save()
+    # user is not active but their API key is still ok because revoke is not called
+    # on a db-level update.
+    User.objects.filter(pk=user.pk).update(is_active=False)
+    user.refresh_from_db()
 
+    # however even a valid API key shouldn't work if user is inactive.
     response = client.get('/accounts/profile/', HTTP_AUTHORIZATION=f'Bearer {api_key}')
     assert response.status_code == 302
     assert '/accounts/login/' in response.url
