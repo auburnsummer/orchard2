@@ -337,3 +337,57 @@ def test_api_key_with_old_iteration_rejected():
     # Old key should no longer work
     assert not user.check_api_key(old_key)
     assert User.get_user_from_api_key(old_key) is None
+
+
+# --- Ban behaviour ---
+
+@pytest.mark.django_db
+def test_banning_user_revokes_api_key():
+    """Setting is_active=False should increment api_key_iter, invalidating any existing key."""
+    user = User.objects.create_user(username="testuser")
+    api_key = user.generate_api_key()
+    assert user.api_key_iter == 1
+    assert user.check_api_key(api_key)
+
+    user.is_active = False
+    user.save()
+    user.refresh_from_db()
+
+    assert user.api_key_iter == 2
+    assert not user.check_api_key(api_key)
+    assert User.get_user_from_api_key(api_key) is None
+
+
+@pytest.mark.django_db
+def test_banned_user_api_key_rejected_by_middleware(client: Client):
+    """A banned user's API key must be rejected by ApiKeyAuthenticationMiddleware."""
+    user = User.objects.create_user(username="testuser")
+    api_key = user.generate_api_key()
+
+    user.is_active = False
+    user.save()
+
+    response = client.get('/accounts/profile/', HTTP_AUTHORIZATION=f'Bearer {api_key}')
+    assert response.status_code == 302
+    assert '/accounts/login/' in response.url
+
+
+@pytest.mark.django_db
+def test_banned_user_session_rejected(client: Client):
+    """A banned user whose session cookie is still present should be treated as anonymous.
+    
+    Django's ModelBackend.get_user() returns None for inactive users, so the
+    session resolves to AnonymousUser and the view redirects to login.
+    """
+    # use the plain client (not bridge_client) because the bridge middleware converts
+    # 302s into 200 JSON responses which would obscure the assertion.
+
+    user = User.objects.create_user(username="testuser")
+    client.force_login(user)
+
+    user.is_active = False
+    user.save()
+
+    response = client.get('/accounts/profile/')
+    assert response.status_code == 302
+    assert '/accounts/login/' in response.url

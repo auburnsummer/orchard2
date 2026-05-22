@@ -590,3 +590,52 @@ def test_step_update_modal_with_overwrite_metadata_sets_flag(
     assert prefill is not None
     assert prefill.overwrite_metadata is True
     mock_prefill.assert_called_once_with(prefill.id, session.id)
+
+
+# ---- Banned user ----
+
+def _pre_ban_discord_user(discord_user_id: str, discord_username: str):
+    """Create a banned user with the given Discord ID."""
+    from cafe.models.rdlevels.tempuser import get_or_create_discord_user
+    user = get_or_create_discord_user(discord_user_id, discord_username)
+    user.is_active = False
+    user.save()
+    return user
+
+
+@pytest.mark.django_db
+def test_add_rejects_banned_user(client_with_discord_key, discord_guild_with_attached_club):
+    client, private_key = client_with_discord_key
+    _pre_ban_discord_user(SAME_USER_AUTHOR["id"], SAME_USER_AUTHOR["global_name"])
+
+    body = make_discord_body(
+        False, discord_guild_with_attached_club.id, ["level.rdzip"],
+        SAME_USER_AUTHOR, SAME_USER_INVOKER,
+    )
+    request = create_discord_request(body, private_key)
+    response = client.post("/discord_interactions/", **request)
+    assert response.status_code == 200
+    assert response.json() == {
+        "data": {"content": "You cannot add levels because your user is inactive.", "flags": 64},
+        "type": 4,
+    }
+    assert not AddSession.objects.filter(id=body["id"]).exists()
+
+
+@pytest.mark.django_db
+def test_add_delegated_rejects_banned_poster(client_with_discord_key, discord_guild_with_attached_club):
+    client, private_key = client_with_discord_key
+    _pre_ban_discord_user(DIFFERENT_AUTHOR["id"], DIFFERENT_AUTHOR["global_name"])
+
+    body = make_discord_body(
+        True, discord_guild_with_attached_club.id, ["level.rdzip"],
+        DIFFERENT_AUTHOR, SAME_USER_INVOKER,
+    )
+    request = create_discord_request(body, private_key)
+    response = client.post("/discord_interactions/", **request)
+    assert response.status_code == 200
+    assert response.json() == {
+        "data": {"content": "You cannot add levels because your user is inactive.", "flags": 64},
+        "type": 4,
+    }
+    assert not AddSession.objects.filter(id=body["id"]).exists()

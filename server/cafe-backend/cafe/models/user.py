@@ -100,6 +100,11 @@ class User(AbstractUser):
             
         except (BadSignature, AttributeError, TypeError):
             return False
+
+    def save(self, *args, **kwargs):
+        if not self.is_active:
+            self.revoke_api_key(False)
+        super().save(*args, **kwargs)
     
     @classmethod
     def get_user_from_api_key(cls, signed_token: str) -> "User | None":
@@ -132,7 +137,7 @@ class User(AbstractUser):
         
         return None
     
-    def revoke_api_key(self) -> None:
+    def revoke_api_key(self, save=True) -> None:
         """
         Revoke the user's API key by incrementing the iteration counter.
         
@@ -140,7 +145,8 @@ class User(AbstractUser):
         track them individually.
         """
         self.api_key_iter += 1
-        self.save()
+        if save:
+            self.save()
 
     def __str__(self):
         return f"{self.display_name} ({self.id})"

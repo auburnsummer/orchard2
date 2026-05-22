@@ -1,4 +1,3 @@
-from django.contrib.auth.models import AnonymousUser
 from django.http import HttpRequest
 from cafe.models import User
 
@@ -6,12 +5,9 @@ from cafe.models import User
 class ApiKeyAuthenticationMiddleware:
     """
     Middleware that authenticates users via API key in the Authorization header.
-    
-    If an API key is provided in the format "Bearer <key>", this middleware will
-    attempt to authenticate the user with that key and set request.user.
-    
-    If no API key is provided or authentication fails, the request proceeds normally
-    (allowing session-based authentication to work).
+    (The header should be in the format "Bearer <key>.")
+
+    Falls through to session user if no key provided.
     """
     
     def __init__(self, get_response):
@@ -26,13 +22,8 @@ class ApiKeyAuthenticationMiddleware:
             
             # Unsign and validate the token
             user = User.get_user_from_api_key(api_key)
-            if user:
+            if user and user.is_active:
                 request.user = user
-                request.api_key_authenticated = True
-            else:
-                request.api_key_authenticated = False
-        else:
-            request.api_key_authenticated = False
         
         response = self.get_response(request)
         return response
