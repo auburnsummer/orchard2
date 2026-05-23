@@ -184,7 +184,9 @@ def add_v2(data, check_user_is_poster=True):
             return ephemeral_response("You can only add levels from your own messages.")
         
     user = get_or_create_discord_user(poster_id, message['author'].get('global_name') or message['author']['username'])
-    
+    if not user.is_active:
+        return ephemeral_response("You cannot add levels because your user is inactive.")
+
     # if there are multiple attachments, we need to ask the user which one they want to add, which means we are on phase 1
     # if there is only one attachment, we can skip straight to phase 2, which asks the user if this is a new level or an update to an existing level.
     phase = AddSessionPhase.SELECTING_ATTACHMENT if len(attachments) > 1 else AddSessionPhase.SELECTING_TYPE

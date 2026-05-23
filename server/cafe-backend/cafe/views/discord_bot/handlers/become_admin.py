@@ -11,6 +11,8 @@ def becomeadmin(data):
         return not_found_response
     invoker_id = data['member']['user']['id']
     user = get_or_create_discord_user(invoker_id, data['member']['user'].get('global_name') or data['member']['user']['username'])
+    if not user.is_active:
+        return ephemeral_response("Cannot promote you because you are inactive.")
     membership = ClubMembership(
         user=user,
         club=club,
