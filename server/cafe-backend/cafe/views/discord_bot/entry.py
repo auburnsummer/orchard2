@@ -10,6 +10,7 @@ from orchard.settings import DISCORD_PUBLIC_KEY
 
 from .handlers import HANDLERS
 
+from cafe.models.banned_guild import BannedGuild
 from .handlers.utils import ephemeral_response, ResponseType, InteractionType
 
 verify_key = Ed25519PublicKey.from_public_bytes(bytes.fromhex(DISCORD_PUBLIC_KEY))
@@ -43,6 +44,11 @@ def entry(request):
             "type": ResponseType.PONG.value
         })
     
+    # check if the guild is banned.
+    guild_id = data.get('guild_id')
+    if guild_id and BannedGuild.objects.filter(guild_id=guild_id).exists():
+        return ephemeral_response("This server is not authorized to use this bot.")
+
     # check if it's installed in a user or guild context. we should only support guild context.
     authorizing_integration_owners = data["authorizing_integration_owners"]
     # If the key is GUILD_INSTALL ("0"), the value depends on the source of the interaction:
@@ -50,7 +56,7 @@ def entry(request):
     # The value will be "0" if the interaction is triggered from a DM with the app’s bot user
     # If the key is USER_INSTALL ("1"), the value will be the ID of the authorizing user
     if "1" in authorizing_integration_owners.keys():
-        return ephemeral_response("This bot does not support usermode installation.")
+        return ephemeral_response("This bot does not support installation in a DM.")
     
     # commands.
     if data['type'] == InteractionType.APPLICATION_COMMAND.value:

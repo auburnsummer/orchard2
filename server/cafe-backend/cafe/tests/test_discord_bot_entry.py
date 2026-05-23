@@ -1,4 +1,5 @@
 import json
+import pytest
 from conftest import create_discord_request
 
 
@@ -100,6 +101,50 @@ def test_discord_bot_entry_unknown_type(client_with_discord_key):
     
     assert response.status_code == 404
     assert response.content == b'Not sure how to handle this type.'
+
+
+@pytest.mark.django_db
+def test_discord_bot_entry_banned_guild_is_rejected(client_with_discord_key):
+    """Test that commands from a banned guild receive an ephemeral rejection message."""
+    from cafe.models.banned_guild import BannedGuild
+
+    client, private_key = client_with_discord_key
+
+    BannedGuild.objects.create(guild_id='999888777666555444')
+
+    command_payload = {
+        'type': 2,
+        'guild_id': '999888777666555444',
+        'authorizing_integration_owners': {'0': '999888777666555444'},
+        'data': {'name': 'version'},
+    }
+    request_data = create_discord_request(command_payload, private_key)
+
+    response = client.post('/discord_interactions/', **request_data)
+
+    assert response.status_code == 200
+    response_data = response.json()
+    assert response_data['type'] == 4   # CHANNEL_MESSAGE_WITH_SOURCE
+    assert response_data['data']['flags'] == 64  # EPHEMERAL
+    assert response_data['data']['content'] == 'This server is not authorized to use this bot.'
+
+
+@pytest.mark.django_db
+def test_discord_bot_entry_banned_guild_does_not_block_ping(client_with_discord_key):
+    """Test that PING interaction are not blocked even if guilds are banned"""
+    from cafe.models.banned_guild import BannedGuild
+
+    client, private_key = client_with_discord_key
+
+    BannedGuild.objects.create(guild_id='999888777666555444')
+
+    ping_payload = {'type': 1}
+    request_data = create_discord_request(ping_payload, private_key)
+
+    response = client.post('/discord_interactions/', **request_data)
+
+    assert response.status_code == 200
+    assert response.json() == {'type': 1}
 
 
 # each command will get its own test file
