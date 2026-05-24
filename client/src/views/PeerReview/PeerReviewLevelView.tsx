@@ -447,12 +447,10 @@ export function PeerReviewLevelView({
     if (doPrivatePost && pathlabWebhookUrl) {
       promises.push(webhookPost(pathlabWebhookUrl, webhookPayloads.private));
     }
-    if (pingUser && userDiscordID && publicWebhookUrl) {
-      promises.push(
-        webhookPost(publicWebhookUrl, webhookPayloads.pingMessage),
-      );
-    }
     await Promise.all(promises);
+    if (pingUser && userDiscordID && publicWebhookUrl) {
+      await webhookPost(publicWebhookUrl, webhookPayloads.pingMessage);
+    }
     formRef.current?.submit();
   };
 
