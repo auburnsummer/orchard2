@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 
 from cafe.models.add_session import AddSession
+from cafe.models.banned_guild import BannedGuild
 from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
 from .models import User
 
@@ -39,3 +40,10 @@ admin.site.register(RDLevel, SimpleHistoryAdmin)
 admin.site.register(DailyBlend)
 admin.site.register(DailyBlendRandomPool)
 admin.site.register(AddSession)
+
+
+@admin.register(BannedGuild)
+class BannedGuildAdmin(admin.ModelAdmin):
+    list_display = ('guild_id', 'reason', 'banned_at')
+    search_fields = ('guild_id',)
+    readonly_fields = ('banned_at',)
