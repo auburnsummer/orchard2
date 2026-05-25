@@ -26,6 +26,7 @@ const DailyBlendConfiguration = React.lazy(() => import("./views/DailyBlend/Dail
 const DailyBlendRandomPool = React.lazy(() => import("./views/DailyBlend/DailyBlendRandomPool").then(m => ({ default: m.DailyBlendRandomPool })));
 const DailyBlendSchedule = React.lazy(() => import("./views/DailyBlend/DailyBlendSchedule").then(m => ({ default: m.DailyBlendSchedule })));
 const DailyBlendBlendNow = React.lazy(() => import("./views/DailyBlend/DailyBlendBlendNow").then(m => ({ default: m.DailyBlendBlendNow })));
+const DailyBlendRandomPools = React.lazy(() => import("./views/DailyBlend/DailyBlendRandomPools").then(m => ({ default: m.DailyBlendRandomPools })));
 
 const ClubSettingsConnectDiscord = React.lazy(() => import("./views/ClubSettings/ClubSettingsConnectDiscord").then(m => ({ default: m.ClubSettingsConnectDiscord })));
 const ClubSettingsInfoView = React.lazy(() => import("./views/ClubSettings/ClubSettingsInfoView").then(m => ({ default: m.ClubSettingsInfoView })));
@@ -64,6 +65,7 @@ export const routeMap: { [key: string]: React.FunctionComponent<any> } = {
   "cafe:blend_main": DailyBlendMainView,
   "cafe:blend_config": DailyBlendConfiguration,
   "cafe:blend_pool": DailyBlendRandomPool,
+  "cafe:blend_pools": DailyBlendRandomPools,
   "cafe:blend_schedule": DailyBlendSchedule,
   "cafe:blend_now": DailyBlendBlendNow,
 };

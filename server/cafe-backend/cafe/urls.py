@@ -6,6 +6,7 @@ from cafe.views.clubs.settings.club_delete import club_delete
 from cafe.views.rdlevels.dailyblend.blend_config import blend_config
 from cafe.views.rdlevels.dailyblend.blend_now import blend_now
 from cafe.views.rdlevels.dailyblend.blend_pool import blend_pool
+from cafe.views.rdlevels.dailyblend.blend_pools import blend_pools
 from cafe.views.rdlevels.dailyblend.blend_schedule import blend_schedule
 from cafe.views.rdlevels.peerreview.pr_level import pr_rdlevel
 from cafe.views.rdlevels.peerreview.pr_main import pr_main
@@ -83,6 +84,7 @@ urlpatterns = [
     path("daily-blend/", blend_main, name="blend_main"),
     path("daily-blend/config/", blend_config, name="blend_config"),
     path("daily-blend/random-pool/", blend_pool, name="blend_pool"),
+    path("daily-blend/random-pools/", blend_pools, name="blend_pools"),
     path("daily-blend/schedule/", blend_schedule, name="blend_schedule"),
     path("daily-blend/blend-now/", blend_now, name="blend_now"),
 
