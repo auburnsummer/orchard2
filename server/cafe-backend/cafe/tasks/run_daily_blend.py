@@ -7,30 +7,44 @@ import jsonata
 
 from cafe.models.rdlevels.daily_blend import DailyBlend, get_blend_date
 from cafe.models.rdlevels.daily_blend_configuration import DailyBlendConfiguration
+from cafe.models.rdlevels.blend_pool import get_default_blend_pool
 from cafe.webhooks import is_allowed_webhook_url
 
-def todays_blend_or_pool() -> DailyBlend | None:
+def todays_blend_or_default() -> DailyBlend:
+    "Get the blend for today, if there isn't one, create one set to the default pool."
     today = get_blend_date()
     from cafe.models.rdlevels.daily_blend import DailyBlend
     try:
         daily_blend = DailyBlend.objects.get(featured_date=today)
         return daily_blend
     except DailyBlend.DoesNotExist:
-        # get something from the pool
-        from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
-        pool = DailyBlendRandomPool.objects.all()
-        if pool.count() == 0:
-            return None
-        pool_entry = random.choice(pool)
-        # make a DailyBlend for today with this level
+        # create a default pool object.
+        default_pool = get_default_blend_pool()
         daily_blend = DailyBlend.objects.create(
-            level=pool_entry.level,
+            pool=default_pool,
             featured_date=today,
-            blended=False
+            blended=False,
+            level=None
         )
-        # remove from pool
-        pool_entry.delete()
         return daily_blend
+
+def resolve_pool_blend(blend: DailyBlend):
+    "If a DailyBlend is set to a pool, pick a level out of the pool and resolve the DailyBlend to that level."
+    from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
+    if blend.level:
+        return blend # no change needed, it's already set to a level.
+    # blend.pool must be set at this point.
+    pool_levels = DailyBlendRandomPool.objects.filter(pool=blend.pool)
+    if pool_levels.count() == 0:
+        return None
+    
+    pool_entry = random.choice(pool_levels)
+    blend.level = pool_entry.level
+    blend.pool = None
+    # remove from pool. TODO: make this behaviour adjustable per pool.
+    pool_entry.delete()
+    blend.save()
+    return blend
     
 def blend_blend(blend: DailyBlend):
     config = DailyBlendConfiguration.get_config()
@@ -53,8 +67,10 @@ def run_daily_blend_task(force: bool = False):
     if config.paused:
         return  # daily blend is paused
 
-    blend = todays_blend_or_pool()
-    if blend is None:
+    blend = todays_blend_or_default()
+    resolve_pool_blend(blend)
+
+    if blend.level is None:
         raise ValueError("No daily blend available and pool is empty")
     
     if blend.blended and not force:
