@@ -36,7 +36,7 @@ def get_todays_blend() -> RDLevel | None:
         raise DailyBlend.DoesNotExist 
     except DailyBlend.DoesNotExist:
         # get the most recent past blend
-        past_blends = DailyBlend.objects.filter(featured_date__lt=blend_date, level__is_null=False).order_by('-featured_date')
+        past_blends = DailyBlend.objects.filter(featured_date__lt=blend_date, level__isnull=False).order_by('-featured_date')
         first = past_blends.first()
         if first:
             return first.level
@@ -65,7 +65,7 @@ class DailyBlend(models.Model):
         constraints = [
             models.CheckConstraint(
                 name="at_least_one_of_level_or_pool_is_not_null",
-                condition=Q(level__is_null=False) | Q(pool__is_null=False)
+                condition=Q(level_id__isnull=False) | Q(pool_id__isnull=False)
             )
         ]
 
