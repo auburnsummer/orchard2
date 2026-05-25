@@ -156,7 +156,217 @@ def test_get_todays_blend_before_cutoff_falls_back_to_past(rdlevel):
     assert result is None
 
 
+# ============== Tests: get_todays_blend with pool-only blend ==============
+
+@pytest.mark.django_db
+@freeze_time(_AFTER_CUTOFF_TIME, tz_offset=0)
+def test_get_todays_blend_falls_back_when_today_has_pool_only(rdlevel, default_blend_pool):
+    """If today's DailyBlend is pool-only (not yet resolved), fall back to most recent past resolved blend"""
+    from cafe.models.rdlevels.daily_blend import DailyBlend, get_todays_blend
+
+    DailyBlend.objects.create(
+        pool=default_blend_pool,
+        featured_date=datetime.date(2025, 12, 18)
+    )
+    DailyBlend.objects.create(
+        level=rdlevel,
+        featured_date=datetime.date(2025, 12, 17)
+    )
+
+    result = get_todays_blend()
+    assert result == rdlevel
+
+
+@pytest.mark.django_db
+@freeze_time(_AFTER_CUTOFF_TIME, tz_offset=0)
+def test_get_todays_blend_returns_none_when_today_has_pool_only_and_no_past(default_blend_pool):
+    """If today's DailyBlend is pool-only and there's no past resolved blend, return None"""
+    from cafe.models.rdlevels.daily_blend import DailyBlend, get_todays_blend
+
+    DailyBlend.objects.create(
+        pool=default_blend_pool,
+        featured_date=datetime.date(2025, 12, 18)
+    )
+
+    result = get_todays_blend()
+    assert result is None
+
+
+# ============== Tests: todays_blend_or_default ==============
+
+@pytest.mark.django_db
+@freeze_time(_AFTER_CUTOFF_TIME, tz_offset=0)
+def test_todays_blend_or_default_returns_existing_level_blend(rdlevel, default_blend_pool):
+    """Returns existing DailyBlend for today if it already has a level"""
+    from cafe.models.rdlevels.daily_blend import DailyBlend
+    from cafe.tasks.run_daily_blend import todays_blend_or_default
+
+    existing = DailyBlend.objects.create(
+        level=rdlevel,
+        featured_date=datetime.date(2025, 12, 18)
+    )
+
+    result = todays_blend_or_default()
+    assert result == existing
+    assert DailyBlend.objects.count() == 1
+
+
+@pytest.mark.django_db
+@freeze_time(_AFTER_CUTOFF_TIME, tz_offset=0)
+def test_todays_blend_or_default_returns_existing_pool_blend(default_blend_pool):
+    """Returns existing DailyBlend for today if it already has a pool"""
+    from cafe.models.rdlevels.daily_blend import DailyBlend
+    from cafe.tasks.run_daily_blend import todays_blend_or_default
+
+    existing = DailyBlend.objects.create(
+        pool=default_blend_pool,
+        featured_date=datetime.date(2025, 12, 18)
+    )
+
+    result = todays_blend_or_default()
+    assert result == existing
+    assert DailyBlend.objects.count() == 1
+
+
+@pytest.mark.django_db
+@freeze_time(_AFTER_CUTOFF_TIME, tz_offset=0)
+def test_todays_blend_or_default_creates_default_pool_blend_when_none_today(default_blend_pool):
+    """When no DailyBlend exists for today, creates one pointing to the default pool"""
+    from cafe.models.rdlevels.daily_blend import DailyBlend
+    from cafe.tasks.run_daily_blend import todays_blend_or_default
+
+    result = todays_blend_or_default()
+
+    assert DailyBlend.objects.count() == 1
+    assert result.pool == default_blend_pool
+    assert result.level is None
+    assert result.featured_date == datetime.date(2025, 12, 18)
+
+
+# ============== Tests: resolve_pool_blend ==============
+
+@pytest.mark.django_db
+def test_resolve_pool_blend_no_op_when_level_already_set(rdlevel, default_blend_pool):
+    """Returns blend unchanged and does not consume pool entries when level is already set"""
+    from cafe.models.rdlevels.daily_blend import DailyBlend
+    from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
+    from cafe.tasks.run_daily_blend import resolve_pool_blend
+
+    blend = DailyBlend.objects.create(
+        level=rdlevel,
+        featured_date=datetime.date(2025, 12, 18)
+    )
+    DailyBlendRandomPool.objects.create(level=rdlevel, pool=default_blend_pool)
+
+    resolve_pool_blend(blend)
+
+    assert blend.level == rdlevel
+    assert DailyBlendRandomPool.objects.count() == 1  # pool entry not consumed
+
+
+@pytest.mark.django_db
+def test_resolve_pool_blend_picks_level_from_pool(rdlevel, default_blend_pool):
+    """Resolves a pool-based DailyBlend to a specific level from the pool"""
+    from cafe.models.rdlevels.daily_blend import DailyBlend
+    from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
+    from cafe.tasks.run_daily_blend import resolve_pool_blend
+
+    blend = DailyBlend.objects.create(
+        pool=default_blend_pool,
+        featured_date=datetime.date(2025, 12, 18)
+    )
+    DailyBlendRandomPool.objects.create(level=rdlevel, pool=default_blend_pool)
+
+    resolve_pool_blend(blend)
+
+    assert blend.level == rdlevel
+    assert blend.pool is None
+
+
+@pytest.mark.django_db
+def test_resolve_pool_blend_persists_to_db(rdlevel, default_blend_pool):
+    """After resolution, the level is saved to the database and pool is cleared"""
+    from cafe.models.rdlevels.daily_blend import DailyBlend
+    from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
+    from cafe.tasks.run_daily_blend import resolve_pool_blend
+
+    blend = DailyBlend.objects.create(
+        pool=default_blend_pool,
+        featured_date=datetime.date(2025, 12, 18)
+    )
+    DailyBlendRandomPool.objects.create(level=rdlevel, pool=default_blend_pool)
+
+    resolve_pool_blend(blend)
+    blend.refresh_from_db()
+
+    assert blend.level == rdlevel
+    assert blend.pool is None
+
+
+@pytest.mark.django_db
+def test_resolve_pool_blend_deletes_pool_entry(rdlevel, default_blend_pool):
+    """Consumes (deletes) the chosen entry from the pool after resolving"""
+    from cafe.models.rdlevels.daily_blend import DailyBlend
+    from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
+    from cafe.tasks.run_daily_blend import resolve_pool_blend
+
+    blend = DailyBlend.objects.create(
+        pool=default_blend_pool,
+        featured_date=datetime.date(2025, 12, 18)
+    )
+    DailyBlendRandomPool.objects.create(level=rdlevel, pool=default_blend_pool)
+
+    resolve_pool_blend(blend)
+
+    assert DailyBlendRandomPool.objects.count() == 0
+
+
+@pytest.mark.django_db
+def test_resolve_pool_blend_only_picks_from_assigned_pool(rdlevel, second_rdlevel, default_blend_pool):
+    """Picks only from the pool assigned to the blend, not other pools"""
+    from cafe.models.rdlevels.blend_pool import BlendPool
+    from cafe.models.rdlevels.daily_blend import DailyBlend
+    from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
+    from cafe.tasks.run_daily_blend import resolve_pool_blend
+
+    other_pool = BlendPool.objects.create(name="Other Pool")
+    blend = DailyBlend.objects.create(
+        pool=default_blend_pool,
+        featured_date=datetime.date(2025, 12, 18)
+    )
+    # Only put second_rdlevel in the other pool — default_blend_pool is empty
+    DailyBlendRandomPool.objects.create(level=second_rdlevel, pool=other_pool)
+
+    resolve_pool_blend(blend)
+
+    assert blend.level is None  # default_blend_pool is empty, other pool ignored
+
+
+@pytest.mark.django_db
+def test_resolve_pool_blend_returns_none_when_pool_empty(default_blend_pool):
+    """Returns None and leaves blend unmodified when the pool has no entries"""
+    from cafe.models.rdlevels.daily_blend import DailyBlend
+    from cafe.tasks.run_daily_blend import resolve_pool_blend
+
+    blend = DailyBlend.objects.create(
+        pool=default_blend_pool,
+        featured_date=datetime.date(2025, 12, 18)
+    )
+
+    resolve_pool_blend(blend)
+
+    assert blend.level is None
+
+
 # ============== Fixtures ==============
+
+@pytest.fixture
+def default_blend_pool():
+    """Fetch the default blend pool (created by migration)"""
+    from cafe.models.rdlevels.blend_pool import BlendPool, DEFAULT_BLEND_POOL_ID
+    pool, _ = BlendPool.objects.get_or_create(id=DEFAULT_BLEND_POOL_ID, defaults={"name": "Default Pool"})
+    return pool
+
 
 @pytest.fixture
 def second_rdlevel(test_club):

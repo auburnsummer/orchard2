@@ -28,15 +28,15 @@ def todays_blend_or_default() -> DailyBlend:
         )
         return daily_blend
 
-def resolve_pool_blend(blend: DailyBlend):
+def resolve_pool_blend(blend: DailyBlend) -> None:
     "If a DailyBlend is set to a pool, pick a level out of the pool and resolve the DailyBlend to that level."
     from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
     if blend.level:
-        return blend # no change needed, it's already set to a level.
+        return  # no change needed, it's already set to a level.
     # blend.pool must be set at this point.
     pool_levels = DailyBlendRandomPool.objects.filter(pool=blend.pool)
     if pool_levels.count() == 0:
-        return None
+        return
     
     pool_entry = random.choice(pool_levels)
     blend.level = pool_entry.level
@@ -44,7 +44,6 @@ def resolve_pool_blend(blend: DailyBlend):
     # remove from pool. TODO: make this behaviour adjustable per pool.
     pool_entry.delete()
     blend.save()
-    return blend
     
 def blend_blend(blend: DailyBlend):
     config = DailyBlendConfiguration.get_config()
