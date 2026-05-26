@@ -148,7 +148,11 @@ export function DailyBlendSchedule(props: DailyBlendScheduleProps) {
                     {csrfInput}
                     <input type="hidden" name="featured_date" value={selectedDate?.toISOString().split("T")[0]} />
                     <Words variant="header">Edit Daily Blend for {selectedDate?.toDateString()}</Words>
-                    <TextInput label="Level ID (leave blank to clear schedule)" name="level_id" />
+                    <TextInput
+                        label="Level or Pool ID (leave blank to clear schedule)"
+                        name="level_or_pool_id"
+                        description="Special tip! Level IDs always start with 'r', pool IDs always start with 'b'"
+                    />
                     <Button className="mt-2" type="submit" variant="primary">Save</Button>
                 </Form>
             </Dialog>

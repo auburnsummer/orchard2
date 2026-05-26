@@ -184,18 +184,3 @@ class RDLevel(RulesModel):
             "blend": can_blend
         }
 
-def select_rdlevel_by_id_or_url(query: str) -> RDLevel | None:
-    """
-    function to select an RDLevel by its ID or by its URL
-    """
-    if query.startswith(DOMAIN_URL):
-        # e.g. https://v2.rhythm.cafe/levels/rgDxrsJh/
-        rdlevel_id = query.split("/")[-1]
-        # may be a trailing slash
-        rdlevel_id = rdlevel_id.rstrip("/")
-    else:
-        rdlevel_id = query
-    try:
-        return RDLevel.objects.get(id=rdlevel_id)
-    except RDLevel.DoesNotExist:
-        return None
