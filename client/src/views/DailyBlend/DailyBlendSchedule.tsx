@@ -13,6 +13,7 @@ import { Form } from "@cafe/minibridge/components/Form";
 import { TextInput } from "@cafe/components/ui/TextInput";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { BlendPool } from "@cafe/types/blends";
+import { extractIdFromUrlInput } from "@cafe/utils/extractIdFromUrlInput";
 
 type DailyBlendWithLevel = {
     level: RDLevel;
@@ -87,7 +88,8 @@ export function DailyBlendSchedule(props: DailyBlendScheduleProps) {
     const [selectedDate, setSelectedDate] = useState<Date>(new Date(Date.UTC(year, month, 1)));
     const [showEditDialog, setShowEditDialog] = useState<boolean>(false);
 
-    console.log(props.blends);
+    const [levelOrPoolId, setLevelOrPoolId] = useState("");
+    const submittedLevelOrPoolId = extractIdFromUrlInput(levelOrPoolId);
 
     const levelMap = useMemo(() => {
         const map: Record<number, DailyBlend> = {};
@@ -111,6 +113,7 @@ export function DailyBlendSchedule(props: DailyBlendScheduleProps) {
                     onEditClick={() => {
                         setShowEditDialog(true);
                         setSelectedDate(new Date(Date.UTC(year, month, day)));
+                        setLevelOrPoolId("");
                     }}
                 />
             );
@@ -165,10 +168,12 @@ export function DailyBlendSchedule(props: DailyBlendScheduleProps) {
                 <Form method="POST" onSubmit={() => setShowEditDialog(false)}>
                     {csrfInput}
                     <input type="hidden" name="featured_date" value={selectedDate?.toISOString().split("T")[0]} />
+                    <input type="hidden" name="level_or_pool_id" value={submittedLevelOrPoolId} />
                     <Words variant="header">Edit Daily Blend for {selectedDate?.toDateString()}</Words>
                     <TextInput
                         label="Level or Pool ID (leave blank to clear schedule)"
-                        name="level_or_pool_id"
+                        value={levelOrPoolId}
+                        onChange={(e) => setLevelOrPoolId(e.target.value)}
                         description="Special tip! Level IDs always start with 'r', pool IDs always start with 'b'"
                     />
                     <Button className="mt-2" type="submit" variant="primary">Save</Button>

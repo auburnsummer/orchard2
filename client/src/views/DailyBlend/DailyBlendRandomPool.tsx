@@ -8,11 +8,12 @@ import { TextInput } from "@cafe/components/ui/TextInput";
 import { Button } from "@cafe/components/ui/Button";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@cafe/components/ui/Table";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "@cafe/minibridge/components/Link";
 import { BlendPool } from "@cafe/types/blends";
 import { useDisclosure } from "@mantine/hooks";
 import { Dialog } from "@cafe/components/ui/Dialog";
+import { extractIdFromUrlInput } from "@cafe/utils/extractIdFromUrlInput";
 
 type DailyBlendRandomPoolProps = {
     pool: BlendPool;
@@ -75,6 +76,7 @@ export function DailyBlendRandomPool({ pool, pool_items }: DailyBlendRandomPoolP
     const csrfInput = useCSRFTokenInput();
 
     const [levelId, setLevelId] = useState("");
+    const submittedId = extractIdFromUrlInput(levelId);
 
     const [isOpen, { open, close }] = useDisclosure(false);
 
@@ -103,9 +105,9 @@ export function DailyBlendRandomPool({ pool, pool_items }: DailyBlendRandomPoolP
                 </div>
                 <Form className="flex flex-row gap-2 items-end" method="POST">
                     {csrfInput}
+                    <input type="hidden" name="level_id" value={submittedId} />
                     <TextInput
                         label="Level ID"
-                        name="level_id"
                         value={levelId}
                         onChange={(e) => setLevelId(e.target.value)}
                     />
