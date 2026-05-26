@@ -57,7 +57,7 @@ export function DailyBlendRandomPools({pools}: DailyBlendRandomPoolsProps) {
                     {
                         pools.map(pool => (
                             <Words as="li" variant="link">
-                                <Link href={`/daily-blend/random-pools/${pool.id}`}>{pool.name}</Link>
+                                <Link href={`/daily-blend/random-pools/${pool.id}/`}>{pool.name}</Link>
                             </Words>
                         ))
                     }
