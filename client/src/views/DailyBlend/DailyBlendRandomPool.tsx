@@ -76,7 +76,7 @@ export function DailyBlendRandomPool({ pool, pool_items }: DailyBlendRandomPoolP
 
     const [levelId, setLevelId] = useState("");
 
-    const [isOpen, { open, close, toggle }] = useDisclosure(false);
+    const [isOpen, { open, close }] = useDisclosure(false);
 
     return (
         <Shell
