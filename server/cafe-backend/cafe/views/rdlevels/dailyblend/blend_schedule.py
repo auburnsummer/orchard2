@@ -12,7 +12,7 @@ from django.contrib import messages
 
 class BlendScheduleForm(forms.Form):
     featured_date = forms.DateField()
-    level_id = forms.CharField(required=False)
+    level_or_pool_id = forms.CharField(required=False)
 
 @permission_required('cafe.blend_rdlevel')
 def blend_schedule(request: HttpRequest) -> JsonResponse:
@@ -24,21 +24,34 @@ def blend_schedule(request: HttpRequest) -> JsonResponse:
         form = BlendScheduleForm(request.POST)
         if form.is_valid():
             featured_date = form.cleaned_data['featured_date']
-            level_id = form.cleaned_data['level_id']
+            level_or_pool_id = form.cleaned_data['level_or_pool_id']
 
-            if level_id:
-                level = RDLevel.objects.filter(id=level_id).first()
-                if not level:
-                    messages.error(request, f"Level with ID {level_id} does not exist.")
-                    return Response(request, request.resolver_match.view_name, {})
-                DailyBlend.objects.update_or_create(
-                    featured_date=featured_date,
-                    defaults={'level_id': level.id}
-                )
-                messages.success(request, f"Scheduled blend for {featured_date} with level ID {level_id}.")
-            else:
+            if level_or_pool_id == "":
                 DailyBlend.objects.filter(featured_date=featured_date).delete()
                 messages.success(request, f"Cleared blend schedule for {featured_date}.")
+            elif level_or_pool_id.startswith("r"):
+                # it's a level.
+                level = RDLevel.objects.filter(id=level_or_pool_id).first()
+                if not level:
+                    messages.error(request, f"Level with ID {level_or_pool_id} does not exist.")
+                else:
+                    DailyBlend.objects.update_or_create(
+                        featured_date=featured_date,
+                        defaults={'level': level, 'pool': None}
+                    )
+            elif level_or_pool_id.startswith("b"):
+                # it's a pool.
+                from cafe.models.rdlevels.blend_pool import BlendPool
+                pool = BlendPool.objects.filter(id=level_or_pool_id).first()
+                if not pool:
+                    messages.error(request, f"Pool with ID {level_or_pool_id} does not exist.")
+                else:
+                    DailyBlend.objects.update_or_create(
+                        featured_date=featured_date,
+                        defaults={'pool': pool, 'level': None}
+                    )
+            else:
+                messages.error(request, "Invalid ID")
         else:
             messages.error(request, "Invalid form submission.")
     

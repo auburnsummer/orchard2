@@ -12,12 +12,23 @@ import { Dialog } from "@cafe/components/ui/Dialog";
 import { Form } from "@cafe/minibridge/components/Form";
 import { TextInput } from "@cafe/components/ui/TextInput";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
+import { BlendPool } from "@cafe/types/blends";
 
-type DailyBlend = {
-    level: RDLevel,
+type DailyBlendWithLevel = {
+    level: RDLevel;
+    pool: null;
     featured_date: string, // ISO format YYYY-MM-DD
     blended: boolean,
 }
+
+type DailyBlendWithPool = {
+    level: null;
+    pool: BlendPool;
+    featured_date: string, // ISO format YYYY-MM-DD
+    blended: boolean,
+}
+
+type DailyBlend = DailyBlendWithLevel | DailyBlendWithPool;
 
 type DailyBlendScheduleProps = {
     blends: DailyBlend[];
@@ -28,10 +39,11 @@ type DailyBlendScheduleProps = {
 type DailyBlendCellProps = {
     day: number;
     level: RDLevel | null;
+    pool: BlendPool | null;
     onEditClick?: () => void;
 }
 
-function DailyBlendCell({ day, level, onEditClick }: DailyBlendCellProps) {
+function DailyBlendCell({ day, level, pool, onEditClick }: DailyBlendCellProps) {
     return (
         <TableCell>
             <div className="flex flex-col">
@@ -47,8 +59,12 @@ function DailyBlendCell({ day, level, onEditClick }: DailyBlendCellProps) {
                             <Link href={`/levels/${level.id}/`}>
                                 <Words variant="link">{level.song}</Words>
                             </Link>
+                        ) : pool !== null ? (
+                            <Link href={`/daily-blend/random-pools/${pool.id}/`}>
+                                <Words variant="link">{pool.name}</Words>
+                            </Link>
                         ) : (
-                            <Words variant="muted">Pool</Words>
+                            <Words variant="muted">Default</Words>
                         )
                     }
                 </div>
@@ -74,10 +90,10 @@ export function DailyBlendSchedule(props: DailyBlendScheduleProps) {
     console.log(props.blends);
 
     const levelMap = useMemo(() => {
-        const map: Record<number, RDLevel> = {};
+        const map: Record<number, DailyBlend> = {};
         props.blends.forEach(blend => {
             const date = new Date(blend.featured_date);
-            map[date.getUTCDate()] = blend.level;
+            map[date.getUTCDate()] = blend;
         });
         return map;
     }, [props.blends]);
@@ -85,11 +101,13 @@ export function DailyBlendSchedule(props: DailyBlendScheduleProps) {
     const rows = useMemo(() => {
         const cells = [];
         for (let day = 1; day <= daysInThisMonth; day++) {
+            const blend = levelMap[day] || null;
             cells.push(
                 <DailyBlendCell
                     key={day}
                     day={day}
-                    level={levelMap[day] || null}
+                    level={blend?.level || null}
+                    pool={blend?.pool || null}
                     onEditClick={() => {
                         setShowEditDialog(true);
                         setSelectedDate(new Date(Date.UTC(year, month, day)));
