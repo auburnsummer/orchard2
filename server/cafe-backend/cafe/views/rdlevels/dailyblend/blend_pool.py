@@ -17,7 +17,7 @@ from django.contrib import messages
 class BlendPoolForm(forms.Form):
     level_id = forms.CharField()
     action = forms.CharField()
-    tickets = forms.IntegerField(required=False, min_value=0)
+    tickets = forms.IntegerField(required=False, min_value=1)
 
 @permission_required('cafe.blend_rdlevel')
 def blend_pool(request: HttpRequest, pool_id: str) -> JsonResponse:
@@ -37,8 +37,11 @@ def blend_pool(request: HttpRequest, pool_id: str) -> JsonResponse:
                 elif action == "remove":
                     DailyBlendRandomPool.objects.filter(level=level, pool=pool).delete()
                 elif action == "ticket":
-                    tickets = form.cleaned_data.get("tickets", 0)
-                    DailyBlendRandomPool.objects.filter(level=level, pool=pool).update(tickets=tickets)
+                    tickets = form.cleaned_data.get("tickets", 1)
+                    if not form.cleaned_data.get("tickets"):
+                        messages.error(request, "Ticket value missing")
+                    else:
+                        DailyBlendRandomPool.objects.filter(level=level, pool=pool).update(tickets=tickets)
             else:
                 messages.error(request, f"Level with ID {level_id} does not exist.")
         else:

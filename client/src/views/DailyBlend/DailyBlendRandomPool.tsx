@@ -141,7 +141,7 @@ export function DailyBlendRandomPool({ pool, pool_items }: DailyBlendRandomPoolP
                                         name="tickets"
                                         type="number"
                                         defaultValue={1}
-                                        min={0}
+                                        min={1}
                                     />
                                     <Button type="submit" name="action" value="ticket" variant="default">
                                         Set tickets
