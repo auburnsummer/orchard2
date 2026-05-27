@@ -47,25 +47,29 @@ def resolve_pool_blend(blend: DailyBlend) -> None:
         pk = random.choice(pks)
         pool_entry = DailyBlendRandomPool.objects.get(id=pk)
     elif blend.pool.weighting_system == "aging":
+        # aging: levels are more likely if they have more tickets
         pks = []
+        weights = []
         for entry in pool_levels:
-            pks.extend([entry.id] * entry.tickets)
-        pk = random.choice(pks)
+            pks.append(entry.id)
+            weights.append(entry.tickets)
+        pk = random.choices(pks, weights=weights, k=1)[0]
         pool_entry = DailyBlendRandomPool.objects.get(id=pk)
     else:
         raise ValueError(f"Unknown weighting system: {blend.pool.weighting_system}")
     
-    blend.level = pool_entry.level
-    blend.pool = None
-    # remove from pool. TODO: make this behaviour adjustable per pool.
-    pool_entry.delete()
 
     # post-blend logic according to the weighting system.
     # flat doesn't need to do anything.
     if blend.pool.weighting_system == "aging":
         # every level is awarded an extra ticket!
+        # technically the one that was just selected also gets an extra ticket, but we're immediately deleting it afterwards.
         DailyBlendRandomPool.objects.filter(pool=blend.pool).update(tickets=F('tickets') + 1)
 
+    blend.level = pool_entry.level
+    # remove from pool. TODO: make this behaviour adjustable per pool.
+    pool_entry.delete()
+    blend.pool = None
     blend.save()
     
 def blend_blend(blend: DailyBlend):
