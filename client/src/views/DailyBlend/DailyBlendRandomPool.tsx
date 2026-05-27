@@ -8,34 +8,106 @@ import { TextInput } from "@cafe/components/ui/TextInput";
 import { Button } from "@cafe/components/ui/Button";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@cafe/components/ui/Table";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "@cafe/minibridge/components/Link";
+import { BlendPool } from "@cafe/types/blends";
+import { useDisclosure } from "@mantine/hooks";
+import { Dialog } from "@cafe/components/ui/Dialog";
+import { extractIdFromUrlInput } from "@cafe/utils/extractIdFromUrlInput";
 
 type DailyBlendRandomPoolProps = {
-    pool: {
+    pool: BlendPool;
+    pool_items: {
         level: RDLevel;
     }[];
 };
 
-export function DailyBlendRandomPool({ pool }: DailyBlendRandomPoolProps) {
+function EditDailyBlendRandomPoolForm({ pool, onSubmit }: { pool: BlendPool, onSubmit: () => void }) {
+    const csrfInput = useCSRFTokenInput();
+
+    const deleteFormRef = useRef<HTMLFormElement>(null);
+
+    const [confirmDelete, setConfirmDelete] = useState(false);
+
+    const onDeleteClick = () => {
+        if (!confirmDelete) {
+            setConfirmDelete(true);
+        } else {
+            deleteFormRef.current?.submit();
+        }
+    }
+
+    return (
+        <>
+        {/* invisible delete form */}
+        <Form
+            method="POST"
+            action={`/daily-blend/random-pools/${pool.id}/delete/`}
+            ref={deleteFormRef}
+        >
+            {csrfInput}
+        </Form>
+        <Form
+            method="POST"
+            action={`/daily-blend/random-pools/${pool.id}/edit/`}
+            className="flex flex-col gap-4"
+            onSubmit={onSubmit}
+        >
+            {csrfInput}
+            <TextInput
+                label="Pool name"
+                name="name"
+                defaultValue={pool.name}
+            />
+            <div className="flex flex-row gap-2 items-end justify-stretch">
+                <Button type="submit" variant="primary">
+                    Save
+                </Button>
+                <Button type="button" variant="danger" onClick={onDeleteClick}>
+                    {confirmDelete ? "Click again to confirm delete" : "Delete pool"}
+                </Button>
+            </div>
+        </Form>
+        </>
+    );
+}
+
+export function DailyBlendRandomPool({ pool, pool_items }: DailyBlendRandomPoolProps) {
     const csrfInput = useCSRFTokenInput();
 
     const [levelId, setLevelId] = useState("");
+    const submittedId = extractIdFromUrlInput(levelId);
+
+    const [isOpen, { open, close }] = useDisclosure(false);
 
     return (
         <Shell
             navbar={<DailyBlendNavbar />}
         >
             <title>Daily Blend Random Pool | Rhythm Café</title>
+            <Dialog
+                open={isOpen}
+                onClose={close}
+            >
+                <EditDailyBlendRandomPoolForm pool={pool} onSubmit={close} />
+            </Dialog>
             <Surface className="m-3 p-4">
-                <Words variant="header" className="mb-4">
-                    Random Pool
-                </Words>
-                <Form className="flex flex-row gap-2 items-end" method="POST">
+                <div className="flex flex-row mb-4 items-baseline">
+                    <Words variant="header">
+                        {pool.name}
+                    </Words>
+                    <Words variant="muted" className="text-xs ml-2">
+                        (id: {pool.id})
+                    </Words>
+                    <Button variant="default" className="ml-4" onClick={open}>
+                        Pool settings
+                    </Button>
+                </div>
+                <Form className="flex flex-row gap-2 items-end" method="POST" onSubmit={() => setLevelId("")}>
                     {csrfInput}
+                    <input type="hidden" name="level_id" value={submittedId} />
                     <TextInput
                         label="Level ID"
-                        name="level_id"
                         value={levelId}
                         onChange={(e) => setLevelId(e.target.value)}
                     />
@@ -57,7 +129,7 @@ export function DailyBlendRandomPool({ pool }: DailyBlendRandomPoolProps) {
                     </TableHead>
                     <TableBody>
                         {
-                            pool.map(({ level }) => (
+                            pool_items.map(({ level }) => (
                                 <TableRow key={level.id}>
                                     <TableCell firstColumn>
                                         <Link

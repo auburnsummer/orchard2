@@ -26,3 +26,9 @@ RDLEVEL_ID_LENGTH = 8
 
 def generate_rdlevel_id():
     return RDLEVEL_ID_PREFIX + generate(ALPHABET, RDLEVEL_ID_LENGTH - len(RDLEVEL_ID_PREFIX))
+
+BLENDPOOL_ID_PREFIX = "b"
+BLENDPOOL_ID_LENGTH = 8
+
+def generate_blend_pool_id():
+    return BLENDPOOL_ID_PREFIX + generate(ALPHABET, BLENDPOOL_ID_LENGTH - len(BLENDPOOL_ID_PREFIX))

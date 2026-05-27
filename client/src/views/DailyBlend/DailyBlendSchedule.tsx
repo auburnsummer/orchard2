@@ -12,12 +12,24 @@ import { Dialog } from "@cafe/components/ui/Dialog";
 import { Form } from "@cafe/minibridge/components/Form";
 import { TextInput } from "@cafe/components/ui/TextInput";
 import { useCSRFTokenInput } from "@cafe/hooks/useCSRFToken";
+import { BlendPool } from "@cafe/types/blends";
+import { extractIdFromUrlInput } from "@cafe/utils/extractIdFromUrlInput";
 
-type DailyBlend = {
-    level: RDLevel,
+type DailyBlendWithLevel = {
+    level: RDLevel;
+    pool: null;
     featured_date: string, // ISO format YYYY-MM-DD
     blended: boolean,
 }
+
+type DailyBlendWithPool = {
+    level: null;
+    pool: BlendPool;
+    featured_date: string, // ISO format YYYY-MM-DD
+    blended: boolean,
+}
+
+type DailyBlend = DailyBlendWithLevel | DailyBlendWithPool;
 
 type DailyBlendScheduleProps = {
     blends: DailyBlend[];
@@ -28,10 +40,11 @@ type DailyBlendScheduleProps = {
 type DailyBlendCellProps = {
     day: number;
     level: RDLevel | null;
+    pool: BlendPool | null;
     onEditClick?: () => void;
 }
 
-function DailyBlendCell({ day, level, onEditClick }: DailyBlendCellProps) {
+function DailyBlendCell({ day, level, pool, onEditClick }: DailyBlendCellProps) {
     return (
         <TableCell>
             <div className="flex flex-col">
@@ -47,8 +60,12 @@ function DailyBlendCell({ day, level, onEditClick }: DailyBlendCellProps) {
                             <Link href={`/levels/${level.id}/`}>
                                 <Words variant="link">{level.song}</Words>
                             </Link>
+                        ) : pool !== null ? (
+                            <Link href={`/daily-blend/random-pools/${pool.id}/`}>
+                                <Words variant="link">{pool.name}</Words>
+                            </Link>
                         ) : (
-                            <Words variant="muted">Pool</Words>
+                            <Words variant="muted">Default</Words>
                         )
                     }
                 </div>
@@ -71,13 +88,14 @@ export function DailyBlendSchedule(props: DailyBlendScheduleProps) {
     const [selectedDate, setSelectedDate] = useState<Date>(new Date(Date.UTC(year, month, 1)));
     const [showEditDialog, setShowEditDialog] = useState<boolean>(false);
 
-    console.log(props.blends);
+    const [levelOrPoolId, setLevelOrPoolId] = useState("");
+    const submittedLevelOrPoolId = extractIdFromUrlInput(levelOrPoolId);
 
     const levelMap = useMemo(() => {
-        const map: Record<number, RDLevel> = {};
+        const map: Record<number, DailyBlend> = {};
         props.blends.forEach(blend => {
             const date = new Date(blend.featured_date);
-            map[date.getUTCDate()] = blend.level;
+            map[date.getUTCDate()] = blend;
         });
         return map;
     }, [props.blends]);
@@ -85,14 +103,17 @@ export function DailyBlendSchedule(props: DailyBlendScheduleProps) {
     const rows = useMemo(() => {
         const cells = [];
         for (let day = 1; day <= daysInThisMonth; day++) {
+            const blend = levelMap[day] || null;
             cells.push(
                 <DailyBlendCell
                     key={day}
                     day={day}
-                    level={levelMap[day] || null}
+                    level={blend?.level || null}
+                    pool={blend?.pool || null}
                     onEditClick={() => {
                         setShowEditDialog(true);
                         setSelectedDate(new Date(Date.UTC(year, month, day)));
+                        setLevelOrPoolId("");
                     }}
                 />
             );
@@ -147,8 +168,14 @@ export function DailyBlendSchedule(props: DailyBlendScheduleProps) {
                 <Form method="POST" onSubmit={() => setShowEditDialog(false)}>
                     {csrfInput}
                     <input type="hidden" name="featured_date" value={selectedDate?.toISOString().split("T")[0]} />
+                    <input type="hidden" name="level_or_pool_id" value={submittedLevelOrPoolId} />
                     <Words variant="header">Edit Daily Blend for {selectedDate?.toDateString()}</Words>
-                    <TextInput label="Level ID (leave blank to clear schedule)" name="level_id" />
+                    <TextInput
+                        label="Level or Pool ID (leave blank to clear schedule)"
+                        value={levelOrPoolId}
+                        onChange={(e) => setLevelOrPoolId(e.target.value)}
+                        description="Special tip! Level IDs always start with 'r', pool IDs always start with 'b'"
+                    />
                     <Button className="mt-2" type="submit" variant="primary">Save</Button>
                 </Form>
             </Dialog>

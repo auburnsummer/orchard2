@@ -14,8 +14,8 @@ export function DailyBlendNavbar() {
       href: `/daily-blend/config/`,
     },
     {
-      label: "Random Pool",
-      href: `/daily-blend/random-pool/`,
+      label: "Random Pools",
+      href: `/daily-blend/random-pools/`,
     },
     {
       label: "Scheduled Blends",
