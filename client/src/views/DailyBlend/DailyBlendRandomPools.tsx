@@ -20,7 +20,7 @@ function CreateBlendPoolForm({onSubmit}: {onSubmit?: () => void}) {
     
     return (
         <Form method="POST" onSubmit={onSubmit}>
-            <div className="flex flex-col gap- items-start">
+            <div className="flex flex-col gap-2 items-start">
                 <TextInput
                     name="name"
                     label="Pool name"
@@ -56,7 +56,7 @@ export function DailyBlendRandomPools({pools}: DailyBlendRandomPoolsProps) {
                 <ul>
                     {
                         pools.map(pool => (
-                            <Words as="li" variant="link">
+                            <Words as="li" variant="link" key={pool.id}>
                                 <Link href={`/daily-blend/random-pools/${pool.id}/`}>{pool.name}</Link>
                             </Words>
                         ))

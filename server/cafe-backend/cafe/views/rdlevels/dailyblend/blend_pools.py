@@ -17,9 +17,9 @@ def blend_pools(request: HttpRequest):
         if form.is_valid():
             form.save()
 
-    blend_pools = BlendPool.objects.all()
+    pools = BlendPool.objects.all()
     props = {
-        "pools": [b.to_dict() for b in blend_pools]
+        "pools": [b.to_dict() for b in pools]
     }
 
     return Response(request, request.resolver_match.view_name, props)

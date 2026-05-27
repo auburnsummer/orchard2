@@ -1,4 +1,4 @@
 export type BlendPool = {
-    id: string,
-    name: string
+    id: string;
+    name: string;
 }

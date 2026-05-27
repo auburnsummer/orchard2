@@ -37,8 +37,11 @@ def resolve_pool_blend(blend: DailyBlend) -> None:
     pool_levels = DailyBlendRandomPool.objects.filter(pool=blend.pool)
     if pool_levels.count() == 0:
         return
+
+    pks = pool_levels.values_list('id', flat=True)
+    pk = random.choice(pks)
+    pool_entry = DailyBlendRandomPool.objects.get(id=pk)
     
-    pool_entry = random.choice(pool_levels)
     blend.level = pool_entry.level
     blend.pool = None
     # remove from pool. TODO: make this behaviour adjustable per pool.

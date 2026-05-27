@@ -39,6 +39,7 @@ def blend_schedule(request: HttpRequest) -> JsonResponse:
                         featured_date=featured_date,
                         defaults={'level': level, 'pool': None}
                     )
+                    messages.success(request, f"Set blend schedule for {featured_date} to level '{level.song}'.")
             elif level_or_pool_id.startswith("b"):
                 # it's a pool.
                 from cafe.models.rdlevels.blend_pool import BlendPool
@@ -50,6 +51,7 @@ def blend_schedule(request: HttpRequest) -> JsonResponse:
                         featured_date=featured_date,
                         defaults={'pool': pool, 'level': None}
                     )
+                    messages.success(request, f"Set blend schedule for {featured_date} to pool '{pool.name}'.")
             else:
                 messages.error(request, "Invalid ID")
         else:
