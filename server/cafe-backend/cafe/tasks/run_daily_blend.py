@@ -1,3 +1,4 @@
+from django.db.models import F
 from datetime import datetime
 import httpx
 from huey.contrib.djhuey import db_task, periodic_task
@@ -28,6 +29,7 @@ def todays_blend_or_default() -> DailyBlend:
         )
         return daily_blend
 
+
 def resolve_pool_blend(blend: DailyBlend) -> None:
     "If a DailyBlend is set to a pool, pick a level out of the pool and resolve the DailyBlend to that level."
     from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
@@ -38,14 +40,32 @@ def resolve_pool_blend(blend: DailyBlend) -> None:
     if pool_levels.count() == 0:
         return
 
-    pks = pool_levels.values_list('id', flat=True)
-    pk = random.choice(pks)
-    pool_entry = DailyBlendRandomPool.objects.get(id=pk)
+    # select a level according to the weighting system of the pool.
+    if blend.pool.weighting_system == "flat":
+        # flat: pick a random level, don't care about tickets.
+        pks = pool_levels.values_list('id', flat=True)
+        pk = random.choice(pks)
+        pool_entry = DailyBlendRandomPool.objects.get(id=pk)
+    elif blend.pool.weighting_system == "aging":
+        pks = []
+        for entry in pool_levels:
+            pks.extend([entry.id] * entry.tickets)
+        pk = random.choice(pks)
+        pool_entry = DailyBlendRandomPool.objects.get(id=pk)
+    else:
+        raise ValueError(f"Unknown weighting system: {blend.pool.weighting_system}")
     
     blend.level = pool_entry.level
     blend.pool = None
     # remove from pool. TODO: make this behaviour adjustable per pool.
     pool_entry.delete()
+
+    # post-blend logic according to the weighting system.
+    # flat doesn't need to do anything.
+    if blend.pool.weighting_system == "aging":
+        # every level is awarded an extra ticket!
+        DailyBlendRandomPool.objects.filter(pool=blend.pool).update(tickets=F('tickets') + 1)
+
     blend.save()
     
 def blend_blend(blend: DailyBlend):
