@@ -30,6 +30,26 @@ def todays_blend_or_default() -> DailyBlend:
         return daily_blend
 
 
+def pull_entry(pool_levels, weighting_system: str):
+    "Pick a single entry from pool_levels according to the weighting system."
+    from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
+    if weighting_system == "flat":
+        # flat: don't care about tickets, just pick one at random.
+        pks = pool_levels.values_list('id', flat=True)
+        pk = random.choice(pks)
+    elif weighting_system == "aging":
+        # aging: more tickets = higher chance. you get tickets by being in the pool.
+        pks = []
+        weights = []
+        for entry in pool_levels:
+            pks.append(entry.id)
+            weights.append(entry.tickets)
+        pk = random.choices(pks, weights=weights, k=1)[0]
+    else:
+        raise ValueError(f"Unknown weighting system: {weighting_system}")
+    return DailyBlendRandomPool.objects.get(id=pk)
+
+
 def resolve_pool_blend(blend: DailyBlend) -> None:
     "If a DailyBlend is set to a pool, pick a level out of the pool and resolve the DailyBlend to that level."
     from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
@@ -40,27 +60,10 @@ def resolve_pool_blend(blend: DailyBlend) -> None:
     if pool_levels.count() == 0:
         return
 
-    # select a level according to the weighting system of the pool.
-    if blend.pool.weighting_system == "flat":
-        # flat: pick a random level, don't care about tickets.
-        pks = pool_levels.values_list('id', flat=True)
-        pk = random.choice(pks)
-        pool_entry = DailyBlendRandomPool.objects.get(id=pk)
-    elif blend.pool.weighting_system == "aging":
-        # aging: levels are more likely if they have more tickets
-        pks = []
-        weights = []
-        for entry in pool_levels:
-            pks.append(entry.id)
-            weights.append(entry.tickets)
-        pk = random.choices(pks, weights=weights, k=1)[0]
-        pool_entry = DailyBlendRandomPool.objects.get(id=pk)
-    else:
-        raise ValueError(f"Unknown weighting system: {blend.pool.weighting_system}")
+    pool_entry = pull_entry(pool_levels, blend.pool.weighting_system)
     
-
     # post-blend logic according to the weighting system.
-    # flat doesn't need to do anything.
+    # note: flat doesn't need to do anything.
     if blend.pool.weighting_system == "aging":
         # every level is awarded an extra ticket!
         # technically the one that was just selected also gets an extra ticket, but we're immediately deleting it afterwards.
