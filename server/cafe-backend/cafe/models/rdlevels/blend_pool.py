@@ -7,11 +7,16 @@ DEFAULT_BLEND_POOL_ID = "bdefault"
 class BlendPool(RulesModel):
     id = CharField(primary_key=True, max_length=BLENDPOOL_ID_LENGTH, default=generate_blend_pool_id)
     name = CharField(null=False, blank=False)
+    weighting_system = CharField(choices={
+        "flat": "Flat",
+        "aging": "Aging",
+    }, default="flat", max_length=100)
 
     def to_dict(self):
         return {
             "id": self.id,
-            "name": self.name
+            "name": self.name,
+            "weighting_system": self.weighting_system
         }
 
     def __str__(self):

@@ -14,11 +14,13 @@ import { BlendPool } from "@cafe/types/blends";
 import { useDisclosure } from "@mantine/hooks";
 import { Dialog } from "@cafe/components/ui/Dialog";
 import { extractIdFromUrlInput } from "@cafe/utils/extractIdFromUrlInput";
+import Select from "@cafe/components/ui/Select";
 
 type DailyBlendRandomPoolProps = {
     pool: BlendPool;
     pool_items: {
         level: RDLevel;
+        tickets: number;
     }[];
 };
 
@@ -59,7 +61,18 @@ function EditDailyBlendRandomPoolForm({ pool, onSubmit }: { pool: BlendPool, onS
                 name="name"
                 defaultValue={pool.name}
             />
-            <div className="flex flex-row gap-2 items-end justify-stretch">
+            <Select
+                data={[
+                    { value: "flat", label: "Flat -- equal chance for all levels" },
+                    { value: "aging", label: "Aging -- levels become more likely over time" },
+                ]}
+                label="Weighting system"
+                name="weighting_system"
+                defaultValue={pool.weighting_system}
+            >
+            </Select>
+
+            <div className="flex flex-row gap-2 items-end justify-stretch mt-6">
                 <Button type="submit" variant="primary">
                     Save
                 </Button>
@@ -117,6 +130,26 @@ export function DailyBlendRandomPool({ pool, pool_items }: DailyBlendRandomPoolP
                     <Button type="submit" name="action" value="remove" className="h-10" variant="secondary">
                         Remove level from pool
                     </Button>
+                    {
+                        pool.weighting_system === "aging" && (
+                            <>
+                                <div className="flex-grow" />
+                                <div className="flex flex-row ml-4 justify-end items-end gap-4">
+                                    <TextInput
+                                        label="Change tickets"
+                                        className="w-32"
+                                        name="tickets"
+                                        type="number"
+                                        defaultValue={1}
+                                        min={1}
+                                    />
+                                    <Button type="submit" name="action" value="ticket" variant="default">
+                                        Set tickets
+                                    </Button>
+                                </div>
+                            </>
+                        )
+                    }
                 </Form>
                 <Table className="mt-4">
                     <TableHead>
@@ -124,12 +157,17 @@ export function DailyBlendRandomPool({ pool, pool_items }: DailyBlendRandomPoolP
                             <TableHeaderCell firstColumn>Song</TableHeaderCell>
                             <TableHeaderCell>Artist</TableHeaderCell>
                             <TableHeaderCell>User</TableHeaderCell>
+                            {
+                                pool.weighting_system === "aging" && (
+                                    <TableHeaderCell>Tickets</TableHeaderCell>
+                                )
+                            }
                             <TableHeaderCell lastColumn>ID (click to select)</TableHeaderCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {
-                            pool_items.map(({ level }) => (
+                            pool_items.map(({ level, tickets }) => (
                                 <TableRow key={level.id}>
                                     <TableCell firstColumn>
                                         <Link
@@ -146,6 +184,13 @@ export function DailyBlendRandomPool({ pool, pool_items }: DailyBlendRandomPoolP
                                     <TableCell>
                                         <Words>{level.authors.join(', ')}</Words>
                                     </TableCell>
+                                    {
+                                        pool.weighting_system === "aging" && (
+                                            <TableCell>
+                                                {tickets}
+                                            </TableCell>
+                                        )
+                                    }
                                     <TableCell lastColumn>
                                         <Button
                                             variant="secondary"

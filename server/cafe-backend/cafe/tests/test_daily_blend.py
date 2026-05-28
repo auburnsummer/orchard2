@@ -358,6 +358,216 @@ def test_resolve_pool_blend_returns_none_when_pool_empty(default_blend_pool):
     assert blend.level is None
 
 
+# ============== Tests: resolve_pool_blend with aging weighting ==============
+
+@pytest.mark.django_db
+def test_resolve_pool_blend_aging_picks_level(rdlevel, aging_blend_pool):
+    """Aging pool resolves a level from the pool"""
+    from cafe.models.rdlevels.daily_blend import DailyBlend
+    from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
+    from cafe.tasks.run_daily_blend import resolve_pool_blend
+
+    blend = DailyBlend.objects.create(
+        pool=aging_blend_pool,
+        featured_date=datetime.date(2025, 12, 18)
+    )
+    DailyBlendRandomPool.objects.create(level=rdlevel, pool=aging_blend_pool)
+
+    resolve_pool_blend(blend)
+
+    assert blend.level == rdlevel
+    assert blend.pool is None
+    assert DailyBlendRandomPool.objects.filter(pool=aging_blend_pool).count() == 0
+
+
+@pytest.mark.django_db
+def test_resolve_pool_blend_aging_increments_remaining_tickets(rdlevel, second_rdlevel, aging_blend_pool):
+    """After picking a level, remaining entries in the pool have their tickets incremented"""
+    from cafe.models.rdlevels.daily_blend import DailyBlend
+    from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
+    from cafe.tasks.run_daily_blend import resolve_pool_blend
+
+    blend = DailyBlend.objects.create(
+        pool=aging_blend_pool,
+        featured_date=datetime.date(2025, 12, 18)
+    )
+    entry_a = DailyBlendRandomPool.objects.create(level=rdlevel, pool=aging_blend_pool, tickets=1)
+    entry_b = DailyBlendRandomPool.objects.create(level=second_rdlevel, pool=aging_blend_pool, tickets=1)
+
+    with patch('cafe.tasks.run_daily_blend.pull_entry', return_value=entry_a):
+        resolve_pool_blend(blend)
+
+    assert blend.level == rdlevel
+    entry_b.refresh_from_db()
+    assert entry_b.tickets == 2  # was 1, incremented to 2
+
+
+@pytest.mark.django_db
+def test_resolve_pool_blend_aging_increments_all_before_delete(rdlevel, second_rdlevel, aging_blend_pool):
+    """Tickets are incremented for all entries (including picked one) before the picked one is deleted"""
+    from cafe.models.rdlevels.daily_blend import DailyBlend
+    from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
+    from cafe.tasks.run_daily_blend import resolve_pool_blend
+
+    blend = DailyBlend.objects.create(
+        pool=aging_blend_pool,
+        featured_date=datetime.date(2025, 12, 18)
+    )
+    entry_a = DailyBlendRandomPool.objects.create(level=rdlevel, pool=aging_blend_pool, tickets=1)
+    entry_b = DailyBlendRandomPool.objects.create(level=second_rdlevel, pool=aging_blend_pool, tickets=3)
+
+    with patch('cafe.tasks.run_daily_blend.pull_entry', return_value=entry_a):
+        resolve_pool_blend(blend)
+
+    entry_b.refresh_from_db()
+    # entry_b had 3 tickets, gets +1 from the bulk update = 4
+    assert entry_b.tickets == 4
+
+
+@pytest.mark.django_db
+def test_resolve_pool_blend_aging_multiple_remaining_all_increment(rdlevel, second_rdlevel, aging_blend_pool, test_club):
+    """All remaining entries get incremented, not just one"""
+    from cafe.models.rdlevels.rdlevel import RDLevel
+    from cafe.models.user import User
+    from cafe.models.rdlevels.daily_blend import DailyBlend
+    from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
+    from cafe.tasks.run_daily_blend import resolve_pool_blend
+    from django.utils import timezone
+
+    # Create a third level
+    submitter = User.objects.create_user(username="test_submitter_3", display_name="Test 3")
+    with patch('cafe.models.rdlevels.rdlevel.sync_level_to_typesense'):
+        third_rdlevel = RDLevel.objects.create(
+            artist="Third Artist", artist_tokens=["third"], artist_raw="Third Artist",
+            song="Third Song", song_alt="", song_raw="Third Song",
+            seizure_warning=False, description="Third", hue=0.0,
+            authors=["Third"], authors_raw="Third",
+            max_bpm=120, min_bpm=60, difficulty=1,
+            single_player=True, two_player=False,
+            last_updated=timezone.now(), tags=["test"],
+            sha1="third_sha1", rdlevel_sha1="third_rdlevel_sha1", rd_md5="third_md5",
+            is_animated=False,
+            rdzip_url="https://example.com/third.rdzip",
+            image_url="https://example.com/third_image.jpg",
+            thumb_url="https://example.com/third_thumb.jpg",
+            icon_url="https://example.com/third_icon.jpg",
+            submitter=submitter, club=test_club, approval=0,
+        )
+
+    blend = DailyBlend.objects.create(
+        pool=aging_blend_pool,
+        featured_date=datetime.date(2025, 12, 18)
+    )
+    entry_a = DailyBlendRandomPool.objects.create(level=rdlevel, pool=aging_blend_pool, tickets=1)
+    entry_b = DailyBlendRandomPool.objects.create(level=second_rdlevel, pool=aging_blend_pool, tickets=2)
+    entry_c = DailyBlendRandomPool.objects.create(level=third_rdlevel, pool=aging_blend_pool, tickets=5)
+
+    with patch('cafe.tasks.run_daily_blend.pull_entry', return_value=entry_a):
+        resolve_pool_blend(blend)
+
+    assert blend.level == rdlevel
+    entry_b.refresh_from_db()
+    entry_c.refresh_from_db()
+    assert entry_b.tickets == 3
+    assert entry_c.tickets == 6
+
+
+@pytest.mark.django_db
+def test_resolve_pool_blend_flat_does_not_increment_tickets(rdlevel, second_rdlevel, default_blend_pool):
+    """Flat weighting does not increment tickets after a draw"""
+    from cafe.models.rdlevels.daily_blend import DailyBlend
+    from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
+    from cafe.tasks.run_daily_blend import resolve_pool_blend
+
+    blend = DailyBlend.objects.create(
+        pool=default_blend_pool,
+        featured_date=datetime.date(2025, 12, 18)
+    )
+    entry_a = DailyBlendRandomPool.objects.create(level=rdlevel, pool=default_blend_pool, tickets=1)
+    entry_b = DailyBlendRandomPool.objects.create(level=second_rdlevel, pool=default_blend_pool, tickets=1)
+
+    with patch('cafe.tasks.run_daily_blend.pull_entry', return_value=entry_a):
+        resolve_pool_blend(blend)
+
+    entry_b.refresh_from_db()
+    assert entry_b.tickets == 1  # unchanged
+
+
+@pytest.mark.django_db
+def test_resolve_pool_blend_aging_unknown_weighting_raises(rdlevel, default_blend_pool):
+    """An unknown weighting system raises ValueError"""
+    from cafe.models.rdlevels.daily_blend import DailyBlend
+    from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
+    from cafe.tasks.run_daily_blend import resolve_pool_blend
+
+    # Manually set an invalid weighting_system
+    default_blend_pool.weighting_system = "unknown"
+    default_blend_pool.save()
+
+    blend = DailyBlend.objects.create(
+        pool=default_blend_pool,
+        featured_date=datetime.date(2025, 12, 18)
+    )
+    DailyBlendRandomPool.objects.create(level=rdlevel, pool=default_blend_pool)
+
+    with pytest.raises(ValueError, match="Unknown weighting system"):
+        resolve_pool_blend(blend)
+
+
+# ============== Tests: pull_entry ==============
+
+@pytest.mark.django_db
+def test_pull_entry_flat_uses_random_choice(rdlevel, second_rdlevel, default_blend_pool):
+    """Flat weighting uses random.choice for uniform selection"""
+    from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
+    from cafe.tasks.run_daily_blend import pull_entry
+
+    entry_a = DailyBlendRandomPool.objects.create(level=rdlevel, pool=default_blend_pool, tickets=1)
+    entry_b = DailyBlendRandomPool.objects.create(level=second_rdlevel, pool=default_blend_pool, tickets=1)
+    pool_levels = DailyBlendRandomPool.objects.filter(pool=default_blend_pool)
+
+    with patch('cafe.tasks.run_daily_blend.random.choice', return_value=entry_b.id) as mock_choice:
+        result = pull_entry(pool_levels, "flat")
+
+    assert result == entry_b
+    mock_choice.assert_called_once()
+
+
+@pytest.mark.django_db
+def test_pull_entry_aging_uses_weighted_selection(rdlevel, second_rdlevel, aging_blend_pool):
+    """Aging weighting uses random.choices with ticket counts as weights"""
+    from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
+    from cafe.tasks.run_daily_blend import pull_entry
+
+    entry_a = DailyBlendRandomPool.objects.create(level=rdlevel, pool=aging_blend_pool, tickets=5)
+    entry_b = DailyBlendRandomPool.objects.create(level=second_rdlevel, pool=aging_blend_pool, tickets=10)
+    pool_levels = DailyBlendRandomPool.objects.filter(pool=aging_blend_pool)
+
+    with patch('cafe.tasks.run_daily_blend.random.choices', return_value=[entry_b.id]) as mock_choices:
+        result = pull_entry(pool_levels, "aging")
+
+    assert result == entry_b
+    call_args = mock_choices.call_args
+    # Verify weights match ticket counts (order may vary based on queryset ordering)
+    passed_pks = call_args[0][0]
+    passed_weights = call_args[1]['weights']
+    assert set(zip(passed_pks, passed_weights)) == {(entry_a.id, 5), (entry_b.id, 10)}
+    assert call_args[1]['k'] == 1
+
+
+@pytest.mark.django_db
+def test_pull_entry_unknown_raises(rdlevel, default_blend_pool):
+    """Unknown weighting system raises ValueError"""
+    from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
+    from cafe.tasks.run_daily_blend import pull_entry
+
+    DailyBlendRandomPool.objects.create(level=rdlevel, pool=default_blend_pool)
+    pool_levels = DailyBlendRandomPool.objects.filter(pool=default_blend_pool)
+
+    with pytest.raises(ValueError, match="Unknown weighting system"):
+        pull_entry(pool_levels, "bogus")
+
+
 # ============== Fixtures ==============
 
 @pytest.fixture
@@ -366,6 +576,13 @@ def default_blend_pool():
     from cafe.models.rdlevels.blend_pool import BlendPool, DEFAULT_BLEND_POOL_ID
     pool, _ = BlendPool.objects.get_or_create(id=DEFAULT_BLEND_POOL_ID, defaults={"name": "Default Pool"})
     return pool
+
+
+@pytest.fixture
+def aging_blend_pool():
+    """Create a blend pool with aging weighting system"""
+    from cafe.models.rdlevels.blend_pool import BlendPool
+    return BlendPool.objects.create(name="Aging Pool", weighting_system="aging")
 
 
 @pytest.fixture
