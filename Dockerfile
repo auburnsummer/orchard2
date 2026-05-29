@@ -21,7 +21,7 @@ RUN chmod +x hivemind-v1.1.0-linux-amd64
 RUN mv hivemind-v1.1.0-linux-amd64 /tmp/hivemind
 
 # this is the final image
-FROM ghcr.io/astral-sh/uv:0.7.21-python3.13-bookworm-slim
+FROM ghcr.io/astral-sh/uv:0.11.17-python3.14-trixie
 
 # install caddy
 RUN apt-get update && apt-get install -y \
