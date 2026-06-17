@@ -1,6 +1,7 @@
 from django import forms
 from django.http import JsonResponse
 from loguru import logger
+from cafe.tasks.report_blend_change import rdlevel_added_to_pool, rdlevel_removed_from_pool, report_blend_change
 from cafe.views.types import HttpRequest
 from rules.contrib.views import permission_required
 
@@ -33,9 +34,14 @@ def blend_pool(request: HttpRequest, pool_id: str) -> JsonResponse:
 
             if level:
                 if action == "add":
-                    DailyBlendRandomPool.objects.get_or_create(level=level, pool=pool)
+                    _, created = DailyBlendRandomPool.objects.get_or_create(level=level, pool=pool)
+                    if created:
+                        audit_payload = rdlevel_added_to_pool(level, pool, request.user)
+                        report_blend_change(audit_payload)
                 elif action == "remove":
                     DailyBlendRandomPool.objects.filter(level=level, pool=pool).delete()
+                    audit_payload = rdlevel_removed_from_pool(level, pool, request.user)
+                    report_blend_change(audit_payload)
                 elif action == "ticket":
                     tickets = form.cleaned_data.get("tickets", 1)
                     if not form.cleaned_data.get("tickets"):

@@ -25,6 +25,7 @@ type DailyBlendConfigurationProps = {
     webhook_urls: string;
     jsonata_script: string;
     paused: boolean;
+    reporting_webhook_url: string;
   };
 };
 
@@ -161,6 +162,11 @@ export function DailyBlendConfiguration({
             label="Webhook URLs (one per line)"
             rows={5}
             defaultValue={config.webhook_urls}
+          />
+          <TextInput
+            name="reporting_webhook_url"
+            label="Reporting Webhook URL"
+            defaultValue={config.reporting_webhook_url}
           />
           <Textarea
             className="font-mono"

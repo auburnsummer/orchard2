@@ -8,22 +8,20 @@ from cafe.bridge.response import Response
 
 from django.contrib import messages
 
-class BlendConfigForm(forms.Form):
-    webhook_urls = forms.CharField(required=False)
-    jsonata_script = forms.CharField(required=False)
-    paused = forms.BooleanField(required=False)
+class BlendConfigForm(forms.ModelForm):
+    class Meta:
+        model = DailyBlendConfiguration
+        fields = ["webhook_urls", "jsonata_script", "paused", "reporting_webhook_url"]
+
 
 @permission_required('cafe.blend_rdlevel')
 def blend_config(request: HttpRequest) -> JsonResponse:
     config = DailyBlendConfiguration.get_config()
 
     if request.method == "POST":
-        form = BlendConfigForm(request.POST)
+        form = BlendConfigForm(request.POST, instance=config)
         if form.is_valid():
-            config.webhook_urls = form.cleaned_data['webhook_urls']
-            config.jsonata_script = form.cleaned_data['jsonata_script']
-            config.paused = form.cleaned_data['paused']
-            config.save()
+            form.save()
             messages.success(request, "Configuration updated successfully.")
         else:
             messages.error(request, "Invalid form submission.")
