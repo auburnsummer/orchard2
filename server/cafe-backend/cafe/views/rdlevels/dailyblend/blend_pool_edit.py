@@ -1,7 +1,7 @@
 from django.shortcuts import redirect
 from rules.contrib.views import permission_required
 from django.forms.models import ModelForm
-from cafe.tasks.report_blend_change import blend_pool_name_changed, blend_pool_weighting_system_changed, blend_pool_weighting_system_changed, report_blend_change
+from cafe.tasks.report_blend_change import blend_pool_name_changed, blend_pool_weighting_system_changed, report_blend_change
 from cafe.views.types import HttpRequest
 from cafe.models.rdlevels.blend_pool import BlendPool
 from django.contrib import messages
