@@ -1,7 +1,7 @@
 from django import forms
 from django.http import JsonResponse
 from loguru import logger
-from cafe.tasks.report_blend_change import rdlevel_added_to_pool, rdlevel_removed_from_pool, report_blend_change
+from cafe.tasks.report_blend_change import blend_pool_member_tickets_changed, rdlevel_added_to_pool, rdlevel_removed_from_pool, report_blend_change
 from cafe.views.types import HttpRequest
 from rules.contrib.views import permission_required
 
@@ -48,6 +48,8 @@ def blend_pool(request: HttpRequest, pool_id: str) -> JsonResponse:
                         messages.error(request, "Ticket value missing")
                     else:
                         DailyBlendRandomPool.objects.filter(level=level, pool=pool).update(tickets=tickets)
+                        audit_payload = blend_pool_member_tickets_changed(level, pool, tickets, request.user)
+                        report_blend_change(audit_payload)
             else:
                 messages.error(request, f"Level with ID {level_id} does not exist.")
         else:
