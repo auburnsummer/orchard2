@@ -39,9 +39,10 @@ def blend_pool(request: HttpRequest, pool_id: str) -> JsonResponse:
                         audit_payload = rdlevel_added_to_pool(level, pool, request.user)
                         report_blend_change(audit_payload)
                 elif action == "remove":
-                    DailyBlendRandomPool.objects.filter(level=level, pool=pool).delete()
-                    audit_payload = rdlevel_removed_from_pool(level, pool, request.user)
-                    report_blend_change(audit_payload)
+                    removed, _ = DailyBlendRandomPool.objects.filter(level=level, pool=pool).delete()
+                    if removed > 0:
+                        audit_payload = rdlevel_removed_from_pool(level, pool, request.user)
+                        report_blend_change(audit_payload)
                 elif action == "ticket":
                     tickets = form.cleaned_data.get("tickets", 1)
                     if not form.cleaned_data.get("tickets"):

@@ -9,7 +9,6 @@ from cafe.bridge.response import Response
 
 from django.contrib import messages
 
-from loguru import logger
 class BlendConfigForm(forms.ModelForm):
     class Meta:
         model = DailyBlendConfiguration

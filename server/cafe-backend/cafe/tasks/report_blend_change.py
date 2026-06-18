@@ -5,7 +5,6 @@ import textwrap
 from django.urls import reverse
 from huey.contrib.djhuey import task
 from cafe.models.rdlevels.blend_pool import BlendPool
-from cafe.models.rdlevels.blend_random_pool import DailyBlendRandomPool
 from cafe.models.rdlevels.daily_blend import DailyBlend
 from cafe.models.rdlevels.daily_blend_configuration import DailyBlendConfiguration
 from cafe.models.rdlevels.rdlevel import RDLevel
@@ -87,7 +86,7 @@ def blend_schedule_changed(date: date, prev: DailyBlend | None, new: DailyBlend 
         "embeds": [
             {
                 "author": {"name": "Blend Schedule Update"},
-                "title": f"{date.strftime('%m %B %Y')}",
+                "title": f"{date.strftime(r'%d %B %Y')}",
                 "description": description,
                 "color": 0x00ff00,
                 **_user_fields(user, "Updated"),
@@ -107,7 +106,7 @@ def blend_paused(paused: bool, user: User):
     }
 
 def webhook_urls_changed(old_urls: str, new_urls: str, user: User):
-    diff = unified_diff(old_urls.splitlines(), new_urls.splitlines())
+    diff = unified_diff(old_urls.splitlines(), new_urls.splitlines(), lineterm="")
     description = textwrap.dedent(f"""
         ```diff
         {'\n'.join(diff)}
@@ -125,7 +124,7 @@ def webhook_urls_changed(old_urls: str, new_urls: str, user: User):
     }
 
 def jsonata_changed(old_script: str, new_script: str, user: User):
-    diff = unified_diff(old_script.splitlines(), new_script.splitlines())
+    diff = unified_diff(old_script.splitlines(), new_script.splitlines(), lineterm="")
     description = textwrap.dedent(f"""
         ```diff
         {'\n'.join(diff)}
@@ -219,7 +218,5 @@ def report_blend_change(data: dict, override_webhook_url: str | None = None):
         logger.warning("Reporting webhook URL is not allowed, skipping blend change report")
         return
     
-    logger.info(json.dumps(data))
-
     r = httpx.post(reporting_webhook_url, json=data)
     r.raise_for_status()
