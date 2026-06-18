@@ -30,7 +30,3 @@ dependencies = [
     "django-waffle>=5.0.0",
 ]
 
-[dependency-groups]
-dev = [
-    "django-stubs[compatible-mypy]>=6.0.3",
-]

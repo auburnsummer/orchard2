@@ -27,5 +27,13 @@ env = [
 
 [dependency-groups]
 dev = [
+    "django-stubs>=6.0.5",
+    "mypy>=2.1.0",
     "ty>=0.0.6",
 ]
+
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "orchard.settings"

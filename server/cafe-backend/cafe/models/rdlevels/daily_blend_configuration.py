@@ -1,7 +1,7 @@
+from django.db.models import Manager
 from django.db import models
 from django.core.exceptions import ValidationError
 from rules.contrib.models import RulesModel
-
 
 class DailyBlendConfiguration(RulesModel):
     """
@@ -12,6 +12,10 @@ class DailyBlendConfiguration(RulesModel):
     jsonata_script = models.TextField(blank=True, default="")
     paused = models.BooleanField(default=False)
 
+    reporting_webhook_url = models.URLField(blank=True, default="")
+
+    objects: Manager["DailyBlendConfiguration"]
+
     def save(self, *args, **kwargs):
         """Ensure only one instance exists."""
         if not self.pk and DailyBlendConfiguration.objects.exists():
@@ -19,7 +23,7 @@ class DailyBlendConfiguration(RulesModel):
         return super().save(*args, **kwargs)
 
     @classmethod
-    def get_config(cls):
+    def get_config(cls) -> "DailyBlendConfiguration":
         """Get or create the singleton configuration instance."""
         config, _ = cls.objects.get_or_create(pk=1)
         return config
@@ -30,4 +34,5 @@ class DailyBlendConfiguration(RulesModel):
             "webhook_urls": self.webhook_urls,
             "jsonata_script": self.jsonata_script,
             "paused": self.paused,
+            "reporting_webhook_url": self.reporting_webhook_url,
         }
