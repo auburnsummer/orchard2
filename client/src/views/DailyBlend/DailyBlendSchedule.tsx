@@ -62,7 +62,7 @@ function DailyBlendCell({ day, level, pool, onEditClick }: DailyBlendCellProps) 
                             </Link>
                         ) : pool !== null ? (
                             <Link href={`/daily-blend/random-pools/${pool.id}/`}>
-                                <Words variant="link">{pool.name}</Words>
+                                <Words variant="link" className="italic">{pool.name}</Words>
                             </Link>
                         ) : (
                             <Words variant="muted">Default</Words>

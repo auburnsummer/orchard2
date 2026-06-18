@@ -187,7 +187,9 @@ export function DailyBlendRandomPool({ pool, pool_items }: DailyBlendRandomPoolP
                                     {
                                         pool.weighting_system === "aging" && (
                                             <TableCell>
-                                                {tickets}
+                                                <Words>
+                                                    {tickets}
+                                                </Words>
                                             </TableCell>
                                         )
                                     }
