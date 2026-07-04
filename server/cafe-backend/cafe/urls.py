@@ -3,6 +3,7 @@ from django.urls import path
 from cafe.views.accounts.profile.profile_delete_account import profile_delete_account
 from cafe.views.api.execute_webhook import execute_webhook
 from cafe.views.clubs.settings.club_delete import club_delete
+from cafe.views.pharmacy.pharmacy_main import pharmacy_main
 from cafe.views.rdlevels.dailyblend.blend_config import blend_config
 from cafe.views.rdlevels.dailyblend.blend_now import blend_now
 from cafe.views.rdlevels.dailyblend.blend_pool import blend_pool
@@ -91,6 +92,8 @@ urlpatterns = [
     path("daily-blend/random-pools/", blend_pools, name="blend_pools"),
     path("daily-blend/schedule/", blend_schedule, name="blend_schedule"),
     path("daily-blend/blend-now/", blend_now, name="blend_now"),
+
+    path("pharmacy/", pharmacy_main, name="pharmacy_main"),
 
     path("api/execute_webhook/<code>/", execute_webhook, name="execute_webhook"),
     path("api/levels/", search_levels_api, name="api_level_search"),

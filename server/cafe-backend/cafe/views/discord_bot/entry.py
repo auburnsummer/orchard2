@@ -1,4 +1,3 @@
-from ast import If
 import json
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
