@@ -41,7 +41,7 @@ export function PendingLevelNavItem({ level, href, active }: PendingLevelNavItem
             {/* Content */}
             <div className="relative z-10 flex flex-col">
                 <div className="font-semibold">{level.song}</div>
-                <div className="text-xs opacity-70 mt-0.5">
+                <div className="text-xs opacity-70 my-0.5">
                     {level.authors.length > 1 ? '👥' : '👤'} {joinWithAnd(level.authors)}
                 </div>
             </div>

@@ -31,7 +31,7 @@ export function Navbar({
   return (
     <Surface className={cc("m-3 flex-grow flex flex-col", className)}>
       {beforeLinks}
-      <div className={cc("flex flex-col", linksClassName)}>
+      <div className={cc("mt-4 flex flex-col", linksClassName)}>
         {links.map((link) => (
           <NavEntry
             key={link.href}

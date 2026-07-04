@@ -47,7 +47,7 @@ function PeerReviewNavbar({pendingLevels}: PeerReviewShellProps) {
             links={links}
             className="py-2"
             beforeLinks={
-                <Words variant="subheader" className="px-4 mb-2 pb-2">
+                <Words variant="subheader" className="px-4 mb-2 pt-2">
                     Levels {pendingLevels.length > 0 ? `(${pendingLevels.length} pending)` : "No pending reviews"}
                 </Words>
             }

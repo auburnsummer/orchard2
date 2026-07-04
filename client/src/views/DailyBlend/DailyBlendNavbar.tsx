@@ -21,5 +21,5 @@ export function DailyBlendNavbar() {
     },
   ];
 
-  return <Navbar links={links} className="gap-1" linksClassName="mt-4" />;
+  return <Navbar links={links} />;
 }

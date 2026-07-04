@@ -33,7 +33,6 @@ export function ClubSettingsNavbar({ club }: ClubSettingsNavbarProps) {
   return (
     <Navbar
       links={links}
-      className="gap-1"
       beforeLinks={
         <div className="flex flex-row items-center pt-2 px-2">
           <Words variant="header" as="h2" className="pl-1 py-2">{club.name}</Words>
