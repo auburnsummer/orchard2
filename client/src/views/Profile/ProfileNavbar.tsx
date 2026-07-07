@@ -1,11 +1,5 @@
 import { useUser } from "@cafe/hooks/useUser";
-import { Link } from "@cafe/minibridge/components/Link";
-import { useAtomValue } from "jotai";
-import { locationAtom } from "@cafe/minibridge/atoms";
 import { Avatar } from "@cafe/components/ui/Avatar";
-import { NavEntry } from "@cafe/components/ui/NavEntry";
-
-import { Surface } from "@cafe/components/ui/Surface";
 import { Words } from "@cafe/components/ui/Words";
 import { Navbar } from "@cafe/components/ui/Navbar";
 
@@ -15,7 +9,6 @@ export function ProfileNavbar() {
   // if you delete your account, there is a brief period where you have no account
   // but are still on this page while the page reloads to the homepage.
   const user = useUser();
-  const { pathname } = useAtomValue(locationAtom);
 
   const links = [
     {

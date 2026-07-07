@@ -70,4 +70,5 @@ export const routeMap: { [key: string]: React.FunctionComponent<any> } = {
   "cafe:blend_now": DailyBlendBlendNow,
 
   "cafe:pharmacy_main": React.lazy(() => import("./views/Pharmacy/PharmacyMainView").then(m => ({ default: m.PharmacyMainView }))),
+  "cafe:pharmacy_bulk_transfer": React.lazy(() => import("./views/Pharmacy/PharmacyBulkTransfer").then(m => ({ default: m.PharmacyBulkTransfer }))),
 };
