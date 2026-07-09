@@ -22,7 +22,7 @@ def pharmacy_bulk_transfer(request: HttpRequest) -> JsonResponse:
     if request.method == "POST":
         form = PharmacyBulkTransferForm(request.POST)
         if form.is_valid():
-            level_ids = form.cleaned_data.get("level_ids", "").splitlines()
+            level_ids = [line.strip() for line in form.cleaned_data.get("level_ids", "").splitlines()]
             user_id = form.cleaned_data.get("user_id")
 
             try:
