@@ -47,6 +47,9 @@ export function Header({ navbar }: { navbar?: React.ReactNode }) {
     user.authenticated && user.is_peer_reviewer
       ? { name: "Daily Blend Dashboard", href: "/daily-blend/" }
       : null,
+    user.authenticated && user.is_peer_reviewer
+      ? { name: "Pharmacist Tools", href: "/pharmacy/" }
+      : null,
     { name: "Log out", onClick: () => logOutForm.current?.submit() },
   ].filter((a) => a !== null);
 

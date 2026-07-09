@@ -1,7 +1,5 @@
 from __future__ import annotations
 from django.db import models
-from django.db.models import Manager
-from pytest import PytestAssertRewriteWarning
 
 from cafe.models.id_utils import generate_rdlevel_id, RDLEVEL_ID_LENGTH
 from cafe.models.types import UserType, ClubType
@@ -13,7 +11,6 @@ import rules
 
 from cafe.tasks.sync_level_to_typesense import sync_level_to_typesense
 from cafe.models.clubs.predicates import is_pharmacist
-from orchard.settings import DOMAIN_URL
 
 @rules.predicate
 def is_at_least_admin_of_connected_club(user: UserType, level: "RDLevel"):
