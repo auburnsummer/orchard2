@@ -86,7 +86,10 @@ def run_prefill_v2(prefill_id: str, session_id: str):
     if prefill_result.prefill_type == "update" and prefill_result.user.has_perm('cafe.change_rdlevel', prefill_result.level):
         sha1 = prefill_result.data.get('sha1')
         duplicate = RDLevel.objects.filter(sha1=sha1).first()
-        if duplicate:
+        # the duplicate might be the same level (i.e. the user is updating the level with the same file)
+        # that's fine, it's basically a no-op, but if it's a different level, show an error
+        duplicate_is_same_level = duplicate and duplicate.id == prefill_result.level.id
+        if duplicate and not duplicate_is_same_level:
             session.phase = AddSessionPhase.ERROR_DUPLICATE
             prefill_result.level = duplicate
             prefill_result.save()
@@ -97,7 +100,8 @@ def run_prefill_v2(prefill_id: str, session_id: str):
             for key, value in prefill_result.data.items():
                 setattr(prefill_result.level, key, value)
             # if it's NR'ed, bump it back to pending
-            if prefill_result.level.approval == -1:
+            # unless it's the same level, because otherwise a user could spam the same level to re-request a review on the exact same level
+            if prefill_result.level.approval == -1 and not duplicate_is_same_level:
                 prefill_result.level.approval = 0
             prefill_result.level.save()
 
@@ -154,7 +158,6 @@ def run_prefill(prefill_id: str):
                     # just set the data, we'll display the dupe level on screen later.
                     prefill_result.ready = True
                     prefill_result.save()
-                    pass
             else:
                 # displaying the prefill edit screen.
                 # just set the data and we're done
