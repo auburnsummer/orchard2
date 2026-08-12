@@ -1,11 +1,21 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
+
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.models import AbstractUser, UserManager
-from django.core.signing import Signer, BadSignature
-from django.db.models import Q, CharField, CheckConstraint, EmailField, IntegerField, Manager
+from django.core.signing import BadSignature, Signer
+from django.db.models import (
+    BooleanField,
+    CharField,
+    CheckConstraint,
+    EmailField,
+    IntegerField,
+    Manager,
+    Q,
+)
 
-from .id_utils import generate_user_id, USER_ID_PREFIX
+from .id_utils import USER_ID_PREFIX, generate_user_id
 
 if TYPE_CHECKING:
     from cafe.models.clubs.club_membership import ClubMembership
@@ -53,6 +63,8 @@ class User(AbstractUser):
         'rejected': 'Rejected',
         'all': 'All'
     }, max_length=100, default='approved')
+
+    show_rddirect = BooleanField(default=False)
 
     # from cafe.ClubMembership
     memberships: Manager[ClubMembership]
@@ -161,6 +173,7 @@ class User(AbstractUser):
             "default_pr_preference": self.default_pr_preference,
             "is_superuser": self.is_superuser,
             "is_peer_reviewer": self.has_perm("cafe.peerreview_rdlevel"),
+            "show_rddirect": self.show_rddirect,
         }
     
     def to_dict(self):
