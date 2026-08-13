@@ -80,6 +80,9 @@ export function ProfileSettingsView() {
               ]}
             />
 
+            {/* for now rddirect is hidden */}
+            <input type="hidden" name="show_rddirect" value={user.show_rddirect ? "on" : ""} />
+
             <Button type="submit" variant="primary" className="max-w-32 py-2 mt-4">Save</Button>
           </div>
         </Form>

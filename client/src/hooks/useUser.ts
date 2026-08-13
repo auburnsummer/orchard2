@@ -4,22 +4,24 @@ type ThemePreference = "light" | "dark" | "system";
 
 type SearchDefaultPeerReviewPreference = "approved" | "pending" | "rejected" | "all";
 
-export type UnauthenticatedUser = {
-  authenticated: false;
+type CommonUserFields = {
   theme_preference: ThemePreference;
   default_pr_preference: SearchDefaultPeerReviewPreference;
+  show_rddirect: boolean;
 };
+
+export type UnauthenticatedUser = {
+  authenticated: false;
+} & CommonUserFields;
 
 export type AuthenticatedUser = {
   authenticated: true;
   id: string;
   displayName: string;
   avatarURL: string | null;
-  theme_preference: ThemePreference;
-  default_pr_preference: SearchDefaultPeerReviewPreference;
   is_superuser: boolean;
   is_peer_reviewer: boolean;
-};
+} & CommonUserFields;
 
 export type User = UnauthenticatedUser | AuthenticatedUser;
 

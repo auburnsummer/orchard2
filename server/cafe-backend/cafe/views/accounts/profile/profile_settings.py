@@ -1,16 +1,23 @@
-from cafe.bridge.response import Response
+import typing
 
-from django.forms import ModelForm
 from django.contrib import messages
+from django.forms import ModelForm
 from django.http import HttpResponse
 
+from cafe.bridge.response import Response
 from cafe.models.user import User
 from cafe.views.types import HttpRequest
+
 
 class PostSettingsForm(ModelForm):
     class Meta:
         model = User
-        fields = ["display_name", "theme_preference", "default_pr_preference"]
+        fields: typing.ClassVar = [
+            "display_name",
+            "theme_preference",
+            "default_pr_preference",
+            "show_rddirect"
+        ]
 
 def settings(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":

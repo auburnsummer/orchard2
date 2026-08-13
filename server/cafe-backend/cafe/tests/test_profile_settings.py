@@ -9,22 +9,26 @@ def test_profile_settings_can_change_settings(bridge_client: Client, user_with_n
     assert response.json()['context']['user']['theme_preference'] == 'light'
     assert response.json()['context']['user']['displayName'] == ''
     assert response.json()['context']['user']['default_pr_preference'] == 'approved'
+    assert response.json()['context']['user']['show_rddirect'] is False
     # Now, let's change the settings
     response = bridge_client.post('/accounts/profile/settings/', {
         'theme_preference': 'dark',
         'display_name': 'Test User',
-        'default_pr_preference': 'all'
+        'default_pr_preference': 'all',
+        'show_rddirect': 'on',
     })
     assert response.status_code == 200
     assert response.json()['context']['user']['theme_preference'] == 'dark'
     assert response.json()['context']['user']['displayName'] == 'Test User'
     assert response.json()['context']['user']['default_pr_preference'] == 'all'
+    assert response.json()['context']['user']['show_rddirect'] is True
     # and then if we fetch the settings again, they should be updated
     response = bridge_client.get('/accounts/profile/settings/')
     assert response.status_code == 200
     assert response.json()['context']['user']['theme_preference'] == 'dark'
     assert response.json()['context']['user']['displayName'] == 'Test User'
     assert response.json()['context']['user']['default_pr_preference'] == 'all'
+    assert response.json()['context']['user']['show_rddirect'] is True
 
 @pytest.mark.django_db
 def test_profile_settings_rejects_invalid_data(bridge_client: Client, user_with_no_clubs):
@@ -40,12 +44,14 @@ def test_profile_settings_rejects_invalid_data(bridge_client: Client, user_with_
     initial_theme = response.json()['context']['user']['theme_preference']
     initial_display_name = response.json()['context']['user']['displayName']
     initial_default_pr_preference = response.json()['context']['user']['default_pr_preference']
+    initial_show_rddirect = response.json()['context']['user']['show_rddirect']
     
     # Try to submit invalid theme_preference
     response = bridge_client.post('/accounts/profile/settings/', {
         'theme_preference': 'invalid_theme',
         'display_name': 'Updated Name',
-        'default_pr_preference': 'approved'
+        'default_pr_preference': 'approved',
+        'show_rddirect': 'on',
     })
     
     # The response should still be 200 (the view doesn't return errors, since 
@@ -59,12 +65,14 @@ def test_profile_settings_rejects_invalid_data(bridge_client: Client, user_with_
     assert response.json()['context']['user']['theme_preference'] == initial_theme
     assert response.json()['context']['user']['displayName'] == initial_display_name
     assert response.json()['context']['user']['default_pr_preference'] == initial_default_pr_preference
+    assert response.json()['context']['user']['show_rddirect'] == initial_show_rddirect
     
     # Also test with another invalid theme value
     response = bridge_client.post('/accounts/profile/settings/', {
         'theme_preference': 'rainbow',
         'display_name': 'Another Name',
-        'default_pr_preference': 'approved'
+        'default_pr_preference': 'approved',
+        'show_rddirect': 'on',
     })
     
     # Verify again that settings were not updated
@@ -73,6 +81,7 @@ def test_profile_settings_rejects_invalid_data(bridge_client: Client, user_with_
     assert response.json()['context']['user']['theme_preference'] == initial_theme
     assert response.json()['context']['user']['displayName'] == initial_display_name
     assert response.json()['context']['user']['default_pr_preference'] == initial_default_pr_preference
+    assert response.json()['context']['user']['show_rddirect'] == initial_show_rddirect
 
 
 @pytest.mark.django_db
@@ -236,6 +245,7 @@ def test_anonymous_user_can_get_settings(bridge_client: Client):
     assert not user_ctx['authenticated']
     assert user_ctx['theme_preference'] == 'light'
     assert user_ctx['default_pr_preference'] == 'approved'
+    assert user_ctx['show_rddirect'] is False
     # Anonymous users have no displayName field
     assert 'displayName' not in user_ctx
 
@@ -246,15 +256,18 @@ def test_anonymous_user_can_change_theme(bridge_client: Client):
     response = bridge_client.post('/accounts/profile/settings/', {
         'theme_preference': 'dark',
         'display_name': '',
-        'default_pr_preference': 'approved'
+        'default_pr_preference': 'approved',
+        'show_rddirect': 'on',
     })
     assert response.status_code == 200
     assert response.json()['context']['user']['theme_preference'] == 'dark'
+    assert response.json()['context']['user']['show_rddirect'] is True
 
     # A subsequent GET should reflect the updated session value
     response = bridge_client.get('/accounts/profile/settings/')
     assert response.status_code == 200
     assert response.json()['context']['user']['theme_preference'] == 'dark'
+    assert response.json()['context']['user']['show_rddirect'] is True
 
 
 @pytest.mark.django_db
