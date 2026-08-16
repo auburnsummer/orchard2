@@ -12,7 +12,6 @@ import { Button } from "@cafe/components/ui/Button";
 import { Checkbox } from "@cafe/components/ui/Checkbox";
 import { useState } from "react";
 import { Link } from "@cafe/minibridge/components/Link";
-import { atom } from 'jotai';
 import { useAsync } from "@cafe/hooks/useAsync";
 
 const CAFE_MOD_INSTALLATION_INSTRUCTIONS_URL = "https://github.com/auburnsummer/orchard2/wiki/CafeLink-Installation-Instructions";
