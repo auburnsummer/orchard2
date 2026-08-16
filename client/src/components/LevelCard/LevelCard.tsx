@@ -9,6 +9,7 @@ import {
   faDownload,
   faExclamationTriangle,
   faHeartPulse,
+  faMusic,
   faPaste,
   faPen,
   faXmark,
@@ -160,7 +161,7 @@ export function LevelCard({
             />
           </div>
           <div className="flex items-center text-xs leading-[1.125rem] text-slate-500 dark:text-slate-400">
-            <FontAwesomeIcon icon={faHeartPulse} className="w-4 h-4" />
+            <FontAwesomeIcon icon={faMusic} className="w-4 h-4" />
             <Words className="ml-1 whitespace-pre text-slate-500 dark:text-slate-400 text-xs">
               {bpmText}
             </Words>

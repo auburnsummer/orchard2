@@ -13,6 +13,7 @@ import { Checkbox } from "@cafe/components/ui/Checkbox";
 import { useState } from "react";
 import { Link } from "@cafe/minibridge/components/Link";
 import { useAsync, AsyncState } from "@cafe/hooks/useAsync";
+import { CAFE_LINK_STATUS_URL } from "@cafe/utils/rddirect";
 
 const CAFE_MOD_INSTALLATION_INSTRUCTIONS_URL = "https://github.com/auburnsummer/orchard2/wiki/CafeLink-Installation-Instructions";
 
@@ -20,10 +21,8 @@ type ConnectionTestResponse = {
   status: "ok" | "starting" | "busy";
 }
 
-const CONNECTION_TEST_URL = "http://127.0.0.1:2615/status";
-
 async function doConnectionTest(): Promise<ConnectionTestResponse> {
-  const response = await fetch(CONNECTION_TEST_URL);
+  const response = await fetch(CAFE_LINK_STATUS_URL);
   if (!response.ok) {
     throw new Error(`HTTP error ${response.status}`);
   }
