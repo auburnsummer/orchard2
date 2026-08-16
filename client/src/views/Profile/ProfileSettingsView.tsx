@@ -9,10 +9,32 @@ import { Words } from "@cafe/components/ui/Words";
 import { TextInput } from "@cafe/components/ui/TextInput";
 import Select from "@cafe/components/ui/Select";
 import { Button } from "@cafe/components/ui/Button";
+import { Checkbox } from "@cafe/components/ui/Checkbox";
+import { useState } from "react";
+import { Link } from "@cafe/minibridge/components/Link";
+import { atom } from 'jotai';
+import { useAsync } from "@cafe/hooks/useAsync";
+
+const CAFE_MOD_INSTALLATION_INSTRUCTIONS_URL = "https://github.com/auburnsummer/orchard2/wiki/CafeLink-Installation-Instructions";
+
+const CONNECTION_TEST_URL = "http://127.0.0.1:2615/status";
+
+async function doConnectionTest(): Promise<boolean> {
+    try {
+        const response = await fetch(CONNECTION_TEST_URL);
+        return response.ok;
+    } catch {
+        return false;
+    }
+}
 
 export function ProfileSettingsView() {
   const user = useUser();
   const input = useCSRFTokenInput();
+
+  const [showRdDirect, setShowRdDirect] = useState(user.show_rddirect);
+
+  const [testResult, startTest] = useAsync(doConnectionTest);
 
   return (
     <Shell navbar={user.authenticated && <ProfileNavbar />}>
@@ -79,11 +101,50 @@ export function ProfileSettingsView() {
                 }
               ]}
             />
+            <div className="flex flex-row items-end gap-2">
+            <Checkbox
+              className="mt-4"
+              name="show_rddirect"
+              label="Show direct play links"
+              description={
+                <>
+                  <Words variant="muted">
+                    For the links to work you need to install a Rhythm Doctor mod. See <Link href={CAFE_MOD_INSTALLATION_INSTRUCTIONS_URL} target="_blank" rel="noopener noreferrer" className="underline">installation instructions</Link>.
+                  </Words>
+                </>
+              }
+              checked={showRdDirect}
+              onChange={(e) => setShowRdDirect(e.target.checked)}
+              showDescriptionAsTooltip={false}
+            />
 
-            {/* for now rddirect is hidden */}
-            <input type="hidden" name="show_rddirect" value={user.show_rddirect ? "on" : ""} />
+            {
+              showRdDirect && (
+                <Button className="max-w-48 ml-1" variant="default" onClick={startTest} type="button">Test Connection</Button>
+              )
+            }
 
-            <Button type="submit" variant="primary" className="max-w-32 py-2 mt-4">Save</Button>
+            {
+              showRdDirect && testResult.status === "pending" && (
+                <Words variant="muted" className="text-sm">PENDING</Words>
+              )
+            }
+
+            {
+              showRdDirect && testResult.status === "success" && (
+                <Words variant="muted" className="text-sm">SUCCESS</Words>
+              )
+            }
+
+            {
+              showRdDirect && testResult.status === "error" && (
+                <Words variant="muted" className="text-sm">ERROR: {testResult.error.message}</Words>
+              )
+            }
+
+            </div>
+
+            <Button type="submit" variant="primary" className="max-w-48 py-2 mt-4">Save</Button>
           </div>
         </Form>
         {

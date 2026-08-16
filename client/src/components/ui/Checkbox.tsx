@@ -4,13 +4,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { useTooltip } from "@cafe/hooks/useTooltip";
 
+type _CheckboxPropsWithTooltip = {
+  showDescriptionAsTooltip: true;
+  description?: string;
+}
+
+type _CheckboxPropsWithoutTooltip = {
+  showDescriptionAsTooltip?: false;
+  description?: string | React.ReactNode;
+}
+
 type CheckboxProps = Omit<React.ComponentPropsWithRef<'input'>, 'type'> & {
   label?: string | React.ReactNode;
   className?: string;
   labelClassName?: string;
-  description?: string;
-  showDescriptionAsTooltip?: boolean;
-};
+} & (_CheckboxPropsWithTooltip | _CheckboxPropsWithoutTooltip);
 
 export function Checkbox({
   label,
@@ -29,7 +37,7 @@ export function Checkbox({
   const tooltip = useTooltip();
 
   const handleMouseEnter = () => {
-    if (showDescriptionAsTooltip && description && wrapperRef.current) {
+    if (showDescriptionAsTooltip && description && wrapperRef.current && typeof description === 'string') {
       tooltip.show(description, wrapperRef.current);
     }
   };
