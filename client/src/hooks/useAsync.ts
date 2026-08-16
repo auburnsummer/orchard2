@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 
-type asyncState<T> = {
+export type AsyncState<T> = {
     status: "idle";
 } | {
     status: "pending";
@@ -11,16 +11,16 @@ type asyncState<T> = {
     status: "error";
     error: Error;
 }
-
-type asyncResult<T> = [
-    state: asyncState<T>,
+    
+export type AsyncResult<T> = [
+    state: AsyncState<T>,
     execute: () => void
 ];
 
 export function useAsync<T>(
     func: () => Promise<T>
-): asyncResult<T> {
-    const [state, setState] = useState<asyncState<T>>({ status: "idle" });
+): AsyncResult<T> {
+    const [state, setState] = useState<AsyncState<T>>({ status: "idle" });
 
     const execute = useCallback(() => {
         setState({ status: "pending" });

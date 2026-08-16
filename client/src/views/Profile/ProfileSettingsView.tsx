@@ -12,19 +12,47 @@ import { Button } from "@cafe/components/ui/Button";
 import { Checkbox } from "@cafe/components/ui/Checkbox";
 import { useState } from "react";
 import { Link } from "@cafe/minibridge/components/Link";
-import { useAsync } from "@cafe/hooks/useAsync";
+import { useAsync, AsyncState } from "@cafe/hooks/useAsync";
 
 const CAFE_MOD_INSTALLATION_INSTRUCTIONS_URL = "https://github.com/auburnsummer/orchard2/wiki/CafeLink-Installation-Instructions";
 
+type ConnectionTestResponse = {
+  status: "ok" | "starting" | "busy";
+}
+
 const CONNECTION_TEST_URL = "http://127.0.0.1:2615/status";
 
-async function doConnectionTest(): Promise<boolean> {
-    try {
-        const response = await fetch(CONNECTION_TEST_URL);
-        return response.ok;
-    } catch {
-        return false;
+async function doConnectionTest(): Promise<ConnectionTestResponse> {
+  const response = await fetch(CONNECTION_TEST_URL);
+  if (!response.ok) {
+    throw new Error(`HTTP error ${response.status}`);
+  }
+  console.log(response);
+  return await response.json();
+}
+
+function connectionTestDisplay(testResult: AsyncState<ConnectionTestResponse>) {
+  if (testResult.status === "idle") {
+    return null;
+  }
+  if (testResult.status === "pending") {
+    return <Words variant="muted" className="text-sm">PENDING</Words>;
+  }
+  if (testResult.status === "success") {
+    if (testResult.data.status === "ok") {
+      return <Words variant="muted" className="text-sm">SUCCESS</Words>;
     }
+    if (testResult.data.status === "starting") {
+      return <Words variant="muted" className="text-sm">STARTING</Words>;
+    }
+    if (testResult.data.status === "busy") {
+      return <Words variant="muted" className="text-sm">BUSY</Words>;
+    }
+  }
+  if (testResult.status === "error") {
+    return <Words variant="muted" className="text-sm">ERROR: {testResult.error.message}</Words>;
+  }
+  return null;
 }
 
 export function ProfileSettingsView() {
@@ -124,21 +152,7 @@ export function ProfileSettingsView() {
             }
 
             {
-              showRdDirect && testResult.status === "pending" && (
-                <Words variant="muted" className="text-sm">PENDING</Words>
-              )
-            }
-
-            {
-              showRdDirect && testResult.status === "success" && (
-                <Words variant="muted" className="text-sm">SUCCESS</Words>
-              )
-            }
-
-            {
-              showRdDirect && testResult.status === "error" && (
-                <Words variant="muted" className="text-sm">ERROR: {testResult.error.message}</Words>
-              )
+              showRdDirect && connectionTestDisplay(testResult)
             }
 
             </div>
