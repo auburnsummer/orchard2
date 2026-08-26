@@ -30,6 +30,7 @@ export function PeerReviewStatusSelect() {
             key={status.value}
             name="peer_review"
             label={status.label}
+            id={"pr-filter-" + status.value}
             checked={currentStatus === status.value}
             onChange={() => {
               // Update local state immediately for responsive UI
