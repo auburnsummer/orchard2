@@ -3,12 +3,15 @@ import re
 # Get things like
 # Muse ft. Chvrches
 # Muse feat. Chvrches
-# Muse × Chrvches (note it's not the letter x, it's U+00D7 × MULTIPLICATION SIGN
+# Muse × Chrvches (note it's not the letter x, it's U+00D7 × MULTIPLICATION SIGN)
+# Muse vs Chvrches
+# Muse vs. Chvrches
+# Muse v.s. Chvrches
 
 # note that for authors, we only store the list, but for artists, we still need to store the original string.
 from vitals.color_tagged_string import parse_color_tagged_string
 
-ARTIST_REGEX = r"\s*?(?:ft\.|feat\.|×|,)\s*?"
+ARTIST_REGEX = r"\s*?(?:ft\.|feat\.|×|vs\.|vs\s|v\.s\.|,)\s*?"
 
 def artist_list_facet(obj, **kwargs):
     artist_raw = obj["settings"]["artist"]
