@@ -3,14 +3,16 @@ import { RDLevel } from "@cafe/types/rdLevelBase";
 import cc from "clsx";
 
 import { useClipboard } from "@mantine/hooks";
+import { useUser } from "@cafe/hooks/useUser";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheck,
   faDownload,
   faExclamationTriangle,
-  faHeartPulse,
+  faMusic,
   faPaste,
   faPen,
+  faSyringe,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { DifficultyDecorator } from "./DifficultyDecorator/DifficultyDecorator";
@@ -19,6 +21,8 @@ import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { getLevelDownloadUrl } from "@cafe/utils/constants";
 import { Link } from "@cafe/minibridge/components/Link";
 import { Words } from "../ui/Words";
+import { useCafeLinkDirectPlay } from "@cafe/utils/rddirect";
+import { LevelCardButton } from "./LevelCardButton";
 
 type LevelCardProps = React.HTMLAttributes<HTMLDivElement> & {
   level: RDLevel;
@@ -35,7 +39,11 @@ export function LevelCard({
   onClick,
   ...rest
 }: LevelCardProps) {
-  const clipboard = useClipboard({ timeout: 500 });
+  const user = useUser();
+  const startDirectPlay = useCafeLinkDirectPlay(level.id);
+
+  const rdDirect = user.show_rddirect;
+  const clipboard = useClipboard({ timeout: 800 });
   const bpmText =
     level.min_bpm === level.max_bpm
       ? `${level.min_bpm} BPM`
@@ -72,28 +80,35 @@ export function LevelCard({
             ))}
           </div>
           <div className="w-8 ml-2 flex flex-col items-center gap-4">
-            <button
-              onClick={() => {
-                clipboard.copy(getLevelDownloadUrl(level));
-              }}
-              className={cc(
-                "w-8 border border-white p-2 rounded flex items-center justify-center",
-                "bg-transparent text-white hover:bg-[--mantine-color-primary-4] hover:cursor-pointer",
-                "relative",
-                "after:content-['copied!'] after:absolute after:flex after:invisible",
-                "after:inset-0 after:items-center after:justify-center after:text-base",
-                "after:text-green-500 after:font-semibold after:z-10",
-                "after:translate-y-[-0.5rem] after:opacity-100",
-                "after:transition-all after:duration-1000 after:ease-out",
-                clipboard.copied && "after:visible after:opacity-0 after:translate-y-[-2.5rem]"
-              )}
-            >
-              <FontAwesomeIcon icon={faPaste} className="w-4 h-4" />
-            </button>
+            {
+              rdDirect && (
+                <LevelCardButton
+                  icon={faSyringe}
+                  aria-label="Direct play"
+                  onClick={() => startDirectPlay(false)}
+                />
+              )
+            }
+            <div className="relative">
+              {
+                clipboard.copied && (
+                  <span className="absolute bottom-full left-1/2 mt-4 whitespace-nowrap text-green-400 font-semibold pointer-events-none animate-copy-flyout">
+                    copied!
+                  </span>
+                )
+              }
+              <LevelCardButton
+                icon={faPaste}
+                aria-label="Copy level URL to clipboard"
+                onClick={() => {
+                  clipboard.copy(getLevelDownloadUrl(level));
+                }}
+              />
+            </div>
             <a
               href={getLevelDownloadUrl(level)}
               download
-              className="w-8 border border-white p-2 rounded flex items-center justify-center bg-transparent text-white hover:bg-[--mantine-color-primary-4] hover:cursor-pointer"
+              className="w-8 border border-white p-2 rounded flex items-center justify-center bg-transparent text-white hover:bg-violet-400 hover:cursor-pointer"
             >
               <FontAwesomeIcon icon={faDownload} className="w-4 h-4" />
             </a>
@@ -160,7 +175,7 @@ export function LevelCard({
             />
           </div>
           <div className="flex items-center text-xs leading-[1.125rem] text-slate-500 dark:text-slate-400">
-            <FontAwesomeIcon icon={faHeartPulse} className="w-4 h-4" />
+            <FontAwesomeIcon icon={faMusic} className="w-4 h-4" />
             <Words className="ml-1 whitespace-pre text-slate-500 dark:text-slate-400 text-xs">
               {bpmText}
             </Words>

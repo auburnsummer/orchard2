@@ -19,3 +19,24 @@ body {
     transform: translateX(100%);
   }
 }
+
+@keyframes copy-flyout {
+  from {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -1.5rem);
+  }
+}
+
+.animate-copy-flyout {
+  animation: copy-flyout 800ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-copy-flyout {
+    animation-duration: 1ms;
+  }
+}

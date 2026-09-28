@@ -10,6 +10,7 @@ import {
   faTags,
   faUsers,
   faExclamationTriangle,
+  faMusic,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
@@ -29,6 +30,7 @@ import { Words } from "@cafe/components/ui/Words";
 import { useUser } from "@cafe/hooks/useUser";
 import { Alert } from "@cafe/components/ui/Alert";
 import { PeerReviewStatusCard } from "./PeerReviewStatusCard";
+import { useCafeLinkDirectPlay } from "@cafe/utils/rddirect";
 
 type LevelViewProps = {
   rdlevel: RDLevel;
@@ -48,7 +50,6 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
 
   const csrfInput = useCSRFTokenInput();
 
-
   const getDifficultyBadgeClass = (difficulty: number) => {
     if (difficulty === 0) return "bg-teal-100 text-teal-600 dark:bg-teal-900 dark:text-teal-200"; // Easy
     if (difficulty === 1) return "bg-amber-100 text-amber-600 dark:bg-amber-900 dark:text-amber-200"; // Medium
@@ -65,6 +66,8 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
   const canPeerReview = user.authenticated && user.is_peer_reviewer;
 
   const downloadUrl = getLevelDownloadUrl(rdlevel);
+
+  const startDirectPlay = useCafeLinkDirectPlay(rdlevel.id);
 
   return (
     <Shell>
@@ -163,7 +166,7 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
                     <div className="flex items-center gap-1">
                       <FontAwesomeIcon
                         className="text-slate-700 dark:text-slate-300"
-                        icon={faHeartPulse}
+                        icon={faMusic}
                       />
                       <Words className="text-sm">{bpmText}</Words>
                     </div>
@@ -213,10 +216,22 @@ export function LevelView({ rdlevel, can_edit, can_delete }: LevelViewProps) {
 
               {/* Action Buttons */}
               <div className="flex flex-wrap gap-2 mb-6">
+                {
+                  user.show_rddirect && (
+                    <Button
+                      type="button"
+                      variant="primary"
+                      onClick={() => startDirectPlay(false)}
+                    >
+                      <FontAwesomeIcon icon={faHeartPulse} className="mr-2" />
+                      Direct Play
+                    </Button>
+                  )
+                }
                 <Button
                   as="a"
                   href={downloadUrl}
-                  variant="primary"
+                  variant={user.show_rddirect ? "secondary" : "primary"}
                   download
                 >
                   <FontAwesomeIcon icon={faDownload} className="mr-2" />
