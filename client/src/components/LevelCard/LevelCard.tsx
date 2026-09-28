@@ -84,6 +84,7 @@ export function LevelCard({
               rdDirect && (
                 <LevelCardButton
                   icon={faSyringe}
+                  aria-label="Direct play"
                   onClick={() => startDirectPlay(false)}
                 />
               )
@@ -98,6 +99,7 @@ export function LevelCard({
               }
               <LevelCardButton
                 icon={faPaste}
+                aria-label="Copy level URL to clipboard"
                 onClick={() => {
                   clipboard.copy(getLevelDownloadUrl(level));
                 }}

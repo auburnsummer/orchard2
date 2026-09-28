@@ -151,7 +151,7 @@ export function ProfileSettingsView() {
             }
 
             {
-              showRdDirect && connectionTestDisplay(testResult)
+              showRdDirect && <span aria-live="polite">{connectionTestDisplay(testResult)}</span>
             }
 
             </div>

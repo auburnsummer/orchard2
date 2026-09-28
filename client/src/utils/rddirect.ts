@@ -35,5 +35,5 @@ export function useCafeLinkDirectPlay(levelId: string): (transient: boolean) => 
             .catch((error) => {
                 errorToast(error);
             });
-    }, [levelId]);
+    }, [levelId, errorToast, successToast]);
 }
