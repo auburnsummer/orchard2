@@ -2,8 +2,9 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from typing import Optional, List, Dict, Any, Union
 
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
 from cafe.bridge.response import Response
 
 from cafe.models.clubs.club import Club
@@ -245,9 +246,8 @@ def get_typesense_filter_query(params: SearchLevelParams) -> str:
 
     return " && ".join(parts)
 
-def _execute_search(request: HttpRequest):
+def _execute_search(params: SearchLevelParams):
     """Core search logic shared between the Django-Bridge view and the JSON API."""
-    params = get_search_params(request)
     offset = (params.page - 1) * params.per_page
 
     filter_opts = {
@@ -315,10 +315,17 @@ def _execute_search(request: HttpRequest):
 
 
 def search_levels(request: HttpRequest):
-    props = _execute_search(request)
+    params = get_search_params(request)
+    # if the user directly enters an ID, redirect to that level's page
+    if params.q:
+        rdlevel = RDLevel.objects.filter(id=params.q).first()
+        if rdlevel:
+            return redirect(reverse('cafe:level_view', args=[rdlevel.id]))
+    result = _execute_search(params)
     view_name = request.resolver_match.view_name if request.resolver_match else None
-    return Response(request, view_name, props)
+    return Response(request, view_name, result)
 
 
 def search_levels_api(request: HttpRequest):
-    return JsonResponse(_execute_search(request))
+    params = get_search_params(request)
+    return JsonResponse(_execute_search(params))
