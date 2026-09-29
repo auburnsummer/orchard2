@@ -314,10 +314,18 @@ def _execute_search(params: SearchLevelParams):
     }
 
 
+def could_be_level_id(s: str) -> bool:
+    # level ids always start with "r"
+    if not s.startswith("r"):
+        return False
+    # level ids are atm 8 characters long, including the r
+    return not len(s) < 8
+
+
 def search_levels(request: HttpRequest):
     params = get_search_params(request)
     # if the user directly enters an ID, redirect to that level's page
-    if params.q:
+    if params.q and could_be_level_id(params.q):
         rdlevel = RDLevel.objects.filter(id=params.q).first()
         if rdlevel:
             return redirect(reverse('cafe:level_view', args=[rdlevel.id]))
