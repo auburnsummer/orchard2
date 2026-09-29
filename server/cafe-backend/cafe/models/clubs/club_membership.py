@@ -2,13 +2,12 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, TypeAlias
 
 import rules
-from rules.contrib.models import RulesModel
 from django.db import models
 
 from cafe.models.clubs.predicates import is_owner_of_permission_club, is_permission_subject
 from cafe.models.types import UserType, ClubType
 
-class ClubMembership(RulesModel):
+class ClubMembership(models.Model):
     """
     A User can be a member of any number of Clubs. There are two levels of membership:
 
@@ -45,9 +44,5 @@ class ClubMembership(RulesModel):
             models.UniqueConstraint(fields=['user', 'club'], name='unique_user_and_club')
         ]
 
-        rules_permissions = {
-            # cafe.change_clubmembership
-            "change": is_owner_of_permission_club,
-            # cafe.delete_clubmembership
-            "delete": is_owner_of_permission_club | is_permission_subject
-        }
+rules.add_perm("cafe.change_clubmembership", is_owner_of_permission_club)
+rules.add_perm("cafe.delete_clubmembership", is_owner_of_permission_club | is_permission_subject)

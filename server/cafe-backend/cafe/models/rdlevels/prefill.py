@@ -1,4 +1,4 @@
-from rules.contrib.models import RulesModel
+import rules
 from django.db import models
 from cafe.models.id_utils import generate_rdlevel_prefill_id, RDLEVEL_PREFILL_ID_LENGTH
 
@@ -8,7 +8,7 @@ from django.utils.timezone import now
 
 from .predicates import can_make_level_from_prefill
 
-class RDLevelPrefillResult(RulesModel):
+class RDLevelPrefillResult(models.Model):
     """
     A prefill result stores the initial analysis of an rdzip file.
     """
@@ -58,10 +58,6 @@ class RDLevelPrefillResult(RulesModel):
             "overwrite_metadata": self.overwrite_metadata
         }
 
-    class Meta:
-        rules_permissions = {
-            # cafe.can_make_levels_from_rdlevelprefillresult
-            "can_make_levels_from": can_make_level_from_prefill
-        }
-
     objects: models.Manager["RDLevelPrefillResult"]
+
+rules.add_perm("cafe.can_make_levels_from_rdlevelprefillresult", can_make_level_from_prefill)

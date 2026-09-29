@@ -1,9 +1,8 @@
 from django.db.models import Manager
 from django.db import models
 from django.core.exceptions import ValidationError
-from rules.contrib.models import RulesModel
 
-class DailyBlendConfiguration(RulesModel):
+class DailyBlendConfiguration(models.Model):
     """
     Singleton configuration model for Daily Blend.
     Only one configuration row can exist.
