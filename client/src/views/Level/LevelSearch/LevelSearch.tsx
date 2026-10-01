@@ -67,13 +67,13 @@ export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
   const levelsToShowIds = useMemo(() => {
     // if two or more levels have the same name, we will show the ids so user can distinguish between them
     const nameCount: Record<string, number> = {};
-    results.hits.forEach(level => {
+    results.hits.slice(0, LEVELS_PER_PAGE).forEach(level => {
       const key = level.song.toLowerCase();
       nameCount[key] = (nameCount[key] || 0) + 1;
     });
 
     const ids = new Set<string>();
-    results.hits.forEach(level => {
+    results.hits.slice(0, LEVELS_PER_PAGE).forEach(level => {
       const key = level.song.toLowerCase();
       const count = nameCount[key];
       if (count && count > 1) {
@@ -82,7 +82,7 @@ export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
     });
 
     return ids;
-  }, [results.hits])
+  }, [results.hits]);
 
   const levelTitleText = useMemo(() => {
     if (user.authenticated && searchParams.get("submitter_id") == user.id) {
