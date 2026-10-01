@@ -64,8 +64,27 @@ export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
   const onNext = () => movePage(1);
   const onPrev = () => movePage(-1);
 
-  const levelTitleText = useMemo(() => {
+  const levelsToShowIds = useMemo(() => {
+    // if two or more levels have the same name, we will show the ids so user can distinguish between them
+    const nameCount: Record<string, number> = {};
+    results.hits.forEach(level => {
+      const key = level.song.toLowerCase();
+      nameCount[key] = (nameCount[key] || 0) + 1;
+    });
 
+    const ids = new Set<string>();
+    results.hits.forEach(level => {
+      const key = level.song.toLowerCase();
+      const count = nameCount[key];
+      if (count && count > 1) {
+        ids.add(level.id);
+      }
+    });
+
+    return ids;
+  }, [results.hits])
+
+  const levelTitleText = useMemo(() => {
     if (user.authenticated && searchParams.get("submitter_id") == user.id) {
       return "Your levels";
     }
@@ -133,6 +152,7 @@ export const LevelSearch: React.FC<LevelSearchProps> = ({ results }) => {
             <li key={level.id}>
               <LevelCard
                 level={level}
+                showId={levelsToShowIds.has(level.id)}
                 className="w-full h-full"
                 href={`/levels/${level.id}/`}
               />
