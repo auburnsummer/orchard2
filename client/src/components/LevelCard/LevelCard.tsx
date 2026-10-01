@@ -240,7 +240,7 @@ export function LevelCard({
             </li>
           ))}
         </ul>
-        {showId && <Words className="absolute bottom-0 right-1 text-[0.65rem] text-slate-400">{level.id}</Words>}
+        {showId && <Words variant="muted" className="absolute bottom-1 right-2 text-[0.65rem] font-light">{level.id}</Words>}
       </div>
     </article>
   );
