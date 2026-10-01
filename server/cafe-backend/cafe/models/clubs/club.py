@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from django.db import models
 
-from rules.contrib.models import RulesModel 
+import rules
 from cafe.models.id_utils import generate_club_id, CLUB_ID_LENGTH
 from simple_history.models import HistoricalRecords
 
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from .club_membership import ClubMembership
     from django.db.models.manager import RelatedManager
 
-class Club(RulesModel):
+class Club(models.Model):
     """
     A Club is a group of users and levels.
 
@@ -35,20 +35,11 @@ class Club(RulesModel):
         return {
             "id": self.id,
             "name": self.name
-        } 
-    
-    class Meta:
-        rules_permissions = {
-            # cafe.view_member_of_club
-            "view_member_of": is_at_least_admin,
-            # cafe.view_info_of_club
-            "view_info_of": is_at_least_admin,  
-            # cafe.change_info_of_club
-            "change_info_of": is_owner,
-            # cafe.create_invite_for_club
-            "create_invite_for": is_owner,
-            # cafe.create_delegated_levels_for_club
-            "create_delegated_levels_for": is_at_least_admin,
-            # cafe.delete_club
-            "delete": is_owner,
         }
+
+rules.add_perm("cafe.view_member_of_club", is_at_least_admin)
+rules.add_perm("cafe.view_info_of_club", is_at_least_admin)
+rules.add_perm("cafe.change_info_of_club", is_owner)
+rules.add_perm("cafe.create_invite_for_club", is_owner)
+rules.add_perm("cafe.create_delegated_levels_for_club", is_at_least_admin)
+rules.add_perm("cafe.delete_club", is_owner)

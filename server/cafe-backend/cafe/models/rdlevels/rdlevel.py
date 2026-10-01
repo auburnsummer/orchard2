@@ -6,7 +6,6 @@ from cafe.models.types import UserType, ClubType
 
 from simple_history.models import HistoricalRecords
 
-from rules.contrib.models import RulesModel
 import rules
 
 from cafe.tasks.sync_level_to_typesense import sync_level_to_typesense
@@ -29,7 +28,7 @@ can_review = rules.is_authenticated & (rules.is_superuser | is_pharmacist)
 
 can_blend = can_review
 
-class RDLevel(RulesModel):
+class RDLevel(models.Model):
     """
     An RDLevel represents a single Rhythm Doctor level.
     """
@@ -169,15 +168,8 @@ class RDLevel(RulesModel):
         super(RDLevel, self).delete(*args, **kwargs)
         sync_level_to_typesense(level_id, caller="RDLevel.delete")
 
-    class Meta:
-        rules_permissions = {
-            # cafe.change_rdlevel
-            "change": can_change,
-            # cafe.delete_rdlevel
-            "delete": can_delete,
-            # cafe.peerreview_rdlevel
-            "peerreview": can_review,
-            # cafe.blend_rdlevel
-            "blend": can_blend
-        }
+rules.add_perm("cafe.change_rdlevel", can_change)
+rules.add_perm("cafe.delete_rdlevel", can_delete)
+rules.add_perm("cafe.peerreview_rdlevel", can_review)
+rules.add_perm("cafe.blend_rdlevel", can_blend)
 

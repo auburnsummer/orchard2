@@ -1,10 +1,8 @@
-from rules.contrib.models import RulesModel
-
 from django.db import models
 
 from django.db.models import Q
 
-class DailyBlendRandomPool(RulesModel):
+class DailyBlendRandomPool(models.Model):
     level = models.ForeignKey('cafe.RDLevel', on_delete=models.CASCADE)
     pool = models.ForeignKey('cafe.BlendPool', on_delete=models.CASCADE)
     tickets = models.IntegerField(default=1)
