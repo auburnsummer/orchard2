@@ -4,7 +4,7 @@
 set -e
 
 # run migrations
-cd /app/server/cafe-backend
+cd /app/server
 uv run ./manage.py migrate
 uv run ./manage.py setuptypesense
 

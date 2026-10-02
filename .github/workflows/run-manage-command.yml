@@ -35,5 +35,5 @@ jobs:
               jq -r 'select(.Image == "ghcr.io/auburnsummer/orchard2:main") | .ID' | \
               head -1)
             set -f  # disable glob expansion of $COMMAND
-            sudo docker exec --workdir=/app/server/cafe-backend $CONTAINER_ID \
+            sudo docker exec --workdir=/app/server $CONTAINER_ID \
               uv run manage.py $COMMAND
