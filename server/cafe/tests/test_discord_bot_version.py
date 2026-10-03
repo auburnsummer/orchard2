@@ -1,4 +1,5 @@
-from conftest import create_discord_request
+from cafe.tests.conftest import create_discord_request
+
 
 def test_version_returns_the_version(client_with_discord_key):
     client, private_key = client_with_discord_key

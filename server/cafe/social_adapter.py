@@ -1,4 +1,4 @@
-from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
+from allauth.socialaccount.adapter import DefaultSocialAccountAdapter  # type: ignore
 
 
 class CafeSocialAccountAdapter(DefaultSocialAccountAdapter):
