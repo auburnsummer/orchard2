@@ -39,4 +39,4 @@ For testing, you will need to pull in the test rdzips which are stored in Git LF
 
 # Testing
 
-`pytest orchard/vitals`
+`pytest tests/vitals`

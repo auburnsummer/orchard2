@@ -60,4 +60,4 @@ or:
 
 # Testing
 
-`pytest server/rdlevel_parse`
+`pytest tests/rdlevel_parse`

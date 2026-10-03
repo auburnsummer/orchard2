@@ -45,11 +45,10 @@ COPY --from=hivemind /tmp/hivemind /usr/local/bin/hivemind
 
 # install python dependencies
 WORKDIR server
-RUN uv sync --locked
+RUN uv sync --locked --no-dev
 
 # collect static files for caddy to serve later
 ENV STATIC_ROOT=/var/www/rhythm.cafe/static
-WORKDIR cafe-backend
 
 RUN DJANGO_SECRET_KEY=build-only-not-for-production uv run ./manage.py collectstatic --noinput --no-default-ignore
 

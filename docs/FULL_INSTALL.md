@@ -21,10 +21,10 @@ $ cp Procfile.example Procfile
 
 The Procfile is used to run the application and its dependencies. Each line in the Procfile represents a process that will be run by the application.
 
-In the `server/cafe-backend` directory, copy the example environment file into `.env`:
+In the `server` directory, copy the example environment file into `.env`:
 
 ```bash
-$ cd server/cafe-backend
+$ cd server
 $ cp .env.example .env
 ```
 
@@ -40,7 +40,7 @@ Ngrok does not require a domain name but you won't have a custom domain for your
 
 1. Follow steps 1-3 here: https://ngrok.com/docs/getting-started/   
 2. Step 5 shows the command to run ngrok. Replace `8080` with `8000` to match the port used by the backend server.
-3. Copy the command into the Procfile in the `server/cafe-backend` directory, prefixing it with `ngrok:`, e.g.
+3. Copy the command into the Procfile in the repository root, prefixing it with `ngrok:`, e.g.
 
    ```bash
    ngrok: ngrok http 8000 --url https://wubba-dubba-dubba-is-that-true.ngrok.io
@@ -55,7 +55,7 @@ Ngrok does not require a domain name but you won't have a custom domain for your
     - Enter service as `http://localhost:8000`
 2. Install Cloudflared by following the instructions here: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/installation/
 3. In the page of the tunnel, there will be a command under the text "OR run the tunnel manually in your current terminal session only:"
-   - Copy this command and paste it into the Procfile in the `server/cafe-backend` directory, prefixing it with `cloudflared:`, e.g.
+   - Copy this command and paste it into the Procfile in the repository root, prefixing it with `cloudflared:`, e.g.
 
    ```bash
    cloudflared: cloudflared tunnel run --token whoa-you-go-big-guy
@@ -160,7 +160,7 @@ $ uv sync
 ## Download test files
 
 ```bash
-$ cd server/vitals/tests/fixtures
+$ cd server/tests/vitals/fixtures
 $ ./download_fixtures.sh
 ```
 
@@ -184,7 +184,7 @@ $ uv run python -c 'import secrets; print(secrets.token_hex(100))'
 
 ## Setup database
 
-In the `server/cafe-backend` directory, set up the database tables:
+In the `server` directory, set up the database tables:
 
 ```bash
 $ uv run python manage.py migrate
