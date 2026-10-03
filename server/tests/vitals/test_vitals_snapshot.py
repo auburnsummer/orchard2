@@ -1,16 +1,19 @@
-import os
-import pytest
-import msgspec
 from pathlib import Path
-from vitals import vitals, vitals_quick
+
+import msgspec
+import pytest
 from syrupy.extensions.json import JSONSnapshotExtension
+from syrupy.location import PyTestLocation
+from syrupy.types import SnapshotIndex
+from vitals import vitals, vitals_quick
+
 
 class VitalsSnapshotExtension(JSONSnapshotExtension):
     """Custom extension to save snapshots with meaningful filenames"""
     _file_extension = "json"
 
     @classmethod
-    def get_snapshot_name(cls, *, test_location, index: int) -> str:
+    def get_snapshot_name(cls, *, test_location: PyTestLocation, index: SnapshotIndex = 0) -> str:
         """Generate a snapshot name based on the fixture filename and test function"""
         test_name = str(test_location)
         # The test name will be like "test_vitals_snapshot[filename]" or "test_vitals_quick_snapshot[filename]"
