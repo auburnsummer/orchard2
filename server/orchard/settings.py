@@ -139,7 +139,7 @@ SOCIALACCOUNT_ONLY = True
 SOCIALACCOUNT_PROVIDERS = {
     'discord': {
         'VERIFIED_EMAIL': True,
-        'SCOPE': ['identify'],
+        'SCOPE': ['identify', 'email'],
         'APP': {
             'client_id': DISCORD_CLIENT_ID,
             'secret': DISCORD_CLIENT_SECRET,
@@ -227,8 +227,7 @@ REDIS_HOST = os.environ.get('REDIS_HOST', '')
 REDIS_PORT = os.environ.get('REDIS_PORT', '')
 REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD', None)
 
-NUMBER_OF_WORKERS = int(os.environ.get('NUMBER_OF_WORKERS', 1))
-
+NUMBER_OF_WORKERS = int(os.environ.get('NUMBER_OF_WORKERS', '1'))
 
 # settings.py
 HUEY = {
@@ -260,6 +259,12 @@ HUEY = {
     },
 }
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": f"redis://:{REDIS_PASSWORD or ''}@{REDIS_HOST}:{REDIS_PORT}/1",
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
