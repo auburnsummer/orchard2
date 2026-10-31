@@ -139,7 +139,7 @@ SOCIALACCOUNT_ONLY = True
 SOCIALACCOUNT_PROVIDERS = {
     'discord': {
         'VERIFIED_EMAIL': True,
-        'SCOPE': ['identify', 'email'],
+        'SCOPE': ['identify'],
         'APP': {
             'client_id': DISCORD_CLIENT_ID,
             'secret': DISCORD_CLIENT_SECRET,
