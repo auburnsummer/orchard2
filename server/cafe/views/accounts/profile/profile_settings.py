@@ -16,7 +16,8 @@ class PostSettingsForm(ModelForm):
             "display_name",
             "theme_preference",
             "default_pr_preference",
-            "show_rddirect"
+            "show_rddirect",
+            "rd_launch_url",
         ]
 
 def settings(request: HttpRequest) -> HttpResponse:
