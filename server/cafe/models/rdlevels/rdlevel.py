@@ -1,23 +1,22 @@
 from __future__ import annotations
-from django.db import models
-
-from cafe.models.id_utils import generate_rdlevel_id, RDLEVEL_ID_LENGTH
-from cafe.models.types import UserType, ClubType
-
-from simple_history.models import HistoricalRecords
 
 import rules
+from django.db import models
+from simple_history.models import HistoricalRecords
 
-from cafe.tasks.sync_level_to_typesense import sync_level_to_typesense
 from cafe.models.clubs.predicates import is_pharmacist
+from cafe.models.id_utils import RDLEVEL_ID_LENGTH, generate_rdlevel_id
+from cafe.models.types import ClubType, UserType
+from cafe.tasks.sync_level_to_typesense import sync_level_to_typesense
+
 
 @rules.predicate
-def is_at_least_admin_of_connected_club(user: UserType, level: "RDLevel"):
+def is_at_least_admin_of_connected_club(user: UserType, level: RDLevel):
     memberships = user.memberships.filter(club__exact=level.club, role__in=["owner", "admin"])
     return len(memberships) > 0
 
 @rules.predicate
-def is_submitter(user: UserType, level: "RDLevel"):
+def is_submitter(user: UserType, level: RDLevel):
     return level.submitter == user
 
 can_change = rules.is_authenticated & (rules.is_superuser | is_pharmacist | is_at_least_admin_of_connected_club | is_submitter)
@@ -160,12 +159,12 @@ class RDLevel(models.Model):
         }
 
     def save(self, *args, **kwargs):
-        super(RDLevel, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         sync_level_to_typesense(self.id, caller="RDLevel.save")
 
     def delete(self, *args, **kwargs):
         level_id = self.id
-        super(RDLevel, self).delete(*args, **kwargs)
+        super().delete(*args, **kwargs)
         sync_level_to_typesense(level_id, caller="RDLevel.delete")
 
 rules.add_perm("cafe.change_rdlevel", can_change)

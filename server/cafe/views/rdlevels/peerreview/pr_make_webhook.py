@@ -1,23 +1,22 @@
 
+from cafe.bridge.response import Response
+from cafe.views.rdlevels.peerreview.pr_levels import get_pr_pending_levels
+from cafe.views.types import AuthenticatedHttpRequest
+from cafe.webhooks import is_allowed_webhook_url
+from cryptography.fernet import Fernet
 from django import forms
 from django.conf import settings
 from django.contrib import messages
 from django.urls import reverse
-from cafe.bridge.response import Response
 from rules.contrib.views import permission_required
-from cryptography.fernet import Fernet
 
-from cafe.models.rdlevels.rdlevel import RDLevel
-from cafe.views.types import AuthenticatedHttpRequest
-from cafe.webhooks import is_allowed_webhook_url
 
 class WebhookForm(forms.Form):
     webhook_url = forms.URLField()
 
 @permission_required('cafe.peerreview_rdlevel')
 def pr_make_webhook(request: AuthenticatedHttpRequest):
-    # we want the oldest level first
-    pr_levels = RDLevel.objects.filter(approval=0).order_by('last_updated')
+    pr_levels = get_pr_pending_levels()
     if request.method == 'POST':
         form = WebhookForm(request.POST)
         if form.is_valid():
