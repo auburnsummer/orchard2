@@ -1,12 +1,13 @@
-from django import forms
-from django.shortcuts import get_object_or_404
-from cafe.bridge.response import Response
-from django.contrib import messages
-
-from cafe.models import RDLevel
-from cafe.views.types import HttpRequest
-from rules.contrib.views import permission_required
 from allauth.socialaccount.models import SocialAccount
+from cafe.bridge.response import Response
+from cafe.models import RDLevel
+from cafe.views.rdlevels.peerreview.pr_levels import get_pr_pending_levels
+from cafe.views.types import HttpRequest
+from django import forms
+from django.contrib import messages
+from django.shortcuts import get_object_or_404
+from rules.contrib.views import permission_required
+
 
 class PeerReviewLevelPayload(forms.Form):
     approval_intent = forms.IntegerField()
@@ -35,8 +36,7 @@ def pr_rdlevel(request: HttpRequest, level_id: str):
     # also resolve their discord id if possible
     social_account = SocialAccount.objects.filter(user=submitter, provider='discord').first()
 
-    # we want the oldest level first
-    pr_levels = RDLevel.objects.filter(approval=0).order_by('last_updated')
+    pr_levels = get_pr_pending_levels()
     props = {
         "levels": [level.to_dict() for level in pr_levels],
         "rdlevel": rdlevel.to_dict(),
