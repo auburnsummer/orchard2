@@ -156,6 +156,12 @@ export function ProfileSettingsView() {
 
             </div>
 
+            <input
+              type="hidden"
+              name="rd_launch_url"
+              value={user.rd_launch_url}
+            />
+
             <Button type="submit" variant="primary" className="max-w-48 py-2 mt-4">Save</Button>
           </div>
         </Form>

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+import typing
 
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.models import AbstractUser, UserManager
@@ -64,7 +65,11 @@ class User(AbstractUser):
         'all': 'All'
     }, max_length=100, default='approved')
 
+    # whether to show rd!direct links for this user
     show_rddirect = BooleanField(default=False)
+
+    # if the cafelink server is not running, a URL that we will attempt to fetch to launch RD
+    rd_launch_url = CharField(max_length=200, unique=False, blank=True, default="steam://run/774181")
 
     # from cafe.ClubMembership
     memberships: Manager[ClubMembership]
@@ -119,7 +124,7 @@ class User(AbstractUser):
         super().save(*args, **kwargs)
     
     @classmethod
-    def get_user_from_api_key(cls, signed_token: str) -> "User | None":
+    def get_user_from_api_key(cls, signed_token: str) -> User | None:
         """
         Get the user associated with a signed API key.
         
@@ -174,6 +179,7 @@ class User(AbstractUser):
             "is_superuser": self.is_superuser,
             "is_peer_reviewer": self.has_perm("cafe.peerreview_rdlevel"),
             "show_rddirect": self.show_rddirect,
+            "rd_launch_url": self.rd_launch_url,
         }
     
     def to_dict(self):
@@ -185,10 +191,10 @@ class User(AbstractUser):
     objects = CafeUserManager()
 
     USERNAME_FIELD = "id"
-    REQUIRED_FIELDS = ["username", "display_name"]
+    REQUIRED_FIELDS: typing.ClassVar[list[str]] = ["username", "display_name"]
 
     class Meta:
-        constraints = [
+        constraints: typing.ClassVar[list[CheckConstraint]] = [
             CheckConstraint(
                 name="cafe__user_id_starts_with_u",
                 condition=Q(id__startswith=USER_ID_PREFIX),

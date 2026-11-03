@@ -8,6 +8,7 @@ type CommonUserFields = {
   theme_preference: ThemePreference;
   default_pr_preference: SearchDefaultPeerReviewPreference;
   show_rddirect: boolean;
+  rd_launch_url: string;
 };
 
 export type UnauthenticatedUser = {
