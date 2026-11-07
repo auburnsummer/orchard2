@@ -10,9 +10,11 @@ def user(request: HttpRequest):
         theme_preference = request.session.get("theme_preference", "light")
         pr_default_preference = request.session.get("default_pr_preference", "approved")
         show_rddirect = request.session.get("show_rddirect", False)
+        rd_launch_url = request.session.get("rd_launch_url", "") 
         return {
             "authenticated": False,
             "theme_preference": theme_preference,
             "default_pr_preference": pr_default_preference,
             "show_rddirect": show_rddirect,
+            "rd_launch_url": rd_launch_url,
         }

@@ -39,6 +39,10 @@ export async function cafeLinkConnectionTest() {
         if (!response.ok) {
             throw new Error(`HTTP error ${response.status}`);
         }
+        const body = await response.json();
+        if (body.status !== "ok") {
+            return false;
+        }
         return true;
     } catch (error) {
         clearTimeout(timeoutId);
@@ -109,8 +113,15 @@ export function useCafeLinkDirectPlay(levelId: string): (transient: boolean) => 
                 }
                 if (online) {
                     // The server is online, we can attempt to play the level again.
-                    await cafeLinkDirectPlay(levelId, transient);
-                    successToast(`Playing level!`);
+                    try {
+                        await cafeLinkDirectPlay(levelId, transient);
+                        successToast(`Playing level!`);
+                        return;
+                    } catch (error) {
+                        // somehow we failed even after the server came online??
+                        errorToast(new Error(`Failed to play level`));
+                        return;
+                    }
                 } else {
                     errorToast(new Error(`Failed to play level`));
                 }
