@@ -15,6 +15,8 @@ import { Link } from "@cafe/minibridge/components/Link";
 import { useAsync, AsyncState } from "@cafe/hooks/useAsync";
 import { CAFE_LINK_STATUS_URL } from "@cafe/utils/rddirect";
 
+import cc from "clsx";
+
 const CAFE_MOD_INSTALLATION_INSTRUCTIONS_URL = "https://github.com/auburnsummer/orchard2/wiki/CafeLink-Installation-Instructions";
 
 type ConnectionTestResponse = {
@@ -128,39 +130,44 @@ export function ProfileSettingsView() {
               ]}
             />
             <div className="flex flex-row items-end gap-2">
-            <Checkbox
-              className="mt-4"
-              name="show_rddirect"
-              label="Show direct play links"
-              description={
-                <>
-                  <Words variant="muted">
-                    For the links to work you need to install a Rhythm Doctor mod. See <Link href={CAFE_MOD_INSTALLATION_INSTRUCTIONS_URL} target="_blank" rel="noopener noreferrer" className="underline">installation instructions</Link>.
-                  </Words>
-                </>
+              <Checkbox
+                className="mt-4"
+                name="show_rddirect"
+                label="Show direct play links"
+                description={
+                  <>
+                    <Words variant="muted">
+                      For the links to work you need to install a Rhythm Doctor mod. See <Link href={CAFE_MOD_INSTALLATION_INSTRUCTIONS_URL} target="_blank" rel="noopener noreferrer" className="underline">installation instructions</Link>.
+                    </Words>
+                  </>
+                }
+                checked={showRdDirect}
+                onChange={(e) => setShowRdDirect(e.target.checked)}
+                showDescriptionAsTooltip={false}
+              />
+
+              {
+                showRdDirect && (
+                  <Button className="max-w-48 ml-1" variant="default" onClick={startTest} type="button">Test Connection</Button>
+                )
               }
-              checked={showRdDirect}
-              onChange={(e) => setShowRdDirect(e.target.checked)}
-              showDescriptionAsTooltip={false}
-            />
 
-            {
-              showRdDirect && (
-                <Button className="max-w-48 ml-1" variant="default" onClick={startTest} type="button">Test Connection</Button>
-              )
-            }
-
-            {
-              showRdDirect && <span aria-live="polite">{connectionTestDisplay(testResult)}</span>
-            }
+              {
+                showRdDirect && <span aria-live="polite">{connectionTestDisplay(testResult)}</span>
+              }
 
             </div>
 
-            <input
-              type="hidden"
-              name="rd_launch_url"
-              value={user.rd_launch_url}
-            />
+            {
+              (
+                <TextInput
+                  label="URL to launch RD if it's not running"
+                  className={cc(`max-w-64`, !showRdDirect && `hidden`)}
+                  name="rd_launch_url"
+                  defaultValue={user.rd_launch_url}
+                />
+              )
+            }
 
             <Button type="submit" variant="primary" className="max-w-48 py-2 mt-4">Save</Button>
           </div>

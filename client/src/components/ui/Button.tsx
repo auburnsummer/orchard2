@@ -2,7 +2,7 @@
 type Variant = "default" | "primary" | "secondary" | "danger";
 
 const commonStyles = `
-    rounded-lg hover:cursor-pointer text-sm font-semibold px-3 py-2 shadow-xs
+    rounded-lg cursor-pointer text-sm font-semibold px-3 py-2 shadow-xs
     disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150
 `;
 
