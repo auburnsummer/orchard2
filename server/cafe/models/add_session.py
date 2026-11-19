@@ -45,3 +45,7 @@ class AddSession(models.Model):
 
     # if the addsession state is for "new" or "update".
     add_type = models.CharField(max_length=10, default="new")
+
+    # channel and message ids of the original Discord message
+    channel_id = models.TextField(blank=True)
+    message_id = models.TextField(blank=True)

@@ -1,11 +1,10 @@
 import uuid
 from unittest.mock import patch
 
-from conftest import create_discord_request
 import pytest
-
 from cafe.models.add_session import AddSession, AddSessionPhase
 from cafe.views.discord_bot.handlers.utils import Flags, ResponseType
+from conftest import create_discord_request
 
 
 def make_discord_body(
@@ -43,6 +42,7 @@ def make_discord_body(
             },
             "target_id": "1378335040420712612",
         },
+        "channel_id": "123456789012345678",
         "member": {"user": invoker},
     }
     if is_webhook:

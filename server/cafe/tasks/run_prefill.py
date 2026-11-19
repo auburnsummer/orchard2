@@ -1,26 +1,34 @@
 import asyncio
+import traceback
 from io import BufferedRandom, BytesIO
 from tempfile import TemporaryFile
 from typing import NamedTuple
+
+import httpx
+import msgspec
+import sentry_sdk
 from aiohttp import ClientSession
 from aiohttp_s3_client import S3Client
+from asgiref.sync import async_to_sync
+from django.db import IntegrityError, transaction
 from essfree.essfree import Essfree
-import msgspec
-from django.db import transaction
+from huey.contrib.djhuey import db_task
+from orchard.settings import (
+    DISCORD_BOT_TOKEN,
+    DISCORD_CLIENT_ID,
+    S3_ACCESS_KEY_ID,
+    S3_API_URL,
+    S3_PUBLIC_CDN_URL,
+    S3_REGION,
+    S3_SECRET_ACCESS_KEY,
+)
 from vitals import vitals, vitals_quick
-from huey.contrib.djhuey import db_periodic_task, db_task, on_commit_task
-import httpx
+from vitals.msgspec_schema import VitalsLevel, VitalsLevelImmutable
+
 from cafe.models.add_session import AddSession, AddSessionPhase
 from cafe.models.rdlevels.prefill import RDLevelPrefillResult
-from asgiref.sync import async_to_sync
-from vitals.msgspec_schema import VitalsLevel, VitalsLevelImmutable
-import traceback
-import sentry_sdk
-
-from django.db import IntegrityError
-
 from cafe.models.rdlevels.rdlevel import RDLevel
-from orchard.settings import DISCORD_CLIENT_ID, S3_API_URL, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY, S3_REGION, S3_PUBLIC_CDN_URL
+
 
 class UploadFilesURLs(NamedTuple):
     rdzip_url: str
@@ -113,6 +121,10 @@ def run_prefill_v2(prefill_id: str, session_id: str):
         url = f"https://discord.com/api/v10/webhooks/{DISCORD_CLIENT_ID}/{session.interaction_token}/messages/@original"
         payload = render_add_session(session)['data']
         client.patch(url, json=payload)
+    if session.channel_id and session.message_id:
+        with httpx.Client() as client:
+            url = f"https://discord.com/api/v10/channels/{session.channel_id}/messages/{session.message_id}/reactions/✅/@me"
+            client.put(url, headers={"Authorization": f"Bot {DISCORD_BOT_TOKEN}"})
 
 @db_task(priority=200)
 def run_prefill(prefill_id: str):
