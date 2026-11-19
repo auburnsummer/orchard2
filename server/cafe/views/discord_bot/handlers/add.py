@@ -197,7 +197,9 @@ def add_v2(data, check_user_is_poster=True):
         user = user,
         interaction_token = data['token'],
         phase = phase,
-        attachments = attachments
+        attachments = attachments,
+        channel_id = data['channel_id'],
+        message_id = target_id,
     )
     # if we are on phase SELECTING_TYPE, set selected_attachment_url straight away
     if phase == AddSessionPhase.SELECTING_TYPE:
